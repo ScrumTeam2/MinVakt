@@ -40,7 +40,7 @@ public abstract class DBManager{
     }
     protected void turnOffAutocommit(){
         try{
-            if(connection.getAutoCommit() == true){
+            if(connection.getAutoCommit()){
                 connection.setAutoCommit(false);
             }
         }
