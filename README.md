@@ -13,8 +13,11 @@ Fiktivt system for vaktliste i helsetjenesten
 ## Java
 - Vi tar i bruk standard Java-navnekonvensjon: http://www.oracle.com/technetwork/java/codeconventions-135099.html
 
-## Frontend (WIP)
-- Variabelnavn starter med liten bokstav, akkurat som i Java
+## Frontend
+- Vi tar i bruk W3s praksis: 
+- http://www.w3schools.com/js/js_conventions.asp
+- http://www.w3schools.com/js/js_best_practices.asp
+- http://www.w3schools.com/html/html5_syntax.asp
 
 ## Database
 - Tabellnavn skal vanligvis være substantiv i entall, og bør være selvforklarende (F.eks. user og ikke users)
