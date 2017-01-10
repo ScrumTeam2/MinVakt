@@ -1,4 +1,4 @@
-# MinVakt
+# MinVakt [![Build Status](https://travis-ci.org/ScrumTeam2/MinVakt.svg?branch=master)](https://travis-ci.org/ScrumTeam2/MinVakt)
 Fiktivt system for vaktliste i helsetjenesten
 
 # Kodestrukur
