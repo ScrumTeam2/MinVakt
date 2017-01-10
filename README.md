@@ -1,9 +1,13 @@
-# MinVakt
+# MinVakt [![Build Status](https://travis-ci.org/ScrumTeam2/MinVakt.svg?branch=master)](https://travis-ci.org/ScrumTeam2/MinVakt)
 Fiktivt system for vaktliste i helsetjenesten
 
 # Kodestrukur
 - Backend-kode: src/main/java/no/ntnu/stud/minvakt
+- REST-kode: src/main/java/no/ntnu/stud/minvakt/services
+- Dataklasser (f.eks. User): src/main/java/no/ntnu/stud/minvakt/data
+- Backend-logikk: src/main/java/no/ntnu/stud/minvakt/controller
 - Backend-test: src/test/java/no/ntnu/stud/minvakt
+- Hjelpeklasser/verktøy: src/main/java/no/ntnu/stud/minvakt/util
 - Frontend/web: src/main/webapp
 
 # Kodekonvensjon
@@ -12,9 +16,13 @@ Fiktivt system for vaktliste i helsetjenesten
 
 ## Java
 - Vi tar i bruk standard Java-navnekonvensjon: http://www.oracle.com/technetwork/java/codeconventions-135099.html
+- REST-API, data og logikk skal separeres, se pakkene i _Kodestruktur_. Hvis kode ikke passer i noen av disse, kan det foreslås flere pakker.
 
-## Frontend (WIP)
-- Variabelnavn starter med liten bokstav, akkurat som i Java
+## Frontend
+- Vi tar i bruk W3s praksis: 
+- http://www.w3schools.com/js/js_conventions.asp
+- http://www.w3schools.com/js/js_best_practices.asp
+- http://www.w3schools.com/html/html5_syntax.asp
 
 ## Database
 - Tabellnavn skal vanligvis være substantiv i entall, og bør være selvforklarende (F.eks. user og ikke users)

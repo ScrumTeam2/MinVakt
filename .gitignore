@@ -144,3 +144,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+# MinVakt
+target/

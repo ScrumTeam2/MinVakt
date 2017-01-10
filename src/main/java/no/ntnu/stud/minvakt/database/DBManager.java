@@ -34,7 +34,7 @@ public abstract class DBManager{
     }
     protected void startTransaction(){
         try{
-            if(connection.getAutoCommit() == true){
+            if(connection.getAutoCommit()){
                 connection.setAutoCommit(false);
             }
         }
