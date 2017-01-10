@@ -17,8 +17,7 @@ public class UserAdminService extends SecureService {
     @POST
     @Path("/createuser")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addUser(@Context SecurityContext sc, User user) {
-        sc.isUserInRole("admin");
+    public void addUser(User user) {
         Session session = getSession();
         if(!session.isAdmin()) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.FORBIDDEN);
