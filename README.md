@@ -3,6 +3,9 @@ Fiktivt system for vaktliste i helsetjenesten
 
 # Kodestrukur
 - Backend-kode: src/main/java/no/ntnu/stud/minvakt
+- REST-kode: src/main/java/no/ntnu/stud/minvakt/services
+- Dataklasser (f.eks. User): src/main/java/no/ntnu/stud/minvakt/data
+- Backend-logikk: src/main/java/no/ntnu/stud/minvakt/controller
 - Backend-test: src/test/java/no/ntnu/stud/minvakt
 - Frontend/web: src/main/webapp
 
@@ -12,6 +15,7 @@ Fiktivt system for vaktliste i helsetjenesten
 
 ## Java
 - Vi tar i bruk standard Java-navnekonvensjon: http://www.oracle.com/technetwork/java/codeconventions-135099.html
+- REST-API, data og logikk skal separeres, se pakkene i _Kodestruktur_
 
 ## Frontend
 - Vi tar i bruk W3s praksis: 
