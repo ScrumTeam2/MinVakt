@@ -1,0 +1,4 @@
+language: java
+- 8
+sudo: false
+script: mvn clean verify
