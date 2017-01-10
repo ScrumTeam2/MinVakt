@@ -26,7 +26,7 @@ public class ShiftService {
                     @QueryParam("userId") int userId,
                     @QueryParam("deptId") int deptId) {
         java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-        //Shift shift = new Shift(id, sqlDate, type, res, validAb, userId, deptId);
+        //eShift shift = new Shift(id, sqlDate, type, res, validAb, userId, deptId);
 
     }
 
