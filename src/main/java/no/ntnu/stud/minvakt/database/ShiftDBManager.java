@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
+import no.ntnu.stud.minvakt.data.Shift;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -32,27 +34,27 @@ public class ShiftDBManager extends DBManager {
             responsibility - Boolean telling whether the person is the shift supervisor
             userID - Integer with user primary key
      */
-    public int createNewShift(Date date, int startTime, int endTime, boolean responsibility,
-                                  boolean valid_absence, int userID, int dept_id) {
+    public int createNewShift(Shift shift) {
         int out = -1;
         if (setUp()) {
             try {
                 startTransaction();
                 conn = getConnection();
-                prep = getConnection().prepareStatement(sqlCreateNewShift);
+                prep = conn.prepareStatement(sqlCreateNewShift);
 
-                prep.setDate(1, date);
-                prep.setInt(2, startTime);
-                prep.setInt(3, endTime);
-                prep.setBoolean(4, responsibility);
-                prep.setBoolean(5, valid_absence);
-                prep.setInt(6, userID);
-                prep.setInt(7, dept_id);
+                prep.setDate(1, shift.getDate());
+                prep.setInt(2, shift.getTimeStart());
+                prep.setInt(3, shift.getTimeEnd());
+                prep.setBoolean(4, shift.isResponsible());
+                prep.setBoolean(5, shift.isValidAbsence());
+                prep.setInt(6, shift.getUser().getId());
+                prep.setInt(7, shift.getDept().getId());
 
                 if(prep.executeUpdate() != 0){
-                    prep = getConnection().prepareStatement(sqlGetLastID);
+                    prep = conn.prepareStatement(sqlGetLastID);
                     ResultSet res = prep.executeQuery();
                     if(res.next()) {
+                        //Last auto incremented value
                         out = res.getInt(1);
                     }
                 }
