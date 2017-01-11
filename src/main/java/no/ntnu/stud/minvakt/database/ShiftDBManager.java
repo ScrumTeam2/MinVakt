@@ -1,7 +1,10 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.ShiftUser;
+import no.ntnu.stud.minvakt.data.User;
 
+import javax.ws.rs.core.Response;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -13,9 +16,13 @@ public class ShiftDBManager extends DBManager {
         super();
     }
 
-    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?,?)";
+    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?)";
+    private final String sqlCreateNewShiftStaff = "INSERT INTO employee_shift VALUES(?,?,?,?)";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID()";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?";
+    private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?";
+    private final String sqlGetShiftUser = "SELECT user_id, responsibility, valid_absence FROM employee_shift WHERE shift_id = ?";
+    private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id=?";
 
     Connection conn;
     PreparedStatement prep;
@@ -27,12 +34,6 @@ public class ShiftDBManager extends DBManager {
             If not successful - negative number (-1)
             if successful - shiftID
 
-        Arguments:
-            date - SQL date object with the date of shift start
-            startTime - Integer representing how many 15 minute rotations from 00:00 the shift starts
-            endTime - Integer representing how many 15 minute rotations from 00:00 the shift ends
-            responsibility - Boolean telling whether the person is the shift supervisor
-            userID - Integer with user primary key
      */
     public int createNewShift(Shift shift) {
         int out = -1;
@@ -42,24 +43,39 @@ public class ShiftDBManager extends DBManager {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlCreateNewShift);
 
-                prep.setBoolean(1, shift.isResponsible());
-                prep.setBoolean(2, shift.isValidAbsence());
-                prep.setDate(3, shift.getDate());
-                prep.setInt(4, shift.getType().getValue());
-                prep.setInt(5, shift.getUserId());
-                prep.setInt(6, shift.getDeptId());
+                prep.setInt(1, shift.getStaffNumb());
+                prep.setDate(2, shift.getDate());
+                prep.setInt(3, shift.getType().getValue());
+                prep.setInt(4, shift.getDeptId());
                 System.out.println(prep.toString());
                 if(prep.executeUpdate() != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
                     ResultSet res = prep.executeQuery();
                     if(res.next()) {
                         //Last auto incremented value
-                        out = res.getInt(1);
+                        shift.setId(res.getInt(1));
+                        ArrayList<ShiftUser> shiftUsers = shift.getShiftUsers();
+                        for(ShiftUser shiftUser : shiftUsers){
+                            prep = conn.prepareStatement(sqlCreateNewShiftStaff);
+                            prep.setInt(1, shiftUser.getUserId());
+                            prep.setInt(2,shift.getId());
+                            prep.setBoolean(3,shiftUser.isResponsibility());
+                            prep.setBoolean(4,shiftUser.isValid_absence());
+                            if(prep.executeUpdate() == 0){
+                                throw new SQLException("User info not added, rolled back");
+                            }
+                        }
+                        out = shift.getId();
                     }
+
+                }
+                else{
+                    throw new SQLException("Database not updated, rolled back");
                 }
 
             } catch (SQLException sqle) {
-                System.err.println("Issue with creating new shift");
+                rollbackStatement();
+                System.err.println("Issue with creating new shift, data rolled back");
                 sqle.printStackTrace();
             }
             finally {
@@ -71,20 +87,74 @@ public class ShiftDBManager extends DBManager {
     }
 
     //Deletes a shift using the shift ID. Meant mainly for cleaning up database when running tests.
-    public boolean deleteShift(int shiftID){
-        int out = 0;
+    public boolean deleteShift(int shiftId){
+        int status = 0;
         if(setUp()){
             try {
-                prep = getConnection().prepareStatement(sqlDeleteShift);
-                prep.setInt(1,shiftID);
-                out = prep.executeUpdate();
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlDeleteShift);
+                prep.setInt(1, shiftId);
+                status = prep.executeUpdate();
+                if(status != 0){
+                    prep = conn.prepareStatement(sqlDeleteShiftStaff);
+                    prep.setInt(1,shiftId);
+                    status = prep.executeUpdate();
+                }
+                else
+                    throw new SQLException("Could not delete shift, rolling back");
             }
             catch (SQLException sqle){
-                System.err.println("Issue with deleting shift with ID = "+shiftID);
+                rollbackStatement();
+                status = 0;
+                System.err.println("Issue with deleting shift with ID = "+shiftId);
                 sqle.printStackTrace();
             }
+            finally {
+                endTransaction();
+                closeConnection();
+            }
         }
-        return out != 0;
+        return status != 0;
+    }
+    public Shift getShift(int shiftId){
+        Shift out = null;
+        if(setUp()){
+            ResultSet res = null;
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetShiftUser);
+                prep.setInt(1,shiftId);
+                res = prep.executeQuery();
+                ArrayList<ShiftUser> shiftUsers = new ArrayList<ShiftUser>();
+                while(res.next()){
 
+                    shiftUsers.add(new ShiftUser(res.getInt("user_id"),
+                            res.getBoolean("responsibility"),
+                            res.getBoolean("valid_absence")));
+                }
+                prep = conn.prepareStatement(sqlGetShift);
+                prep.setInt(1, shiftId);
+                res = prep.executeQuery();
+                if(res.next())
+                    out = new Shift(res.getInt("shift_id"),
+                            res.getInt("staff_number"),
+                            res.getDate("date"),
+                            res.getInt("time"),
+                            res.getInt("dept_id"),
+                            shiftUsers);
+            }
+            catch (SQLException sqle){
+                rollbackStatement();
+                System.err.println("Not able to get shift from shift ID = "+shiftId);
+                sqle.printStackTrace();
+            }
+            finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return out;
     }
 }

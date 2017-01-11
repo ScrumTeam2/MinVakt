@@ -4,6 +4,7 @@ package no.ntnu.stud.minvakt.unittests;
  * Created by evend on 1/10/2017.
  */
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.database.*;
 import no.ntnu.stud.minvakt.services.ShiftService;
 import org.junit.BeforeClass;
@@ -14,6 +15,7 @@ import org.json.*;
 
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -26,15 +28,24 @@ public class TestJUnitREST {
         shiftService = new ShiftService();
     }
 
-    @Test
     @Ignore
     public void createShift(){
         Date curDate = new Date(System.currentTimeMillis());
-        Response  shiftResponse = shiftService.createShift(curDate, 1, false,false,1,1);
+        ArrayList<ShiftUser> shiftUsers = new ArrayList<ShiftUser>();
+
+        shiftUsers.add(new ShiftUser(1,false,false));
+        shiftUsers.add(new ShiftUser(2,true,false));
+
+        Shift shift = new Shift(-1,2,new Date(System.currentTimeMillis()),1,1,shiftUsers);
+        Response shiftResponse = shiftService.createShift(shift);
         String shiftIdStr = shiftResponse.readEntity(String.class);
         System.out.println(shiftIdStr);
         int shiftId = Integer.parseInt(shiftIdStr);
         //shiftService.deleteShift(shiftId);
         assertTrue(shiftId != -1);
+    }
+    @Test
+    public void getShift(){
+        assertNotNull(shiftService.getShift(1));
     }
 }
