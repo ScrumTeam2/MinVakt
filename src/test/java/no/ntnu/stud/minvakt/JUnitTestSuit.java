@@ -5,14 +5,14 @@ package no.ntnu.stud.minvakt;
  */
 
 import no.ntnu.stud.minvakt.services.ShiftServiceTest;
-import no.ntnu.stud.minvakt.unittests.TestJUnitDB;
+import no.ntnu.stud.minvakt.database.ShiftDBManagerTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 //JUnit Suite Test
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        TestJUnitDB.class,
+        ShiftDBManagerTest.class,
         ShiftServiceTest.class,
 //        SessionServiceTest.class,
         //TestJUnitEncryption.class,
