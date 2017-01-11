@@ -1,20 +1,15 @@
-package no.ntnu.stud.minvakt.unittests;
+package no.ntnu.stud.minvakt.database;
 
 /**
  * Created by evend on 1/10/2017.
  */
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.database.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
-import org.junit.Test;
 
 import java.sql.Date;
 
-import static org.junit.Assert.*;
 
-
-public class TestJUnitDB {
+public class ShiftDBManagerTest {
     private static ShiftDBManager shiftDB;
 
     @BeforeClass
