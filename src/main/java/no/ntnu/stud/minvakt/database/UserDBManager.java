@@ -27,49 +27,26 @@ public class UserDBManager extends DBManager {
      }*/
 
     String sqlLoginId = "SELECT * FROM User where user_id=?";
-    String sqlLoginEmail = "SELECT * FROM User where email=?";
-    String sqlLoginPhone = "SELECT * FROM User where phone=?";
+    String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?";
     String sqlChangePass = "UPDATE User SET hash = ?, salt = ? WHERE user_id = ?";
     PreparedStatement prep;
     Connection conn;
     ResultSet res;
     Encryption en = new Encryption();
 
-    //@Deprecated. Use loginObjEmail instead
-    public int checkLoginEmail(String email, String pass) {
-        int login = -1;
-
-        /*String[] passInfo = en.passEncoding(pass);
-         String pw = passInfo[0];
-         string salt = passInfo[1];
-         */
-//        String hashedPass = MD5Generator.md5generate(pass);
-        if (setUp()) {
-            try {
-                startTransaction();
-                prep = getConnection().prepareStatement(sqlLoginEmail);
-                prep.setString(1, email);
-                res = prep.executeQuery();
-                if (res.next()) {
-                    if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
-                        res.getInt(1);
-                    }
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return login;
-    }
-
-    //Returns an user object if the login is correct
-    public User loginUserEmail(String email, String pass) {
+    /**
+     * Tries to log in an user with either mail or phone number
+     * @param email The mail or phone number
+     * @param pass The password, plaintext
+     * @return Returns an user object if the login is correct
+     */
+    public User loginUser(String email, String pass) {
         if (setUp()) {
             try {
                 // startTransaction(); //Trengs denne?
-                prep = getConnection().prepareStatement(sqlLoginEmail);
+                prep = getConnection().prepareStatement(sqlLogin);
                 prep.setString(1, email);
+                prep.setString(2, email);
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
@@ -86,50 +63,6 @@ public class UserDBManager extends DBManager {
             }
         }
         return null;
-    }
-
-    public Object loginObjPhone(String phone, String pass) {
-        Object[] userData = new Object[7];
-        if (setUp()) {
-            try {
-                // startTransaction(); //Trengs denne?
-                prep = getConnection().prepareStatement(sqlLoginPhone);
-                prep.setString(1, phone);
-                res = prep.executeQuery();
-                if (res.next()) {
-                    if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
-                        return new Object[]{res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work")};
-                    }
-                }
-
-            } catch (Exception e) {
-                System.out.println("Error at loginObj");
-                e.printStackTrace();
-            }
-        }
-        return userData;
-    }
-
-    //@Deprecated. Use loginObjPhone() instead
-    public int checkLoginPhone(String phone, String pass) {
-        int login = -1;
-        String sqlLogin = "SELECT * FROM User where phonenumber=? and pass=?";
-        String hashedPass = MD5Generator.md5generate(pass);
-        if (setUp()) {
-            try {
-                startTransaction();
-                prep = getConnection().prepareStatement(sqlLogin);
-                prep.setString(1, phone);
-                prep.setString(2, hashedPass);
-                ResultSet res = prep.executeQuery();
-                if (res.next()) {
-                    login = res.getInt(1);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return login;
     }
 
     //Check login via user ID. used when changing user's password
