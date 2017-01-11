@@ -7,6 +7,7 @@ import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.database.*;
 import no.ntnu.stud.minvakt.services.ShiftService;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.json.*;
 
@@ -26,6 +27,7 @@ public class TestJUnitREST {
     }
 
     @Test
+    @Ignore
     public void createShift(){
         Date curDate = new Date(System.currentTimeMillis());
         Response  shiftResponse = shiftService.createShift(curDate, 1, false,false,1,1);

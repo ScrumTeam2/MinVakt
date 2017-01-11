@@ -6,6 +6,7 @@ package no.ntnu.stud.minvakt.unittests;
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.database.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -26,6 +27,7 @@ public class TestJUnitDB {
             e.printStackTrace();
         }
     }
+    @Ignore
     @Test
     public void createShift(){
         Date curDate = new Date(System.currentTimeMillis());
