@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
+import no.ntnu.stud.minvakt.data.Shift;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -11,7 +13,7 @@ public class ShiftDBManager extends DBManager {
         super();
     }
 
-    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?,?,?)";
+    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?,?)";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID()";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?";
 
@@ -32,27 +34,26 @@ public class ShiftDBManager extends DBManager {
             responsibility - Boolean telling whether the person is the shift supervisor
             userID - Integer with user primary key
      */
-    public int createNewShift(Date date, int startTime, int endTime, boolean responsibility,
-                                  boolean valid_absence, int userID, int dept_id) {
+    public int createNewShift(Shift shift) {
         int out = -1;
         if (setUp()) {
             try {
                 startTransaction();
                 conn = getConnection();
-                prep = getConnection().prepareStatement(sqlCreateNewShift);
+                prep = conn.prepareStatement(sqlCreateNewShift);
 
-                prep.setDate(1, date);
-                prep.setInt(2, startTime);
-                prep.setInt(3, endTime);
-                prep.setBoolean(4, responsibility);
-                prep.setBoolean(5, valid_absence);
-                prep.setInt(6, userID);
-                prep.setInt(7, dept_id);
-
+                prep.setBoolean(1, shift.isResponsible());
+                prep.setBoolean(2, shift.isValidAbsence());
+                prep.setDate(3, shift.getDate());
+                prep.setInt(4, shift.getType().getValue());
+                prep.setInt(5, shift.getUserId());
+                prep.setInt(6, shift.getDeptId());
+                System.out.println(prep.toString());
                 if(prep.executeUpdate() != 0){
-                    prep = getConnection().prepareStatement(sqlGetLastID);
+                    prep = conn.prepareStatement(sqlGetLastID);
                     ResultSet res = prep.executeQuery();
                     if(res.next()) {
+                        //Last auto incremented value
                         out = res.getInt(1);
                     }
                 }
