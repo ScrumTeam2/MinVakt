@@ -4,6 +4,7 @@ package no.ntnu.stud.minvakt.unittests;
  * Created by evend on 1/10/2017.
  */
 
+import no.ntnu.stud.minvakt.services.SessionServiceTest;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         TestJUnitDB.class,
+        SessionServiceTest.class,
         //TestJUnitEncryption.class,
         //TestJUnitDelivery.class,
 })
