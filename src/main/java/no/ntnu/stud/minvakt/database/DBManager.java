@@ -55,7 +55,7 @@ public abstract class DBManager{
         }
     }
 
-    public void rollbackStatement() {
+    protected void rollbackStatement() {
         try {
             if (!connection.getAutoCommit()) {
                 connection.rollback();
@@ -67,7 +67,7 @@ public abstract class DBManager{
     }
 
 
-    public void finallyStatement(ResultSet res, PreparedStatement prep) {
+    protected void finallyStatement(ResultSet res, PreparedStatement prep) {
         try {
             if (!connection.getAutoCommit()) {
                 connection.commit();
@@ -81,7 +81,7 @@ public abstract class DBManager{
         }
         closeConnection();
     }
-    public void finallyStatement(PreparedStatement prep) {
+    protected void finallyStatement(PreparedStatement prep) {
         try {
             if (!connection.getAutoCommit()) {
                 connection.commit();

@@ -1,17 +1,17 @@
 package no.ntnu.stud.minvakt.data;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 /**
  * Created by evend on 1/10/2017.
  */
 public class Shift {
     private int id;
+    private int staffNumb;
     private Date date;
     private ShiftType type;
-    private boolean responsibility;
-    private boolean validAbsence;
-    private int userId;
+    private ArrayList<ShiftUser> shiftUsers;
     private int deptId;
 
 
@@ -37,15 +37,16 @@ public class Shift {
         }
 
     }
+    public Shift(){
 
-    public Shift(int id, Date date, int type, boolean responsibility,
-                 boolean validAbsence, int userId, int deptId) {
+    }
+
+    public Shift(int id, int staffNumb, Date date, int type, int deptId, ArrayList<ShiftUser> shiftUsers) {
         this.id = id;
         this.date = date;
+        this.staffNumb = staffNumb;
         this.type = ShiftType.valueOf(type);
-        this.responsibility = responsibility;
-        this.validAbsence = validAbsence;
-        this.userId = userId;
+        this.shiftUsers = shiftUsers;
         this.deptId = deptId;
     }
 
@@ -61,27 +62,40 @@ public class Shift {
         return type;
     }
 
-    public boolean isResponsible() {
-        return responsibility;
-    }
-
-    public boolean isValidAbsence() {
-        return validAbsence;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
 
     public int getDeptId() {
         return deptId;
     }
+
+    public int getStaffNumb(){
+        return staffNumb;
+    }
+    public ArrayList<ShiftUser> getShiftUsers(){
+        return shiftUsers;
+    }
+
+    public void setStaffNumb(int staffNumb){
+        this.staffNumb = staffNumb;
+    }
+
     public void setId(int id){
         this.id = id;
     }
 
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setType(ShiftType type) {
+        this.type = type;
+    }
+
+    public void setShiftUsers(ArrayList<ShiftUser> shiftUsers){
+        this.shiftUsers = shiftUsers;
+    }
 
 
-
-
+    public void setDeptId(int deptId) {
+        this.deptId = deptId;
+    }
 }

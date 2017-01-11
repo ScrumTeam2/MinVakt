@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.database.DBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 
 import javax.ws.rs.*;
@@ -21,17 +22,9 @@ import java.util.Collection;
 public class ShiftService {
     ShiftDBManager shiftDB = new ShiftDBManager();
     @POST
-    @Path("/")
-    public Response createShift(
-                    @QueryParam("date") java.util.Date date,
-                    @QueryParam("type") int type,
-                    @QueryParam("responsibility") boolean res,
-                    @QueryParam("valdiAbsence") boolean validAb,
-                    @QueryParam("userId") int userId,
-                    @QueryParam("deptId") int deptId) {
-        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+    public Response createShift(Shift shift) {
+        //java.sql.Date sqlDate = new java.sql.Date(date.getTime());
         //default id = -1, will change after created
-        Shift shift = new Shift(-1, sqlDate, type, res, validAb, userId, deptId);
         int shiftId = shiftDB.createNewShift(shift);
         shift.setId(shiftId);
         if(shiftId < 0){
@@ -44,7 +37,6 @@ public class ShiftService {
         }
     }
     @DELETE
-    @Path("/")
     public Response deleteShift(@QueryParam("id") int id) {
         boolean isDeleted = shiftDB.deleteShift(id);
 
@@ -52,9 +44,14 @@ public class ShiftService {
             return Response.status(400).entity("Unable to delete shift.").build();
         }
         else {
-            //TODO: Add shiftId to response
             return Response.status(200).build();
         }
+    }
+    @GET
+    @Path("/{shiftId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Shift getShift(@PathParam("shiftId") int shiftId){
+        return shiftDB.getShift(shiftId);
     }
 
 }
