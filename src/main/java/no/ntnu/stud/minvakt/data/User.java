@@ -13,4 +13,16 @@ public class User {
     public int getId() {
         return id;
     }
+
+    public User() {
+
+    }
+
+    public User(int id, String firstName, String lastName, String hash, String salt) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.hash = hash;
+        this.salt = salt;
+    }
 }

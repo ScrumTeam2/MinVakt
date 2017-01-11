@@ -8,4 +8,11 @@ notifications:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  
+
+  # MySQL setup
+services:
+  - mysql
+
+before_install:
+  - mysql -e 'CREATE DATABASE test;'
+  - mysql -u root test < sql/db.sql
