@@ -53,4 +53,15 @@ public class ShiftServiceTest {
     public void getShift(){
         assertNotNull(shiftService.getShift(1));
     }
+    @Test
+    public void addEmployeeToShift(){
+        ShiftUser shiftUser = new ShiftUser(1, true, false);
+        Response statusOk = shiftService.addEmployeeToShift(shiftUser, 2);
+        if(statusOk.getStatus() == 200){
+            statusOk = shiftService.deleteEmployeeFromShift(1, 2);
+        }
+        assertTrue(statusOk.getStatus() == 200);
+
+    }
+
 }
