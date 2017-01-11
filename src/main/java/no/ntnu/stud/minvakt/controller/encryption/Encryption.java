@@ -21,9 +21,8 @@ public class Encryption {
      * @param hashString Hash from database
      * @return boolean whether they matched.
      */
-    public boolean passDecoding(String pass, String saltString, String hashString) {
+    public boolean passDecoding(String pass, String hashString, String saltString) {
         byte[] salt = stringToByte(saltString);
-
         byte[] hashPass = stringToByte(hashString);
 
 
