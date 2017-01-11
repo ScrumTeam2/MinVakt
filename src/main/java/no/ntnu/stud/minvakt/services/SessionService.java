@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.data.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,10 +27,10 @@ public class SessionService {
 
         // LoginHandler loginHandler = new LoginHandler();
         // if(!loginHandler.checkLoginEmail(identificator, password) && !loginHandler.checkLoginPhone(identificator, password)) {
-        // // No match in database, return error
-        // return;
-        // }
-        //
+         if(false) {
+             // No match in database, return error
+             return Response.status(Response.Status.FORBIDDEN).entity(Entity.json("{\"error\": \"Invalid credentials\"")).build();
+         }
 
         // Create session
         Session session = new Session();
