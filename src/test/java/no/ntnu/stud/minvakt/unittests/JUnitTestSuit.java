@@ -15,6 +15,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
         TestJUnitDB.class,
+        TestJUnitREST.class,
         SessionServiceTest.class,
         //TestJUnitEncryption.class,
         //TestJUnitDelivery.class,

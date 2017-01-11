@@ -10,27 +10,21 @@ import java.sql.*;
  */
 public abstract class DBManager{
     private Connection connection;
-    private Statement scentence;
     private DatabaseConnection c;
 
-    protected boolean connected(){
-        return scentence != null;
-    }
     protected boolean setUp(){
         try {
             c = new DatabaseConnection();
             connection = c.getConnection();
-            scentence = connection.createStatement();
         } catch (Exception e) {
             System.err.println("Connecting to database failed.");
             closeConnection();
             return false;
         }
-        return !(connection == null || scentence == null);
+        return !(connection == null);
     }
     protected void closeConnection(){
         try {
-            if(scentence != null)DbUtils.closeQuietly(scentence);
             if(connection != null)DbUtils.closeQuietly(connection);
         }
         catch (Exception e){
@@ -38,7 +32,7 @@ public abstract class DBManager{
             e.printStackTrace();
         }
     }
-    protected void turnOffAutocommit(){
+    protected void startTransaction(){
         try{
             if(connection.getAutoCommit()){
                 connection.setAutoCommit(false);
@@ -48,6 +42,17 @@ public abstract class DBManager{
             System.err.println("Issue with setting autocommit false");
         }
 
+    }
+    protected void endTransaction(){
+        try{
+            if(connection.getAutoCommit()){
+                connection.commit();
+                connection.setAutoCommit(true);
+            }
+        }
+        catch (SQLException sqle){
+            System.err.println("Issue with setting autocommit false");
+        }
     }
 
     public void rollbackStatement() {
@@ -76,9 +81,18 @@ public abstract class DBManager{
         }
         closeConnection();
     }
-
-    protected Statement getScentence() {
-        return scentence;
+    public void finallyStatement(PreparedStatement prep) {
+        try {
+            if (!connection.getAutoCommit()) {
+                connection.commit();
+                connection.setAutoCommit(true);
+            }
+            if (prep != null) prep.close();
+        } catch (SQLException sqle) {
+            System.err.println("Finally Statement failed");
+            sqle.printStackTrace();
+        }
+        closeConnection();
     }
 
     protected Connection getConnection() { return connection; }
