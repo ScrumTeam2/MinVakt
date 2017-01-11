@@ -4,6 +4,7 @@ package no.ntnu.stud.minvakt.unittests;
  * Created by evend on 1/10/2017.
  */
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.database.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -36,4 +37,12 @@ public class TestJUnitDB {
       //  shiftDB.deleteShift(shiftId);
        // assertTrue(shiftId != -1);
     }
-}
+    @Test
+    public void addEmployeeToShift(){
+        ShiftUser shiftUser = new ShiftUser(1, true, false);
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
+        if(statusOk){
+            shiftDB.deleteEmployeeFromShift(1, 2);
+        }
+        assertTrue(statusOk);
+    }}

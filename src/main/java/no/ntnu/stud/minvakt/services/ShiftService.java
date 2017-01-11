@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.database.DBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 
@@ -22,6 +23,7 @@ import java.util.Collection;
 public class ShiftService {
     ShiftDBManager shiftDB = new ShiftDBManager();
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response createShift(Shift shift) {
         //java.sql.Date sqlDate = new java.sql.Date(date.getTime());
         //default id = -1, will change after created
@@ -37,7 +39,8 @@ public class ShiftService {
         }
     }
     @DELETE
-    public Response deleteShift(@QueryParam("id") int id) {
+    @Path("/{shiftId}")
+    public Response deleteShift(@PathParam("shiftId") int id) {
         boolean isDeleted = shiftDB.deleteShift(id);
 
         if(!isDeleted){
@@ -52,6 +55,35 @@ public class ShiftService {
     @Produces(MediaType.APPLICATION_JSON)
     public Shift getShift(@PathParam("shiftId") int shiftId){
         return shiftDB.getShift(shiftId);
+    }
+
+    /*
+        Parameters:
+
+     */
+    @POST
+    @Path("/{shiftId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addEmployeeToShift(ShiftUser shiftUser, @PathParam("shiftId") int shiftId){
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
+        if(statusOk){
+            return Response.status(200).build();
+        }
+        else {
+            return Response.status(400).entity("Unable to add employee").build();
+        }
+    }
+    @DELETE
+    @Path("/{shiftId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteEmployeeFromShift(@QueryParam("userId") int userId, @PathParam("shiftId") int shiftId){
+        boolean statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
+        if(statusOk){
+            return Response.status(200).build();
+        }
+        else {
+            return Response.status(400).entity("Unable to delete employee").build();
+        }
     }
 
 }
