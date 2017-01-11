@@ -3,6 +3,7 @@ Fiktivt system for vaktliste i helsetjenesten
 
 # Kodestrukur
 - Backend-kode: src/main/java/no/ntnu/stud/minvakt
+- Databasekommunikasjon: src/main/java/no/ntnu/stud/minvakt/database
 - REST-kode: src/main/java/no/ntnu/stud/minvakt/services
 - Dataklasser (f.eks. User): src/main/java/no/ntnu/stud/minvakt/data
 - Backend-logikk: src/main/java/no/ntnu/stud/minvakt/controller
