@@ -13,7 +13,7 @@ public class ShiftDBManager extends DBManager {
         super();
     }
 
-    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?,?,?)";
+    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?,?)";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID()";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?";
 
@@ -42,14 +42,13 @@ public class ShiftDBManager extends DBManager {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlCreateNewShift);
 
-                prep.setDate(1, shift.getDate());
-                prep.setInt(2, shift.getTimeStart());
-                prep.setInt(3, shift.getTimeEnd());
-                prep.setBoolean(4, shift.isResponsible());
-                prep.setBoolean(5, shift.isValidAbsence());
-                prep.setInt(6, shift.getUser().getId());
-                prep.setInt(7, shift.getDept().getId());
-
+                prep.setBoolean(1, shift.isResponsible());
+                prep.setBoolean(2, shift.isValidAbsence());
+                prep.setDate(3, shift.getDate());
+                prep.setInt(4, shift.getType().getValue());
+                prep.setInt(5, shift.getUserId());
+                prep.setInt(6, shift.getDeptId());
+                System.out.println(prep.toString());
                 if(prep.executeUpdate() != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
                     ResultSet res = prep.executeQuery();

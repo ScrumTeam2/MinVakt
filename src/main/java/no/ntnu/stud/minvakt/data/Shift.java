@@ -8,12 +8,11 @@ import java.sql.Date;
 public class Shift {
     private int id;
     private Date date;
-    private Enum type;
-    private int timeEnd;
+    private ShiftType type;
     private boolean responsibility;
     private boolean validAbsence;
-    private User user;
-    private Department dept;
+    private int userId;
+    private int deptId;
 
 
     public enum ShiftType {
@@ -40,14 +39,14 @@ public class Shift {
     }
 
     public Shift(int id, Date date, int type, boolean responsibility,
-                 boolean validAbsence, User user, Department dept) {
+                 boolean validAbsence, int userId, int deptId) {
         this.id = id;
         this.date = date;
         this.type = ShiftType.valueOf(type);
         this.responsibility = responsibility;
         this.validAbsence = validAbsence;
-        this.user = user;
-        this.dept = dept;
+        this.userId = userId;
+        this.deptId = deptId;
     }
 
     public int getId() {
@@ -58,7 +57,7 @@ public class Shift {
         return date;
     }
 
-    public Enum getType(){
+    public ShiftType getType(){
         return type;
     }
 
@@ -70,12 +69,15 @@ public class Shift {
         return validAbsence;
     }
 
-    public User getUser() {
-        return user;
+    public int getUserId() {
+        return userId;
     }
 
-    public Department getDept() {
-        return dept;
+    public int getDeptId() {
+        return deptId;
+    }
+    public void setId(int id){
+        this.id = id;
     }
 
 
