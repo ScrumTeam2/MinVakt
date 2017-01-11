@@ -1,13 +1,17 @@
 package no.ntnu.stud.minvakt.database;
 
+import no.ntnu.stud.minvakt.data.ShiftUser;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import java.util.Date;
+
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by evend on 1/10/2017.
  */
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-
-import java.sql.Date;
-
 
 public class ShiftDBManagerTest {
     private static ShiftDBManager shiftDB;
@@ -31,4 +35,13 @@ public class ShiftDBManagerTest {
       //  shiftDB.deleteShift(shiftId);
        // assertTrue(shiftId != -1);
     }
-}
+
+    @Test
+    public void addEmployeeToShift(){
+        ShiftUser shiftUser = new ShiftUser(1, true, false);
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
+        if(statusOk){
+            shiftDB.deleteEmployeeFromShift(1, 2);
+        }
+        assertTrue(statusOk);
+    }}

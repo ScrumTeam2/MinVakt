@@ -4,6 +4,8 @@ import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.User;
 
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class ShiftDBManager extends DBManager {
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?";
     private final String sqlGetShiftUser = "SELECT user_id, responsibility, valid_absence FROM employee_shift WHERE shift_id = ?";
     private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id=?";
+    private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?)";
+    private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?";
 
     Connection conn;
     PreparedStatement prep;
@@ -42,7 +46,7 @@ public class ShiftDBManager extends DBManager {
                 startTransaction();
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlCreateNewShift);
-
+                System.out.println(shift.getType().getValue());
                 prep.setInt(1, shift.getStaffNumb());
                 prep.setDate(2, shift.getDate());
                 prep.setInt(3, shift.getType().getValue());
@@ -153,6 +157,55 @@ public class ShiftDBManager extends DBManager {
             finally {
                 endTransaction();
                 finallyStatement(res, prep);
+            }
+        }
+        return out;
+    }
+    /*
+        Adds new employee to shift. Send a shiftUser object to the correct path
+        (shift you would like to add to)
+     */
+    public boolean addEmployeeToShift(ShiftUser shiftUser, int shiftId){
+        boolean out = false;
+        if(setUp()){
+
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(addEmployeeToShift);
+                prep.setInt(1,shiftUser.getUserId());
+                prep.setInt(2, shiftId);
+                prep.setBoolean(3, shiftUser.isResponsibility());
+                prep.setBoolean(4,shiftUser.isValid_absence());
+                out = prep.executeUpdate() != 0;
+
+            }
+            catch (SQLException sqle){
+                System.err.println("Not able to get shift from shift ID = "+shiftId);
+                sqle.printStackTrace();
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return out;
+    }
+    public boolean deleteEmployeeFromShift(int userId, int shiftId){
+        boolean out = false;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(deleteEmployeeFromShift);
+                prep.setInt(1,shiftId);
+                prep.setInt(2, userId);
+                out = prep.executeUpdate() != 0;
+
+            }
+            catch (SQLException sqle){
+                System.err.println("Not able to delete shift with shift ID = "+shiftId + " and user ID = "+userId);
+                sqle.printStackTrace();
+            }
+            finally {
+                finallyStatement(prep);
             }
         }
         return out;

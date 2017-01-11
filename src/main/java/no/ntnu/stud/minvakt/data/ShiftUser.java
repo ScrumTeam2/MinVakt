@@ -9,16 +9,18 @@ public class ShiftUser {
     private int userId;
     private boolean responsibility;
     private boolean valid_absence;
+    User user = null;
 
     public ShiftUser(int userId, boolean responsibility, boolean valid_absence){
         this.userId = userId;
         this.responsibility = responsibility;
         this.valid_absence = valid_absence;
     }
-    public ShiftUser(){
+
+    public ShiftUser() {
 
     }
-
+    
     public boolean isResponsibility() {
         return responsibility;
     }
