@@ -17,7 +17,7 @@ public abstract class DBManager{
             c = new DatabaseConnection();
             connection = c.getConnection();
         } catch (Exception e) {
-            System.err.println("Connecting to database failed.");
+            System.err.println("Connecting to database failed." + e);
             closeConnection();
             return false;
         }
