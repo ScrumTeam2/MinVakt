@@ -81,17 +81,4 @@ public class Encryption {
 
 
     }
-
-
-    /**
-     * Test program for encryption
-     *
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        Encryption en = new Encryption();
-        String[] passInfo = en.passEncoding("password");
-        if (en.passDecoding("password", "2oUGF8AAgobU1E3rcAtyiw==", "oQaZgG266KjDzEkGTgXYMQ==")) ;
-    }
 }
