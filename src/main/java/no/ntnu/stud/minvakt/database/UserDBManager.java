@@ -8,6 +8,7 @@ import no.ntnu.stud.minvakt.data.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -147,20 +148,20 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 while (res.next()){
                     User user = new User();
-                    user.setId(res.getString("user_id"));
+                    user.setId(res.getInt("user_id"));
                     user.setFirstName(res.getString("first_name"));
                     user.setLastName(res.getString("last_name"));
                     user.setEmail(res.getString("email"));
-                    user.setPhone(res.getString("phonenumber"));
+                    user.setPhonenumber(res.getString("phonenumber"));
                     user.setCategory(res.getInt("category"));
                     users.add(user);
                 }
-            }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return users;
         }
+        return users;
+    }
 
     public User getUserById(String userId) {
         User user = null;
@@ -172,19 +173,19 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 if (res.next()){
                     User u = new User();
-                    u.setId(res.getString("user_id"));
+                    u.setId(res.getInt("user_id"));
                     u.setFirstName(res.getString("first_name"));
                     u.setLastName(res.getString("last_name"));
                     u.setEmail(res.getString("email"));
-                    u.setPhone(res.getString("phonenumber"));
+                    u.setPhonenumber(res.getString("phonenumber"));
                     u.setCategory(res.getInt("category"));
-                    user.add(u);
+                    user = u;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-          return out;
         }
+      return user;
     }
 
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
