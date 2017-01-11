@@ -17,6 +17,10 @@ public class ShiftUser {
         this.valid_absence = valid_absence;
     }
 
+    public ShiftUser() {
+
+    }
+    
     public boolean isResponsibility() {
         return responsibility;
     }
