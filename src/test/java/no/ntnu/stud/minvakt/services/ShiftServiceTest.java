@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.unittests;
+package no.ntnu.stud.minvakt.services;
 
 /**
  * Created by evend on 1/10/2017.
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 
-public class TestJUnitREST {
+public class ShiftServiceTest {
     private static ShiftService shiftService;
 
     @BeforeClass
