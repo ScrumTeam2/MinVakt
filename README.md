@@ -18,6 +18,11 @@ Fiktivt system for vaktliste i helsetjenesten
 ## Java
 - Vi tar i bruk standard Java-navnekonvensjon: http://www.oracle.com/technetwork/java/codeconventions-135099.html
 - REST-API, data og logikk skal separeres, se pakkene i _Kodestruktur_. Hvis kode ikke passer i noen av disse, kan det foreslås flere pakker.
+###
+- Klassenavn:
+  - REST-servicer: -Service (_F.eks. UserService_) 
+  - Testklasser: Klassen som skal testes + Test (_F.eks. testklasse for UserService skal være UserServiceTest_)
+  - Databaseklasser (i database-pakken): -DBManager (_F.eks. UserDBManager_)
 
 ## Frontend
 - Vi tar i bruk W3s praksis: 
