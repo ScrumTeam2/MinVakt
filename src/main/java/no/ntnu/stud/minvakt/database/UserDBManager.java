@@ -3,6 +3,7 @@ package no.ntnu.stud.minvakt.database;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.controller.encryption.MD5Generator;
+import no.ntnu.stud.minvakt.data.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,9 +63,8 @@ public class UserDBManager extends DBManager {
         return login;
     }
 
-    //Returns an object with user data if the login is correct
-    public Object loginObjEmail(String email, String pass) {
-        Object[] userData = new Object[7];
+    //Returns an user object if the login is correct
+    public User loginUserEmail(String email, String pass) {
         if (setUp()) {
             try {
                 // startTransaction(); //Trengs denne?
@@ -74,7 +74,9 @@ public class UserDBManager extends DBManager {
                 if (res.next()) {
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
                         //New user
-                        return new Object[]{res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work")};
+                        //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
+                        User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), null, null);
+                        return user;
                     }
                 }
 
@@ -83,7 +85,7 @@ public class UserDBManager extends DBManager {
                 e.printStackTrace();
             }
         }
-        return userData;
+        return null;
     }
 
     public Object loginObjPhone(String phone, String pass) {
