@@ -58,7 +58,7 @@ public class UserDBManager extends DBManager {
                 }
 
             } catch (Exception e) {
-                System.out.println("Error at loginObj");
+                System.out.println("Error at loginUser");
                 e.printStackTrace();
             }
         }
@@ -107,9 +107,88 @@ public class UserDBManager extends DBManager {
         }
         return change;
     }
+    /*
+    public String[][] getTableAllUsers(){
+        String[] tupleArray = {"user_id", "first_name", "last_name", "email", "phonenumber"};
+        String sqlUsers = "Select (user_id, first_name, last_name, email, phonenumber) FROM User";
+
+        ArrayList<ArrayList<String>> users= new ArrayList<>();
+        if (setUp()) {
+            try {
+                startTransaction();
+                prep = getConnection().prepareStatement(sqlLogin);
+                ResultSet res = prep.executeQuery();
+                while(res.next()){
+                    ArrayList<String> resultat = new ArrayList<>();
+                    for (int i = 0; i < 6; i++) {
+                        resultat.add(res.getString(i +1));
+                    }
+                    users.add(resultat);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            String[][] array = new String[users.size()][];
+            for (int i = 0; i < users.size(); i++) {
+                ArrayList<String> row = users.get(i);
+                array[i] = row.toArray(new String[row.size()]);
+            }
+        }
+        return array;
+    }
+    */
+
+    public ArrayList<User> getUsers(){
+        ArrayList<User> users = new ArrayList<User>();
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement("SELECT * FROM User;");
+                res = prep.executeQuery();
+                while (res.next()){
+                    User user = new User();
+                    user.setId(res.getString("user_id"));
+                    user.setFirstName(res.getString("first_name"));
+                    user.setLastName(res.getString("last_name"));
+                    user.setEmail(res.getString("email"));
+                    user.setPhone(res.getString("phonenumber"));
+                    user.setCategory(res.getInt("category"));
+                    users.add(user);
+                }
+            }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return users;
+        }
+
+    public User getUserById(String userId) {
+        User user = null;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement("SELECT * FROM User WHERE user_id = ?;");
+                prep.setString(1, userId);
+                res = prep.executeQuery();
+                if (res.next()){
+                    User u = new User();
+                    u.setId(res.getString("user_id"));
+                    u.setFirstName(res.getString("first_name"));
+                    u.setLastName(res.getString("last_name"));
+                    u.setEmail(res.getString("email"));
+                    u.setPhone(res.getString("phonenumber"));
+                    u.setCategory(res.getInt("category"));
+                    user.add(u);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+          return out;
+        }
+    }
 
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
-    public int createNewAnsatt(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
+    public int createNewUser(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
         int creation = -1;
         String sqlInsert = "INSERT INTO User (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?)";
         String randomPass = GeneratePassword.generateRandomPass();
