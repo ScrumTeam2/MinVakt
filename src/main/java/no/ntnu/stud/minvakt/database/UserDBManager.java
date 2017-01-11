@@ -175,28 +175,33 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
+    //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
     public int createNewAnsatt(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
         int creation = -1;
         String sqlInsert = "INSERT INTO User (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?)";
         String randomPass = GeneratePassword.generateRandomPass();
-        String hashedPass = MD5Generator.md5generate(randomPass);
-        String salt = "getSaltHere";
-        //Get hash
-        //Get salt
-
-        try {
-            prep.setString(1, first_name);
-            prep.setString(2, last_name);
-            prep.setString(3, randomPass); //Hash
-            //SaltHere
-            prep.setString(4, salt);
-            prep.setString(5, email);
-            prep.setString(6, phone);
-            startTransaction();
-            prep = getConnection().prepareStatement(sqlInsert);
-            prep.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
+        //sendEmailWithGeneratedPass to registered user in this method
+        String hashedPass[] = en.passEncoding(randomPass);
+        String salt = hashedPass[0];
+        String hash = hashedPass[1];
+        if (setUp()) {
+            try {
+                startTransaction();
+                prep.setString(1, first_name);
+                prep.setString(2, last_name);
+                prep.setString(3, hash);
+                prep.setString(4, salt);
+                prep.setString(5, email);
+                prep.setString(6, phone);
+                prep = getConnection().prepareStatement(sqlInsert);
+                creation = prep.executeUpdate();
+            } catch (Exception e) {
+                System.out.println("Issue creating new ansatt");
+                e.printStackTrace();
+            } finally {
+                endTransaction();
+                finallyStatement(prep);
+            }
         }
         return creation;
     }
