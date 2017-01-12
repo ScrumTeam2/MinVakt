@@ -13,6 +13,7 @@ public class User {
     public User() {
 
     }
+
     public int getId() {
         return id;
     }
@@ -84,5 +85,19 @@ public class User {
         this.lastName = lastName;
         this.hash = hash;
         this.salt = salt;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", hash='" + hash + '\'' +
+                ", salt='" + salt + '\'' +
+                ", email='" + email + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
+                ", category=" + category +
+                '}';
     }
 }
