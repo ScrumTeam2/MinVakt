@@ -4,32 +4,53 @@
 
 $(document).ready(function(){
 
-    var formData = JSON.stringify($("#form").serializeArray());
-    $('#login').click(function(){
-        $.ajax({
-            url: "/rest/session/login",
-            type: 'POST',
-            dataType: 'json',
-            data: formData,
-            success: login,
-            error: invalid
-        });
+    $('#login').click(function(e){
+        e.preventDefault();
+        var emptyField = true;
+        var $identificator = $('#identificator');
+        var $password = $('#password');
+
+        if(!$identificator.val()){
+            $identificator.addClass('error');
+            emptyField = false;
+        }
+
+        if(!$password.val()){
+            $password.addClass('error');
+            emptyField = false;
+        }
+
+
+        if(emptyField){
+            $.ajax({
+                url: "/rest/session/login",
+                type: 'POST',
+                data: {
+                    identificator: $("#identificator").val(),
+                    password: $("#password").val()
+                },
+                success: login,
+                error: invalid
+            });
+        }
     });
 });
 
 
 function login(data){
+    console.log("Login", data);
 
-    //go to homepage
-    window.location="index.html";
+
+    if(data.isAdmin === true){
+        console.log("admin");
+        window.location="home-a.html";
+    } else{
+        console.log("ansatt");
+        window.location="home-e.html";
+    }
 }
 
 function invalid(data){
-    var identificator = $('#identificator');
-    var password = $('#password');
-
-    identificator.addClass('error');
-    password.addClass('error');
     $('.feedback').show();
-    alert(data);
+    console.log("Invalid", data);
 }
