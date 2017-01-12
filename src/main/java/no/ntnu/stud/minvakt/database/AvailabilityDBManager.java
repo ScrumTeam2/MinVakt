@@ -43,6 +43,7 @@ public class AvailabilityDBManager extends DBManager{
             } catch (SQLException sqlE){
                 System.err.println("Error finding available staff for shift with ID = " +shiftID);
                 sqlE.printStackTrace();
+                return null;
             } finally {
                 endTransaction();
                 finallyStatement(res, prep);
