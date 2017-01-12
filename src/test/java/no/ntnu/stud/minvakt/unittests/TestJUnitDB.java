@@ -5,12 +5,14 @@ package no.ntnu.stud.minvakt.unittests;
  */
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
+import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
@@ -45,4 +47,10 @@ public class TestJUnitDB {
             shiftDB.deleteEmployeeFromShift(1, 2);
         }
         assertTrue(statusOk);
-    }}
+    }
+    @Test
+    public void getShiftsFromUserId(){
+        ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
+        assertTrue(result.get(0) instanceof ShiftUserBasic);
+    }
+}

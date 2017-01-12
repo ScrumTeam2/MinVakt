@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
+import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.DBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 
@@ -22,6 +23,7 @@ import java.util.Collection;
 @Path("/shift")
 public class ShiftService {
     ShiftDBManager shiftDB = new ShiftDBManager();
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createShift(Shift shift) {
@@ -38,6 +40,7 @@ public class ShiftService {
             return Response.ok(json,MediaType.APPLICATION_JSON).build();
         }
     }
+
     @DELETE
     @Path("/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") int id) {
@@ -50,6 +53,7 @@ public class ShiftService {
             return Response.status(200).build();
         }
     }
+
     @GET
     @Path("/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,6 +88,12 @@ public class ShiftService {
         else {
             return Response.status(400).entity("Unable to delete employee").build();
         }
+    }
+    @GET
+    @Path("/user/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
+        return shiftDB.getShiftWithUserId(userId);
     }
 
 }

@@ -5,6 +5,7 @@ package no.ntnu.stud.minvakt.unittests;
  */
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
+import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.*;
 import no.ntnu.stud.minvakt.services.ShiftService;
 import org.junit.BeforeClass;
@@ -56,7 +57,11 @@ public class TestJUnitREST {
             statusOk = shiftService.deleteEmployeeFromShift(1, 2);
         }
         assertTrue(statusOk.getStatus() == 200);
-
+    }
+    @Test
+    public void getEmployeeBasicsWithUserId(){
+        ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId(1);
+        assertFalse(shiftUserBasics.isEmpty());
     }
 
 }
