@@ -25,9 +25,8 @@ public class AvailabilityDBManager extends DBManager{
 
 
     // Find available staff for a given shift, returns arraylist with userIDs
-    public ArrayList<ShiftUser> getAvailability(Shift shift){
+    public ArrayList<ShiftUser> getAvailability(int shiftID){
         ArrayList<ShiftUser> userList = new ArrayList<>();
-        int shiftID = shift.getId();
 
         ResultSet res = null;
 
@@ -58,10 +57,8 @@ public class AvailabilityDBManager extends DBManager{
     }
 
     // Sets staff member available for given shift, returns true or false
-    public boolean setAvailability(User user, Shift shift){
+    public boolean setAvailability(int userID, int shiftID){
         int out = 0;
-        int shiftID = shift.getId();
-        int userID = user.getId();
 
         if(setUp()){
             try{
@@ -84,10 +81,8 @@ public class AvailabilityDBManager extends DBManager{
     }
 
     // Disables the availability on given user for given shift
-    public boolean deleteAvailability(User user, Shift shift){
+    public boolean deleteAvailability(int userID, int shiftID){
         int out = 0;
-        int shiftID = shift.getId();
-        int userID = user.getId();
 
         if(setUp()){
             try{
