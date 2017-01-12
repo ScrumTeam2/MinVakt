@@ -21,12 +21,7 @@ public class ShiftDBManagerTest {
 
     @BeforeClass
     public static void DBsetUp() {
-        try {
-            shiftDB = new ShiftDBManager();
-        } catch (Exception e) {
-            System.err.println("Issue with databaseconnections! ");
-            e.printStackTrace();
-        }
+        shiftDB = new ShiftDBManager();
     }
 
     @Test
