@@ -11,12 +11,17 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.lang.invoke.MethodHandles;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Audun on 10.01.2017.
  */
 @Path("session")
 public class SessionService {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     @Path("/login")
     @POST
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -24,6 +29,7 @@ public class SessionService {
     public Response checkLogin(@Context HttpServletRequest request, @FormParam("identificator") String identificator, @FormParam("password") String password) {
         // Return if already logged in
         if (request.getSession().getAttribute("session") != null) {
+            log.log(Level.INFO, "Session already exists!");
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
