@@ -87,36 +87,3 @@ public class AvailabilityDBManagerTest {
     }
 
 }
-
-/*
-    @BeforeClass
-    public static void DBsetUp(){
-        try {
-
-            shiftDB = new ShiftDBManager();
-        }
-        catch(Exception e) {
-            System.err.println("Issue with databaseconnections! ");
-            e.printStackTrace();
-        }
-    }
-    @Ignore
-    public void createShift(){
-        Date curDate = new Date(System.currentTimeMillis());
-        // Shift shift = new Shift(-1, 2,curDate,1,false,
-        // false,1,1);
-        //     int shiftId = shiftDB.createNewShift(shift);
-        //  shiftDB.deleteShift(shiftId);
-        // assertTrue(shiftId != -1);
-    }
-
-    @Test
-    public void addEmployeeToShift(){
-        ShiftUser shiftUser = new ShiftUser(1, true, false);
-        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
-        if(statusOk){
-            shiftDB.deleteEmployeeFromShift(1, 2);
-        }
-        assertTrue(statusOk);
-    }}
-*/
