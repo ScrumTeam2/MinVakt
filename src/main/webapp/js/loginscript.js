@@ -2,25 +2,23 @@
  * Created by ingvildbroen on 12.01.2017.
  */
 
+$(document).ready(function(){
 
-$('#login').click(function(e){
-    e.preventDefault();
-    $.ajax({
-        url: "rest/session/login",
-        type: 'POST',
-        data: '{}',
-        dataType: 'json',
-        success: login(data),
-        error: invalid
+    var formData = JSON.stringify($("#form").serializeArray());
+    $('#login').click(function(){
+        $.ajax({
+            url: "/rest/session/login",
+            type: 'POST',
+            dataType: 'json',
+            data: formData,
+            success: login,
+            error: invalid
+        });
     });
 });
 
 
 function login(data){
-    var identificator = $('#identificator');
-    var password = $('#password');
-
-    //console.log(data);
 
     //go to homepage
     window.location="index.html";
@@ -33,5 +31,5 @@ function invalid(data){
     identificator.addClass('error');
     password.addClass('error');
     $('.feedback').show();
-    alert(data)
+    alert(data);
 }
