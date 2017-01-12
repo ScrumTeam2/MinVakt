@@ -10,16 +10,6 @@ import java.util.Date;
 
 import static org.junit.Assert.assertTrue;
 
-/*
-    @Tests
-        loginUser()
-        checkLoginId()
-        getUsers();
-        getUserById();
-        createNewUser();
-        changePasswordUserId();
-        changeDepartment();
-*/
 public class UserDBManagerTest {
     private static UserDBManager userDB;
 
@@ -28,11 +18,11 @@ public class UserDBManagerTest {
         try {
             userDB = new UserDBManager();
         } catch (Exception e) {
-            System.err.println("Issue with databaseconnections! ");
+            System.err.println("Issue with DB Connection");
             e.printStackTrace();
         }
     }
-    
+    /*
     @Test
     public void createNewUser() {
         int status= userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "123456789", "1");
@@ -78,7 +68,8 @@ public class UserDBManagerTest {
         }
         assertTrue(successObtain);
     }
-    
+    */
+    /*
     @Test
     public void getUsers() {
         ArrayList<User> users = userDB.getUsers();
@@ -87,9 +78,11 @@ public class UserDBManagerTest {
             successGetUsers = true;
         }assertTrue(successGetUsers);
         */
+    /*
         assertTrue(users.get(0) instanceof User);
     }
-
+    */
+/*
     @Test
     public void changePassword() {
         String userId = "1";
@@ -107,4 +100,5 @@ public class UserDBManagerTest {
         UserDBManagerTest udb = new UserDBManagerTest();
         udb.changePassword();
     }
+    */
 }

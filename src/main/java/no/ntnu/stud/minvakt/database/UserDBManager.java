@@ -22,6 +22,7 @@ public class UserDBManager extends DBManager {
     private final String sqlGetUsers = "SELECT * FROM User;";
     private final String sqlGetUserById = "SELECT * FROM User WHERE user_id = ?;";
     private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?);";
+    private final String sqlChangeUserInfo = "UPDATE User SET first_name = ?, last_name = ?, email =?, phonenumber =?, category =? WHERE user_id =?;";
     PreparedStatement prep;
     Connection conn;
     ResultSet res;
@@ -72,7 +73,7 @@ public class UserDBManager extends DBManager {
      * Checks whether the user ID and password matches a row in the database
      * @param userId
      * @param Password plaintext
-     * @return Integer 1 if success, -1 if fail
+     * @return Integer>-1 if success, -1 if fail
      */
     public int checkLoginId(String userId, String pass) {
         int login = -1;
@@ -187,7 +188,7 @@ public class UserDBManager extends DBManager {
      /**
      * Creates a new user in the database
      * @param
-     * @return Integer 1 if success, -1 if fail
+     * @return Integer > -1 if success, -1 if fail
      */
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
     public int createNewUser(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
@@ -225,7 +226,7 @@ public class UserDBManager extends DBManager {
      * @param userId
      * @param prev_password, the previous password
      * @param new_password, the new password
-     * @return Integer 1 if success, -1 if fail
+     * @return Integer > -1 if success, -1 if fail
      */
     public int changePasswordUserId(String user_id, String prev_password, String new_password) {
         int change = -1;
@@ -254,8 +255,8 @@ public class UserDBManager extends DBManager {
             try {
                 prep = getConnection().prepareStatement(sqlChangePass);
                 prep.setString(1, hashNew);
-                prep.setString(1, saltNew);
-                prep.setString(1, user_id);
+                prep.setString(2, saltNew);
+                prep.setString(3, user_id);
                 change = prep.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Error at changePasswordUserId() update");
@@ -266,11 +267,40 @@ public class UserDBManager extends DBManager {
         }
         return change;
     }
+    
+    /**
+    * Receives a user object which has changed information. Then updates the information in database.
+    * @param user User object
+    * @return Integer >-1 if success, -1 if fail
+    */
+     public int changeUserInfo(User user) {
+        int change = -1;
+            if(setUp()) {
+                try {
+                    startTransaction();
+                    conn = getConnection();
+                    //conn.setAutoCommit(false);
+                    prep = conn.prepareStatement(sqlChangeUserInfo);
+                    prep.setString(1, user.getFirstName());
+                    prep.setString(2, user.getLastName());
+                    prep.setString(3, user.getEmail());
+                    prep.setString(4, user.getPhonenumber());
+                    prep.setInt(5, user.getCategory());
+                    change = prep.executeUpdate();
+                } catch (Exception e) {
+                    System.out.println("Error at changeUserInfo()");
+                    e.printStackTrace();
+                } finally {
+                    finallyStatement(res,prep);
+                }
+            }
+        return change;
+    }
 
     /**
     * Changes department for user
     * @param userId
-    * @return Integer 1 if success, -1 if fail
+    * @return Integer >-1 if success, -1 if fail
     */
     public int changeDepartment(String user_id) {
         int change = -1;
