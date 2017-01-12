@@ -51,8 +51,9 @@ function createUserShiftHtml(data) {
                     "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
                     "<p class='sub'>"+shiftTimes[element.shiftType]+"</p>" +
                 "</div>" +
-                "<i class='material-icons'>info_outlines</i>" +
+                "<i class='symbol info-icon'><i class='material-icons'>info_outlines</i></i>" +
             "</div>";
         calendarList.append(html)
     })
 }
+
