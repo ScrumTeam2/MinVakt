@@ -69,6 +69,22 @@ public class AvailabilityDBManagerTest {
         System.out.print(assertionError);
 
     }
+
+    @Test
+    public void setAvailableFailTest(){
+        boolean res = availabilityDB.setAvailability(100, 13);
+        boolean test = false;
+        String assertionError = null;
+
+        try{
+            assertEquals(res, test);
+        } catch (AssertionError ae){
+            assertionError = ae.toString();
+        }
+
+        System.out.print(assertionError);
+    }
+
     @Test
 //    @Ignore
     public void deleteAvailabilityTest(){
@@ -85,5 +101,4 @@ public class AvailabilityDBManagerTest {
 
         System.out.print(assertionError);
     }
-
 }

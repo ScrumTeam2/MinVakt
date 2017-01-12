@@ -31,7 +31,7 @@ public class AvailabilityService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAvailability(@PathParam("shiftId") int shiftId){
         ArrayList<Integer> out = availabilityDB.getAvailability(shiftId);
-        if(out==null){
+        if(out.isEmpty()){
             return Response.status(400).entity("Unable to find available employees.").build();
         }else {
             return Response.status(200).entity(out).build();

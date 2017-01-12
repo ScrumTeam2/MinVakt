@@ -39,11 +39,9 @@ public class AvailabilityDBManager extends DBManager{
                     userList.add(res.getInt("user_id"));
                 }
 
-
-            } catch (SQLException sqlE){
-                System.err.println("Error finding available staff for shift with ID = " +shiftID);
+            } catch (SQLException sqlE) {
+                System.err.println("Error finding available staff for shift with ID = " + shiftID);
                 sqlE.printStackTrace();
-                return null;
             } finally {
                 endTransaction();
                 finallyStatement(res, prep);
@@ -66,7 +64,7 @@ public class AvailabilityDBManager extends DBManager{
                 prep.setInt(2, shiftID);
                 out = prep.executeUpdate();
             } catch (SQLException sqlE){
-                System.err.println("Error registering user with ID = " + userID + "available for shift with ID = " +shiftID);
+                System.err.println("Error registering user with ID = " + userID + " available for shift with ID = " +shiftID);
                 sqlE.printStackTrace();
             } finally {
                 endTransaction();
