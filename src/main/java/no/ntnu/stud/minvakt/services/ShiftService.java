@@ -31,13 +31,12 @@ public class ShiftService {
         //default id = -1, will change after created
         int shiftId = shiftDB.createNewShift(shift);
         shift.setId(shiftId);
-        if(shiftId < 0){
+        if (shiftId < 0) {
             return Response.status(400).entity("Unable to create new shift.").build();
-        }
-        else {
+        } else {
             //TODO: Add shiftId to response
-            String json = "{\"id\": \""+shiftId+"\"}";
-            return Response.ok(json,MediaType.APPLICATION_JSON).build();
+            String json = "{\"id\": \"" + shiftId + "\"}";
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
         }
     }
 
@@ -46,10 +45,9 @@ public class ShiftService {
     public Response deleteShift(@PathParam("shiftId") int id) {
         boolean isDeleted = shiftDB.deleteShift(id);
 
-        if(!isDeleted){
+        if (!isDeleted) {
             return Response.status(400).entity("Unable to delete shift.").build();
-        }
-        else {
+        } else {
             return Response.status(200).build();
         }
     }
@@ -57,7 +55,7 @@ public class ShiftService {
     @GET
     @Path("/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Shift getShift(@PathParam("shiftId") int shiftId){
+    public Shift getShift(@PathParam("shiftId") int shiftId) {
         return shiftDB.getShift(shiftId);
     }
 
@@ -68,32 +66,31 @@ public class ShiftService {
     @POST
     @Path("/{shiftId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addEmployeeToShift(ShiftUser shiftUser, @PathParam("shiftId") int shiftId){
+    public Response addEmployeeToShift(ShiftUser shiftUser, @PathParam("shiftId") int shiftId) {
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
-        if(statusOk){
+        if (statusOk) {
             return Response.status(200).build();
-        }
-        else {
+        } else {
             return Response.status(400).entity("Unable to add employee").build();
         }
     }
+
     @DELETE
     @Path("/{shiftId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteEmployeeFromShift(@QueryParam("userId") int userId, @PathParam("shiftId") int shiftId){
+    public Response deleteEmployeeFromShift(@QueryParam("userId") int userId, @PathParam("shiftId") int shiftId) {
         boolean statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
-        if(statusOk){
+        if (statusOk) {
             return Response.status(200).build();
-        }
-        else {
+        } else {
             return Response.status(400).entity("Unable to delete employee").build();
         }
     }
+
     @GET
     @Path("/user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
+    public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId) {
         return shiftDB.getShiftWithUserId(userId);
     }
-
 }

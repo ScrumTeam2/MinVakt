@@ -2,6 +2,8 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.ErrorInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -21,20 +23,20 @@ public class SessionService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response checkLogin(@Context HttpServletRequest request, @FormParam("identificator") String identificator, @FormParam("password") String password) {
         // Return if already logged in
-        if(request.getSession().getAttribute("session") != null) {
+        if (request.getSession().getAttribute("session") != null) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
 
-        // LoginHandler loginHandler = new LoginHandler();
-        // if(!loginHandler.checkLoginEmail(identificator, password) && !loginHandler.checkLoginPhone(identificator, password)) {
-         if(false) {
-             // No match in database, return error
-             return Response.status(Response.Status.FORBIDDEN).entity(Entity.json("{\"error\": \"Invalid credentials\"")).build();
-         }
+        UserDBManager userDBManager = new UserDBManager();
+        User user = userDBManager.loginUser(identificator, password);
+        if (user == null) {
+            // No match in database, return error
+            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorInfo("Invalid credentials")).build();
+        }
 
         // Create session
         Session session = new Session();
-        session.setUser(new User());
+        session.setUser(user);
         request.getSession().setAttribute("session", session);
         return Response.ok().entity(session.getUser()).build();
     }

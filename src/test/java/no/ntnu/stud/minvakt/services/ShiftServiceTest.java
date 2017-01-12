@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.unittests;
+package no.ntnu.stud.minvakt.services;
 
 /**
  * Created by evend on 1/10/2017.
@@ -8,6 +8,7 @@ import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.*;
 import no.ntnu.stud.minvakt.services.ShiftService;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 
-public class TestJUnitREST {
+public class ShiftServiceTest {
     private static ShiftService shiftService;
 
     @BeforeClass
@@ -29,37 +30,43 @@ public class TestJUnitREST {
         shiftService = new ShiftService();
     }
 
-    @Ignore
-    public void createShift(){
+    @Test
+    public void createShift() {
         Date curDate = new Date(System.currentTimeMillis());
         ArrayList<ShiftUser> shiftUsers = new ArrayList<ShiftUser>();
 
-        shiftUsers.add(new ShiftUser(1,false,false));
-        shiftUsers.add(new ShiftUser(2,true,false));
+        shiftUsers.add(new ShiftUser(1, false, false));
+        shiftUsers.add(new ShiftUser(2, true, false));
 
-        Shift shift = new Shift(-1,2,new Date(System.currentTimeMillis()),1,1,shiftUsers);
+        Shift shift = new Shift(-1, 2, new Date(System.currentTimeMillis()), 1, 1, shiftUsers);
         Response shiftResponse = shiftService.createShift(shift);
-        String shiftIdStr = shiftResponse.readEntity(String.class);
+        Object entity = shiftResponse.getEntity();
+        Assert.assertTrue(entity instanceof String);
+        String shiftIdStr = (String) entity;
+        JSONObject obj = new JSONObject(shiftIdStr);
         System.out.println(shiftIdStr);
-        int shiftId = Integer.parseInt(shiftIdStr);
+        int shiftId = obj.getInt("id");
         //shiftService.deleteShift(shiftId);
         assertTrue(shiftId != -1);
     }
+
     @Test
-    public void getShift(){
+    public void getShift() {
         assertNotNull(shiftService.getShift(1));
     }
+
     @Test
-    public void addEmployeeToShift(){
+    public void addEmployeeToShift() {
         ShiftUser shiftUser = new ShiftUser(1, true, false);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 2);
-        if(statusOk.getStatus() == 200){
+        if (statusOk.getStatus() == 200) {
             statusOk = shiftService.deleteEmployeeFromShift(1, 2);
         }
         assertTrue(statusOk.getStatus() == 200);
     }
+
     @Test
-    public void getEmployeeBasicsWithUserId(){
+    public void getEmployeeBasicsWithUserId() {
         ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId(1);
         assertFalse(shiftUserBasics.isEmpty());
     }

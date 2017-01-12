@@ -21,9 +21,8 @@ public class Encryption {
      * @param hashString Hash from database
      * @return boolean whether they matched.
      */
-    public boolean passDecoding(String pass, String saltString, String hashString) {
+    public boolean passDecoding(String pass, String hashString, String saltString) {
         byte[] salt = stringToByte(saltString);
-
         byte[] hashPass = stringToByte(hashString);
 
 
@@ -81,18 +80,5 @@ public class Encryption {
         return dec.decode(string);
 
 
-    }
-
-
-    /**
-     * Test program for encryption
-     *
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-        Encryption en = new Encryption();
-        String[] passInfo = en.passEncoding("password");
-        if (en.passDecoding("password", "2oUGF8AAgobU1E3rcAtyiw==", "oQaZgG266KjDzEkGTgXYMQ==")) ;
     }
 }

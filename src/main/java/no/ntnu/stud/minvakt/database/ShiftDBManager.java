@@ -212,6 +212,7 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
+
     public ArrayList<ShiftUserBasic> getShiftWithUserId(int userId){
         ArrayList<ShiftUserBasic> out = new ArrayList<>();
         if(setUp()){
@@ -240,5 +241,4 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
-
 }

@@ -113,7 +113,7 @@ ALTER TABLE overtime
 
  -- USERS
  -- (user_id, first_name, last_name, hash, salt, email, phonenumber)
- INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'password','password', 'email1', 'phone1');
+ INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1');
  INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2');
  INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3');
  INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'password', 'password', 'email4', 'phone4');
