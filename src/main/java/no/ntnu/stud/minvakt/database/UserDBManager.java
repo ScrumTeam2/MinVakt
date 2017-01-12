@@ -1,9 +1,11 @@
 package no.ntnu.stud.minvakt.database;
 
+import com.mysql.cj.api.jdbc.Statement;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.controller.encryption.MD5Generator;
 import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.util.QueryUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -191,7 +193,7 @@ public class UserDBManager extends DBManager {
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
     public int createNewUser(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
         int creation = -1;
-        String sqlInsert = "INSERT INTO User (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?)";
+        String sqlInsert = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?)";
         String randomPass = GeneratePassword.generateRandomPass();
         //sendEmailWithGeneratedPass to registered user in this method
         String hashedPass[] = en.passEncoding(randomPass);
@@ -200,14 +202,15 @@ public class UserDBManager extends DBManager {
         if (setUp()) {
             try {
                 startTransaction();
+                prep = getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
                 prep.setString(1, first_name);
                 prep.setString(2, last_name);
                 prep.setString(3, hash);
                 prep.setString(4, salt);
                 prep.setString(5, email);
                 prep.setString(6, phone);
-                prep = getConnection().prepareStatement(sqlInsert);
                 creation = prep.executeUpdate();
+                return QueryUtil.getGeneratedKeys(prep);
             } catch (Exception e) {
                 System.out.println("Issue creating new ansatt");
                 e.printStackTrace();
@@ -216,7 +219,7 @@ public class UserDBManager extends DBManager {
                 finallyStatement(prep);
             }
         }
-        return creation;
+        return -1;
     }
 
     public int changePasswordUserId(String user_id, String prev_password, String new_password) {
