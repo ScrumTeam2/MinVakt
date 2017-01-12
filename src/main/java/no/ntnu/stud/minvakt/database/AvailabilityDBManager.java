@@ -25,8 +25,8 @@ public class AvailabilityDBManager extends DBManager{
 
 
     // Find available staff for a given shift, returns arraylist with userIDs
-    public ArrayList<ShiftUser> getAvailability(int shiftID){
-        ArrayList<ShiftUser> userList = new ArrayList<>();
+    public ArrayList<Integer> getAvailability(int shiftID){
+        ArrayList<Integer> userList = new ArrayList<>();
 
         ResultSet res = null;
 
@@ -40,8 +40,7 @@ public class AvailabilityDBManager extends DBManager{
                 res = prep.executeQuery();
 
                 while(res.next()){
-                    userList.add(new ShiftUser(
-                            res.getInt("user_id"), res.getBoolean("responsibility"), res.getBoolean("valid_absence")));
+                    userList.add(res.getInt("user_id"));
                 }
 
 
