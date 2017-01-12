@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MinVakt | Registrer bruker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/style.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<header>
+    <i class="material-icons">menu</i>
+    <h1>MinVakt</h1>
+    <i class="material-icons">more_vert</i>
+</header>
+<div class="container">
+    <form class="register-form" method="POST" onSubmit="return submitForm()">
+        <div class="radio-group">
+            <input type="radio" name="type" id="employee" value="employee" checked>
+            <label for="employee">Ansatt</label>
+            <input type="radio" name="type" id="admin" value="admin">
+            <label for="admin">Administrasjon</label>
+        </div>
+        <input type="text" id="firstname" placeholder="Fornavn"/>
+        <input type="text" id="lastname" placeholder="Etternavn"/>
+        <div class="select-container">
+            <select name="category" id="category">
+                <option selected disabled>Velg en kategori</option>
+                <option value="nurse">Sykepleier</option>
+                <option value="health">Helsefagarbeider</option>
+                <option value="assistant">Assistent</option>
+            </select>
+        </div>
+        <input type="number" id="percentage" min="1" max="100" placeholder="Stillingsprosent"/>
+        <input type="email" id="email" placeholder="E-post"/>
+        <input type="text" id="phone" data-validation="length numeric" data-validation-length="8" placeholder="Mobilnummer"/>
+        <button type="submit" id="userBtn">Registrer bruker</button>
+    </form>
+    <div id="userModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>Brukeren er nå lagt inn i systemet</p>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" id="userCloseBtn">Lukk</button>
+                    <button type="button" id="userViewBtn">Se bruker</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../js/registerscript.js"></script>
+</body>
+</html>
