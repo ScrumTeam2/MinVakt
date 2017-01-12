@@ -5,7 +5,6 @@ import org.junit.*;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by AnitaKristineAune on 12.01.2017.
