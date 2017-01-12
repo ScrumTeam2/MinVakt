@@ -1,11 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.Shift;
 import java.util.ArrayList;
-
 import java.sql.*;
-import no.ntnu.stud.minvakt.data.ShiftUser;
 
 /**
  * Created by AnitaKristineAune on 11.01.2017.
@@ -14,7 +10,7 @@ public class AvailabilityDBManager extends DBManager{
 
     private final String sqlGetAvailability = "SELECT user_id, first_name, last_name FROM availability NATURAL JOIN user WHERE shift_id=?";
     private final String sqlSetAvailability = "INSERT INTO availability VALUES(?,?);";
-    private final String sqlDeleteAvailability = "DELETE user_id, shift_id FROM availability WHERE user_id=? AND shift_id=?";
+    private final String sqlDeleteAvailability = "DELETE FROM availability WHERE user_id=? AND shift_id=?";
 
     Connection conn;
     PreparedStatement prep;
@@ -87,16 +83,17 @@ public class AvailabilityDBManager extends DBManager{
             try{
                 startTransaction();
                 conn = getConnection();
-                // shiftID
+
                 prep = conn.prepareStatement(sqlDeleteAvailability);
                 prep.setInt(1, userID);
                 prep.setInt(2, shiftID);
+                out = prep.executeUpdate();
 
             } catch (SQLException sqlE) {
                 System.err.println("Error: Deleting availability on user with ID = " + userID + " and shift with ID = " + shiftID);
             } finally {
                 endTransaction();
-                closeConnection();
+                finallyStatement(prep);
             }
         }
         return out != 0;
