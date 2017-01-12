@@ -2,8 +2,11 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.ErrorInfo;
 
 import javax.ws.rs.*;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -17,14 +20,44 @@ public class UserAdminService extends SecureService {
     @POST
     @Path("/createuser")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void addUser(User user) {
+    public Response addUser(User user) {
         Session session = getSession();
         if(!session.isAdmin()) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.FORBIDDEN);
         }
 
-        // TODO: Verify user data, insert into db
-        // LoginHandler h = new LoginHandler();
-        // h.createNewAnsatt(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber() ...);
+        // Verify user data
+
+        // TODO: Better verification of mail
+        if(user.getEmail() == null || user.getEmail().isEmpty()) {
+            return Response.ok(Entity.json(new ErrorInfo("Invalid mail"))).build();
+        }
+
+        if(user.getFirstName() == null || user.getFirstName().isEmpty()) {
+            return Response.ok(Entity.json(new ErrorInfo("Invalid first name"))).build();
+        }
+
+        if(user.getLastName() == null || user.getLastName().isEmpty()) {
+            return Response.ok(Entity.json(new ErrorInfo("Invalid last name"))).build();
+        }
+
+        // TODO: Better verification of phone number?
+        if(user.getPhonenumber() == null || user.getPhonenumber().isEmpty()) {
+            return Response.ok(Entity.json(new ErrorInfo("Invalid phone number"))).build();
+        }
+
+        // TODO: Verify user category
+
+        // Insert into database
+        UserDBManager userDBManager = new UserDBManager();
+        int userId = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhonenumber(), user.getCategory() + "");
+        user.setId(userId);
+
+        if(userId > 0) {
+            return Response.ok(user).build();
+        }
+
+        System.err.println("UserAdminService.addUser failed: " + user);
+        return Response.serverError().build();
     }
 }
