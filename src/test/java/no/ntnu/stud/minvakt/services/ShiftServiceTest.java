@@ -5,6 +5,7 @@ package no.ntnu.stud.minvakt.services;
  */
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
+import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.*;
 import no.ntnu.stud.minvakt.services.ShiftService;
 import org.junit.Assert;
@@ -30,14 +31,14 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void createShift(){
+    public void createShift() {
         Date curDate = new Date(System.currentTimeMillis());
         ArrayList<ShiftUser> shiftUsers = new ArrayList<ShiftUser>();
 
-        shiftUsers.add(new ShiftUser(1,false,false));
-        shiftUsers.add(new ShiftUser(2,true,false));
+        shiftUsers.add(new ShiftUser(1, false, false));
+        shiftUsers.add(new ShiftUser(2, true, false));
 
-        Shift shift = new Shift(-1,2,new Date(System.currentTimeMillis()),1,1,shiftUsers);
+        Shift shift = new Shift(-1, 2, new Date(System.currentTimeMillis()), 1, 1, shiftUsers);
         Response shiftResponse = shiftService.createShift(shift);
         Object entity = shiftResponse.getEntity();
         Assert.assertTrue(entity instanceof String);
@@ -50,18 +51,24 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void getShift(){
+    public void getShift() {
         assertNotNull(shiftService.getShift(1));
     }
+
     @Test
-    public void addEmployeeToShift(){
+    public void addEmployeeToShift() {
         ShiftUser shiftUser = new ShiftUser(1, true, false);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 2);
-        if(statusOk.getStatus() == 200){
+        if (statusOk.getStatus() == 200) {
             statusOk = shiftService.deleteEmployeeFromShift(1, 2);
         }
         assertTrue(statusOk.getStatus() == 200);
+    }
 
+    @Test
+    public void getEmployeeBasicsWithUserId() {
+        ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId(1);
+        assertFalse(shiftUserBasics.isEmpty());
     }
 
 }
