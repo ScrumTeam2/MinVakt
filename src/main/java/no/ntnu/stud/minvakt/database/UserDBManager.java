@@ -12,44 +12,44 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-/**
- *
- * @author 8460p
- */
 public class UserDBManager extends DBManager {
-    //If string contains @, it's an email
-   /* if(username.contains("@")) {
-     checkLogin(username, password); //Email
-     } else {
-     checkLogin(username, password); //Phone
-     }*/
-
-    String sqlLoginId = "SELECT * FROM User where user_id=?";
-    String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?";
-    String sqlChangePass = "UPDATE User SET hash = ?, salt = ? WHERE user_id = ?";
+    public UserDBManager() {
+        super();
+    }
+    private final String sqlLoginId = "SELECT * FROM User where user_id=?;";
+    private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?;";
+    private final String sqlChangePass = "UPDATE User SET hash = ?, salt = ? WHERE user_id = ?;";
+    private final String sqlGetUsers = "SELECT * FROM User;";
+    private final String sqlGetUserById = "SELECT * FROM User WHERE user_id = ?;";
+    private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?);";
     PreparedStatement prep;
     Connection conn;
     ResultSet res;
     Encryption en = new Encryption();
-
+    
+     /*Contents
+        loginUser()
+        checkLoginId()
+        getUsers();
+        getUserById();
+        createNewUser();
+        changePasswordUserId();
+        changeDepartment();
+    */
+    
     /**
      * Tries to log in an user with either mail or phone number
-     * @param email The mail or phone number
+     * @param username The mail or phone number
      * @param pass The password, plaintext
-     * @return Returns an user object if the login is correct
+     * @return Returns a user object if the login is correct
      */
-    public User loginUser(String email, String pass) {
+    public User loginUser(String username, String pass) {
         if (setUp()) {
             try {
-                // startTransaction(); //Trengs denne?
+                startTransaction();
                 prep = getConnection().prepareStatement(sqlLogin);
-                prep.setString(1, email);
-                prep.setString(2, email);
+                prep.setString(1, username);
+                prep.setString(2, pass);
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
@@ -68,7 +68,12 @@ public class UserDBManager extends DBManager {
         return null;
     }
 
-    //Check login via user ID. used when changing user's password
+    /**
+     * Checks whether the user ID and password matches a row in the database
+     * @param userId
+     * @param Password plaintext
+     * @return Integer 1 if success, -1 if fail
+     */
     public int checkLoginId(String userId, String pass) {
         int login = -1;
         if (setUp()) {
@@ -90,27 +95,36 @@ public class UserDBManager extends DBManager {
         return login;
     }
 
-    public int deleteUser(String user_id) {
-        return -1;
-        //"Deletes" the row of this specific user? Possible?
-    }
-
-    public int changeDepartment(String user_id) {
-        int change = -1;
-        String sqlChangeDep = "UPDATE dept_id FROM User where user_id=?";
-        if (setUp()) {
+     /**
+     * Returns an array with user objects.
+     * @return User object
+     */
+    public ArrayList<User> getUsers(){
+        ArrayList<User> users = new ArrayList<User>();
+        if(setUp()){
             try {
-                startTransaction();
-                prep = getConnection().prepareStatement(sqlChangeDep);
-                prep.executeUpdate();
-                change = 1;
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUsers);
+                res = prep.executeQuery();
+                while (res.next()){
+                    User user = new User();
+                    user.setId(res.getInt("user_id"));
+                    user.setFirstName(res.getString("first_name"));
+                    user.setLastName(res.getString("last_name"));
+                    user.setEmail(res.getString("email"));
+                    user.setPhonenumber(res.getString("phonenumber"));
+                    user.setCategory(res.getInt("category"));
+                    users.add(user);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return change;
+        return users;
     }
-    /*
+    
+    
+    /* //Deprecated
     public String[][] getTableAllUsers(){
         String[] tupleArray = {"user_id", "first_name", "last_name", "email", "phonenumber"};
         String sqlUsers = "Select (user_id, first_name, last_name, email, phonenumber) FROM User";
@@ -140,37 +154,18 @@ public class UserDBManager extends DBManager {
         return array;
     }
     */
-
-    public ArrayList<User> getUsers(){
-        ArrayList<User> users = new ArrayList<User>();
-        if(setUp()){
-            try {
-                conn = getConnection();
-                prep = conn.prepareStatement("SELECT * FROM User;");
-                res = prep.executeQuery();
-                while (res.next()){
-                    User user = new User();
-                    user.setId(res.getInt("user_id"));
-                    user.setFirstName(res.getString("first_name"));
-                    user.setLastName(res.getString("last_name"));
-                    user.setEmail(res.getString("email"));
-                    user.setPhonenumber(res.getString("phonenumber"));
-                    user.setCategory(res.getInt("category"));
-                    users.add(user);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return users;
-    }
-
+    
+     /**
+     * Gets user object by user ID
+     * @param ususerIderId
+     * @return User object
+     */
     public User getUserById(String userId) {
         User user = null;
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement("SELECT * FROM User WHERE user_id = ?;");
+                prep = conn.prepareStatement(sqlGetUserById);
                 prep.setString(1, userId);
                 res = prep.executeQuery();
                 if (res.next()){
@@ -189,11 +184,14 @@ public class UserDBManager extends DBManager {
         }
       return user;
     }
-
+     /**
+     * Creates a new user in the database
+     * @param
+     * @return Integer 1 if success, -1 if fail
+     */
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
     public int createNewUser(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
         int creation = -1;
-        String sqlInsert = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?)";
         String randomPass = GeneratePassword.generateRandomPass();
         //sendEmailWithGeneratedPass to registered user in this method
         String hashedPass[] = en.passEncoding(randomPass);
@@ -202,7 +200,7 @@ public class UserDBManager extends DBManager {
         if (setUp()) {
             try {
                 startTransaction();
-                prep = getConnection().prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+                prep = getConnection().prepareStatement(sqlCreateNewUser, Statement.RETURN_GENERATED_KEYS);
                 prep.setString(1, first_name);
                 prep.setString(2, last_name);
                 prep.setString(3, hash);
@@ -222,22 +220,31 @@ public class UserDBManager extends DBManager {
         return -1;
     }
 
+     /**
+     * Changes a user's password
+     * @param userId
+     * @param prev_password, the previous password
+     * @param new_password, the new password
+     * @return Integer 1 if success, -1 if fail
+     */
     public int changePasswordUserId(String user_id, String prev_password, String new_password) {
         int change = -1;
-        String sqlChangePass = "UPDATE User SET hash = ?, salt = ? WHERE user_id = ?";
         boolean oldPassCorrect = false;
-        try {
-            prep = getConnection().prepareStatement(sqlLoginId);
-            prep.setString(1, user_id);
-            res = prep.executeQuery();
-            if (res.next()) {
-                if (en.passDecoding(prev_password, res.getString("hash"), res.getString("salt"))) {
-                    oldPassCorrect = true;
+        if (setUp()) {
+            try {
+                startTransaction();
+                prep = getConnection().prepareStatement(sqlLoginId);
+                prep.setString(1, user_id);
+                res = prep.executeQuery();
+                if (res.next()) {
+                    if (en.passDecoding(prev_password, res.getString("hash"), res.getString("salt"))) {
+                        oldPassCorrect = true;
+                    }
                 }
+            } catch (Exception e) {
+                System.out.println("Error at changePasswordUserId()");
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            System.out.println("Error at changePasswordUserId()");
-            e.printStackTrace();
         }
         if(oldPassCorrect) {
             //Change Pass
@@ -260,4 +267,37 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
+    /**
+    * Changes department for user
+    * @param userId
+    * @return Integer 1 if success, -1 if fail
+    */
+    public int changeDepartment(String user_id) {
+        int change = -1;
+        String sqlChangeDep = "UPDATE dept_id FROM User where user_id=?";
+        if (setUp()) {
+            try {
+                startTransaction();
+                prep = getConnection().prepareStatement(sqlChangeDep);
+                prep.executeUpdate();
+                change = 1;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return change;
+    }
+
+    /*
+     Not yet implemented
+    */
+    public int deleteUser(String user_id) {
+        return -1;
+    }
+    //If string contains @, it's an email
+   /* if(username.contains("@")) {
+     checkLogin(username, password); //Email
+     } else {
+     checkLogin(username, password); //Phone
+     }*/
 }
