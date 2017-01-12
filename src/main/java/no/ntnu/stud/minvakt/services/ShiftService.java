@@ -44,7 +44,6 @@ public class ShiftService {
     @Path("/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") int id) {
         boolean isDeleted = shiftDB.deleteShift(id);
-
         if (!isDeleted) {
             return Response.status(400).entity("Unable to delete shift.").build();
         } else {
@@ -76,9 +75,9 @@ public class ShiftService {
     }
 
     @DELETE
-    @Path("/{shiftId}")
+    @Path("/{shiftId}/user/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteEmployeeFromShift(@QueryParam("userId") int userId, @PathParam("shiftId") int shiftId) {
+    public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId) {
         boolean statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
         if (statusOk) {
             return Response.status(200).build();
