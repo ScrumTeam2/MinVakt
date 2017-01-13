@@ -11,6 +11,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import java.util.logging.Level;
 
 /**
  * Created by Audun on 10.01.2017.
@@ -57,7 +58,7 @@ public class UserAdminService extends SecureService {
             return Response.ok(user).build();
         }
 
-        System.err.println("UserAdminService.addUser failed: " + user);
+        log.log(Level.WARNING, "Failed to insert user: " + user);
         return Response.serverError().build();
     }
 }

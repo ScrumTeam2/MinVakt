@@ -21,6 +21,7 @@ public class ShiftUser {
         this.valid_absence = valid_absence;
     }
 
+    @SuppressWarnings("unused")
     public ShiftUser() {
 
     }
