@@ -15,19 +15,20 @@ import java.util.logging.Level;
 /**
  * Created by evend on 1/10/2017.
  */
+
 public class ShiftDBManager extends DBManager {
     public ShiftDBManager(){
         super();
     }
 
     private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?);";
-    private final String sqlCreateNewShiftStaff = "INSERT INTO employee_shift VALUES(?,?,?,?);";
+    private final String sqlCreateNewShiftStaff = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
     private final String sqlGetShiftUser = "SELECT user_id, responsibility, valid_absence FROM employee_shift WHERE shift_id = ?;";
     private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id = ?;";
-    private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?);";
+    private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
     private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?;";
     private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?) AND date >= CURDATE()" +
             "ORDER BY date ASC, time ASC;";
@@ -51,9 +52,12 @@ public class ShiftDBManager extends DBManager {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlCreateNewShift);
                 prep.setInt(1, shift.getStaffNumb());
-                prep.setDate(2, shift.getDate());
+                java.sql.Date sqlDate = new java.sql.Date(shift.getDate().getTime());
+                System.out.println("sqlDate: "+sqlDate);
+                prep.setDate(2, sqlDate);
                 prep.setInt(3, shift.getType().getValue());
                 prep.setInt(4, shift.getDeptId());
+
                 if(prep.executeUpdate() != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
                     ResultSet res = prep.executeQuery();
@@ -67,6 +71,8 @@ public class ShiftDBManager extends DBManager {
                             prep.setInt(2,shift.getId());
                             prep.setBoolean(3,shiftUser.isResponsibility());
                             prep.setBoolean(4,shiftUser.isValid_absence());
+                            prep.setBoolean(5,false);
+
                             if(prep.executeUpdate() == 0){
                                 throw new SQLException("User info not added, rolled back");
                             }
@@ -176,7 +182,8 @@ public class ShiftDBManager extends DBManager {
                 prep.setInt(1,shiftUser.getUserId());
                 prep.setInt(2, shiftId);
                 prep.setBoolean(3, shiftUser.isResponsibility());
-                prep.setBoolean(4,shiftUser.isValid_absence());
+                prep.setBoolean(4, shiftUser.isValid_absence());
+                prep.setBoolean(5, false);
                 out = prep.executeUpdate() != 0;
 
             }
@@ -221,9 +228,9 @@ public class ShiftDBManager extends DBManager {
                 res = prep.executeQuery();
                 while(res.next()){
                     out.add(new ShiftUserBasic(
-                            res.getInt("shift_id"),
-                            res.getDate("date"),
-                            Shift.ShiftType.valueOf(res.getInt("time"))
+                                    res.getInt("shift_id"),
+                                    res.getDate("date"),
+                                    Shift.ShiftType.valueOf(res.getInt("time"))
                             )
                     );
                 }
