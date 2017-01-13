@@ -120,7 +120,7 @@ public class UserDBManager extends DBManager {
      * Returns an array with user objects.
      * @return User object
      */
-    public ArrayList<User> getUsers(){
+    public ArrayList<User> getUsers1(){
         ArrayList<User> users = new ArrayList<User>();
         if(setUp()){
             try {
@@ -134,7 +134,7 @@ public class UserDBManager extends DBManager {
                     user.setLastName(res.getString("last_name"));
                     user.setEmail(res.getString("email"));
                     user.setPhonenumber(res.getString("phonenumber"));
-                    user.setCategory(res.getInt("category"));
+                //    user.setCategory(res.getInt("category"));
                     users.add(user);
                 }
             } catch (Exception e) {
@@ -144,7 +144,7 @@ public class UserDBManager extends DBManager {
         return users;
     }
     
-     public ArrayList<UserBasic> getUsersBasic(){
+     public ArrayList<UserBasic> getUsersBasic1(){
         ArrayList<UserBasic> users = new ArrayList<UserBasic>();
         if(setUp()){
             try {
@@ -217,7 +217,7 @@ public class UserDBManager extends DBManager {
                     u.setLastName(res.getString("last_name"));
                     u.setEmail(res.getString("email"));
                     u.setPhonenumber(res.getString("phonenumber"));
-                    u.setCategory(res.getInt("category"));
+                   // u.setCategory(res.getInt("category"));
                     user = u;
                 }
             } catch (Exception e) {
@@ -326,7 +326,7 @@ public class UserDBManager extends DBManager {
                     prep.setString(2, user.getLastName());
                     prep.setString(3, user.getEmail());
                     prep.setString(4, user.getPhonenumber());
-                    prep.setInt(5, user.getCategory());
+                   // prep.setInt(5, user.getCategory());
                     change = prep.executeUpdate();
                 } catch (Exception e) {
                     System.out.println("Error at changeUserInfo()");
