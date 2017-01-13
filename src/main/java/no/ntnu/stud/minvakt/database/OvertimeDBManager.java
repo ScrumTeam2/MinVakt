@@ -16,9 +16,6 @@ public class OvertimeDBManager extends DBManager{
     private final String sqlGetRowCount = "SELECT COUNT(*) FROM overtime WHERE user_id=? AND date BETWEEN ? AND ?;";
     private final String sqlGetOvertime = "SELECT date, start_time, end_time FROM overtime WHERE user_id = ? AND date BETWEEN ? AND ?;";
 
-    // private final String sqlGetOvertimeHours = "SELECT start_time, end_time FROM overtime WHERE user_id=?";
-    // private final String sqlGetOvertime = "SELECT start_time, end_time FROM overtime WHERE user_id=?";
-
     Connection conn;
     PreparedStatement prep;
 
@@ -55,34 +52,7 @@ public class OvertimeDBManager extends DBManager{
         return out != 0;
     }
 
-    // Returns number of rows
-    public int getRowCount(int userId, Date startDate, Date endDate){
-        int count = 0;
-        ResultSet res = null;
-        if(setUp()){
-            try{
-                startTransaction();
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlGetRowCount);
-                prep.setInt(1,userId);
-                prep.setDate(2, startDate);
-                prep.setDate(3, endDate);
-
-                res = prep.executeQuery();
-                while(res.next()){
-                    count += res.getInt("COUNT(*)");
-                }
-            } catch (SQLException sqlE){
-                log.log(Level.WARNING, "Error getting row count for user with ID = " + userId, sqlE);
-            } finally{
-                endTransaction();
-                finallyStatement(prep);
-            }
-        }
-        return count;
-    }
-
-    // Returns array with overtime (date, start_time, end_time) on given userID. Hours and date from given start date til end date
+    // Returns array with Overtime object on given userId. It contains hours and date from given start date til end date
     public Overtime[] getOvertimeList(int userId, Date startDate, Date endDate){
 
         Overtime listObject = null;
@@ -135,5 +105,32 @@ public class OvertimeDBManager extends DBManager{
             }
         }
         return hours;
+    }
+
+    // Returns number of rows
+    public int getRowCount(int userId, Date startDate, Date endDate){
+        int count = 0;
+        ResultSet res = null;
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetRowCount);
+                prep.setInt(1,userId);
+                prep.setDate(2, startDate);
+                prep.setDate(3, endDate);
+
+                res = prep.executeQuery();
+                while(res.next()){
+                    count += res.getInt("COUNT(*)");
+                }
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING, "Error getting row count for user with ID = " + userId, sqlE);
+            } finally{
+                endTransaction();
+                finallyStatement(prep);
+            }
+        }
+        return count;
     }
 }

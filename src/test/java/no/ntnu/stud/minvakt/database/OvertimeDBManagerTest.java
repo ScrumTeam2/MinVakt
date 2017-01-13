@@ -70,6 +70,5 @@ public class OvertimeDBManagerTest {
         int expRes = 16;
 
         assertEquals(expRes,res);
-
     }
 }

@@ -46,5 +46,4 @@ public class Overtime {
 
         return date != null ? date.equals(overtime.date) : overtime.date == null;
     }
-
 }
