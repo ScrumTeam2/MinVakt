@@ -30,7 +30,7 @@ public class ShiftDBManagerTest {
         }
     }
 
-    @Test
+    @Ignore
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,false));
@@ -42,7 +42,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
-    @Test
+    @Ignore
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
