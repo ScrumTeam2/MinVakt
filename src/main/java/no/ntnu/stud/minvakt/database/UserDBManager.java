@@ -58,7 +58,9 @@ public class UserDBManager extends DBManager {
                         System.out.println("hash: " + res.getString("hash") + "salt: " + res.getString("salt"));
                         //New user
                         //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
-                        User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), null, null);
+                        User user = new User(res.getInt("user_id"), res.getString("first_name"),
+                                res.getString("last_name"), res.getString("hash"),
+                                res.getString("salt"), User.UserCategory.valueOf(res.getInt("category")));
                         return user;
                     }
                 }
@@ -196,12 +198,6 @@ public class UserDBManager extends DBManager {
         return array;
     }
     */
-    
-     /**
-     * Gets user object by user ID
-     * @param ususerIderId
-     * @return User object
-     */
     public User getUserById(String userId) {
         User user = null;
         if(setUp()){
@@ -217,7 +213,7 @@ public class UserDBManager extends DBManager {
                     u.setLastName(res.getString("last_name"));
                     u.setEmail(res.getString("email"));
                     u.setPhonenumber(res.getString("phonenumber"));
-                   // u.setCategory(res.getInt("category"));
+                    u.setCategory(u.UserCategory.valueOf(res.getInt("category")));
                     user = u;
                 }
             } catch (Exception e) {

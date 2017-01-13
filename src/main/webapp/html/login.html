@@ -5,6 +5,7 @@
     <title>MinVakt | Logg inn</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -14,7 +15,7 @@
 
 <div class="container">
 
-    <form class="login-form" method="POST">
+    <form class="login-form" id="form" action="" method="POST">
         <input type="text" id="identificator" placeholder="E-post/mobilnummer"/>
         <input type="password" id="password" placeholder="Passord"/>
         <button type="submit" id="login">Logg inn</button>
@@ -24,7 +25,6 @@
     <p class="feedback center-text">Feil brukernavn eller passord</p>
 
 </div>
-
 <script src="../js/loginscript.js"></script>
 </body>
 </html>
