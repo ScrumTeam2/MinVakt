@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import no.ntnu.stud.minvakt.data.UserBasic;
 
 public class UserDBManager extends DBManager {
     public UserDBManager() {
@@ -23,6 +24,7 @@ public class UserDBManager extends DBManager {
     private final String sqlGetUserById = "SELECT * FROM User WHERE user_id = ?;";
     private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?);";
     private final String sqlChangeUserInfo = "UPDATE User SET first_name = ?, last_name = ?, email =?, phonenumber =?, category =? WHERE user_id =?;";
+    private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     PreparedStatement prep;
     Connection conn;
     ResultSet res;
@@ -39,7 +41,7 @@ public class UserDBManager extends DBManager {
     */
     
     /**
-     * Tries to log in an user with either mail or phone number
+     * Tries to log in a user with either mail or phone number
      * @param username The mail or phone number
      * @param pass The password, plaintext
      * @return Returns a user object if the login is correct
@@ -95,7 +97,25 @@ public class UserDBManager extends DBManager {
         }
         return login;
     }
-
+    
+    public int checkUserAdmin(String userId) {
+        int isAdmin= -1;
+        if (setUp()) {
+            try {
+                startTransaction();
+                prep = getConnection().prepareStatement(sqlIsAdmin);
+                prep.setString(1, userId);
+                res = prep.executeQuery();
+                if (res.next()) {
+                    isAdmin = res.getInt(1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return login;
+    }
+    
      /**
      * Returns an array with user objects.
      * @return User object
@@ -124,6 +144,27 @@ public class UserDBManager extends DBManager {
         return users;
     }
     
+     public ArrayList<UserBasic> getUsersBasic(){
+        ArrayList<UserBasic> users = new ArrayList<UserBasic>();
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUsers);
+                res = prep.executeQuery();
+                while (res.next()){
+                    int userId = res.getInt("user_id");
+                    String firstName =res.getString("first_name");
+                    String lastName = res.getString("last_name");
+                    int category = res.getInt("category");
+                    UserBasic user = new UserBasic(userId,firstName,lastName,category);
+                    users.add(user);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return users;
+    }
     
     /* //Deprecated
     public String[][] getTableAllUsers(){
