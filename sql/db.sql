@@ -14,7 +14,7 @@ CREATE TABLE user(
     first_name VARCHAR(30),
     last_name VARCHAR(30),
     hash VARCHAR(50),
-  	salt VARCHAR(50),
+    salt VARCHAR(50),
     email VARCHAR(40) NOT NULL,
     phonenumber VARCHAR(8),
     CONSTRAINT pk_user PRIMARY KEY(user_id)
@@ -60,6 +60,7 @@ CREATE TABLE employee_shift(
   shift_id INTEGER,
   responsibility BOOLEAN,
   valid_absence BOOLEAN,
+  shift_change BOOLEAN, 
   CONSTRAINT pk_employee_shift PRIMARY KEY(user_id, shift_id)
 );
 
@@ -92,7 +93,7 @@ ALTER TABLE shift
   REFERENCES department(dept_id);
 
 ALTER TABLE employee_shift
-	ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
+  ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
   REFERENCES employee(user_id),
   ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
   REFERENCES shift(shift_id);
@@ -162,9 +163,9 @@ INSERT INTO admin VALUES(19, true);
  -- shift(shift_id, responsibility, valid_absence, date, time, user_id, dept_id)
 
  -- department 1
-
- -- employee_shift(user_id, shift_id, responsibility, valid_absence)
+ 
  -- NEW shift(shift_id, staff_number, date, time, dept_id)
+ -- employee_shift(user_id, shift_id, responsibility, valid_absence, shift_change)
 
  -- day 1
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-11', 1, 1); -- Day
@@ -183,43 +184,43 @@ INSERT INTO admin VALUES(19, true);
 
 
 -- DAY 1
- INSERT INTO employee_shift VALUES(7, 1, true, false);
- INSERT INTO employee_shift VALUES(4, 1, false, false);
- INSERT INTO employee_shift VALUES(1, 1, false, false);
+ INSERT INTO employee_shift VALUES(7, 1, true, false, false);
+ INSERT INTO employee_shift VALUES(4, 1, false, false, false);
+ INSERT INTO employee_shift VALUES(1, 1, false, false,false);
 
- INSERT INTO employee_shift VALUES(8, 2, true, false);
- INSERT INTO employee_shift VALUES(5, 2, false, false);
- INSERT INTO employee_shift VALUES(2, 2, false, false);
+ INSERT INTO employee_shift VALUES(8, 2, true, false, false);
+ INSERT INTO employee_shift VALUES(5, 2, false, false, false);
+ INSERT INTO employee_shift VALUES(2, 2, false, false, false);
 
- INSERT INTO employee_shift VALUES(9, 3, true, false);
- INSERT INTO employee_shift VALUES(6, 3, false, false);
- INSERT INTO employee_shift VALUES(3, 3, false, false);
+ INSERT INTO employee_shift VALUES(9, 3, true, false, false);
+ INSERT INTO employee_shift VALUES(6, 3, false, false, false);
+ INSERT INTO employee_shift VALUES(3, 3, false, false, false);
 
  -- DAY 2
- INSERT INTO employee_shift VALUES(7, 4, true, false);
- INSERT INTO employee_shift VALUES(4, 4, false, false);
- INSERT INTO employee_shift VALUES(1, 4, false, false);
+ INSERT INTO employee_shift VALUES(7, 4, true, false, false);
+ INSERT INTO employee_shift VALUES(4, 4, false, false, false);
+ INSERT INTO employee_shift VALUES(1, 4, false, false, false);
 
- INSERT INTO employee_shift VALUES(9, 5, true, false);
- INSERT INTO employee_shift VALUES(6, 5, false, false);
- INSERT INTO employee_shift VALUES(3, 5, false, false);
+ INSERT INTO employee_shift VALUES(9, 5, true, false, false);
+ INSERT INTO employee_shift VALUES(6, 5, false, false, false);
+ INSERT INTO employee_shift VALUES(3, 5, false, false, false);
 
- INSERT INTO employee_shift VALUES(8, 6, true, false);
- INSERT INTO employee_shift VALUES(5, 6, false, false);
- INSERT INTO employee_shift VALUES(2, 6, false, false);
+ INSERT INTO employee_shift VALUES(8, 6, true, false, false);
+ INSERT INTO employee_shift VALUES(5, 6, false, false, false);
+ INSERT INTO employee_shift VALUES(2, 6, false, false, false);
 
  -- DAY 3
- INSERT INTO employee_shift VALUES(9, 7, true, false);
- INSERT INTO employee_shift VALUES(6, 7, false, false);
- INSERT INTO employee_shift VALUES(3, 7, false, false);
+ INSERT INTO employee_shift VALUES(9, 7, true, false, false);
+ INSERT INTO employee_shift VALUES(6, 7, false, false, false);
+ INSERT INTO employee_shift VALUES(3, 7, false, false, false);
 
- INSERT INTO employee_shift VALUES(7, 8, true, false);
- INSERT INTO employee_shift VALUES(4, 8, false, false);
- INSERT INTO employee_shift VALUES(1, 8, false, false);
+ INSERT INTO employee_shift VALUES(7, 8, true, false, false);
+ INSERT INTO employee_shift VALUES(4, 8, false, false, false);
+ INSERT INTO employee_shift VALUES(1, 8, false, false, false);
 
- INSERT INTO employee_shift VALUES(8, 9, true, false);
- INSERT INTO employee_shift VALUES(5, 9, false, false);
- INSERT INTO employee_shift VALUES(2, 9, false, false);
+ INSERT INTO employee_shift VALUES(8, 9, true, false, false);
+ INSERT INTO employee_shift VALUES(5, 9, false, false, false);
+ INSERT INTO employee_shift VALUES(2, 9, false, false, false);
 
 
  -- department 2
@@ -229,21 +230,21 @@ INSERT INTO admin VALUES(19, true);
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-11', 2, 2);
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-11', 3, 2);
 
- -- employee_shift(user_id, shift_id, responsibility, valid_absence)
+ -- employee_shift(user_id, shift_id, responsibility, valid_absence, shift_change)
  -- dag 1, shift 1
- INSERT INTO employee_shift VALUES(16, 10,  true, false);
- INSERT INTO employee_shift VALUES(13, 10, false, false);
- INSERT INTO employee_shift VALUES(10, 10, false, false);
+ INSERT INTO employee_shift VALUES(16, 10,  true, false, false);
+ INSERT INTO employee_shift VALUES(13, 10, false, false, false);
+ INSERT INTO employee_shift VALUES(10, 10, false, false, false);
 
  -- dag 1, shift 2
- INSERT INTO employee_shift VALUES(17, 11,  true, false);
- INSERT INTO employee_shift VALUES(14, 11, false, false);
- INSERT INTO employee_shift VALUES(11, 11, false, false);
+ INSERT INTO employee_shift VALUES(17, 11,  true, false, false);
+ INSERT INTO employee_shift VALUES(14, 11, false, false, false);
+ INSERT INTO employee_shift VALUES(11, 11, false, false, false);
 
  -- dag 1, shift 3
- INSERT INTO employee_shift VALUES(18, 12,  true, false);
- INSERT INTO employee_shift VALUES(15, 12, false, false);
- INSERT INTO employee_shift VALUES(12, 12, false, false);
+ INSERT INTO employee_shift VALUES(18, 12,  true, false, false);
+ INSERT INTO employee_shift VALUES(15, 12, false, false, false);
+ INSERT INTO employee_shift VALUES(12, 12, false, false, false);
 
  -- DAG 2
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-12', 1, 2);
@@ -251,19 +252,19 @@ INSERT INTO admin VALUES(19, true);
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-12', 3, 2);
 
   -- dag 2, shift 1
- INSERT INTO employee_shift VALUES(17, 13,  true, false);
- INSERT INTO employee_shift VALUES(14, 13, false, false);
- INSERT INTO employee_shift VALUES(11, 13, false, false);
+ INSERT INTO employee_shift VALUES(17, 13,  true, false, false);
+ INSERT INTO employee_shift VALUES(14, 13, false, false, false);
+ INSERT INTO employee_shift VALUES(11, 13, false, false, false);
 
  -- dag 2, shift 2
- INSERT INTO employee_shift VALUES(18, 14,  true, false);
- INSERT INTO employee_shift VALUES(15, 14, false, false);
- INSERT INTO employee_shift VALUES(12, 14, false, false);
+ INSERT INTO employee_shift VALUES(18, 14,  true, false, false);
+ INSERT INTO employee_shift VALUES(15, 14, false, false, false);
+ INSERT INTO employee_shift VALUES(12, 14, false, false, false);
 
  -- dag 2, shift 3
- INSERT INTO employee_shift VALUES(16, 15,  true, false);
- INSERT INTO employee_shift VALUES(13, 15, false, false);
- INSERT INTO employee_shift VALUES(10, 15, false, false);
+ INSERT INTO employee_shift VALUES(16, 15,  true, false, false);
+ INSERT INTO employee_shift VALUES(13, 15, false, false, false);
+ INSERT INTO employee_shift VALUES(10, 15, false, false, false);
 
  -- DAG 3
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-13', 1, 2);
@@ -272,19 +273,19 @@ INSERT INTO admin VALUES(19, true);
 
 
  -- dag 3, shift 1
- INSERT INTO employee_shift VALUES(17, 16,  true, false);
- INSERT INTO employee_shift VALUES(14, 16, false, false);
- INSERT INTO employee_shift VALUES(11, 16, false, false);
+ INSERT INTO employee_shift VALUES(17, 16,  true, false, false);
+ INSERT INTO employee_shift VALUES(14, 16, false, false, false);
+ INSERT INTO employee_shift VALUES(11, 16, false, false, false);
 
  -- dag 3, shift 2
- INSERT INTO employee_shift VALUES(18, 17,  true, false);
- INSERT INTO employee_shift VALUES(15, 17, false, false);
- INSERT INTO employee_shift VALUES(12, 17, false, false);
+ INSERT INTO employee_shift VALUES(18, 17,  true, false, false);
+ INSERT INTO employee_shift VALUES(15, 17, false, false, false);
+ INSERT INTO employee_shift VALUES(12, 17, false, false, false);
 
  -- dag 3, shift 3
- INSERT INTO employee_shift VALUES(16, 18,  true, false);
- INSERT INTO employee_shift VALUES(13, 18, false, false);
- INSERT INTO employee_shift VALUES(10, 18, false, false);
+ INSERT INTO employee_shift VALUES(16, 18,  true, false, false);
+ INSERT INTO employee_shift VALUES(13, 18, false, false, false);
+ INSERT INTO employee_shift VALUES(10, 18, false, false, false);
 
  -- AVAILABLE SHIFTS
  -- dag 4, shift 1
@@ -295,13 +296,18 @@ INSERT INTO admin VALUES(19, true);
 
  -- AVAILABILITY
  -- (user_id, shift_id)
+ INSERT INTO employee_shift VALUES(13, 19, false, false, true);
+ INSERT INTO employee_shift VALUES(18, 21,  true, false, true);
+ 
  INSERT INTO availability VALUES(10, 19);
  INSERT INTO availability VALUES(14, 20);
  INSERT INTO availability VALUES(17, 19);
  INSERT INTO availability VALUES(7, 21);
  INSERT INTO availability VALUES(3, 21);
  INSERT INTO availability VALUES(2, 22);
-
-
-
-
+ 
+-- overtime
+INSERT INTO overtime VALUES(1, '2017-01-01', 24, 26);
+INSERT INTO overtime VALUES(1, '2017-01-02', 86, 88);
+INSERT INTO overtime VALUES(1, '2017-01-04', 24, 30);
+INSERT INTO overtime VALUES(1, '2017-01-05', 86, 2);

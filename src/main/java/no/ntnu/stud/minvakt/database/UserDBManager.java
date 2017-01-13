@@ -3,7 +3,6 @@ package no.ntnu.stud.minvakt.database;
 import com.mysql.cj.api.jdbc.Statement;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
-import no.ntnu.stud.minvakt.controller.encryption.MD5Generator;
 import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
