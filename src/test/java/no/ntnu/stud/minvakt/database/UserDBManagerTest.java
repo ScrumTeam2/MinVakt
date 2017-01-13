@@ -22,10 +22,10 @@ public class UserDBManagerTest {
             e.printStackTrace();
         }
     }
-    /*
-    @Test
+    
+    @Ignore
     public void createNewUser() {
-        int status= userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "123456789", "1");
+        int status= userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "12345678", "1");
         boolean successCreation = false;
         if(status>0) {
             successCreation = true;
@@ -33,7 +33,7 @@ public class UserDBManagerTest {
         assertTrue(successCreation);
     }
     
-    @Test
+    @Ignore
     public void loginUser() {
         String username = "testUser@gmail.com";
         String password = "testPass";
@@ -47,7 +47,7 @@ public class UserDBManagerTest {
         assertTrue(successLogin);
     }
     
-    @Test
+    @Ignore
     public void loginUserId() {
         String userId = "1";
         int status = userDB.checkLoginId(userId, "testPass");
@@ -58,7 +58,7 @@ public class UserDBManagerTest {
         assertTrue(successLogin);
     }
     
-    @Test
+    @Ignore
     public void getUser() {
         String userId = "1";
         User obtainedUser = userDB.getUserById(userId);
@@ -68,9 +68,9 @@ public class UserDBManagerTest {
         }
         assertTrue(successObtain);
     }
-    */
-    /*
-    @Test
+    
+    
+    @Ignore
     public void getUsers() {
         ArrayList<User> users = userDB.getUsers();
         /*boolean successGetUsers = false;
@@ -78,12 +78,12 @@ public class UserDBManagerTest {
             successGetUsers = true;
         }assertTrue(successGetUsers);
         */
-    /*
+   
         assertTrue(users.get(0) instanceof User);
     }
-    */
-/*
-    @Test
+    
+
+    @Ignore
     public void changePassword() {
         String userId = "1";
         String prevPassword = "testPass";
@@ -100,5 +100,5 @@ public class UserDBManagerTest {
         UserDBManagerTest udb = new UserDBManagerTest();
         udb.changePassword();
     }
-    */
+
 }

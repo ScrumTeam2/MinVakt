@@ -17,13 +17,13 @@ public class UserDBManager extends DBManager {
     public UserDBManager() {
         super();
     }
-    private final String sqlLoginId = "SELECT * FROM User where user_id=?;";
+    private final String sqlLoginId = "SELECT * FROM user where user_id=?;";
     private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?;";
-    private final String sqlChangePass = "UPDATE User SET hash = ?, salt = ? WHERE user_id = ?;";
-    private final String sqlGetUsers = "SELECT * FROM User;";
-    private final String sqlGetUserById = "SELECT * FROM User WHERE user_id = ?;";
+    private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
+    private final String sqlGetUsers = "SELECT * FROM user;";
+    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
     private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?);";
-    private final String sqlChangeUserInfo = "UPDATE User SET first_name = ?, last_name = ?, email =?, phonenumber =?, category =? WHERE user_id =?;";
+    private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     PreparedStatement prep;
     Connection conn;
@@ -56,6 +56,7 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
+                        System.out.println("hash: " + res.getString("hash") + "salt: " + res.getString("salt"));
                         //New user
                         //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
                         User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), null, null);
@@ -113,7 +114,7 @@ public class UserDBManager extends DBManager {
                 e.printStackTrace();
             }
         }
-        return login;
+        return isAdmin;
     }
     
      /**
@@ -371,4 +372,11 @@ public class UserDBManager extends DBManager {
      } else {
      checkLogin(username, password); //Phone
      }*/
+    public static void main(String[] args) {
+        UserDBManager us = new UserDBManager();
+        int status= us.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "12345678", "1");
+        System.out.println(status);
+        
+        System.out.println(us.loginUser("testUser@gmail.com","testPass"));
+    }
 }

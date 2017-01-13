@@ -29,7 +29,7 @@ public class ShiftDBManagerTest {
         }
     }
 
-    @Test
+    @Ignore
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1,false,false));
@@ -41,7 +41,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
-    @Test
+    @Ignore
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, true, false);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
@@ -50,7 +50,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(statusOk);
     }
-    @Test
+    @Ignore
     public void getShiftsFromUserId(){
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
         assertTrue(result.get(0) instanceof ShiftUserBasic);

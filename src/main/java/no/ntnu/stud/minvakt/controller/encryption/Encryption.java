@@ -63,9 +63,11 @@ public class Encryption {
 
         Base64.Encoder enc = Base64.getEncoder();
         String[] out = new String[2];
+        
         out[0] = (enc.encodeToString(salt));
+        System.out.println("salt: " + out[0]);
         out[1] = (enc.encodeToString(hash));
-
+                System.out.println("hash: " + out[1]);
         return out;
     }
 
@@ -81,4 +83,13 @@ public class Encryption {
 
 
     }
+    
+    public static void main(String[] args) {
+        Encryption en = new Encryption();
+        System.out.println(en.passEncoding("testPass")[0]); //Salt
+        System.out.println(en.passEncoding("testPass")[1]); //Hash
+        
+        System.out.println("true? "+ en.passDecoding("testPass", "/vNGSkGDFcd9XmixFbFx/A==","EudCX7mUayIKjzy+uaCeMg=="));
+    }
+    
 }
