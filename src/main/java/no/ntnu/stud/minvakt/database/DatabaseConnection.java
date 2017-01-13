@@ -2,15 +2,20 @@ package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.util.TravisUtil;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Database class for connection between DBManager and mySQL
  */
 public class DatabaseConnection {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     private final String username = TravisUtil.isTravis() ? "root" : "audunwar_scrum";
     private final String password = TravisUtil.isTravis() ? "" : "c?6qUDAy";
     private final String databasename = TravisUtil.isTravis() ? "jdbc:mysql://localhost/test" : "jdbc:mysql://mysql.stud.ntnu.no/audunwar_scrum_db";
@@ -24,10 +29,10 @@ public class DatabaseConnection {
         try {
             Class.forName(databasedriver);
             connection = DriverManager.getConnection(databasename,username,password);
-        } catch (ClassNotFoundException cnfe) {
-            System.err.println("Issue with database driver.");
-        } catch (SQLException SQLe) {
-            System.err.println("Issue with connecting to database.");
+        } catch (ClassNotFoundException e) {
+            log.log(Level.SEVERE, "Issue with database driver.", e);
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Issue with connecting to database.", e);
         }
     }
 
