@@ -3,6 +3,7 @@ package no.ntnu.stud.minvakt.database;
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.User;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,18 +22,13 @@ public class ShiftDBManagerTest {
 
     @BeforeClass
     public static void DBsetUp() {
-        try {
-            shiftDB = new ShiftDBManager();
-        } catch (Exception e) {
-            System.err.println("Issue with databaseconnections! ");
-            e.printStackTrace();
-        }
+        shiftDB = new ShiftDBManager();
     }
 
     @Ignore
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1,false,false));
+        shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,false));
         Shift shift = new Shift(-1,1, new java.sql.Date(System.currentTimeMillis()), 1,1, shiftUsers);
         int shiftId = shiftDB.createNewShift(shift);
         if(shiftId != 0){
@@ -43,7 +39,7 @@ public class ShiftDBManagerTest {
     }
     @Ignore
     public void addEmployeeToShift(){
-        ShiftUser shiftUser = new ShiftUser(1, true, false);
+        ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
         if(statusOk){
             shiftDB.deleteEmployeeFromShift(1, 2);

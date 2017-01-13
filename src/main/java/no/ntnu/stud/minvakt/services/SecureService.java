@@ -6,11 +6,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import java.lang.invoke.MethodHandles;
+import java.util.logging.Logger;
 
 /**
  * Created by Audun on 10.01.2017.
  */
 public abstract class SecureService {
+    protected static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     @Context
     private HttpServletRequest request;
 

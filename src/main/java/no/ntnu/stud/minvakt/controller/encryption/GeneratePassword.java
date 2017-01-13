@@ -6,13 +6,18 @@
 
 package no.ntnu.stud.minvakt.controller.encryption;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author 8460p
  */
 public class GeneratePassword {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     public static String generateRandomPass() {
         //Requirements:
         //Min 1 stor bokstav
@@ -66,7 +71,7 @@ public class GeneratePassword {
             }
         }
         if (numChars < 2) {
-            System.out.println("----LESS THAN 2----");
+            log.log(Level.INFO, "----LESS THAN 2----");
         }
         return password;
     }

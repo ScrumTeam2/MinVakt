@@ -2,13 +2,18 @@ package no.ntnu.stud.minvakt.database;
 
 import org.apache.commons.dbutils.DbUtils;
 
+import java.lang.invoke.MethodHandles;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Default abstract class for working with database.
  */
 public abstract class DBManager{
+    protected static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+
     private Connection connection;
     private DatabaseConnection c;
 
@@ -17,7 +22,7 @@ public abstract class DBManager{
             c = new DatabaseConnection();
             connection = c.getConnection();
         } catch (Exception e) {
-            System.err.println("Connecting to database failed." + e);
+            log.log(Level.SEVERE, "Connecting to database failed.", e);
             closeConnection();
             return false;
         }
@@ -28,8 +33,7 @@ public abstract class DBManager{
             if(connection != null)DbUtils.closeQuietly(connection);
         }
         catch (Exception e){
-            System.err.println("Problem with closing connection");
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Problem with closing connection", e);
         }
     }
     protected void startTransaction(){
@@ -38,11 +42,12 @@ public abstract class DBManager{
                 connection.setAutoCommit(false);
             }
         }
-        catch (SQLException sqle){
-            System.err.println("Issue with setting autocommit false");
+        catch (SQLException e){
+            log.log(Level.SEVERE, "Issue with setting autocommit false", e);
         }
 
     }
+
     protected void endTransaction(){
         try{
             if(connection.getAutoCommit()){
@@ -50,8 +55,8 @@ public abstract class DBManager{
                 connection.setAutoCommit(true);
             }
         }
-        catch (SQLException sqle){
-            System.err.println("Issue with setting autocommit false");
+        catch (SQLException e){
+            log.log(Level.SEVERE, "Issue with setting autocommit false", e);
         }
     }
 
@@ -61,8 +66,8 @@ public abstract class DBManager{
                 connection.rollback();
                 connection.setAutoCommit(true);
             }
-        } catch (SQLException ee) {
-            System.err.println("Rollback Statement failed");
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Rollback Statement failed", e);
         }
     }
 
@@ -75,9 +80,8 @@ public abstract class DBManager{
             }
             if (res != null) res.close();
             if (prep != null) prep.close();
-        } catch (SQLException sqle) {
-            System.err.println("Finally Statement failed");
-            sqle.printStackTrace();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Finally Statement failed", e);
         }
         closeConnection();
     }
@@ -88,9 +92,8 @@ public abstract class DBManager{
                 connection.setAutoCommit(true);
             }
             if (prep != null) prep.close();
-        } catch (SQLException sqle) {
-            System.err.println("Finally Statement failed");
-            sqle.printStackTrace();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Finally Statement failed", e);
         }
         closeConnection();
     }
