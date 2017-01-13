@@ -72,7 +72,7 @@ public class UserDBManagerTest {
     
     @Ignore
     public void getUsers() {
-        ArrayList<User> users = userDB.getUsers();
+        ArrayList<User> users = userDB.getUsers1();
         /*boolean successGetUsers = false;
         if(users.size() >0) {
             successGetUsers = true;
