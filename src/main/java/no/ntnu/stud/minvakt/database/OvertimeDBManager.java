@@ -1,6 +1,9 @@
 package no.ntnu.stud.minvakt.database;
+import no.ntnu.stud.minvakt.data.Overtime;
 
+import javax.xml.transform.Result;
 import java.sql.*;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
@@ -8,9 +11,10 @@ import java.util.logging.Level;
  */
 public class OvertimeDBManager extends DBManager{
 
+
     private final String sqlSetOvertime = "INSERT INTO overtime VALUES(?,?,?,?);";
-    private final String sqlGetRowCount = "SELECT COUNT(*) FROM overtime WHERE user_id=?";
-    private final String sqlGetOvertime = "SELECT date, start_time, end_time FROM overtime WHERE user_id = ? AND date LIKE ? ORDER BY date ASC LIMIT ?;";
+    private final String sqlGetRowCount = "SELECT COUNT(*) FROM overtime WHERE user_id=? AND date BETWEEN ? AND ?;";
+    private final String sqlGetOvertime = "SELECT date, start_time, end_time FROM overtime WHERE user_id = ? AND date BETWEEN ? AND ?;";
 
     // private final String sqlGetOvertimeHours = "SELECT start_time, end_time FROM overtime WHERE user_id=?";
     // private final String sqlGetOvertime = "SELECT start_time, end_time FROM overtime WHERE user_id=?";
@@ -51,15 +55,23 @@ public class OvertimeDBManager extends DBManager{
         return out != 0;
     }
 
-    public int getRowCount(int userId){
+    // Returns number of rows
+    public int getRowCount(int userId, Date startDate, Date endDate){
         int count = 0;
+        ResultSet res = null;
         if(setUp()){
             try{
                 startTransaction();
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetRowCount);
                 prep.setInt(1,userId);
-                count = prep.executeUpdate();
+                prep.setDate(2, startDate);
+                prep.setDate(3, endDate);
+
+                res = prep.executeQuery();
+                while(res.next()){
+                    count += res.getInt("COUNT(*)");
+                }
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting row count for user with ID = " + userId, sqlE);
             } finally{
@@ -70,11 +82,13 @@ public class OvertimeDBManager extends DBManager{
         return count;
     }
 
-    // Returns array with overtime (date, start_time, end_time) on given userID. Hours and date from given start date until given number of days
-    public int[][] getOvertimeList(int userId, Date date, int days){
-        int rowCount = getRowCount(userId);
+    // Returns array with overtime (date, start_time, end_time) on given userID. Hours and date from given start date til end date
+    public Overtime[] getOvertimeList(int userId, Date startDate, Date endDate){
 
-        int[][] timeList = new int[rowCount][3];
+        Overtime listObject = null;
+        int rowCount = getRowCount(userId, startDate, endDate);
+
+        Overtime[] timeList = new Overtime[rowCount];
 
         ResultSet res = null;
 
@@ -84,17 +98,18 @@ public class OvertimeDBManager extends DBManager{
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetOvertime);
                 prep.setInt(1, userId);
-                prep.setDate(2, date);
-                prep.setInt(3, days);
+                prep.setDate(2, startDate);
+                prep.setDate(3, endDate);
 
                 res = prep.executeQuery();
 
+                int index = 0;
                 while(res.next()){
-                    for(int i = 0; i < timeList.length; i++){
-                        timeList[i][0] = res.getInt("date");
-                        timeList[i][1] = res.getInt("start_time");
-                        timeList[i][2] = res.getInt("end_time");
-                    }
+
+                    listObject = new Overtime(res.getDate("date"), res.getInt("start_time"), res.getInt("end_time"));
+                    timeList[index] = listObject;
+
+                    index++;
                 }
 
             } catch (SQLException sqlE){
@@ -108,15 +123,15 @@ public class OvertimeDBManager extends DBManager{
     }
 
     // Returns overtime for given user. Hours are returned from given start date until given number of days
-    public int getOvertimeHours(int userId, Date date, int days){
+    public int getOvertimeHours(int userId, Date startDate, Date endDate){
         int hours = 0;
 
-        int[][] list = getOvertimeList(userId, date, days);
+        Overtime[] list = getOvertimeList(userId, startDate, endDate);
         for(int i = 0; i < list.length; i++){
-            if(list[i][3] > list[i][2]) {
-                hours += list[i][3] - list[i][2];
+            if(list[i].getEndTime() > list[i].getStartTime()) {
+                hours += list[i].getEndTime() - list[i].getStartTime();
             } else {
-                hours += (list[i][3] + 90) - list[i][2];
+                hours += (list[i].getEndTime() + 90) - list[i].getStartTime();
             }
         }
         return hours;
