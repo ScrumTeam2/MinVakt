@@ -7,11 +7,15 @@ import java.util.ArrayList;
  */
 public class ShiftUser {
     private int userId;
+    private String userName;
     private boolean responsibility;
     private boolean valid_absence;
+    private User.UserCategory userCategory;
     User user = null;
 
-    public ShiftUser(int userId, boolean responsibility, boolean valid_absence){
+    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, boolean valid_absence){
+        this.userCategory = userCategory;
+        this.userName = userName;
         this.userId = userId;
         this.responsibility = responsibility;
         this.valid_absence = valid_absence;
@@ -21,7 +25,18 @@ public class ShiftUser {
     public ShiftUser() {
 
     }
-    
+    public User.UserCategory getUserCategory(){
+        return userCategory;
+    }
+    public void setUserCategory(User.UserCategory userCategory){
+        this.userCategory = userCategory;
+    }
+    public String getUserName(){
+        return userName;
+    }
+    public void setUserName(String userName){
+        this.userName = userName;
+    }
     public boolean isResponsibility() {
         return responsibility;
     }
