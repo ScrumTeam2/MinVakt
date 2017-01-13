@@ -10,6 +10,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  * Created by evend on 1/10/2017.
@@ -28,7 +29,8 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id = ?;";
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?);";
     private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?;";
-    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?) AND date >= CURDATE();";
+    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?) AND date >= CURDATE()" +
+            "ORDER BY date ASC, time ASC;";
 
     Connection conn;
     PreparedStatement prep;
@@ -79,8 +81,7 @@ public class ShiftDBManager extends DBManager {
 
             } catch (SQLException sqle) {
                 rollbackStatement();
-                System.err.println("Issue with creating new shift, data rolled back");
-                sqle.printStackTrace();
+                log.log(Level.WARNING, "Issue with creating new shift, data rolled back");
             }
             finally {
                 endTransaction();
@@ -99,22 +100,21 @@ public class ShiftDBManager extends DBManager {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlDeleteShiftStaff);
                 prep.setInt(1,shiftId);
-                System.out.println(prep.toString());
+                log.fine(prep.toString());
                 status = prep.executeUpdate();
                 if(status != 0){
                     prep = conn.prepareStatement(sqlDeleteShift);
                     prep.setInt(1, shiftId);
-                    System.out.println(prep.toString());
+                    log.fine(prep.toString());
                     status = prep.executeUpdate();
                 }
                 else
                     throw new SQLException("Could not delete shift, rolling back");
             }
-            catch (SQLException sqle){
+            catch (SQLException e){
                 rollbackStatement();
                 status = 0;
-                System.err.println("Issue with deleting shift with ID = "+shiftId);
-                sqle.printStackTrace();
+                log.log(Level.WARNING, "Issue with deleting shift with ID = " + shiftId, e);
             }
             finally {
                 endTransaction();
@@ -151,10 +151,9 @@ public class ShiftDBManager extends DBManager {
                             res.getInt("dept_id"),
                             shiftUsers);
             }
-            catch (SQLException sqle){
+            catch (SQLException e){
                 rollbackStatement();
-                System.err.println("Not able to get shift from shift ID = "+shiftId);
-                sqle.printStackTrace();
+                log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
             }
             finally {
                 endTransaction();
@@ -181,9 +180,8 @@ public class ShiftDBManager extends DBManager {
                 out = prep.executeUpdate() != 0;
 
             }
-            catch (SQLException sqle){
-                System.err.println("Not able to get shift from shift ID = "+shiftId);
-                sqle.printStackTrace();
+            catch (SQLException e){
+                log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
             }
             finally {
                 finallyStatement(prep);
@@ -202,9 +200,8 @@ public class ShiftDBManager extends DBManager {
                 out = prep.executeUpdate() != 0;
 
             }
-            catch (SQLException sqle){
-                System.err.println("Not able to delete shift with shift ID = "+shiftId + " and user ID = "+userId);
-                sqle.printStackTrace();
+            catch (SQLException e){
+                log.log(Level.WARNING, "Not able to delete shift with shift ID = " + shiftId + " and user ID = " + userId, e);
             }
             finally {
                 finallyStatement(prep);
@@ -231,9 +228,8 @@ public class ShiftDBManager extends DBManager {
                     );
                 }
             }
-            catch (SQLException sqle){
-                System.err.println("Not able to get shift with userId = "+userId);
-                sqle.printStackTrace();
+            catch (SQLException e){
+                log.log(Level.WARNING, "Not able to get shift with userId = " + userId, e);
             }
             finally {
                 finallyStatement(res, prep);
