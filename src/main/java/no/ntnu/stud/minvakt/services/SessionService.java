@@ -30,14 +30,14 @@ public class SessionService {
         // Return if already logged in
         if (request.getSession().getAttribute("session") != null) {
             log.log(Level.INFO, "Session already exists!");
-            return Response.status(Response.Status.FORBIDDEN).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         UserDBManager userDBManager = new UserDBManager();
         User user = userDBManager.loginUser(identificator, password);
         if (user == null) {
             // No match in database, return error
-            return Response.status(Response.Status.FORBIDDEN).entity(new ErrorInfo("Invalid credentials")).build();
+            return Response.status(Response.Status.UNAUTHORIZED).entity(new ErrorInfo("Invalid credentials")).build();
         }
 
         // Create session

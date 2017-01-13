@@ -4,11 +4,13 @@ import com.mysql.cj.api.jdbc.Statement;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.UserBasic;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /*
@@ -28,9 +30,10 @@ public class UserDBManager extends DBManager {
      checkLogin(username, password); //Phone
      }*/
 
-    String sqlLoginId = "SELECT * FROM User where user_id=?";
-    String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?";
-    String sqlChangePass = "UPDATE User SET hash = ?, salt = ? WHERE user_id = ?";
+    private String sqlLoginId = "SELECT * FROM user where user_id=?";
+    private String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?";
+    private String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?";
+    private String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user;";
     PreparedStatement prep;
     Connection conn;
     ResultSet res;
@@ -51,13 +54,18 @@ public class UserDBManager extends DBManager {
                 prep.setString(2, email);
                 res = prep.executeQuery();
                 if (res.next()) {
+                    System.out.println(email+ " " + pass);
+
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
                         //New user
                         //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
-                                res.getString("last_name"), res.getString("hash"),
-                                res.getString("salt"), User.UserCategory.valueOf(res.getInt("category")));
+                                res.getString("last_name"), null,
+                                null, User.UserCategory.valueOf(res.getInt("category")));
                         return user;
+                    }
+                    else{
+                        throw new Exception("User with username = "+email+" typed incorrect password!"+pass);
                     }
                 }
 
@@ -95,6 +103,7 @@ public class UserDBManager extends DBManager {
         return -1;
         //"Deletes" the row of this specific user? Possible?
     }
+
 
     public int changeDepartment(String user_id) {
         int change = -1;
@@ -259,6 +268,33 @@ public class UserDBManager extends DBManager {
             System.out.println("Login incorrect");
         }
         return change;
+    }
+    public ArrayList<UserBasic> getUserBasics(){
+        ArrayList<UserBasic> userBasics = new ArrayList<>();
+        if(setUp()){
+            ResultSet res = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUserBasics);
+                res = prep.executeQuery();
+                while(res.next()){
+                    userBasics.add(new UserBasic(
+                            res.getInt("user_id"),
+                            res.getString("first_name"),
+                            res.getString("last_name"),
+                            User.UserCategory.valueOf(res.getInt("category"))
+                    ));
+                }
+            }
+            catch (SQLException sqle){
+                System.out.println("Issue with getting user basics");
+                sqle.printStackTrace();
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return userBasics;
     }
 
 }

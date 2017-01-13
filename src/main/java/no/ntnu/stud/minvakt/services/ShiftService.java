@@ -1,4 +1,5 @@
 package no.ntnu.stud.minvakt.services;
+import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.ShiftUserBasic;
@@ -21,33 +22,42 @@ import java.util.Collection;
     Parameter date needs to be on correct format
  */
 @Path("/shift")
-public class ShiftService {
+public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
+    Session session = getSession();
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createShift(Shift shift) {
-        //java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-        //default id = -1, will change after created
-        int shiftId = shiftDB.createNewShift(shift);
-        shift.setId(shiftId);
-        if (shiftId < 0) {
-            return Response.status(400).entity("Unable to create new shift.").build();
-        } else {
-            //TODO: Add shiftId to response
-            String json = "{\"id\": \"" + shiftId + "\"}";
-            return Response.ok(json, MediaType.APPLICATION_JSON).build();
+        if(session.isAdmin()) {
+            int shiftId = shiftDB.createNewShift(shift);
+            shift.setId(shiftId);
+            if (shiftId < 0) {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Unable to create new shift.").build();
+            } else {
+                //TODO: Add shiftId to response
+                String json = "{\"id\": \"" + shiftId + "\"}";
+                return Response.ok(json, MediaType.APPLICATION_JSON).build();
+            }
+        }
+        else{
+            return Response.status(Response.Status.UNAUTHORIZED).entity("User is not an admin").build();
         }
     }
 
     @DELETE
     @Path("/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") int id) {
-        boolean isDeleted = shiftDB.deleteShift(id);
-        if (!isDeleted) {
-            return Response.status(400).entity("Unable to delete shift.").build();
-        } else {
-            return Response.status(200).build();
+        if(session.isAdmin()) {
+            boolean isDeleted = shiftDB.deleteShift(id);
+            if (!isDeleted) {
+                return Response.status(400).entity("Unable to delete shift.").build();
+            } else {
+                return Response.status(200).build();
+            }
+        }
+        else{
+            return Response.status(Response.Status.UNAUTHORIZED).entity("User is not an admin").build();
         }
     }
 
@@ -87,9 +97,9 @@ public class ShiftService {
     }
 
     @GET
-    @Path("/user/{userId}")
+    @Path("/user/")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId) {
-        return shiftDB.getShiftWithUserId(userId);
+    public ArrayList<ShiftUserBasic> getUserBasicFromId() {
+        return shiftDB.getShiftWithUserId(session.getUser().getId());
     }
 }

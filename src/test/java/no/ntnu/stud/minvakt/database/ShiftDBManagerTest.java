@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -51,5 +52,6 @@ public class ShiftDBManagerTest {
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
     }
+
 }
 
