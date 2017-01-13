@@ -2,15 +2,19 @@ package no.ntnu.stud.minvakt.controller.encryption;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.lang.invoke.MethodHandles;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by M/ed on 07.03.2016.
  */
 public class Encryption {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     /**
      * Checks whether two passwords are the same using an input password,
@@ -32,7 +36,8 @@ public class Encryption {
             SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             hash = f.generateSecret(spec).getEncoded();
         } catch (Exception e) {
-            System.err.println("Issue with secret key factory in password decryption.");
+
+            log.log(Level.SEVERE, "Issue with secret key factory in password decryption.", e);
             return false;
         }
 
@@ -57,7 +62,7 @@ public class Encryption {
             SecretKeyFactory f = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
             hash = f.generateSecret(spec).getEncoded();
         } catch (Exception e) {
-            System.err.println("Issue with SecretKeyFactory in password encrpytion.");
+            log.log(Level.SEVERE, "Issue with SecretKeyFactory in password encrpytion.", e);
             return null;
         }
 
@@ -80,8 +85,6 @@ public class Encryption {
     private byte[] stringToByte(String string) {
         Base64.Decoder dec = Base64.getDecoder();
         return dec.decode(string);
-
-
     }
     
     public static void main(String[] args) {

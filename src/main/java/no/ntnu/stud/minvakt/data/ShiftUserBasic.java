@@ -10,6 +10,7 @@ public class ShiftUserBasic {
     private Date date;
     private Shift.ShiftType shiftType;
 
+    @SuppressWarnings("unused")
     public ShiftUserBasic(){}
 
     public ShiftUserBasic(int shiftId, Date date, Shift.ShiftType shiftType) {

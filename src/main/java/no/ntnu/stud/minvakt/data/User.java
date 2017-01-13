@@ -1,6 +1,31 @@
 package no.ntnu.stud.minvakt.data;
 
 public class User {
+
+    public enum UserCategory {
+        ASSISTANT, HEALTH_WORKER, NURSE;
+
+
+
+        public int getValue() {
+            return super.ordinal();
+        }
+
+        public static UserCategory valueOf(int shiftTypeNr) {
+            for (UserCategory type : UserCategory.values()) {
+                if (type.ordinal() == shiftTypeNr) {
+                    return type;
+                }
+            }
+            return null;
+        }
+        @Override
+        public String toString() {
+            String constName = super.toString();
+            return constName.substring(0, 1) + constName.substring(1).toLowerCase();
+        }
+
+    }
     private int id;
     private String firstName;
     private String lastName;
@@ -8,7 +33,7 @@ public class User {
     private String salt;
     private String email;
     private String phonenumber;
-    private int category;
+    private UserCategory category;
 
     public User() {
 
@@ -71,20 +96,21 @@ public class User {
         this.phonenumber = phonenumber;
     }
 
-    public int getCategory() {
+    public UserCategory getCategory() {
         return category;
     }
 
-    public void setCategory(int category) {
+    public void setCategory(UserCategory category) {
         this.category = category;
     }
 
-    public User(int id, String firstName, String lastName, String hash, String salt) {
+    public User(int id, String firstName, String lastName, String hash, String salt, UserCategory userCategory) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hash = hash;
         this.salt = salt;
+        this.category = userCategory;
     }
 
     @Override

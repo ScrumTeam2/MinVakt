@@ -2,6 +2,7 @@ package no.ntnu.stud.minvakt.database;
 
 import java.util.ArrayList;
 import java.sql.*;
+import java.util.logging.Level;
 
 /**
  * Created by AnitaKristineAune on 11.01.2017.
@@ -40,8 +41,7 @@ public class AvailabilityDBManager extends DBManager{
                 }
 
             } catch (SQLException sqlE) {
-                System.err.println("Error finding available staff for shift with ID = " + shiftID);
-                sqlE.printStackTrace();
+                log.log(Level.WARNING, "Error finding available staff for shift with ID = " + shiftID, sqlE);
             } finally {
                 endTransaction();
                 finallyStatement(res, prep);
@@ -64,8 +64,7 @@ public class AvailabilityDBManager extends DBManager{
                 prep.setInt(2, shiftID);
                 out = prep.executeUpdate();
             } catch (SQLException sqlE){
-                System.err.println("Error registering user with ID = " + userID + " available for shift with ID = " +shiftID);
-                sqlE.printStackTrace();
+                log.log(Level.WARNING, "Error registering user with ID = " + userID + " available for shift with ID = " + shiftID, sqlE);
             } finally {
                 endTransaction();
                 finallyStatement(prep);
@@ -89,7 +88,7 @@ public class AvailabilityDBManager extends DBManager{
                 out = prep.executeUpdate();
 
             } catch (SQLException sqlE) {
-                System.err.println("Error: Deleting availability on user with ID = " + userID + " and shift with ID = " + shiftID);
+                log.log(Level.WARNING, "Error: Deleting availability on user with ID = " + userID + " and shift with ID = " + shiftID, sqlE);
             } finally {
                 endTransaction();
                 finallyStatement(prep);

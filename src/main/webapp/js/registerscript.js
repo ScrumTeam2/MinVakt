@@ -3,30 +3,62 @@
  */
 
 
-/*
-* Modal for submitting user
-*/
+$(document).ready(function(){
 
-//function for submitting user
-function submitForm(){
-    var first = $('#firstname').value();
-    var last = $('#lastname').value();
-    var percent = $('#percentage').value();
-    var email = $('#email').value();
-    var phone = $('#phone').value();
-    var category = $('#category').value();
+    $('#userBtn').click(function(e){
+        e.preventDefault();
+        var emptyField = true;
+
+        var $first = $('#firstname').value();
+        var $last = $('#lastname').value();
+        var $percent = $('#percentage').value();
+        var $email = $('#email').value();
+        var $phone = $('#phone').value();
+        var $category = $('#category').value();
+
+        if(!$identificator.val()){
+            $identificator.addClass('error');
+            emptyField = false;
+        }
+
+        if(!$password.val()){
+            $password.addClass('error');
+            emptyField = false;
+        }
 
 
-    $('#firstname').addClass('error');
+        if(emptyField){
+            $.ajax({
+                url: "/rest/admin/createuser",
+                type: 'POST',
+                data: {
+                    firstName: $('#firstname').val(),
+                    lastName: $('#lastname').val(),
+                    email: $('#email').val(),
+                    phonenumber: $('#phone').val(),
+                    category: $('#category').val(),
+                    workPercentage: $('#percentage').val()
+                },
+                success: addUser,
+                error: invalidField
+            });
+        }
+    });
+});
+
+function addUser(data){
+    console.log("Login", data);
+
     $('.modal').show();
-    return false;
-
-    if(first == null){
-        first.addClass('error');
-    }
-
 
 }
+
+function invalidField(data){
+    $('.feedback').show();
+    console.log("Invalid", data);
+}
+
+
 
 //close modal
 $('#userCloseBtn').click(function() {

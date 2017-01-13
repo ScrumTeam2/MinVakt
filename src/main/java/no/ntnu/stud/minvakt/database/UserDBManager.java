@@ -58,8 +58,8 @@ public class UserDBManager extends DBManager {
                         //New user
                         //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
-                        res.getString("last_name"), res.getString("hash"),
-                        res.getString("salt"), User.UserCategory.valueOf(res.getInt("category")));
+                                res.getString("last_name"), res.getString("hash"),
+                                res.getString("salt"), User.UserCategory.valueOf(res.getInt("category")));
                         return user;
                     }
                 }
@@ -197,12 +197,30 @@ public class UserDBManager extends DBManager {
         return array;
     }
     */
-    
-     /**
-     * Gets user object by user ID
-     * @param ususerIderId
-     * @return User object
-     */
+
+    public ArrayList<User> getUsers(){
+        ArrayList<User> users = new ArrayList<User>();
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement("SELECT * FROM User;");
+                res = prep.executeQuery();
+                while (res.next()){
+                    User user = new User();
+                    user.setId(res.getInt("user_id"));
+                    user.setFirstName(res.getString("first_name"));
+                    user.setLastName(res.getString("last_name"));
+                    user.setEmail(res.getString("email"));
+                    user.setPhonenumber(res.getString("phonenumber"));
+                    user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    users.add(user);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return users;
+    }
     public User getUserById(String userId) {
         User user = null;
         if(setUp()){
