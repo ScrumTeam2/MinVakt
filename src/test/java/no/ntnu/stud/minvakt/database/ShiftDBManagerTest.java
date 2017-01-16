@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -26,7 +27,7 @@ public class ShiftDBManagerTest {
         shiftDB = new ShiftDBManager();
     }
 
-    @Test
+    @Ignore
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,false));
@@ -38,7 +39,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
-    @Test
+    @Ignore
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
@@ -53,6 +54,28 @@ public class ShiftDBManagerTest {
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
         System.out.println(result);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
+    }
+
+
+    // int getShiftHours(int userId, Date startDate, Date endDate)
+    @Test
+    public void getTotalHoursTest(){
+        String stringDate1 = "2017-01-01";
+        String stringDate2 = "2017-01-31";
+        java.sql.Date date1 = java.sql.Date.valueOf(stringDate1);
+        java.sql.Date date2 = java.sql.Date.valueOf(stringDate2);
+
+        int res = shiftDB.getShiftHours(10, date1, date2);
+        int expRes = 3 * 32;
+        assertEquals(expRes, res);
+    }
+
+    @Test
+    public void setShiftChangeTest(){
+        boolean res = shiftDB.setShiftChange(4,7);
+        boolean expRes = true;
+
+        assertEquals(expRes, res);
     }
 
 }
