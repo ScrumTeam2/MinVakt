@@ -1,6 +1,11 @@
 package no.ntnu.stud.minvakt.data;
 
+import java.lang.invoke.MethodHandles;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class User {
+    private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     public enum UserCategory {
         ADMIN, ASSISTANT, HEALTH_WORKER, NURSE;
@@ -19,6 +24,18 @@ public class User {
             }
             return null;
         }
+
+        @SuppressWarnings("unused")
+        public static UserCategory fromString(String shiftTypeNr) {
+            try {
+                int val = Integer.parseInt(shiftTypeNr);
+                return valueOf(val);
+            } catch (NumberFormatException e) {
+                log.log(Level.WARNING, "Invalid UserCategory " + shiftTypeNr, e);
+                return UserCategory.HEALTH_WORKER;
+            }
+        }
+
         @Override
         public String toString() {
             String constName = super.toString();

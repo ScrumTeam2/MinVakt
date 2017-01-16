@@ -255,13 +255,13 @@ public class UserDBManager extends DBManager {
         }
         return users;
     }
-    public User getUserById(String userId) {
+    public User getUserById(int userId) {
         User user = null;
         if(setUp()){
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetUserById);
-                prep.setString(1, userId);
+                prep.setInt(1, userId);
                 res = prep.executeQuery();
                 if (res.next()){
                     User u = new User();
