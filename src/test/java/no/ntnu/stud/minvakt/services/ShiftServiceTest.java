@@ -2,21 +2,18 @@ package no.ntnu.stud.minvakt.services;
 
 /**
  * Created by evend on 1/10/2017.
- *//*
-import com.google.gson.Gson;
+ */
 import no.ntnu.stud.minvakt.data.Shift;
 import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.database.*;
-import no.ntnu.stud.minvakt.services.ShiftService;
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.json.*;
+import org.springframework.mock.web.MockHttpServletRequest;
 
-
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -26,35 +23,45 @@ import static org.junit.Assert.*;
 
 public class ShiftServiceTest {
     private static ShiftService shiftService;
+    private HttpServletRequest request;
 
-    @BeforeClass
-    public static void objectSetUp() {
-        shiftService = new ShiftService();
+    @Before
+    public void setUpTest() {
+        request = new MockHttpServletRequest();
+        shiftService = new ShiftService(request);
     }
 
-    @Ignore
+    private void logInUser() {
+        SessionService sessionService = new SessionService();
+        sessionService.checkLogin(request, "email1", "password");
+    }
+
+    @Test
     public void createShift() {
+        logInUser();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false, false));
         Shift shift = new Shift(-1, 1, new Date(System.currentTimeMillis()), 1, 1, shiftUsers);
         Response response = shiftService.createShift(shift);
         if (response.getStatus() == 200) {
-            String rawJson = response.readEntity(String.class);
-            Gson gson = new Gson();
-            Integer shiftId = gson.fromJson(rawJson, Integer.class);
+            String rawJson = (String) response.getEntity();
+            JSONObject o = new JSONObject(rawJson);
+            Integer shiftId = o.getInt("id");
             Response delResponse = shiftService.deleteShift(shiftId);
             assertTrue(delResponse.getStatus() == 200);
         }
         assertTrue(response.getStatus() == 200);
     }
 
-    @Ignore
+    @Test
     public void getShift() {
+        logInUser();
         assertNotNull(shiftService.getShift(1));
     }
 
-    @Ignore
+    @Test
     public void addEmployeeToShift() {
+        logInUser();
         ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, false);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 2);
         if (statusOk.getStatus() == 200) {
@@ -65,8 +72,8 @@ public class ShiftServiceTest {
 
     @Ignore
     public void getEmployeeBasicsWithUserId() {
+        logInUser();
         ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId();
         assertFalse(shiftUserBasics.isEmpty());
     }
 }
-*/
