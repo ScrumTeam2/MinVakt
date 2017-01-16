@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -47,9 +48,11 @@ public class ShiftDBManagerTest {
         }
         assertTrue(statusOk);
     }
+    //Skaper problemer med at det ikke er koblet noen skift i databasen
     @Ignore
     public void getShiftsFromUserId(){
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
+        System.out.println(result);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
     }
 
@@ -74,5 +77,6 @@ public class ShiftDBManagerTest {
 
         assertEquals(expRes, res);
     }
+
 }
 

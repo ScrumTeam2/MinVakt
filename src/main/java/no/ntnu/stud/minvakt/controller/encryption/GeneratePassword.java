@@ -73,6 +73,7 @@ public class GeneratePassword {
         if (numChars < 2) {
             log.log(Level.INFO, "----LESS THAN 2----");
         }
+        System.out.print(password);
         return password;
     }
 

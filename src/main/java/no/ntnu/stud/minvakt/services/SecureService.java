@@ -22,7 +22,7 @@ public abstract class SecureService {
         // Tries to get session of logged in user. If no session, throw exception
         Session session = (Session)request.getSession().getAttribute("session");
         if(session == null) {
-            throw new NotAuthorizedException("Cannot access service", Response.Status.FORBIDDEN);
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
         return session;
     }

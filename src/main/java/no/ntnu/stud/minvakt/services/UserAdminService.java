@@ -24,7 +24,7 @@ public class UserAdminService extends SecureService {
     public Response addUser(User user) {
         Session session = getSession();
         if(!session.isAdmin()) {
-            throw new NotAuthorizedException("Cannot access service", Response.Status.FORBIDDEN);
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
 
         // Verify user data

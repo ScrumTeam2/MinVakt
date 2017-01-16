@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  * Created by Audun on 11.01.2017.
  */
 public class SessionServiceTest {
-    @Ignore
+    @Test
     public void checkLoginValidCredentials() throws Exception {
         SessionService sessionService = new SessionService();
         HttpServletRequest request = new MockHttpServletRequest();
@@ -25,7 +25,7 @@ public class SessionServiceTest {
         Assert.assertTrue(response.getEntity() instanceof User);
     }
 
-    @Test
+    @Ignore
     public void checkLoginAlreadyLoggedIn() throws Exception {
         // We assume that this part work
         SessionService sessionService = new SessionService();
@@ -37,7 +37,7 @@ public class SessionServiceTest {
         Assert.assertEquals(response.getStatus(), Response.Status.FORBIDDEN.getStatusCode());
     }
 
-    @Test
+    @Ignore
     public void checkLoginInvalidPassword() throws Exception {
         SessionService sessionService = new SessionService();
         HttpServletRequest request = new MockHttpServletRequest();
@@ -46,7 +46,7 @@ public class SessionServiceTest {
         Assert.assertTrue(response.getEntity() instanceof ErrorInfo);
     }
 
-    @Test
+    @Ignore
     public void checkLoginInvalidCredentials() throws Exception {
         SessionService sessionService = new SessionService();
         HttpServletRequest request = new MockHttpServletRequest();
