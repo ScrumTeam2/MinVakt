@@ -52,7 +52,7 @@ public class UserDBManagerTest {
         assertTrue(successLogin);
     }
     
-    @Ignore
+    @Test
     public void loginUserId() {
         String userId = "1";
         int status = userDB.checkLoginId(userId, "password");
@@ -88,7 +88,7 @@ public class UserDBManagerTest {
     }
     
 
-    @Ignore
+    @Test
     public void changePassword() {
         String userId = "1";
         String prevPassword = "password";
