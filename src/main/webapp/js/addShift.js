@@ -15,20 +15,35 @@ $(document).ready(function() {
         var staffEvening = parseInt(data.evening);
         var staffNight = parseInt(data.night);
         var date = data.date;
-        var shiftUsers = null;
+        var shiftUsers = [];
         var deptId = parseInt(data.department);
 
         var day = {
             id: id,
             staffNumb: staffDay,
             date: date,
-            type: 1,
+            type: "DAY",
             deptId: deptId,
             shiftUsers: shiftUsers,
         };
 
-        console.log(JSON.stringify(day));
-        console.log(day);
+        var evening = {
+            id: id,
+            staffNumb: staffEvening,
+            date: date,
+            type: "EVENING",
+            deptId: deptId,
+            shiftUsers: shiftUsers,
+        };
+
+        var night = {
+            id: id,
+            staffNumb: staffNight,
+            date: date,
+            type: "NIGHT",
+            deptId: deptId,
+            shiftUsers: shiftUsers,
+        };
 
         $.ajax({
                 url: "/rest/shift",
@@ -36,16 +51,41 @@ $(document).ready(function() {
                 dataType: "json",
                 contentType: "application/json",
                 data: JSON.stringify(day)
-            })
-            .done(function() {
-                console.log( "success" );
-            })
-            .fail(function(error) {
-                console.log( "error", error );
-            })
-            .always(function() {
-                console.log( "complete" );
-            });
+        })
+        .done(function(data) {
+            console.log( "success", data );
+        })
+        .fail(function(error) {
+            console.log( "error", error );
+        });
+
+        $.ajax({
+                url: "/rest/shift",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(evening)
+        })
+        .done(function(data) {
+            console.log( "success", data );
+        })
+        .fail(function(error) {
+            console.log( "error", error );
+        });
+
+        $.ajax({
+                url: "/rest/shift",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(night)
+        })
+        .done(function(data) {
+            console.log( "success", data );
+        })
+        .fail(function(error) {
+            console.log( "error", error );
+        });
 
 
     });
