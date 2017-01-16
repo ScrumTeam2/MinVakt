@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -50,6 +51,28 @@ public class ShiftDBManagerTest {
     public void getShiftsFromUserId(){
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
+    }
+
+
+    // int getShiftHours(int userId, Date startDate, Date endDate)
+    @Test
+    public void getTotalHoursTest(){
+        String stringDate1 = "2017-01-01";
+        String stringDate2 = "2017-01-31";
+        java.sql.Date date1 = java.sql.Date.valueOf(stringDate1);
+        java.sql.Date date2 = java.sql.Date.valueOf(stringDate2);
+
+        int res = shiftDB.getShiftHours(10, date1, date2);
+        int expRes = 3 * 32;
+        assertEquals(expRes, res);
+    }
+
+    @Test
+    public void setShiftChangeTest(){
+        boolean res = shiftDB.setShiftChange(28,1);
+        boolean expRes = true;
+
+        assertEquals(expRes, res);
     }
 }
 
