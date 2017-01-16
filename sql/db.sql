@@ -20,6 +20,10 @@ CREATE TABLE user(
     CONSTRAINT pk_user PRIMARY KEY(user_id)
 );
 
+-- Make login identifiers unique
+ALTER TABLE user ADD UNIQUE INDEX (email);
+ALTER TABLE user ADD UNIQUE INDEX (phonenumber);
+
 -- Administration user. (rights: needed?)
 CREATE TABLE admin(
   user_id INTEGER NOT NULL,
