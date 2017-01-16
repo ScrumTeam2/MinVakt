@@ -50,7 +50,7 @@ public class AvailabilityDBManagerTest {
 
     @Test
     public void setAvailableFailTest() {
-        boolean res = availabilityDB.setAvailability(1, 13);
+        boolean res = availabilityDB.setAvailability(1000, 13);
         boolean test = false;
 
         assertEquals(res, test);
