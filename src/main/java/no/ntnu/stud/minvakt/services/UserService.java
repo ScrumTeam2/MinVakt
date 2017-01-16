@@ -24,7 +24,7 @@ public class UserService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<UserBasic> getUserBasics(Shift shift) {
+    public ArrayList<UserBasicList> getUserBasics() {
         return userDB.getUserBasics();
     }
 }
