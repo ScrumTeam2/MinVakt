@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.User;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,15 +28,43 @@ public class UserDBManagerTest {
             e.printStackTrace();
         }
     }
-    
+
     @Test
-    public void createNewUser() {
-        int status= userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "12345678", "1");
-        boolean successCreation = false;
-        if(status>0) {
-            successCreation = true;
-        }
-        assertTrue(successCreation);
+    public void createAndDeleteNewUser() {
+        int userId = userDB.createNewUser("testFornavn", "testEtternavn", "createAndDeleteNewUser@gmail.com", "10101010", User.UserCategory.ASSISTANT.getValue());
+
+        Assert.assertTrue(userId > 0);
+
+        User user = userDB.getUserById(userId);
+        Assert.assertTrue(userDB.deleteUser(userId));
+
+        Assert.assertEquals("testFornavn", user.getFirstName());
+        Assert.assertEquals("testEtternavn", user.getLastName());
+        Assert.assertEquals("createAndDeleteNewUser@gmail.com", user.getEmail());
+        Assert.assertEquals("10101010", user.getPhonenumber());
+        Assert.assertEquals(User.UserCategory.ASSISTANT, user.getCategory());
+    }
+
+    @Test
+    public void createNewUserDuplicateMail() {
+        int userId = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "01010101", 1);
+
+        Assert.assertTrue(userId > 0);
+
+        int userId2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "11111111", 1);
+        Assert.assertTrue(userDB.deleteUser(userId));
+        Assert.assertEquals(-1, userId2);
+    }
+
+    @Test
+    public void createNewUserDuplicatePhone() {
+        int userId = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone@gmail.com", "11001100", 1);
+
+        Assert.assertTrue(userId > 0);
+
+        int userId2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone2@gmail.com", "11001100", 1);
+        Assert.assertTrue(userDB.deleteUser(userId));
+        Assert.assertEquals(-1, userId2);
     }
     
     @Test
@@ -65,7 +94,7 @@ public class UserDBManagerTest {
     
     @Test
     public void getUser() {
-        String userId = "1";
+        int userId = 1;
         User obtainedUser = userDB.getUserById(userId);
         boolean successObtain = false;
         if(obtainedUser != null) {

@@ -5,9 +5,6 @@ import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.ShiftUserBasic;
 import no.ntnu.stud.minvakt.data.User;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -33,6 +30,9 @@ public class ShiftDBManager extends DBManager {
     private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?;";
     private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?) AND date >= CURDATE()" +
             "ORDER BY date ASC, time ASC;";
+
+    private final String sqlGetShiftHours = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
+    private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
 
     Connection conn;
     PreparedStatement prep;
@@ -245,5 +245,60 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return out;
+    }
+
+    /*
+     Calculates number of hours an employee has worked from a given start date to an end date.
+     NB overtime hours are calculated in OvertimeDBManager
+      */
+
+    public int getShiftHours(int userId, Date startDate, Date endDate){
+        int out = 0;
+        ResultSet res = null;
+        int shiftLength = 32; // Given each shift is 8 hours (4 * 8)
+
+        if(setUp()){
+            try {
+               conn = getConnection();
+               prep = conn.prepareStatement(sqlGetShiftHours);
+
+               prep.setInt(1,userId);
+               prep.setDate(2,startDate);
+               prep.setDate(3, endDate);
+
+               res = prep.executeQuery();
+               while(res.next()){
+                   out += res.getInt("shift_id");
+               }
+               out *= shiftLength;
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId);
+            } finally{
+                finallyStatement(prep);
+            }
+        }
+        return out;
+    }
+
+    // Registers a shift as available for change. Returns true or false
+    public boolean setShiftChange(int shiftId, int userId){
+        int out = 0;
+        if(setUp()){
+            try{
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetShiftChange);
+                prep.setInt(1, 1);
+                prep.setInt(2, shiftId);
+                prep.setInt(3, userId);
+                out = prep.executeUpdate();
+
+            } catch(SQLException sqlE){
+                log.log(Level.WARNING, "Error setting 'shift_change' = 1 for shift with ID = " + shiftId);
+            } finally{
+                finallyStatement(prep);
+            }
+        }
+        return out != 0;
     }
 }
