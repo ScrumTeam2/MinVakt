@@ -45,4 +45,30 @@ public class SessionService {
         request.getSession().setAttribute("session", session);
         return Response.ok().entity(session.getUser()).build();
     }
+
+    /**
+     * Used to check if the client still is logged in
+     * @param request
+     * @return Status OK if user is logged in, status UNAUTHORIZED otherwise
+     */
+    @Path("/check")
+    @GET
+    public Response validateSession(@Context HttpServletRequest request) {
+        if (request.getSession().getAttribute("session") != null) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.UNAUTHORIZED).build();
+    }
+
+    /**
+     * Logs out an user (invalidates the session)
+     * @param request
+     * @return Status OK if success
+     */
+    @Path("/log_out")
+    @GET
+    public Response logOut(@Context HttpServletRequest request) {
+        request.getSession().invalidate();
+        return Response.ok().build();
+    }
 }
