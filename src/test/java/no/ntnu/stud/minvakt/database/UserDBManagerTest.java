@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.User;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,15 +28,35 @@ public class UserDBManagerTest {
             e.printStackTrace();
         }
     }
-    
+
     @Test
-    public void createNewUser() {
-        int status= userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "12345678", "1");
-        boolean successCreation = false;
-        if(status>0) {
-            successCreation = true;
-        }
-        assertTrue(successCreation);
+    public void createAndDeleteNewUser() {
+        int userId = userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "10101010", 1);
+
+        Assert.assertTrue(userId > 0);
+        Assert.assertTrue(userDB.deleteUser(userId));
+    }
+
+    @Test
+    public void createNewUserDuplicateMail() {
+        int userId = userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "10101010", 1);
+
+        Assert.assertTrue(userId > 0);
+
+        int userId2 = userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "11111111", 1);
+        Assert.assertTrue(userDB.deleteUser(userId));
+        Assert.assertEquals(-1, userId2);
+    }
+
+    @Test
+    public void createNewUserDuplicatePhone() {
+        int userId = userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "10101010", 1);
+
+        Assert.assertTrue(userId > 0);
+
+        int userId2 = userDB.createNewUser("testFornavn", "testEtternavn", "testEmail2@gmail.com", "10101010", 1);
+        Assert.assertTrue(userDB.deleteUser(userId));
+        Assert.assertEquals(-1, userId2);
     }
     
     @Test
