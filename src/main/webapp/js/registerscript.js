@@ -16,13 +16,33 @@ $(document).ready(function(){
         var $phone = $('#phone').value();
         var $category = $('#category').value();
 
-        if(!$identificator.val()){
-            $identificator.addClass('error');
+        if(!$first.val()){
+            $first.addClass('error');
             emptyField = false;
         }
 
-        if(!$password.val()){
-            $password.addClass('error');
+        if(!$last.val()){
+            $last.addClass('error');
+            emptyField = false;
+        }
+
+        if(!$percent.val()){
+            $percent.addClass('error');
+            emptyField = false;
+        }
+
+        if(!$email.val()){
+            $email.addClass('error');
+            emptyField = false;
+        }
+
+        if(!$phone.val()){
+            $phone.addClass('error');
+            emptyField = false;
+        }
+
+        if(!$category.val()){
+            $category.addClass('error');
             emptyField = false;
         }
 
@@ -47,7 +67,7 @@ $(document).ready(function(){
 });
 
 function addUser(data){
-    console.log("Login", data);
+    console.log("OK", data);
 
     $('.modal').show();
 
