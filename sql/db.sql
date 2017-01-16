@@ -17,6 +17,7 @@ CREATE TABLE user(
     salt VARCHAR(50),
     email VARCHAR(40) NOT NULL,
     phonenumber VARCHAR(8),
+	category INTEGER,
     CONSTRAINT pk_user PRIMARY KEY(user_id)
 );
 
@@ -28,11 +29,9 @@ CREATE TABLE admin(
 );
 
 -- Employee user
--- category: 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
--- (user_id, category, percentage_work)
+-- (user_id, percentage_work)
 CREATE TABLE employee(
   user_id INTEGER NOT NULL,
-  category INTEGER,
   percentage_work FLOAT,
   CONSTRAINT pk_employee PRIMARY KEY(user_id)
 );
@@ -113,51 +112,52 @@ ALTER TABLE overtime
  INSERT INTO department VALUES(2, 'Avdeling 2');
 
  -- USERS
- -- (user_id, first_name, last_name, hash, salt, email, phonenumber)
- INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1');
- INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2');
- INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3');
- INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'password', 'password', 'email4', 'phone4');
- INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'password', 'password', 'email5', 'phone5');
- INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'passord', 'password', 'email6', 'phone6');
- INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'password', 'password', 'email7', 'phone7');
- INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'password', 'password', 'email8','phone8');
- INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'password', 'password', 'email9', 'phone9');
+ 
+ -- category: 0 - Admin, 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
+ -- (user_id, first_name, last_name, hash, salt, email, phonenumber, category)
+ INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1);
+ INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2', 1);
+ INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3', 1);
+ INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'password', 'password', 'email4', 'phone4',2);
+ INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'password', 'password', 'email5', 'phone5',2);
+ INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'passord', 'password', 'email6', 'phone6',2);
+ INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'password', 'password', 'email7', 'phone7',2);
+ INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'password', 'password', 'email8','phone8',2);
+ INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'password', 'password', 'email9', 'phone9',2);
 
- INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'password', 'password', 'email10', 'phone10');
- INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'password', 'password', 'email11', 'phone11');
- INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'password', 'password', 'email12', 'phone12');
- INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'password', 'password', 'email13', 'phone13');
- INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'password','password', 'email14', 'phone14');
- INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'password', 'password', 'email15', 'phone15');
- INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'password', 'password', 'email16', 'phone16');
- INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'password', 'password', 'email17','phone17');
- INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email18', 'phone18');
+ INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'password', 'password', 'email10', 'phone10',3);
+ INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'password', 'password', 'email11', 'phone11',3);
+ INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'password', 'password', 'email12', 'phone12',3);
+ INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'password', 'password', 'email13', 'phone13',3);
+ INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'password','password', 'email14', 'phone14',3);
+ INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'password', 'password', 'email15', 'phone15',3);
+ INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'password', 'password', 'email16', 'phone16',2);
+ INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'password', 'password', 'email17','phone17',2);
+ INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email18', 'phone18',2);
 
-INSERT INTO user VALUES(DEFAULT, 'Admin', '', 'password', 'password', 'admin', 'admin');
+INSERT INTO user VALUES(DEFAULT, 'Admin', '', 'password', 'password', 'admin', 'admin',0);
 INSERT INTO admin VALUES(19, true);
 
- -- category: 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
- -- (user_id, category, percentage_work)
- INSERT INTO employee VALUES(1, 1, 100);
- INSERT INTO employee VALUES(2, 1, 100);
- INSERT INTO employee VALUES(3, 1, 100);
- INSERT INTO employee VALUES(4, 2, 100);
- INSERT INTO employee VALUES(5, 2, 100);
- INSERT INTO employee VALUES(6, 2, 100);
- INSERT INTO employee VALUES(7, 3, 100);
- INSERT INTO employee VALUES(8, 3, 100);
- INSERT INTO employee VALUES(9, 3, 100);
+ -- (user_id, percentage_work)
+ INSERT INTO employee VALUES(1, 100);
+ INSERT INTO employee VALUES(2, 100);
+ INSERT INTO employee VALUES(3, 100);
+ INSERT INTO employee VALUES(4, 100);
+ INSERT INTO employee VALUES(5, 100);
+ INSERT INTO employee VALUES(6, 100);
+ INSERT INTO employee VALUES(7, 100);
+ INSERT INTO employee VALUES(8, 100);
+ INSERT INTO employee VALUES(9, 100);
 
- INSERT INTO employee VALUES(10, 1, 100);
- INSERT INTO employee VALUES(11, 1, 100);
- INSERT INTO employee VALUES(12, 1, 100);
- INSERT INTO employee VALUES(13, 2, 100);
- INSERT INTO employee VALUES(14, 2, 100);
- INSERT INTO employee VALUES(15, 2, 100);
- INSERT INTO employee VALUES(16, 3, 100);
- INSERT INTO employee VALUES(17, 3, 100);
- INSERT INTO employee VALUES(18, 3, 100);
+ INSERT INTO employee VALUES(10, 100);
+ INSERT INTO employee VALUES(11, 100);
+ INSERT INTO employee VALUES(12, 100);
+ INSERT INTO employee VALUES(13, 100);
+ INSERT INTO employee VALUES(14, 100);
+ INSERT INTO employee VALUES(15, 100);
+ INSERT INTO employee VALUES(16, 100);
+ INSERT INTO employee VALUES(17, 100);
+ INSERT INTO employee VALUES(18, 100);
 
  -- SHCEDULED SHIFTS
  -- shift(shift_id, responsibility, valid_absence, date, time, user_id, dept_id)
