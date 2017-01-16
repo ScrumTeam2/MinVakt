@@ -17,7 +17,7 @@ CREATE TABLE user(
     salt VARCHAR(50),
     email VARCHAR(40) NOT NULL,
     phonenumber VARCHAR(8),
-	category INTEGER,
+	  category INTEGER,
     CONSTRAINT pk_user PRIMARY KEY(user_id)
 );
 
