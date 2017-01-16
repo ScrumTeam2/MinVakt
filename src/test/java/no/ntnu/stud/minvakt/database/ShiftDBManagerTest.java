@@ -46,7 +46,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(statusOk);
     }
-    @Test
+    @Ignore
     public void getShiftsFromUserId(){
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
