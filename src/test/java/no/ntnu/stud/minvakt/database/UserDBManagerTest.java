@@ -83,9 +83,11 @@ public class UserDBManagerTest {
             successGetUsers = true;
         }assertTrue(successGetUsers);
         */
+
    
         assertTrue(users.get(0) instanceof User);
     }
+
     
 
     @Test
