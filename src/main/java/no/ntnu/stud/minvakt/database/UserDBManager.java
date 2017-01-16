@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+
 import no.ntnu.stud.minvakt.data.UserBasic;
 
 public class UserDBManager extends DBManager {
@@ -23,11 +25,13 @@ public class UserDBManager extends DBManager {
     private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
     private final String sqlGetUsers = "SELECT * FROM user;";
     private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
-    private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?);";
+    private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber, category) VALUES (?,?,?,?,?,?,?);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user;";
     private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
+    private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
+
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -121,9 +125,28 @@ public class UserDBManager extends DBManager {
         return isAdmin;
     }
 
-    public int deleteUser(String user_id) {
-        return -1;
+    public boolean deleteUser(int userId) {
         //"Deletes" the row of this specific user? Possible?
+        if (setUp()) {
+            try {
+                prep = getConnection().prepareStatement(sqlDeleteUser);
+                prep.setInt(1, userId);
+
+                int affectedRows = prep.executeUpdate();
+                if(affectedRows == 0) {
+                    log.info("userId " + userId + " not found when deleting");
+                    return false;
+                }
+
+                return true;
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Failed to delete user with userId " + userId, e);
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return false;
     }
 
 
@@ -232,13 +255,13 @@ public class UserDBManager extends DBManager {
         }
         return users;
     }
-    public User getUserById(String userId) {
+    public User getUserById(int userId) {
         User user = null;
         if(setUp()){
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetUserById);
-                prep.setString(1, userId);
+                prep.setInt(1, userId);
                 res = prep.executeQuery();
                 if (res.next()){
                     User u = new User();
@@ -262,7 +285,7 @@ public class UserDBManager extends DBManager {
      * @return Integer > -1 if success, -1 if fail
      */
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
-    public int createNewUser(String first_name, String last_name, String email, String phone, String category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
+    public int createNewUser(String first_name, String last_name, String email, String phone, int category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
         int creation = -1;
         String randomPass = GeneratePassword.generateRandomPass();
         //sendEmailWithGeneratedPass to registered user in this method
@@ -279,6 +302,7 @@ public class UserDBManager extends DBManager {
                 prep.setString(4, salt);
                 prep.setString(5, email);
                 prep.setString(6, phone);
+                prep.setInt(7, category);
                 creation = prep.executeUpdate();
                 return QueryUtil.getGeneratedKeys(prep);
             } catch (Exception e) {
