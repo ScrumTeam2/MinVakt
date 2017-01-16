@@ -17,9 +17,13 @@ CREATE TABLE user(
     salt VARCHAR(50),
     email VARCHAR(40) NOT NULL,
     phonenumber VARCHAR(8),
-	category INTEGER,
+	  category INTEGER,
     CONSTRAINT pk_user PRIMARY KEY(user_id)
 );
+
+-- Make login identifiers unique
+ALTER TABLE user ADD UNIQUE INDEX (email);
+ALTER TABLE user ADD UNIQUE INDEX (phonenumber);
 
 -- Administration user. (rights: needed?)
 CREATE TABLE admin(
