@@ -27,4 +27,13 @@ public class UserService {
     public ArrayList<UserBasicList> getUserBasics() {
         return userDB.getUserBasics();
     }
+
+    @GET
+    @Path("/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUserBasics(@PathParam("userId") int userId) {
+        return userDB.getUserById(userId);
+    }
+
+
 }
