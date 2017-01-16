@@ -85,6 +85,7 @@ public class AvailabilityDBManager extends DBManager{
                 prep = conn.prepareStatement(sqlDeleteAvailability);
                 prep.setInt(1, userID);
                 prep.setInt(2, shiftID);
+                System.out.println(prep);
                 out = prep.executeUpdate();
 
             } catch (SQLException sqlE) {
