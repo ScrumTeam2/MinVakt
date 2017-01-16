@@ -55,7 +55,7 @@ public class UserAdminService extends SecureService {
 
         // Insert into database
         UserDBManager userDBManager = new UserDBManager();
-        int userId = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhonenumber(), user.getCategory() + "");
+        int userId = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhonenumber(), user.getCategory().getValue());
         user.setId(userId);
 
         if(userId > 0) {
