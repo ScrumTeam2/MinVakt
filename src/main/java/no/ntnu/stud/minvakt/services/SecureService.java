@@ -15,8 +15,11 @@ import java.util.logging.Logger;
 public abstract class SecureService {
     protected static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    @Context
     private HttpServletRequest request;
+
+    public SecureService(@Context HttpServletRequest request) {
+        this.request = request;
+    }
 
     protected Session getSession() throws NotAuthorizedException {
         // Tries to get session of logged in user. If no session, throw exception
