@@ -1,10 +1,14 @@
 package no.ntnu.stud.minvakt.data;
 
+/**
+ * Created by evend on 1/13/2017.
+ */
+
 public class UserBasic {
     private int id;
     private String firstName;
     private String lastName;
-    private String category;
+    private User.UserCategory category;
     public UserBasic() {
 
     }
@@ -33,25 +37,21 @@ public class UserBasic {
         this.lastName = lastName;
     }
 
-    public String getCategory() {
+
+    public User.UserCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(User.UserCategory category) {
         this.category = category;
     }
 
-    public UserBasic(int id, String firstName, String lastName, int category) {
+    public UserBasic(int id, String firstName, String lastName, User.UserCategory category) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        if(category ==1) {
-            this.category = "Assistent";
-        } else if(category ==2) {
-            this.category = "Helsefagarbeider";
-        } else if(category ==3) {
-            this.category = "Sykepleier";
-        }
+        this.category = category;
+
     }
 
     @Override

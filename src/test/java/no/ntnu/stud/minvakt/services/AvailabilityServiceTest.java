@@ -29,14 +29,15 @@ public class AvailabilityServiceTest {
     }
 
     @Test
+    public void deleteAvailability(){
+        Response response = availabilityService.deleteAvailability(3,19);
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
     public void checkSetAvailability(){
         Response response = availabilityService.setAvailability(3,19);
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
-    @Test
-    public void deleteAvailability(){
-        Response response = availabilityService.deleteAvailability(10,19);
-        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-    }
 }

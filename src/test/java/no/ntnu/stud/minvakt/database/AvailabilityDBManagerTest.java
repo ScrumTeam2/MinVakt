@@ -17,7 +17,7 @@ public class AvailabilityDBManagerTest {
         availabilityDB = new AvailabilityDBManager();
     }
 
-    @Ignore
+    @Test
     public void getAvailabilityTest() {
         ArrayList<Integer> userList = new ArrayList<>();
         ArrayList<Integer> userListTest = new ArrayList<>();
@@ -39,23 +39,23 @@ public class AvailabilityDBManagerTest {
     }
 
 //    @Ignore
-    @Ignore
+    @Test
     public void setAvailabilityTest() {
-        boolean res = availabilityDB.setAvailability(11, 13);
+        boolean res = availabilityDB.setAvailability(2, 22);
         boolean test = true;
 
         assertEquals(res, test);
     }
 
 
-    @Ignore
+    @Test
     public void setAvailableFailTest() {
-        boolean res = availabilityDB.setAvailability(100, 13);
+        boolean res = availabilityDB.setAvailability(1, 13);
         boolean test = false;
 
         assertEquals(res, test);
     }
-    @Ignore
+    @Test
     public void deleteAvailabilityTest() {
         boolean res = availabilityDB.deleteAvailability(2, 22);
         boolean test = true;
