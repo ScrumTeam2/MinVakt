@@ -35,6 +35,7 @@ public class SessionServiceTest {
         // Try to login once more
         Response response = sessionService.checkLogin(request, "email1", "password");
         Assert.assertEquals(response.getStatus(), Response.Status.FORBIDDEN.getStatusCode());
+        Assert.assertEquals(null, response.getEntity());
     }
 
     @Ignore
