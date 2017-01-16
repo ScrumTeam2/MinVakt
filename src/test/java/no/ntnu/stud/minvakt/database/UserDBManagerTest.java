@@ -10,6 +10,11 @@ import java.util.Date;
 
 import static org.junit.Assert.assertTrue;
 
+import static junit.framework.TestCase.assertFalse;
+
+/**
+ * Created by evend on 1/13/2017.
+ */
 public class UserDBManagerTest {
     private static UserDBManager userDB;
 
@@ -23,7 +28,7 @@ public class UserDBManagerTest {
         }
     }
     
-    @Ignore
+    @Test
     public void createNewUser() {
         int status= userDB.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "12345678", "1");
         boolean successCreation = false;
@@ -33,10 +38,10 @@ public class UserDBManagerTest {
         assertTrue(successCreation);
     }
     
-    @Ignore
+    @Test
     public void loginUser() {
-        String username = "testUser@gmail.com";
-        String password = "testPass";
+        String username = "email1";
+        String password = "password";
         User userObj = userDB.loginUser(username,password);
         boolean successLogin = false;
         if (userObj != null) {
@@ -50,7 +55,7 @@ public class UserDBManagerTest {
     @Ignore
     public void loginUserId() {
         String userId = "1";
-        int status = userDB.checkLoginId(userId, "testPass");
+        int status = userDB.checkLoginId(userId, "password");
         boolean successLogin = false;
         if(status>0) {
             successLogin = true;
@@ -58,7 +63,7 @@ public class UserDBManagerTest {
         assertTrue(successLogin);
     }
     
-    @Ignore
+    @Test
     public void getUser() {
         String userId = "1";
         User obtainedUser = userDB.getUserById(userId);
@@ -70,9 +75,9 @@ public class UserDBManagerTest {
     }
     
     
-    @Ignore
+    @Test
     public void getUsers() {
-        ArrayList<User> users = userDB.getUsers1();
+        ArrayList<User> users = userDB.getUsers();
         /*boolean successGetUsers = false;
         if(users.size() >0) {
             successGetUsers = true;
@@ -86,8 +91,8 @@ public class UserDBManagerTest {
     @Ignore
     public void changePassword() {
         String userId = "1";
-        String prevPassword = "testPass";
-        String newPass = "testPass";
+        String prevPassword = "password";
+        String newPass = "password";
         int status = userDB.changePasswordUserId(userId, prevPassword, newPass);
         boolean successChange = false;
         if(status>0) {
@@ -96,9 +101,8 @@ public class UserDBManagerTest {
         assertTrue(successChange);
     }
 
-    public static void main(String[] args) {
-        UserDBManagerTest udb = new UserDBManagerTest();
-        udb.changePassword();
+    @Test
+    public void getUserBasics(){
+        assertFalse(userDB.getUserBasics().isEmpty());
     }
-
 }

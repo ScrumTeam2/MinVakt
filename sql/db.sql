@@ -178,7 +178,7 @@ INSERT INTO admin VALUES(19, true);
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-12', 3, 1); -- Night
 
  -- day 3
- INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-13', 1, 1); -- Day
+ INSERT INTO shift VALUES(DEFAULT, 3, '2017-06-13', 1, 1); -- Day
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-13', 2, 1); -- Evening
  INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-13', 3, 1); -- Night
 

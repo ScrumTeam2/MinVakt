@@ -4,11 +4,13 @@ import com.mysql.cj.api.jdbc.Statement;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.UserBasic;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import no.ntnu.stud.minvakt.data.UserBasic;
 
@@ -24,6 +26,16 @@ public class UserDBManager extends DBManager {
     private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber) VALUES (?,?,?,?,?,?);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
+    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user;";
+    private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
+
+    //If string contains @, it's an email
+   /* if(username.contains("@")) {
+     checkLogin(username, password); //Email
+     } else {
+     checkLogin(username, password); //Phone
+     }*/
+
     PreparedStatement prep;
     Connection conn;
     ResultSet res;
@@ -54,13 +66,18 @@ public class UserDBManager extends DBManager {
                 prep.setString(2, pass);
                 res = prep.executeQuery();
                 if (res.next()) {
+                    System.out.println(username+ " " + pass);
+
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
                         //New user
                         //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
-                                res.getString("last_name"), res.getString("hash"),
-                                res.getString("salt"), User.UserCategory.valueOf(res.getInt("category")));
+                                res.getString("last_name"), null,
+                                null, User.UserCategory.valueOf(res.getInt("category")));
                         return user;
+                    }
+                    else{
+                        throw new Exception("User with username = "+username+" typed incorrect password!"+pass);
                     }
                 }
 
@@ -98,54 +115,44 @@ public class UserDBManager extends DBManager {
         }
         return login;
     }
-    
+
     public int checkUserAdmin(String userId) {
-        int isAdmin= -1;
+        int isAdmin = -1;
+        return isAdmin;
+    }
+
+    public int deleteUser(String user_id) {
+        return -1;
+        //"Deletes" the row of this specific user? Possible?
+    }
+
+
+    public int changeDepartment(int user_id) {
+        int change = -1;
         if (setUp()) {
             try {
-                startTransaction();
-                prep = getConnection().prepareStatement(sqlIsAdmin);
-                prep.setString(1, userId);
-                res = prep.executeQuery();
-                if (res.next()) {
-                    isAdmin = res.getInt(1);
-                }
+                prep = getConnection().prepareStatement(sqlChangeDep);
+                prep.setInt(1,user_id);
+                change = prep.executeUpdate();
+
             } catch (Exception e) {
+                System.err.println("Isse with changing department for userId = "+user_id);
                 e.printStackTrace();
             }
+            finally {
+                finallyStatement(res, prep);
+            }
         }
-        return isAdmin;
+        return change;
     }
     
      /**
      * Returns an array with user objects.
      * @return User object
      */
-    public ArrayList<User> getUsers1(){
-        ArrayList<User> users = new ArrayList<User>();
-        if(setUp()){
-            try {
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlGetUsers);
-                res = prep.executeQuery();
-                while (res.next()){
-                    User user = new User();
-                    user.setId(res.getInt("user_id"));
-                    user.setFirstName(res.getString("first_name"));
-                    user.setLastName(res.getString("last_name"));
-                    user.setEmail(res.getString("email"));
-                    user.setPhonenumber(res.getString("phonenumber"));
-                    user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
-                    users.add(user);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return users;
-    }
+
     
-     public ArrayList<UserBasic> getUsersBasic1(){
+     public ArrayList<UserBasic> getUsersBasics(){
         ArrayList<UserBasic> users = new ArrayList<UserBasic>();
         if(setUp()){
             try {
@@ -157,7 +164,8 @@ public class UserDBManager extends DBManager {
                     String firstName =res.getString("first_name");
                     String lastName = res.getString("last_name");
                     int category = res.getInt("category");
-                    UserBasic user = new UserBasic(userId,firstName,lastName,category);
+                    UserBasic user = new UserBasic(userId,firstName,lastName,
+                            User.UserCategory.valueOf(category));
                     users.add(user);
                 }
             } catch (Exception e) {
@@ -203,7 +211,7 @@ public class UserDBManager extends DBManager {
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement("SELECT * FROM User;");
+                prep = conn.prepareStatement("SELECT * FROM user;");
                 res = prep.executeQuery();
                 while (res.next()){
                     User user = new User();
@@ -217,6 +225,9 @@ public class UserDBManager extends DBManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            finally {
+                finallyStatement(res, prep);
             }
         }
         return users;
@@ -327,7 +338,7 @@ public class UserDBManager extends DBManager {
         }
         return change;
     }
-    
+
     /**
     * Receives a user object which has changed information. Then updates the information in database.
     * @param user User object
@@ -362,27 +373,31 @@ public class UserDBManager extends DBManager {
     * @param userId
     * @return Integer >-1 if success, -1 if fail
     */
-    public int changeDepartment(String user_id) {
-        int change = -1;
-        String sqlChangeDep = "UPDATE dept_id FROM User where user_id=?";
+
+    public ArrayList<UserBasic> getUserBasics() {
+        ArrayList<UserBasic> userBasics = new ArrayList<>();
         if (setUp()) {
+            ResultSet res = null;
             try {
-                startTransaction();
-                prep = getConnection().prepareStatement(sqlChangeDep);
-                prep.executeUpdate();
-                change = 1;
-            } catch (Exception e) {
-                e.printStackTrace();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUserBasics);
+                res = prep.executeQuery();
+                while (res.next()) {
+                    userBasics.add(new UserBasic(
+                            res.getInt("user_id"),
+                            res.getString("first_name"),
+                            res.getString("last_name"),
+                            User.UserCategory.valueOf(res.getInt("category"))
+                    ));
+                }
+            } catch (SQLException sqle) {
+                System.out.println("Issue with getting user basics");
+                sqle.printStackTrace();
+            } finally {
+                finallyStatement(res, prep);
             }
         }
-        return change;
-    }
-
-    /*
-     Not yet implemented
-    */
-    public int deleteUser(String user_id) {
-        return -1;
+        return userBasics;
     }
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -390,11 +405,5 @@ public class UserDBManager extends DBManager {
      } else {
      checkLogin(username, password); //Phone
      }*/
-    public static void main(String[] args) {
-        UserDBManager us = new UserDBManager();
-        int status= us.createNewUser("testFornavn", "testEtternavn", "testEmail@gmail.com", "12345678", "1");
-        System.out.println(status);
-        
-        System.out.println(us.loginUser("testUser@gmail.com","testPass"));
-    }
+
 }

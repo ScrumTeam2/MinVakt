@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.data;
 public class User {
 
     public enum UserCategory {
-        ASSISTANT, HEALTH_WORKER, NURSE;
+        ADMIN, ASSISTANT, HEALTH_WORKER, NURSE;
 
 
 
