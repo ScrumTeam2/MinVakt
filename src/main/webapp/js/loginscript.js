@@ -51,6 +51,6 @@ function login(data){
 }
 
 function invalid(data){
-    $('.feedback').show();
+    $('.feedback').fadeIn(1500);
     console.log("Invalid", data);
 }
