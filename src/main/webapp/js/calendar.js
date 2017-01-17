@@ -1,16 +1,16 @@
- /* 
- //Hente dato trykket på
- var tableId = $('#calendar-availability tr');
- var columnId = $('#calendar-availability tr td');
- var cells = document.getElementsByTagName('td');
- for (var i = 0; i < cells.length; i++) {
-     cells[i].addEventListener('click', clickHandler);
- }
+$(document).ready(function() {
+    loadCalendar();
+});
 
- function clickHandler() {
-  console.log(this.textContent);
- }
- */
+function loadCalendar() {
+    //Hente dato trykket på
+    var tableId = $('#calendar-availability tr');
+    var columnId = $('#calendar-availability tr td');
+    var cells = document.getElementsByTagName('td');
+    for (var i = 0; i < cells.length; i++) {
+        cells[i].addEventListener('click', clickHandler);
+    }
+}
 
 var C = function Calendar(month, year) {
   var now = new Date();
@@ -118,6 +118,38 @@ C.prototype.switchDate = function(postfix) {
 
 }
 
+function clickHandler() {
+    console.log(this.textContent);
+    console.log(month);
+    var dateString = year+'-'+month+'-'+this.textContent;
+    console.log(dateString);
+    if (this.textContent > 0) {
+        $.ajax({
+            url: "/rest/availability/"+dateString,
+            type: 'GET',
+            //datatype: 'json',
+           /* data: {
+                dateSelection: dateString
+            },*/
+            success: success,
+            error: invalid
+        });
+    }
+}
+
+function success(data) {
+  console.log(data);
+  if(data.length <1) {
+    $("#error").html( "<p>Ingen ledige vakter på denne datoen</p>").fadeIn(1500);
+    setTimeout(function(){  $("#error").fadeOut(1000);}, 1000);
+  }
+  console.log('success send data');
+
+}
+function invalid(data) {
+
+}
+
 function switchDate(postfix) {
   var switched = false;
   if(this.month == 12 && postfix>0) {
@@ -139,4 +171,5 @@ function switchDate(postfix) {
     }
   }
   document.getElementById('calendar').innerHTML = C(this.month,this.year);
+  loadCalendar();
 }

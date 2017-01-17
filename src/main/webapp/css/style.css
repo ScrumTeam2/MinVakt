@@ -347,7 +347,7 @@ button {
 .right {
   float:right;
 }
-.left; {
+.left {
   float:left;
 }
 .ledige-vakter{
@@ -511,7 +511,8 @@ button {
 }
 .calendar table tr td{
     cursor:pointer;
-};
+}
+
 .calendar table tbody .disabled {
   background: #f2f2f2;
 }
@@ -529,7 +530,6 @@ button {
   }
   
   .day {
-    width: $day_size + px;
     height: 40px;
     text-align: center;
   }
@@ -539,8 +539,17 @@ button {
       background: #eee;
     }
   }
-  
+  .error {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #f79dac;
+    border-style: solid;
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+  }
   .disabled-month {
     opacity: 0.5;
   }
-}

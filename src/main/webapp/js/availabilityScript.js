@@ -1,3 +1,4 @@
+/*
 $(document).ready(function(){
 
 //$("#calendar-availability").html("<p>hello</p>");
@@ -8,12 +9,15 @@ $(document).ready(function(){
  for (var i = 0; i < cells.length; i++) {
      cells[i].addEventListener('click', clickHandler);
  }
-
  function clickHandler() {
+    /*for(var i=0; i<moned.length;i++) {
+        console.log('moned length');
+    }*/
+    /*
      console.log(this.textContent);
      if(this.textContent>0) {
          $.ajax({
-             url: "/rest/session/login",
+             url: "/rest/session/",
              type: 'POST',
              data: {
                  identificator: $("#identificator").val(),
@@ -30,6 +34,7 @@ $(document).ready(function(){
      //console.log(rowIndex);
  });
 });
+*/
 
 
 function login(data){
@@ -46,6 +51,6 @@ function login(data){
 }
 
 function invalid(data){
-    $('.feedback').show();
-    console.log("Invalid", data);
+    //$('.feedback').show();
+    //console.log("Invalid", data);
 }
