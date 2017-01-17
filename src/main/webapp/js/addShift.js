@@ -54,6 +54,7 @@ $(document).ready(function() {
         })
         .done(function(data) {
             console.log( "success", data );
+            localStorage.setItem("TempDayId", data.id);
         })
         .fail(function(error) {
             console.log( "error", error );
@@ -68,6 +69,7 @@ $(document).ready(function() {
         })
         .done(function(data) {
             console.log( "success", data );
+            localStorage.setItem("TemEveningId", data.id);
         })
         .fail(function(error) {
             console.log( "error", error );
@@ -82,6 +84,7 @@ $(document).ready(function() {
         })
         .done(function(data) {
             console.log( "success", data );
+            localStorage.setItem("TempNightId", data.id);
         })
         .fail(function(error) {
             console.log( "error", error );
