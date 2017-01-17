@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MinVakt | Logg inn</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="logo">
+    <h1>MinVakt</h1>
+</header>
+
+<div class="container">
+    <div class="icons"> 
+      <i class="symbol x2 left">
+    <i class="material-icons">people</i>
+  </i>
+  <h3 class="ledige-vakter">Ledige <br> Vakter</h3>
+      <i class="symbol x2 right">
+    <i class="material-icons">today</i>
+  </i>
+    </div>
+    <section class="list">
+    <div class="container-title">
+      <h3>Onsdag 9. januar</h3>
+      <a href="#" class="link">Rediger</a>
+    </div>
+    <div class="watch">
+      <div class="watch-info">
+        <p class="lead">Dagvakt</p>
+         <p class="sub">Avdeling</p>
+        <p class="sub">7.00 - 15.00</p>
+      </div>
+      <input type="checkbox" name="check" id="check1" value="employee" style="display:none;">
+      <label for="check1">Ledig</label>
+    </div>
+    <div class="watch">
+      <div class="watch-info">
+        <p class="lead">Kveldsvakt</p>
+        <p class="sub">Avdeling 2</p>
+        <p class="sub">15.00 - 23.00</p>
+      </div>
+<input type="checkbox" name="check" id="check2" value="employee" style="display:none;">
+      <label for="check2">Ledig</label>    
+    </div>
+    <div class="container-title">
+      <h3>Torsdag 10. januar</h3>
+      <a href="#" class="link">Rediger</a>
+    </div>
+    <div class="watch">
+      <div class="watch-info">
+        <p class="lead">Dagvakt</p>
+        <p class="sub">Avdeling 3</p>
+        <p class="sub">7.00 - 15.00</p>
+      </div>
+      <input type="checkbox" name="check" id="check3" value="employee" style="display:none;">
+      <label for="check3">Ledig</label> 
+    </div>
+    <div class="watch">
+      <div class="watch-info">
+        <p class="lead">Kveldsvakt</p>
+        <p class="sub">Avdeling 4</p>
+        <p class="sub">15.00 - 23.00</p>
+      </div>
+      <input type="checkbox" name="check" id="check4" value="employee" style="display:none;">
+      <label for="check4">Ledig</label> 
+    </div>
+  </section>
+<button type="submit" id="userBtn">Lagre</button>
+</div>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker12').datetimepicker({
+                inline: true,
+                sideBySide: true
+            });
+        });
+    </script>
+<script src="../js/loginscript.js"></script>
+
+</body>
+</html>
