@@ -51,6 +51,7 @@ public class ShiftService extends SecureService{
     public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward){
         return shiftDB.getShifts(daysForward, getSession().getUser().getId());
     }
+
     @DELETE
     @Path("/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") int id) {

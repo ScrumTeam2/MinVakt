@@ -68,12 +68,6 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void getEmployeeBasicsWithUserId() {
-        logInUser();
-        ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId(1);
-        assertFalse(shiftUserBasics.isEmpty());
-    }
-    @Test
     public void getShifts(){
         logInUser();
         ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300);
