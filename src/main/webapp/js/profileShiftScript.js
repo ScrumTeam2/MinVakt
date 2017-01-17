@@ -89,7 +89,7 @@ function createUserShiftHtml(data) {
                 "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
                 "<div class='more-info'></div>" +
             "</div>";
-        calendarList.append(html)
+        calendarList.append(html)git
     });
     createInfoListeners();
 }
