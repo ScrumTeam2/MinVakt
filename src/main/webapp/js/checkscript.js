@@ -7,13 +7,9 @@ $(document).ready(function(){
     if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
-        console.log("expire: ", expire);
-        console.log("date: ", date);
-        console.log("date.get: ", date.getTime());
         var timeNow = date.getTime();
 
         if(expire <= timeNow){
-            console.log("yo");
             $.ajax({
                 url: "/rest/session/check",
                 type: 'GET',
