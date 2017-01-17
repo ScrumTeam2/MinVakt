@@ -23,6 +23,7 @@ $(document).ready(function(){
 
     $('#userBtn').click(function(e){
         e.preventDefault();
+
         var emptyField = false;
 
         var $first = $('#firstname');
