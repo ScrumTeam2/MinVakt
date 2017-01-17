@@ -3,10 +3,7 @@ package no.ntnu.stud.minvakt.services;
 /**
  * Created by evend on 1/10/2017.
  */
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftUser;
-import no.ntnu.stud.minvakt.data.ShiftUserBasic;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.*;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -70,10 +67,10 @@ public class ShiftServiceTest {
         assertTrue(statusOk.getStatus() == 200);
     }
 
-    @Ignore
-    public void getEmployeeBasicsWithUserId() {
+    @Test
+    public void getShifts(){
         logInUser();
-        ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId();
-        assertFalse(shiftUserBasics.isEmpty());
+        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300);
+        assertFalse(statusOk.isEmpty());
     }
 }
