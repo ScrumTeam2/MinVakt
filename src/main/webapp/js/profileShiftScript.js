@@ -4,6 +4,8 @@
 $(document).ready(function () {
     createPeopleListeners();
 });
+createAjaxForOwnShifts();
+function createAjaxForOwnShifts() {
     $.ajax({
         //     url: "rest/shift/user/"+userId,
         url: "../rest/shift/user",
@@ -15,6 +17,7 @@ $(document).ready(function () {
             calendarList.append("<p>" + data + "</p>");
         }
     });
+}
 //});
 
 function addShiftInfoHtml (element, shiftId, data) {
@@ -29,7 +32,6 @@ function addShiftInfoHtml (element, shiftId, data) {
         console.log(categoriesForLoop[i]);
         console.log(html);
         $.each(shiftUsers, function (index, user) {
-            console.log(user);
             if (user.userCategory == categoriesForLoop[i]) {
                 if (!hasPerson) {
                     html += "<h4>" + employeeCategories[categoriesForLoop[i]] + "</h4>";
@@ -42,13 +44,7 @@ function addShiftInfoHtml (element, shiftId, data) {
                     html += "<a href='#' class='link'>" + user.userName + "<i class='material-icons'>chevron_right</i></a>"
                 }
             }
-            console.log(html);
-
         });
-        console.log(html);
-        console.log(element);
-        element.append(html);
-
     }
     console.log(html);
     element.append(html);
@@ -73,11 +69,11 @@ function convertDate(dateInput){
     var dayIndex = date.getDay();
 
     return dayNames[dayIndex] + " " + day + ". " + monthNames[monthIndex];
-
 }
 
 function createUserShiftHtml(data) {
     var calendarList = $(".list");
+    calendarList.html("");
     var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
     var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
     $.each(data, function (index, element) {
@@ -91,20 +87,26 @@ function createUserShiftHtml(data) {
                     "<p class='sub'>"+shiftTimes[element.shiftType]+"</p>" +
                 "</div>" +
                 "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
-            "</div>" +
-            "<div class='more-info'></div>";
+                "<div class='more-info'></div>" +
+            "</div>";
         calendarList.append(html)
     });
     createInfoListeners();
 }
 function createInfoListeners() {
     $('.info-button').click(function (e) {
-        clickedElement = $(this);
-        moreInfoElement = clickedElement.closest('.more-info');
-        if (moreInfoElement.length != 0) {
+        var clickedElement = $(this);
+        var moreInfoElement = clickedElement.next();
+        console.log(moreInfoElement);
+        isLoaded = moreInfoElement.attr("loaded");
+        console.log("Attr: " +isLoaded);
+        if (isLoaded == "true") {
             moreInfoElement.toggle();
+            console.log("Correct: "+ moreInfoElement.firstChild);
         }
         else {
+            moreInfoElement.attr("loaded", "true");
+            console.log("Wrong"+moreInfoElement.firstChild);
             e.preventDefault();
             var shiftId = clickedElement.attr('data-id');
             console.log("ShiftId = " + shiftId);
@@ -134,6 +136,19 @@ function createPeopleListeners() {
             title.removeClass("my-shifts");
             title.addClass("all-shifts");
             title.text("Alle vakter");
+            $.ajax({
+                //     url: "rest/shift/user/"+userId,
+                url: "../rest/shift",
+                data: {daysForward : 300}, //TODO: edit to 7?
+                type: 'GET',
+                dataType: 'json',
+                success: createAllShiftsHtml,
+                error: function (data) {
+                    console.log("Error, no data found");
+                    var calendarList = $(".list");
+                    calendarList.append("<p>" + data + "</p>");
+                }
+            });
         }
         else {
             $(this).text("person");
@@ -143,22 +158,12 @@ function createPeopleListeners() {
             title.removeClass("all-shifts");
             title.addClass("my-shifts");
             title.text("Mine vakter");
-            $.ajax({
-                //     url: "rest/shift/user/"+userId,
-                url: "../rest/shift",
-                data: {daysForward : 300}, //TODO: edit to 7?
-                type: 'GET',
-                dataType: 'json',
-                success: createUserShiftHtml,
-                error: function (data) {
-                    var calendarList = $(".list");
-                    calendarList.append("<p>" + data + "</p>");
-                }
-            });
+            createAjaxForOwnShifts();
         }
     })
 }
 function createAllShiftsHtml(data) {
+    console.log("heihei");
     var calendarList = $(".list");
     calendarList.html("");
     var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
@@ -173,28 +178,23 @@ function createAllShiftsHtml(data) {
             "<div class='watch-info'>" +
             "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
             "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
-            "</div>" +
             "</div>";
         if (element.hasUser) {
             html +=
-                "<div class='watch'>" +
                 "<div class='watch-info'>" +
-                "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
-                "</div>" +
+                "<p class='sub'>Din vakt</p>" +
                 "</div>";
         }
         else if (element.available) {
             html +=
-                "<div class='watch'>" +
                 "<div class='watch-info'>" +
-                "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
-                "</div>" +
+                "<p class='sub'>Ledig vakt</p>" +
                 "</div>";
         }
         html +=
             "<i class='symbol info-button' data-id='" + element.shiftId + "'><i class='material-icons'>info_outlines</i></i>" +
-            "</div>" +
-            "<div class='more-info'></div>";
+            "<div class='more-info'></div></div>";
         calendarList.append(html);
     });
+    createInfoListeners()
 }
