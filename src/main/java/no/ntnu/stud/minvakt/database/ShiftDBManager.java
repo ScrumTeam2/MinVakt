@@ -34,6 +34,18 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShiftHours = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
 
+    //Used to display availability. Returns dates which do not include these shifts
+
+    /*
+SELECT *, COUNT(employee_shift.shift_id)
+AS amount_employees_taken
+FROM shift JOIN employee_shift
+ON employee_shift.shift_id = shift.shift_id WHERE valid_absence=0 AND shift_change = 0
+GROUP BY date, time, dept_id
+*/
+     */
+    private final String sqlGetAllShiftsAndAmountTaken = "SELECT *, COUNT(employee_shift.shift_id) AS amount_employees_taken FROM shift JOIN employee_shift ON employee_shift.shift_id = shift.shift_id WHERE valid_absence=0 AND shift_change = 0 GROUP BY date, time, dept_id";
+    //private final String sqlGetAllTakenShifts = "SELECT *, COUNT(employee_shift.shift_id) AS amount_employees_taken FROM shift JOIN employee_shift ON employee_shift.shift_id = shift.shift_id GROUP BY date, time, dept_id"; //Join with count of users who have taken each shift, and staff_number > count(amntOfEmployeesOnShift)
     Connection conn;
     PreparedStatement prep;
 

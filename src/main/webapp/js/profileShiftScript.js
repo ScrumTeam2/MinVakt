@@ -9,7 +9,7 @@
         dataType: 'json',
         success: createUserShiftHtml,
         error: function (data) {
-            var calendarList = $(".list");
+            var calendarList = $(".calendar-list");
             calendarList.append("<p>" + data + "</p>");
         }
     });
@@ -70,7 +70,7 @@ function convertDate(dateInput){
 }
 
 function createUserShiftHtml(data) {
-    var calendarList = $(".list");
+    var calendarList = $(".calendar-list");
     var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
     var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
     $.each(data, function (index, element) {
