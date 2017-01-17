@@ -20,7 +20,6 @@ $(document).ready(function(){
             emptyField = false;
         }
 
-
         if(emptyField){
             $.ajax({
                 url: "/rest/session/login",
@@ -36,12 +35,17 @@ $(document).ready(function(){
     });
 });
 
-
 function login(data){
     console.log("Login", data);
 
+    sessionStorage.SessionId = data.id;
 
-    if(data.isAdmin === true){
+    var date = new Date();
+    date.setTime(date.getTime() + (1000 * 60));
+    var timeNow = date.getTime();
+    sessionStorage.SessionExpires = timeNow;
+
+    if(data.category === 0){
         console.log("admin");
         window.location="home-a.html";
     } else{
