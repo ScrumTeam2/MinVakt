@@ -41,7 +41,7 @@ function login(data){
     sessionStorage.SessionId = data.id;
 
     var date = new Date();
-    date.setTime(date.getTime() + (1000 * 60));
+    date.setTime(date.getTime() + (1000 * 60 * 60 * 2));
     var timeNow = date.getTime();
     sessionStorage.SessionExpires = timeNow;
 
