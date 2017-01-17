@@ -69,4 +69,22 @@ public class SessionServiceTest {
         Assert.assertEquals(response.getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
         Assert.assertTrue(response.getEntity() instanceof ErrorInfo);
     }
+
+    @Test
+    public void validateSession() throws Exception {
+        Response response = sessionService.validateSession(request);
+        Assert.assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
+
+        sessionService.checkLogin(request, "email1", "password");
+
+        response = sessionService.validateSession(request);
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void logOut() throws Exception {
+        sessionService.checkLogin(request, "email1", "password");
+        Response response = sessionService.logOut(request);
+        Assert.assertEquals(null, request.getSession().getAttribute("session"));
+    }
 }

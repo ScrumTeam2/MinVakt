@@ -2,14 +2,14 @@
 Fiktivt system for vaktliste i helsetjenesten
 
 # Kodestrukur
-- Backend-kode: src/main/java/no/ntnu/stud/minvakt
-- Databasekommunikasjon: src/main/java/no/ntnu/stud/minvakt/database
-- REST-kode: src/main/java/no/ntnu/stud/minvakt/services
-- Dataklasser (f.eks. User): src/main/java/no/ntnu/stud/minvakt/data
-- Backend-logikk: src/main/java/no/ntnu/stud/minvakt/controller
-- Backend-test: src/test/java/no/ntnu/stud/minvakt
-- Hjelpeklasser/verktøy: src/main/java/no/ntnu/stud/minvakt/util
-- Frontend/web: src/main/webapp
+- Backend-kode: [src/main/java/no/ntnu/stud/minvakt](src/main/java/no/ntnu/stud/minvakt)
+- Databasekommunikasjon: [src/main/java/no/ntnu/stud/minvakt/database](src/main/java/no/ntnu/stud/minvakt/database)
+- REST-kode: [src/main/java/no/ntnu/stud/minvakt/services](src/main/java/no/ntnu/stud/minvakt/services)
+- Dataklasser (f.eks. User): [src/main/java/no/ntnu/stud/minvakt/data](src/main/java/no/ntnu/stud/minvakt/data)
+- Backend-logikk: [src/main/java/no/ntnu/stud/minvakt/controller](src/main/java/no/ntnu/stud/minvakt/controller)
+- Backend-test: [src/test/java/no/ntnu/stud/minvakt](src/test/java/no/ntnu/stud/minvakt)
+- Hjelpeklasser/verktøy: [src/main/java/no/ntnu/stud/minvakt/util](src/main/java/no/ntnu/stud/minvakt/util)
+- Frontend/web: [src/main/webapp](src/main/webapp)
 
 # Kodekonvensjon
 ## Generelt

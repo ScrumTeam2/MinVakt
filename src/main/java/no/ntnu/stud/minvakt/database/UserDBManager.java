@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.data.UserBasic;
+import no.ntnu.stud.minvakt.data.UserBasicList;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
 import java.sql.Connection;
@@ -13,8 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
-
-import no.ntnu.stud.minvakt.data.UserBasic;
 
 public class UserDBManager extends DBManager {
     public UserDBManager() {
@@ -28,7 +27,7 @@ public class UserDBManager extends DBManager {
     private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber, category) VALUES (?,?,?,?,?,?,?);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
-    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user;";
+    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
     private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
 
@@ -242,7 +241,7 @@ public class UserDBManager extends DBManager {
                     user.setFirstName(res.getString("first_name"));
                     user.setLastName(res.getString("last_name"));
                     user.setEmail(res.getString("email"));
-                    user.setPhonenumber(res.getString("phonenumber"));
+                    user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     users.add(user);
                 }
@@ -269,7 +268,7 @@ public class UserDBManager extends DBManager {
                     u.setFirstName(res.getString("first_name"));
                     u.setLastName(res.getString("last_name"));
                     u.setEmail(res.getString("email"));
-                    u.setPhonenumber(res.getString("phonenumber"));
+                    u.setPhoneNumber(res.getString("phonenumber"));
                     u.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     user = u;
                 }
@@ -379,7 +378,7 @@ public class UserDBManager extends DBManager {
                     prep.setString(1, user.getFirstName());
                     prep.setString(2, user.getLastName());
                     prep.setString(3, user.getEmail());
-                    prep.setString(4, user.getPhonenumber());
+                    prep.setString(4, user.getPhoneNumber());
                    // prep.setInt(5, user.getCategory());
                     change = prep.executeUpdate();
                 } catch (Exception e) {
@@ -398,16 +397,28 @@ public class UserDBManager extends DBManager {
     * @return Integer >-1 if success, -1 if fail
     */
 
-    public ArrayList<UserBasic> getUserBasics() {
-        ArrayList<UserBasic> userBasics = new ArrayList<>();
+    public ArrayList<UserBasicList> getUserBasics() {
+        ArrayList<UserBasicList> userBasics = new ArrayList<>();
         if (setUp()) {
             ResultSet res = null;
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetUserBasics);
                 res = prep.executeQuery();
+                char orderLetter = 0;
+                String lastName;
+                ArrayList<UserBasic> usersWithSameHead = new ArrayList<>();
                 while (res.next()) {
-                    userBasics.add(new UserBasic(
+                    lastName =  res.getString("last_name");
+                    if (lastName.equals("")) lastName = " ";
+                    if (orderLetter == 0) orderLetter = lastName.charAt(0);
+                    if (lastName.charAt(0) != orderLetter){
+                        userBasics.add(new UserBasicList(usersWithSameHead,
+                                orderLetter));
+                        orderLetter = lastName.charAt(0);
+                        usersWithSameHead = new ArrayList<>();
+                    }
+                    usersWithSameHead.add(new UserBasic(
                             res.getInt("user_id"),
                             res.getString("first_name"),
                             res.getString("last_name"),
