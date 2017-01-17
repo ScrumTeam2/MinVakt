@@ -10,25 +10,29 @@
 </head>
 <body>
 <header>
-    <i class="material-icons">menu</i>
+    <i class="material-icons" id="menu">menu</i>
     <h1>MinVakt</h1>
     <i class="material-icons">more_vert</i>
 </header>
 <div class="container">
     <div class="container-title">
-        <i class="symbol">
+        <i class="symbol right-arrow-circle" id="showStuff">
             <i class="material-icons">panorama_fish_eye</i>
             <i class="material-icons">chevron_right</i>
         </i>
-
-        <i class="symbol rotate90">
-            <i class="material-icons">panorama_fish_eye</i>
+        <h3>Vaktbytte</h3>
+    </div>
+    <div class="watch" id="display_watch">
+        <div class="watch-info">
+            <p class="lead">Navn -> Navn</p>
+            <p class="sub">7.00 - 15.00</p>
+        </div>
+        <i class="symbol right-arrow">
             <i class="material-icons">chevron_right</i>
         </i>
-
     </div>
 </div>
 
-<script src="../js/registerscript.js"></script>
+<script src="../js/feedscript.js"></script>
 </body>
 </html>

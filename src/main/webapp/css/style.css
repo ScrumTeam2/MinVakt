@@ -343,6 +343,21 @@ button {
     display: block;
 }
 
+.num-employees {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.num-employees label, .num-employees input {
+    width: 50%;
+}
+
 .symbol {
     position: relative;
     display: block;
@@ -401,7 +416,7 @@ button {
     align-items: center;
 }
 
-.list .watch-info .lead {
+.lead {
     margin: 0;
     font-weight: normal;
     font-size: 1rem;
@@ -530,6 +545,10 @@ button {
 
 .calendar table tbody .disabled {
     background: #f2f2f2;
+}
+
+.hide {
+    display: none;
 }
 
 
