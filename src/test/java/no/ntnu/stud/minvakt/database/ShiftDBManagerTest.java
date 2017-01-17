@@ -1,9 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftUser;
-import no.ntnu.stud.minvakt.data.ShiftUserBasic;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -76,6 +73,12 @@ public class ShiftDBManagerTest {
         boolean expRes = true;
 
         assertEquals(expRes, res);
+    }
+    @Test
+    public void getShifts(){
+        ArrayList<ShiftUserAvailability> status = shiftDB.getShifts(300, 1);
+        assertFalse(status.isEmpty());
+
     }
 
 }

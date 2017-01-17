@@ -4,7 +4,7 @@
 //$(document).ready(function () {
     $.ajax({
         //     url: "rest/shift/user/"+userId,
-        url: "../rest/shift/user/1",
+        url: "../rest/shift/user",
         type: 'GET',
         dataType: 'json',
         success: createUserShiftHtml,
@@ -19,12 +19,13 @@ function addShiftInfoHtml (element, shiftId, data) {
 
     employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsemedarbeider', 'NURSE': 'Sykepleier'};
     categoriesForLoop = ['ASSISTANT', 'HEALTH_WORKER', 'NURSE'];
-    var html = "<div class='more-info'>";
     var shiftUsers = data.shiftUsers;
     var hasPerson = false;
+    var html = "";
     //Could be made more efficient
     for (var i = 0; i < categoriesForLoop.length; i++) {
         console.log(categoriesForLoop[i]);
+        console.log(html);
         $.each(shiftUsers, function (index, user) {
             console.log(user);
             if (user.userCategory == categoriesForLoop[i]) {
@@ -39,10 +40,14 @@ function addShiftInfoHtml (element, shiftId, data) {
                     html += "<a href='#' class='link'>" + user.userName + "<i class='material-icons'>chevron_right</i></a>"
                 }
             }
+            console.log(html);
+
         });
+        console.log(html);
+        console.log(element);
+        element.append(html);
 
     }
-    html += "</div>";
     console.log(html);
     element.append(html);
 }
@@ -84,7 +89,8 @@ function createUserShiftHtml(data) {
                     "<p class='sub'>"+shiftTimes[element.shiftType]+"</p>" +
                 "</div>" +
                 "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
-            "</div>";
+            "</div>" +
+            "<div class='more-info'></div>";
         calendarList.append(html)
     });
     createInfoListeners();
@@ -92,7 +98,7 @@ function createUserShiftHtml(data) {
 function createInfoListeners() {
     $('.info-button').click(function (e) {
         clickedElement = $(this);
-        moreInfoElement = clickedElement.children('.more-info');
+        moreInfoElement = clickedElement.closest('.more-info');
         if (moreInfoElement.length != 0) {
             moreInfoElement.toggle();
         }
@@ -105,7 +111,7 @@ function createInfoListeners() {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    addShiftInfoHtml(clickedElement, shiftId, data);
+                    addShiftInfoHtml(moreInfoElement, shiftId, data);
                 },
                 error: function (data) {
                     console.log(data)
