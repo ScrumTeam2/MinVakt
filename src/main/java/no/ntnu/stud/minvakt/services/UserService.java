@@ -15,8 +15,6 @@ import java.util.Collection;
  */
 
 /*
-    Class for creating shifts
-    Parameter date needs to be on correct format
  */
 @Path("/user")
 public class UserService {
