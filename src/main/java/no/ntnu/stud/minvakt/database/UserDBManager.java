@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import no.ntnu.stud.minvakt.data.UserBasic;
-
 public class UserDBManager extends DBManager {
     public UserDBManager() {
         super();
@@ -243,7 +241,7 @@ public class UserDBManager extends DBManager {
                     user.setFirstName(res.getString("first_name"));
                     user.setLastName(res.getString("last_name"));
                     user.setEmail(res.getString("email"));
-                    user.setPhonenumber(res.getString("phonenumber"));
+                    user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     users.add(user);
                 }
@@ -270,7 +268,7 @@ public class UserDBManager extends DBManager {
                     u.setFirstName(res.getString("first_name"));
                     u.setLastName(res.getString("last_name"));
                     u.setEmail(res.getString("email"));
-                    u.setPhonenumber(res.getString("phonenumber"));
+                    u.setPhoneNumber(res.getString("phonenumber"));
                     u.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     user = u;
                 }
@@ -380,7 +378,7 @@ public class UserDBManager extends DBManager {
                     prep.setString(1, user.getFirstName());
                     prep.setString(2, user.getLastName());
                     prep.setString(3, user.getEmail());
-                    prep.setString(4, user.getPhonenumber());
+                    prep.setString(4, user.getPhoneNumber());
                    // prep.setInt(5, user.getCategory());
                     change = prep.executeUpdate();
                 } catch (Exception e) {
