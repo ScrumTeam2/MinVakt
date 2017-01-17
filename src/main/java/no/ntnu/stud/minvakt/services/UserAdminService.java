@@ -47,7 +47,7 @@ public class UserAdminService extends SecureService {
         }
 
         // TODO: Better verification of phone number?
-        if(user.getPhonenumber() == null || user.getPhonenumber().isEmpty()) {
+        if(user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
             return Response.ok(Entity.json(new ErrorInfo("Invalid phone number"))).build();
         }
 
@@ -55,7 +55,7 @@ public class UserAdminService extends SecureService {
 
         // Insert into database
         UserDBManager userDBManager = new UserDBManager();
-        int userId = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhonenumber(), user.getCategory().getValue());
+        int userId = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getCategory().getValue());
         user.setId(userId);
 
         if(userId > 0) {

@@ -2,52 +2,126 @@
  * Created by ingvildbroen on 11.01.2017.
  */
 
-
 $(document).ready(function(){
+
+    sessionStorage.getItem("SessionId");
+    console.log(sessionStorage.getItem("SessionId"));
+    console.log(sessionStorage.getItem("SessionExpires"));
+
+    var userValue = $(".user-type:checked").val();
+
+    $(".user-type").on('change', function() {
+        userValue = $(".user-type:checked").val();
+
+        if(userValue === "admin"){
+            showAdminInput();
+        } else{
+            showEmployeeInput();
+        }
+    });
+
 
     $('#userBtn').click(function(e){
         e.preventDefault();
-        var emptyField = true;
 
-        var $first = $('#firstname').value();
-        var $last = $('#lastname').value();
-        var $percent = $('#percentage').value();
-        var $email = $('#email').value();
-        var $phone = $('#phone').value();
-        var $category = $('#category').value();
+        var emptyField = false;
 
-        if(!$identificator.val()){
-            $identificator.addClass('error');
-            emptyField = false;
+        var $first = $('#firstname');
+        var $last = $('#lastname');
+        var $percent = $('#percentage');
+        var $email = $('#email');
+        var $phone = $('#phone');
+        var $category = $('#category');
+
+        if(!$first.val()){
+            $first.addClass('error');
+            emptyField = true;
         }
 
-        if(!$password.val()){
-            $password.addClass('error');
-            emptyField = false;
+        if(!$last.val()){
+            $last.addClass('error');
+            emptyField = true;
         }
 
-
-        if(emptyField){
-            $.ajax({
-                url: "/rest/admin/createuser",
-                type: 'POST',
-                data: {
-                    firstName: $('#firstname').val(),
-                    lastName: $('#lastname').val(),
-                    email: $('#email').val(),
-                    phonenumber: $('#phone').val(),
-                    category: $('#category').val(),
-                    workPercentage: $('#percentage').val()
-                },
-                success: addUser,
-                error: invalidField
-            });
+        if(!$email.val()){
+            $email.addClass('error');
+            emptyField = true;
         }
+
+        if(!$phone.val()){
+            $phone.addClass('error');
+            emptyField = true;
+        }
+
+        var formData;
+
+        console.log(emptyField);
+        console.log(userValue);
+
+        if(userValue === "admin"){
+            if(!emptyField){
+                console.log("admin her");
+                formData = {
+                    "firstName": $first.val(),
+                    "lastName": $last.val(),
+                    "email": $email.val(),
+                    "phonenumber": $phone.val(),
+                    "category": 'ADMIN'
+                    //"workpercentage": 100 eller null
+                };
+            }
+
+        } else{
+
+            if(!$category.val()){
+                $category.addClass('error');
+                emptyField = true;
+            }
+            /*if(!$percent.val()){
+             $percent.addClass('error');
+             emptyField = true;
+             }*/
+
+            if(!emptyField){
+                formData = {
+                    "firstName": $first.val(),
+                    "lastName": $last.val(),
+                    "email": $email.val(),
+                    "phonenumber": $phone.val(),
+                    "category": $category.val()
+                };
+            }
+        }
+
+        $.ajax({
+            url: "/rest/admin/createuser",
+            type: 'POST',
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(formData),
+            success: addUser,
+            error: invalidField
+        });
     });
 });
 
+function showAdminInput(){
+    var $select = $('.select-container');
+    var $percent = $('#percentage');
+    $select.addClass("hide");
+    $percent.addClass("hide");
+}
+
+
+function showEmployeeInput(){
+    var $select = $('.select-container');
+    var $percent = $('#percentage');
+    $select.removeClass("hide");
+    $percent.removeClass("hide");
+}
+
 function addUser(data){
-    console.log("Login", data);
+    console.log("OK", data);
 
     $('.modal').show();
 
@@ -55,7 +129,7 @@ function addUser(data){
 
 function invalidField(data){
     $('.feedback').show();
-    console.log("Invalid", data);
+    console.log("Invalid data", data);
 }
 
 
@@ -77,5 +151,6 @@ var modal = document.getElementById('userModal');
 window.onclick = function(event) {
     if (event.target == modal) {
         modal.hide();
+        $('.register-form')[0].reset();
     }
-}
+};
