@@ -369,10 +369,11 @@ public class ShiftDBManager extends DBManager {
                     ShiftUserAvailability obj = new ShiftUserAvailability(
                             shiftId, res.getDate("date"),
                             Shift.ShiftType.valueOf(res.getInt("time")),
-                            res.getInt("staff_number") ==
-                                    res.getInt("current_staff_numb"),
+                            !(res.getInt("staff_number") ==
+                                    res.getInt("current_staff_numb")),
                             isInShift
                     );
+                    System.out.println(obj);
                     out.add(obj);
 
                 }
