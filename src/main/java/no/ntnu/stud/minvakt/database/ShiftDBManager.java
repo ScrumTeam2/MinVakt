@@ -1,9 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftUser;
-import no.ntnu.stud.minvakt.data.ShiftUserBasic;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -300,5 +297,38 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return out != 0;
+    }
+
+    private final String sqlGetCandidates = "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
+            "NATURAL JOIN user " +
+            "NATURAL JOIN shift " +
+            "WHERE shift.date BETWEEN ? AND ? " +
+            "GROUP BY user_id " +
+            "ORDER BY shifts_worked DESC";
+
+    public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end) {
+        ArrayList<UserBasicWorkHours> users = new ArrayList<>();
+        ResultSet res;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetCandidates);
+                prep.setDate(1, start);
+                prep.setDate(2, end);
+                res = prep.executeQuery();
+                while (res.next()){
+                    int userId = res.getInt("user_id");
+                    String firstName =res.getString("first_name");
+                    String lastName = res.getString("last_name");
+                    int category = res.getInt("category");
+                    int normalShifts = res.getInt("shifts_worked");
+                    UserBasicWorkHours user = new UserBasicWorkHours(userId,firstName,lastName, User.UserCategory.valueOf(category), normalShifts, 0);
+                    users.add(user);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Could not get work hour list", e);
+            }
+        }
+        return users;
     }
 }

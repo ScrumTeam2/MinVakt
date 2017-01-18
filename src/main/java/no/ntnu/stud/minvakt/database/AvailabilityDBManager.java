@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.UserBasic;
 import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
 
 import java.util.ArrayList;
