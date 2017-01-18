@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 
-    if(sessionStorage.getItem("SessionId")){
+    /*if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
         var timeNow = date.getTime();
@@ -32,32 +32,37 @@ $(document).ready(function(){
         }
     } else{
         redirect();
-    }
+    }*/
 });
+
 
 
 //Menu button
-$('#menu').click(function() {
-    $("#popup_more").toggle("right");
-    $()
+$('#menu_icon').click(function(e) {
+    e.preventDefault();
+    //$("#popup_menu").toggle("slide");
+    console.log("hei");
+    var $menu = $('#popup_menu');
+    $menu.removeClass("hide");
+    $menu.css('position', 'absolute');
+    $menu.css('width', '100%');
+    $menu.css('height', '100%');
 });
-
 
 //More button
-$('#more').click(function() {
+/*$('#more_icon').click(function() {
     $("#popup_more").toggle("right");
-    $()
 });
+*/
 
-
-function logOut(){
+/*function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
         type: 'GET',
         success: redirect
     });
     console.log("log out function");
-}
+}*/
 
 function renewSession(){
     console.log("renew");
