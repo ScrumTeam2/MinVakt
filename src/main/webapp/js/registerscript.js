@@ -65,7 +65,7 @@ $(document).ready(function(){
                     "firstName": $first.val(),
                     "lastName": $last.val(),
                     "email": $email.val(),
-                    "phonenumber": $phone.val(),
+                    "phoneNumber": $phone.val(),
                     "category": 'ADMIN'
                     //"workpercentage": 100 eller null
                 };
@@ -87,7 +87,7 @@ $(document).ready(function(){
                     "firstName": $first.val(),
                     "lastName": $last.val(),
                     "email": $email.val(),
-                    "phonenumber": $phone.val(),
+                    "phoneNumber": $phone.val(),
                     "category": $category.val()
                 };
                 console.log(JSON.stringify(formData));

@@ -36,20 +36,20 @@ public class UserAdminService extends SecureService {
         // TODO: Better verification of mail
         System.out.println(user);
         if(user.getEmail() == null || user.getEmail().isEmpty()) {
-            return Response.ok(Entity.json(new ErrorInfo("Invalid mail"))).build();
+            return Response.ok(new ErrorInfo("Invalid mail")).build();
         }
 
         if(user.getFirstName() == null || user.getFirstName().isEmpty()) {
-            return Response.ok(Entity.json(new ErrorInfo("Invalid first name"))).build();
+            return Response.ok(new ErrorInfo("Invalid first name")).build();
         }
 
         if(user.getLastName() == null || user.getLastName().isEmpty()) {
-            return Response.ok(Entity.json(new ErrorInfo("Invalid last name"))).build();
+            return Response.ok(new ErrorInfo("Invalid last name")).build();
         }
 
         // TODO: Better verification of phone number?
         if(user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
-            return Response.ok(Entity.json(new ErrorInfo("Invalid phone number"))).build();
+            return Response.ok(new ErrorInfo("Invalid phone number")).build();
         }
 
         // TODO: Verify user category
