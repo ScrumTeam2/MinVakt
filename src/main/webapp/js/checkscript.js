@@ -38,31 +38,33 @@ $(document).ready(function(){
 
 
 //Menu button
-/*$('#menu_icon').click(function(e) {
+$('#menu_icon').click(function(e) {
     e.preventDefault();
-    //$("#popup_menu").toggle("slide");
-    console.log("hei");
     var $menu = $('#popup_menu');
-    $menu.removeClass("hide");
-    $menu.css('position', 'absolute');
-    $menu.css('width', '100%');
-    $menu.css('height', '100%');
-});*/
+    $menu.toggle();
+});
 
 //More button
-/*$('#more_icon').click(function() {
-    $("#popup_more").toggle("right");
+$('#more_icon').click(function(e) {
+    e.preventDefault();
+    var $more = $('#popup_more');
+    $more.toggle();
 });
-*/
 
-/*function logOut(){
+$('#logout').click(function(e){
+    e.preventDefault();
+    logOut();
+});
+
+
+function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
         type: 'GET',
         success: redirect
     });
     console.log("log out function");
-}*/
+}
 
 
 function renewSession(){
@@ -111,6 +113,7 @@ var adminlinks = [
     "/html/home-a.html",
     "/html/register.html",
     "/html/user-a.html",
+    "/html/user-e.html",
     "/html/new-shift.html",
     "/html/login.html",
     "/html/resetpassword.html",
