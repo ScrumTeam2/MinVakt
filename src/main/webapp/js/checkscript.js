@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 
- /*   if(sessionStorage.getItem("SessionId")){
+    if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
         var timeNow = date.getTime();
@@ -32,13 +32,13 @@ $(document).ready(function(){
         }
     } else{
         redirect();
-    }*/
+    }
 });
 
 
 
 //Menu button
-$('#menu_icon').click(function(e) {
+/*$('#menu_icon').click(function(e) {
     e.preventDefault();
     //$("#popup_menu").toggle("slide");
     console.log("hei");
@@ -47,7 +47,7 @@ $('#menu_icon').click(function(e) {
     $menu.css('position', 'absolute');
     $menu.css('width', '100%');
     $menu.css('height', '100%');
-});
+});*/
 
 //More button
 /*$('#more_icon').click(function() {
@@ -114,62 +114,23 @@ var adminlinks = [
     "/html/new-shift.html",
     "/html/login.html",
     "/html/resetpassword.html",
+    "/html/add-users-to-shift.html",
+    "/html/calendar-a.html",
+    "/html/user-shifts.html",
     "/html/index.html"
 ];
 
 var employeelinks = [
     "/html/home-e.html",
     "/html/user-e.html",
+    "/html/availability.html",
+    "/html/availability-select.html",
+    "/html/calendar-e.html",
     "/html/login.html",
+    "/html/user-shifts.html",
     "/html/resetpassword.html",
     "/html/index.html"
 ];
-
-/*var currentLocation = window.location.pathname;
-console.log("location: ", currentLocation);
-
-var notAccess = false;
-
-function checkUrlA(){
-    for(var i = 0; i < adminlinks.length; i++){
-        if(currentLocation === adminlinks[i]){
-            notAccess = true;
-            console.log("OK a");
-        } else{
-            adminAccess();
-        }
-    }
-}
-
-function checkUrlE(){
-    for(var i = 0; j < employeelinks.length; j++){
-        if(currentLocation === employeelinks[j]){
-            notAccess = true;
-            console.log("OK e");
-        } else{
-            employeeAccess();
-        }
-    }
-}*/
-
-
-
-/*function adminAccess(){
-    if(notAccess){
-        window.location.replace("/html/index.html");
-    } else{
-        console.log("OK");
-    }
-}
-
-
-function employeeAccess(){
-    if(notAccess){
-        window.location.replace("/html/index.html");
-    } else{
-        console.log("OK");
-    }
-}*/
 
 function adminAccess(){
     var currentLocation = window.location.pathname;
@@ -197,25 +158,3 @@ function employeeAccess(){
         window.location.replace("/html/index.html");
     }
 }
-
-/*
- var failsE = 0;
- for(var j = 0; j < employeelinks.length; j++){
- if(currentLocation === employeelinks[j]){
- console.log("OK e");
- console.log("employee current: ", currentLocation);
- //console.log("admin want: ", adminlinks[i]);
- } else{
- failsE ++;
- console.log("FAIL e", failsE);
- }
- }
- if(failsE === employeelinks.length){
- console.log("ant fails", failsE);
- console.log("possible fails", employeelinks.length);
- console.log("FAIL for E go to");
- window.location.replace("/html/index.html");
- } else{
- console.log("still OK e");
- }
-*/
