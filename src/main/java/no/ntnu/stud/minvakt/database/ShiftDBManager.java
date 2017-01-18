@@ -88,7 +88,7 @@ public class ShiftDBManager extends DBManager {
 
             } catch (SQLException sqle) {
                 rollbackStatement();
-                log.log(Level.WARNING, "Issue with creating new shift, data rolled back");
+                log.log(Level.WARNING, "Issue with creating new shift, data rolled back", sqle);
             }
             finally {
                 endTransaction();
@@ -300,6 +300,46 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return out != 0;
+    }
+
+    private final String sqlGetCandidates = 
+            "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
+            "LEFT JOIN shift USING(shift_id) " +
+            "NATURAL JOIN user " +
+            "WHERE shift.date BETWEEN ? AND ? " +
+            "AND user.category != 0 " +
+            "GROUP BY user_id " +
+            "UNION " +
+            "SELECT *, 0 AS shifts_worked FROM user " +
+            "WHERE category != 0 " +
+            "ORDER BY shifts_worked DESC " +
+            "LIMIT ?";
+
+    public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end, int limit) {
+        ArrayList<UserBasicWorkHours> users = new ArrayList<>();
+        ResultSet res;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetCandidates);
+                prep.setDate(1, start);
+                prep.setDate(2, end);
+                prep.setInt(3, limit);
+                res = prep.executeQuery();
+                while (res.next()){
+                    int userId = res.getInt("user_id");
+                    String firstName =res.getString("first_name");
+                    String lastName = res.getString("last_name");
+                    int category = res.getInt("category");
+                    int normalShifts = res.getInt("shifts_worked");
+                    UserBasicWorkHours user = new UserBasicWorkHours(userId,firstName,lastName, User.UserCategory.valueOf(category), normalShifts, 0);
+                    users.add(user);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Could not get work hour list", e);
+            }
+        }
+        return users;
     }
     public ArrayList<ShiftUserAvailability> getShifts(int daysForward, int userId){
         ArrayList<ShiftUserAvailability> out = new ArrayList<>();

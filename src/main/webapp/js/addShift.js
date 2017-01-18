@@ -54,39 +54,48 @@ $(document).ready(function() {
         })
         .done(function(data) {
             console.log( "success", data );
+            localStorage.setItem("TempDayId", data.id);
+            createEvening();
         })
         .fail(function(error) {
             console.log( "error", error );
         });
 
-        $.ajax({
-                url: "/rest/shift",
-                type: "POST",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(evening)
-        })
-        .done(function(data) {
-            console.log( "success", data );
-        })
-        .fail(function(error) {
-            console.log( "error", error );
-        });
+        function createEvening() {
+            $.ajax({
+                    url: "/rest/shift",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(evening)
+                })
+                .done(function(data) {
+                    console.log( "success", data );
+                    localStorage.setItem("TempEveningId", data.id);
+                    createNight()
+                })
+                .fail(function(error) {
+                    console.log( "error", error );
+                });
+        }
 
-        $.ajax({
-                url: "/rest/shift",
-                type: "POST",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(night)
-        })
-        .done(function(data) {
-            console.log( "success", data );
-        })
-        .fail(function(error) {
-            console.log( "error", error );
-        });
-
+        function createNight() {
+            $.ajax({
+                    url: "/rest/shift",
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json",
+                    data: JSON.stringify(night)
+                })
+                .done(function(data) {
+                    console.log( "success", data );
+                    localStorage.setItem("TempNightId", data.id);
+                    window.location = "add-users-to-shift.html";
+                })
+                .fail(function(error) {
+                    console.log( "error", error );
+                });
+        }
 
     });
 });
