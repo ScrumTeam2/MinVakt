@@ -18,6 +18,10 @@ a.white {
     color: #ffffff;
 }
 
+.cursor-point {
+    cursor: pointer;
+}
+
 header {
   background: #034584;
   color: #ffffff;
@@ -499,13 +503,31 @@ button {
     -ms-flex-flow: column nowrap;
     flex-flow: column nowrap;
     tarnsition: all .2s ease-in-out;
-
 }
 
 .list .watch .more-info[loaded="true"] {
     box-shadow: 0 -.5px 0 0 #000000;
-    padding-top: 1px;
+    padding: 1px;
     opacity: 1;
+}
+
+.list .watch .more-info__text {
+    margin: 0;
+    font-size: .875rem;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.list .watch .more-info__text:first-child {
+    padding-top: .5rem;
+}
+
+.list .watch .more-info__text:last-child {
+    padding-bottom: .5rem;
 }
 
 .list .watch .more-info h4 {
@@ -692,18 +714,17 @@ button {
   
 .weekdays {
     color: black;
-  }
+}
   
-  .day {
-    height: 40px;
-    text-align: center;
-  }
- /*
-  .week {
-    .day {
-      background: #eee;
-    }
-  }*/
+.day {
+height: 40px;
+text-align: center;
+}
+
+.week .day {
+  background: #eee;
+}
+
   .error {
     border: 1px solid transparent;
     border-radius: 4px;
