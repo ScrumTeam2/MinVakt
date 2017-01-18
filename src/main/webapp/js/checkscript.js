@@ -22,7 +22,6 @@ $(document).ready(function(){
     }*/
 });
 
-//Hvorfor funker ikke dette?
 
 function renewSession(){
     console.log("renew");

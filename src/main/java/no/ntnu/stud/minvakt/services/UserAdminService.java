@@ -66,4 +66,18 @@ public class UserAdminService extends SecureService {
         log.log(Level.WARNING, "Failed to insert user: " + user);
         return Response.serverError().build();
     }
+    @DELETE
+    @Path("/deleteuser/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Boolean deleteUser(@PathParam("userId") int userId) {
+        Session session = getSession();
+        if(!session.isAdmin()) {
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+        }
+
+        UserDBManager userDBManager = new UserDBManager();
+        boolean isDeleted = userDBManager.deleteUser(userId);
+        if(!isDeleted)log.log(Level.WARNING, "Failed to delete user: " + userId);
+        return isDeleted;
+    }
 }

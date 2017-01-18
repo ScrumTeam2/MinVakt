@@ -119,19 +119,23 @@ C.prototype.switchDate = function(postfix) {
 }
 
 function clickHandler() {
+    var url;
     console.log(this.textContent);
     console.log(month);
-    var dateString = year+'-'+month+'-'+this.textContent;
+    var dateString = year + '-' + month + '-' + this.textContent;
     console.log(dateString);
     if (this.textContent > 0) {
+        if ($(".person").length > 0)
+            url = "/rest/shift/user";
+        else {
+            url = "/rest/shift";
+        }
         $.ajax({
-            url: "/rest/availability/"+dateString,
+            url: url,
             type: 'GET',
-            //datatype: 'json',
-            /* data: {
-             dateSelection: dateString
-             },*/
-            success: success,
+            datatype: 'json',
+            data: {date: dateString},
+            success: createUserShiftHtml,
             error: invalid
         });
     }

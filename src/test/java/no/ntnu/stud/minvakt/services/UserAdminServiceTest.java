@@ -34,8 +34,8 @@ public class UserAdminServiceTest {
         sessionService.checkLogin(request, "email1", "password");
     }
 
-    @Ignore
-    public void createShift() {
+    @Test
+    public void createUser() {
         logInUser();
         User user = new User(-1, "Even","Dalen", "hash","salt","email","phnumber", User.UserCategory.HEALTH_WORKER, 100 );
         Response response = userAdminService.addUser(user);
@@ -43,9 +43,9 @@ public class UserAdminServiceTest {
             String rawJson = (String) response.getEntity();
             System.out.println(rawJson);
             JSONObject o = new JSONObject(rawJson);
-            Integer shiftId = o.getInt("id");
-            //Response delResponse = userAdminService.(shiftId);
-//            assertTrue(delResponse.getStatus() == 200);
+            Integer userId = o.getInt("id");
+            boolean isDeleted = userAdminService.deleteUser(userId);
+            assertTrue(isDeleted);
 
         }
         assertTrue(response.getStatus() == 200);

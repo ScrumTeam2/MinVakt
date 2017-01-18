@@ -38,7 +38,7 @@ public class ShiftServiceTest {
         logInUser();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false, false));
-        Shift shift = new Shift(-1, 1, new Date(System.currentTimeMillis()), 1, 1, shiftUsers);
+        Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers);
         Response response = shiftService.createShift(shift);
         if (response.getStatus() == 200) {
             String rawJson = (String) response.getEntity();
@@ -70,7 +70,7 @@ public class ShiftServiceTest {
     @Test
     public void getShifts(){
         logInUser();
-        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300);
+        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300, new Date(System.currentTimeMillis()));
         assertFalse(statusOk.isEmpty());
     }
 }

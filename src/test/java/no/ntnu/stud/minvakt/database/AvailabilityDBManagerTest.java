@@ -20,7 +20,7 @@ public class AvailabilityDBManagerTest {
     @Test
     public void getAvailabilityTest() {
         ArrayList<Integer> userList = new ArrayList<>();
-        ArrayList<Integer> userListTest = new ArrayList<>();
+        ArrayList<Integer> userListTest;
 
         userList.add(0, 7);
         userList.add(1, 3);
