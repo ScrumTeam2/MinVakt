@@ -12,8 +12,12 @@ var $list = $('.list');
 
 $(document).ready(function() {
 
+    console.log(dayId, eveningId, nightId);
+
     $('button').on("click", function(e) {
         // TODO: Mark shift as published with the ids, stored in localStorage
+        localStorage.clear();
+        window.location = "/html/new-shift.html";
     });
 
     $.ajax({
