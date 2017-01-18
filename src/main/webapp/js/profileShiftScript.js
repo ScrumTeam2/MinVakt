@@ -83,7 +83,7 @@ function createUserShiftHtml(data) {
     var currentDate = "";
     $.each(data, function (index, element) {
         console.log(shiftTypes[element.shiftType]);
-        if(element.date != currentDate){
+        if(element.date !== currentDate){
             currentDate = element.date;
             html =
                 "<div class='container-title'>" +
@@ -139,8 +139,10 @@ function createInfoListeners() {
 function createPeopleListeners() {
     $('.person').click(function (e) {
         var title;
+        var icon = $(this).find(".material-icons");
+        console.log(icon);
         if ($(this).hasClass("person")){
-            $(this).text("people");
+            icon.text("people");
             $(this).removeClass("person");
             $(this).addClass("people");
             title = $(".my-shifts");
@@ -162,7 +164,7 @@ function createPeopleListeners() {
             });
         }
         else {
-            $(this).text("person");
+            icon.text("person");
             $(this).removeClass("people");
             $(this).addClass("person");
             title = $(".all-shifts");
@@ -181,18 +183,17 @@ function createAllShiftsHtml(data) {
     var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
     var currentDate = "";
     var html = "";
-    //console.log(data);
-  
-    $.each(data, function (index, element) {
-        if(element.date != currentDate) {
-            currentDate = element.date;
 
+    $.each(data, function (index, element) {
+        if(element.date !== currentDate) {
+            currentDate = element.data;
+            currentDate = element.date;
             html =
                 "<div class='container-title'>" +
                 "<h3>" + convertDate(element.date) + "</h3>" +
                 "</div>";
         }
-        html = "<div class='watch'>" +
+        html += "<div class='watch'>" +
         "<div class='watch-info'>" +
         "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
         "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
@@ -213,6 +214,7 @@ function createAllShiftsHtml(data) {
             "<i class='symbol info-button' data-id='" + element.shiftId + "'><i class='material-icons'>info_outlines</i></i>" +
             "<div class='more-info'></div></div>";
         calendarList.append(html);
+        html = ""
     });
     createInfoListeners()
 }
@@ -220,7 +222,7 @@ function createCalendarListener(){
     var calendarIcon = $("#today");
     calendarIcon.click(function () {
         var calendar = $("#calendar");
-        calendar.toggle();
+        calendar.slideToggle();
     });
 }
 

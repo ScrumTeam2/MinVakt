@@ -61,4 +61,15 @@ public class ShiftUserAvailability {
     public void setShiftType(Shift.ShiftType shiftType) {
         this.shiftType = shiftType;
     }
+
+    @Override
+    public String toString() {
+        return "ShiftUserAvailability{" +
+                "shiftId=" + shiftId +
+                ", date=" + date +
+                ", shiftType=" + shiftType +
+                ", isAvailable=" + isAvailable +
+                ", hasUser=" + hasUser +
+                '}';
+    }
 }
