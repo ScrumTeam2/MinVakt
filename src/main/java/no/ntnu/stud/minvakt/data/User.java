@@ -51,6 +51,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private UserCategory category;
+    private int percentageWork;
 
     @JsonIgnore
     private String hash;
@@ -127,13 +128,24 @@ public class User {
         this.category = category;
     }
 
-    public User(int id, String firstName, String lastName, String hash, String salt, UserCategory userCategory) {
+    public int getPercentageWork() {
+        return percentageWork;
+    }
+
+    public void setPercentageWork(int percentageWork) {
+        this.percentageWork = percentageWork;
+    }
+
+    public User(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, int percentageWork) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hash = hash;
         this.salt = salt;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.category = userCategory;
+        this.percentageWork = percentageWork;
     }
 
     @Override

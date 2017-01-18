@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 
-    /*if(sessionStorage.getItem("SessionId")){
+ /*   if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
         var timeNow = date.getTime();
@@ -63,6 +63,7 @@ $('#menu_icon').click(function(e) {
     });
     console.log("log out function");
 }*/
+
 
 function renewSession(){
     console.log("renew");

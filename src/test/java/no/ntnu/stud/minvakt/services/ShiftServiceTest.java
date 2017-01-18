@@ -5,6 +5,7 @@ package no.ntnu.stud.minvakt.services;
  */
 import no.ntnu.stud.minvakt.data.*;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class ShiftServiceTest {
         logInUser();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false, false));
-        Shift shift = new Shift(-1, 1, new Date(System.currentTimeMillis()), 1, 1, shiftUsers);
+        Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers);
         Response response = shiftService.createShift(shift);
         if (response.getStatus() == 200) {
             String rawJson = (String) response.getEntity();
@@ -70,7 +71,15 @@ public class ShiftServiceTest {
     @Test
     public void getShifts(){
         logInUser();
-        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300);
+        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300, new Date(System.currentTimeMillis()));
         assertFalse(statusOk.isEmpty());
+    }
+
+    @Test
+    public void getPossibleCandidates() throws Exception {
+        logInUser();
+        Response response = shiftService.getPossibleCandidates(10);
+        ArrayList<UserBasicWorkHours> candidates = (ArrayList<UserBasicWorkHours>)response.getEntity();
+        Assert.assertTrue(candidates.size() > 0);
     }
 }

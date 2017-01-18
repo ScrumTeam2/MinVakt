@@ -26,13 +26,13 @@ public class ShiftDBManager extends DBManager {
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
     private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?;";
     private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?)" +
-            " AND date >= CURDATE() ORDER BY date ASC, time ASC;";
+            " AND date >= ? ORDER BY date ASC, time ASC;";
 
     private final String sqlGetShiftHours = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
     private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
-            "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= CURDATE() " +
-            "AND date <= DATE_ADD(CURDATE(), INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
+            "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
+            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
 
     Connection conn;
@@ -88,7 +88,7 @@ public class ShiftDBManager extends DBManager {
 
             } catch (SQLException sqle) {
                 rollbackStatement();
-                log.log(Level.WARNING, "Issue with creating new shift, data rolled back");
+                log.log(Level.WARNING, "Issue with creating new shift, data rolled back", sqle);
             }
             finally {
                 endTransaction();
@@ -219,7 +219,7 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
-    public ArrayList<ShiftUserBasic> getShiftWithUserId(int userId){
+    public ArrayList<ShiftUserBasic> getShiftWithUserId(int userId, Date date){
         ArrayList<ShiftUserBasic> out = new ArrayList<>();
         if(setUp()){
             ResultSet res = null;
@@ -227,6 +227,7 @@ public class ShiftDBManager extends DBManager {
                 conn = getConnection();
                 prep = conn.prepareStatement(getShiftWithUserId);
                 prep.setInt(1, userId);
+                prep.setDate(2,date);
                 res = prep.executeQuery();
                 while(res.next()){
                     out.add(new ShiftUserBasic(
@@ -294,14 +295,54 @@ public class ShiftDBManager extends DBManager {
                 out = prep.executeUpdate();
 
             } catch(SQLException sqlE){
-                log.log(Level.WARNING, "Error setting 'shift_change' = 1 for shift with ID = " + shiftId);
+                log.log(Level.WARNING, "Error setting 'shift_change' = 1 for shift with ID = " + shiftId, sqlE);
             } finally{
                 finallyStatement(prep);
             }
         }
         return out != 0;
     }
-    public ArrayList<ShiftUserAvailability> getShifts(int daysForward, int userId){
+
+    private final String sqlGetCandidates = 
+            "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
+            "LEFT JOIN shift USING(shift_id) " +
+            "NATURAL JOIN user " +
+            "WHERE shift.date BETWEEN ? AND ? " +
+            "AND user.category != 0 " +
+            "GROUP BY user_id " +
+            "UNION " +
+            "SELECT *, 0 AS shifts_worked FROM user " +
+            "WHERE category != 0 " +
+            "ORDER BY shifts_worked DESC " +
+            "LIMIT ?";
+
+    public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end, int limit) {
+        ArrayList<UserBasicWorkHours> users = new ArrayList<>();
+        ResultSet res;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetCandidates);
+                prep.setDate(1, start);
+                prep.setDate(2, end);
+                prep.setInt(3, limit);
+                res = prep.executeQuery();
+                while (res.next()){
+                    int userId = res.getInt("user_id");
+                    String firstName =res.getString("first_name");
+                    String lastName = res.getString("last_name");
+                    int category = res.getInt("category");
+                    int normalShifts = res.getInt("shifts_worked");
+                    UserBasicWorkHours user = new UserBasicWorkHours(userId,firstName,lastName, User.UserCategory.valueOf(category), normalShifts, 0);
+                    users.add(user);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Could not get work hour list", e);
+            }
+        }
+        return users;
+    }
+    public ArrayList<ShiftUserAvailability> getShifts(int daysForward, int userId, Date date){
         ArrayList<ShiftUserAvailability> out = new ArrayList<>();
         if (setUp()){
             ResultSet res = null;
@@ -309,7 +350,9 @@ public class ShiftDBManager extends DBManager {
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetShifts);
-                prep.setInt(1, daysForward);
+                prep.setDate(1, date);
+                prep.setDate(2, date);
+                prep.setInt(3, daysForward);
                 startTransaction();
                 res = prep.executeQuery();
                 boolean isInShift = false;

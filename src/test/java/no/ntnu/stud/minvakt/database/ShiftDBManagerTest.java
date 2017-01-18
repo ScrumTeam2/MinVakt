@@ -48,7 +48,7 @@ public class ShiftDBManagerTest {
     //Skaper problemer med at det ikke er koblet noen skift i databasen
     @Ignore
     public void getShiftsFromUserId(){
-        ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1);
+        ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1,new java.sql.Date(System.currentTimeMillis()));
         System.out.println(result);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
     }
@@ -69,14 +69,13 @@ public class ShiftDBManagerTest {
 
     @Test
     public void setShiftChangeTest(){
-        boolean res = shiftDB.setShiftChange(4,7);
+        boolean res = shiftDB.setShiftChange(4, 1);
         boolean expRes = true;
-
         assertEquals(expRes, res);
     }
     @Test
     public void getShifts(){
-        ArrayList<ShiftUserAvailability> status = shiftDB.getShifts(300, 1);
+        ArrayList<ShiftUserAvailability> status = shiftDB.getShifts(300, 1,new java.sql.Date(System.currentTimeMillis()));
         assertFalse(status.isEmpty());
 
     }
