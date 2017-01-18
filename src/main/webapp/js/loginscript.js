@@ -4,6 +4,16 @@
 
 $(document).ready(function(){
 
+    if(sessionStorage.getItem("SessionId")){
+        if(sessionStorage.getItem("SessionIdCat") === 'ADMIN'){
+            window.location = "home-a.html";
+            console.log("Already logged in as admin");
+        } else{
+            window.location = "home-e.html";
+            console.log("Already logged in as employee");
+        }
+    }
+
     $('#login').click(function(e){
         e.preventDefault();
         var emptyField = true;
@@ -25,8 +35,8 @@ $(document).ready(function(){
                 url: "/rest/session/login",
                 type: 'POST',
                 data: {
-                    identificator: $("#identificator").val(),
-                    password: $("#password").val()
+                    identificator: $identificator.val(),
+                    password: $password.val()
                 },
                 success: login,
                 error: invalid
@@ -36,9 +46,11 @@ $(document).ready(function(){
 });
 
 function login(data){
-    console.log("Login", data);
+    console.log("Login", data.id);
+    console.log("Login", data.category);
 
     sessionStorage.SessionId = data.id;
+    sessionStorage.SessionIdCat = data.category;
 
     var date = new Date();
     date.setTime(date.getTime() + (1000 * 60 * 60 * 2));
@@ -47,10 +59,10 @@ function login(data){
 
     if(data.category === 0){
         console.log("admin");
-        window.location="home-a.html";
+        window.location = "home-a.html";
     } else{
         console.log("ansatt");
-        window.location="home-e.html";
+        window.location = "home-e.html";
     }
 }
 
