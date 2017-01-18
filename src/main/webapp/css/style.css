@@ -76,12 +76,6 @@ header h1 {
   padding: .5rem 0;
 }
 
-.container-header div {
-    -webkit-box-align: end;
-    -ms-flex-align: end;
-    align-items: flex-end;
-}
-
 .container-header h2 {
   font-weight: normal;
   font-size: 1.25rem;
@@ -93,6 +87,10 @@ header h1 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+
+    -webkit-box-align: end;
+    -ms-flex-align: end;
+    align-items: flex-end;
 }
 
 input, select {
@@ -410,6 +408,16 @@ button {
     max-width: calc(100% - 4rem);
 }
 
+.material-icons {
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
+}
+
 .symbol {
   position: relative;
   display: block;
@@ -490,6 +498,14 @@ button {
     display: flex;
     -ms-flex-flow: column nowrap;
     flex-flow: column nowrap;
+    tarnsition: all .2s ease-in-out;
+
+}
+
+.list .watch .more-info[loaded="true"] {
+    box-shadow: 0 -.5px 0 0 #000000;
+    padding-top: 1px;
+    opacity: 1;
 }
 
 .list .watch .more-info h4 {

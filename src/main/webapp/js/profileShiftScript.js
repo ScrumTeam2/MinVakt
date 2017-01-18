@@ -30,8 +30,8 @@ function addShiftInfoHtml (element, shiftId, data) {
     //Could be made more efficient
     var baseUrl = "../html/user-e.html?search=";
     for (var i = 0; i < categoriesForLoop.length; i++) {
-        console.log(categoriesForLoop[i]);
-        console.log(html);
+        //console.log(categoriesForLoop[i]);
+        //console.log(html);
         $.each(shiftUsers, function (index, user) {
             if (user.userCategory == categoriesForLoop[i]) {
                 if (!hasPerson) {
@@ -48,7 +48,7 @@ function addShiftInfoHtml (element, shiftId, data) {
             }
         });
     }
-    console.log(html);
+    //console.log(html);
     element.append(html);
 }
 
@@ -99,19 +99,19 @@ function createInfoListeners() {
     $('.info-button').click(function (e) {
         var clickedElement = $(this);
         var moreInfoElement = clickedElement.next();
-        console.log(moreInfoElement);
+        //console.log(moreInfoElement);
         isLoaded = moreInfoElement.attr("loaded");
-        console.log("Attr: " +isLoaded);
+        //console.log("Attr: " +isLoaded);
         if (isLoaded == "true") {
-            moreInfoElement.toggle();
-            console.log("Correct: "+ moreInfoElement.firstChild);
+            moreInfoElement.slideToggle();
+            //console.log("Correct: "+ moreInfoElement.firstChild);
         }
         else {
             moreInfoElement.attr("loaded", "true");
-            console.log("Wrong"+moreInfoElement.firstChild);
+            //console.log("Wrong"+moreInfoElement.firstChild);
             e.preventDefault();
             var shiftId = clickedElement.attr('data-id');
-            console.log("ShiftId = " + shiftId);
+            //console.log("ShiftId = " + shiftId);
             $.ajax({
                 url: "../rest/shift/" + shiftId,
                 type: 'GET',
@@ -120,7 +120,7 @@ function createInfoListeners() {
                     addShiftInfoHtml(moreInfoElement, shiftId, data);
                 },
                 error: function (data) {
-                    console.log(data)
+                    //console.log(data)
                 }
             });
         }
@@ -146,7 +146,7 @@ function createPeopleListeners() {
                 dataType: 'json',
                 success: createAllShiftsHtml,
                 error: function (data) {
-                    console.log("Error, no data found");
+                    //console.log("Error, no data found");
                     var calendarList = $(".list");
                     calendarList.append("<p>" + data + "</p>");
                 }
@@ -165,12 +165,12 @@ function createPeopleListeners() {
     })
 }
 function createAllShiftsHtml(data) {
-    console.log("heihei");
+    //console.log("heihei");
     var calendarList = $(".list");
     calendarList.html("");
     var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
     var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
-    console.log(data);
+    //console.log(data);
     $.each(data, function (index, element) {
         var html =
             "<div class='container-title'>" +
