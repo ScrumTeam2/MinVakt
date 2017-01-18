@@ -66,10 +66,6 @@ $(document).ready(function() {
         }
     }
 
-    //Updates usertable from search
-    function getSearchedUsers(pattern){
-
-    }
     function dropDownUser(user, element){
         var userDataElement = element.children(".user-data");
         console.log(userDataElement.length);
