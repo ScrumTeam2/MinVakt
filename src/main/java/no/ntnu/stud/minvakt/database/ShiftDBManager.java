@@ -294,7 +294,7 @@ public class ShiftDBManager extends DBManager {
                 out = prep.executeUpdate();
 
             } catch(SQLException sqlE){
-                log.log(Level.WARNING, "Error setting 'shift_change' = 1 for shift with ID = " + shiftId);
+                log.log(Level.WARNING, "Error setting 'shift_change' = 1 for shift with ID = " + shiftId, sqlE);
             } finally{
                 finallyStatement(prep);
             }
