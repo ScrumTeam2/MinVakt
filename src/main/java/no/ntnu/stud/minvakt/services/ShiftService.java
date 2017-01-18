@@ -121,7 +121,7 @@ public class ShiftService extends SecureService{
      * @param shiftId
      * @return A Response containing an array of Users
      */
-    @POST
+    @GET
     @Path("/{shiftId}/possiblecandidates")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPossibleCandidates(@PathParam("shiftId") int shiftId) {
@@ -141,6 +141,6 @@ public class ShiftService extends SecureService{
                 new GenericEntity<List<UserBasicWorkHours>>(Lists.newArrayList(candidates)) {};
 
 
-        return Response.ok().entity(candidates).build();
+        return Response.ok().entity(entity).build();
     }
 }

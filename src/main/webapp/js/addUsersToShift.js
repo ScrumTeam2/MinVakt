@@ -6,16 +6,19 @@ var dayId = localStorage.getItem("TempDayId");
 var eveningId = localStorage.getItem("TempEveningId");
 var nightId = localStorage.getItem("TempNightId");
 
+var shiftTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
 
 var $list = $('.list');
 
 $(document).ready(function() {
+
+    $('button').on("click", function(e) {
+        // TODO: Mark shift as published with the ids, stored in localStorage
+    });
+
     $.ajax({
-        url: "/rest/shift",
-        type: "GET",
-        data: {
-            dataType: "json"
-        }
+        url: "/rest/shift/" + dayId + "/possiblecandidates",
+        type: "GET"
     })
     .done(function(data) {
         console.log( "success", data );
@@ -28,27 +31,25 @@ $(document).ready(function() {
         for (var i in data) {
             output += `<div class="watch">
                             <div class="watch-info">
-                                <p class="lead">{data[i].firstName} {data[i].lastName}</p>
-                                <p class="sub">{data[i].category}</p>
+                                <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
+                                <p class="sub">${shiftTypes[data[i].category]}</p>
                             </div>
-                            <a href="#" data-id="{data[i].id}" class="link">Endre</a>
+                            <a href="#" data-id="${data[i].id}" class="link">Endre</a>
                         </div>`;
         }
 
         $list.append(output);
+        getEvening();
     })
     .fail(function(error) {
         console.log( "error", error );
     });
 });
 
-$(document).ready(function() {
+function getEvening() {
     $.ajax({
-            url: "/rest/shift",
-            type: "GET",
-            data: {
-                dataType: "json"
-            }
+            url: "/rest/shift/" + eveningId + "/possiblecandidates",
+            type: "GET"
         })
         .done(function(data) {
             console.log( "success", data );
@@ -61,27 +62,25 @@ $(document).ready(function() {
             for (var i in data) {
                 output += `<div class="watch">
                             <div class="watch-info">
-                                <p class="lead">{data[i].firstName} {data[i].lastName}</p>
-                                <p class="sub">{data[i].category}</p>
+                                <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
+                                <p class="sub">${shiftTypes[data[i].category]}</p>
                             </div>
-                            <a href="#" data-id="{data[i].id}" class="link">Endre</a>
+                            <a href="#" data-id="${data[i].id}" class="link">Endre</a>
                         </div>`;
             }
 
             $list.append(output);
+            getNight();
         })
         .fail(function(error) {
             console.log( "error", error );
         });
-});
+}
 
-$(document).ready(function() {
+function getNight() {
     $.ajax({
-            url: "/rest/shift",
-            type: "GET",
-            data: {
-                dataType: "json"
-            }
+            url: "/rest/shift/" + nightId + "/possiblecandidates",
+            type: "GET"
         })
         .done(function(data) {
             console.log( "success", data );
@@ -94,10 +93,10 @@ $(document).ready(function() {
             for (var i in data) {
                 output += `<div class="watch">
                             <div class="watch-info">
-                                <p class="lead">{data[i].firstName} {data[i].lastName}</p>
-                                <p class="sub">{data[i].category}</p>
+                                <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
+                                <p class="sub">${shiftTypes[data[i].category]}</p>
                             </div>
-                            <a href="#" data-id="{data[i].id}" class="link">Endre</a>
+                            <a href="#" data-id="${data[i].id}" class="link">Endre</a>
                         </div>`;
             }
 
@@ -106,4 +105,4 @@ $(document).ready(function() {
         .fail(function(error) {
             console.log( "error", error );
         });
-});
+};
