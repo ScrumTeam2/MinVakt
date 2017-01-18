@@ -38,7 +38,16 @@ public class UserBasicWorkHours extends UserBasic {
         totalWorkHours = overTime + shiftHours;
     }
 
-    public static Comparator<UserBasicWorkHours> workhoursComparator = new Comparator<UserBasicWorkHours>() {
+    public UserBasicWorkHours(int id, String firstName, String lastName, User.UserCategory category, int shiftHours, int overTime) {
+        super(id, firstName, lastName, category);
+        this.shiftHours = shiftHours;
+        this.overTime = overTime;
+    }
+
+    public UserBasicWorkHours() {
+    }
+
+    public static Comparator<UserBasicWorkHours> workHoursComparator = new Comparator<UserBasicWorkHours>() {
         public int compare(UserBasicWorkHours a, UserBasicWorkHours b) {
             return a.getTotalWorkHours() - b.getTotalWorkHours();
         }

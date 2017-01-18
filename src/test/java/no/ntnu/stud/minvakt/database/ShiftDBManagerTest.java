@@ -69,7 +69,7 @@ public class ShiftDBManagerTest {
 
     @Test
     public void setShiftChangeTest(){
-        boolean res = shiftDB.setShiftChange(4,7);
+        boolean res = shiftDB.setShiftChange(4, 1);
         boolean expRes = true;
 
         assertEquals(expRes, res);
