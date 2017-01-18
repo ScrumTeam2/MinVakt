@@ -25,6 +25,15 @@ public class ShiftUser {
     public ShiftUser() {
 
     }
+
+    public ShiftUser(UserBasicWorkHours user) {
+        this.userId = user.getId();
+        this.userName = user.getFirstName() + " " + user.getLastName();
+        this.responsibility = false;
+        this.valid_absence = false;
+        this.userCategory = user.getCategory();
+    }
+
     public User.UserCategory getUserCategory(){
         return userCategory;
     }

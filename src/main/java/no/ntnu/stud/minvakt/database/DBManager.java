@@ -50,7 +50,7 @@ public abstract class DBManager{
 
     protected void endTransaction(){
         try{
-            if(connection.getAutoCommit()){
+            if(!connection.getAutoCommit()){
                 connection.commit();
                 connection.setAutoCommit(true);
             }

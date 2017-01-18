@@ -2,8 +2,10 @@ package no.ntnu.stud.minvakt.controller.encryption;
 
 import com.sun.jmx.remote.internal.ArrayQueue;
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 
 import java.util.ArrayDeque;
@@ -32,7 +34,7 @@ public class ShiftCandidateController {
 
     public ArrayList<UserBasicWorkHours> getPossibleCandidates() {
         AvailableUsersUtil availableUsersUtil = new AvailableUsersUtil();
-        initialCandidates = availableUsersUtil.sortAvailableEmployeesIgnoreAvailability(shift.getDate());
+        initialCandidates = availableUsersUtil.sortAvailableEmployeesIgnoreAvailability(shift.getDate(), shift.getStaffNumb());
 
         LinkedList<UserBasicWorkHours> initialCandidatesQueue = new LinkedList<>(initialCandidates);
         int nurseGoal = getNurseGoal();
@@ -63,6 +65,13 @@ public class ShiftCandidateController {
             }
         }
         return candidates;
+    }
+
+    public void savePossibleCandidates() {
+        ShiftDBManager shiftDBManager = new ShiftDBManager();
+        for(UserBasicWorkHours user : candidates) {
+            shiftDBManager.addEmployeeToShift(new ShiftUser(user), shift.getId());
+        }
     }
 
     private int getNurseGoal() {
