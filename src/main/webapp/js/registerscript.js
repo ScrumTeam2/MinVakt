@@ -90,6 +90,7 @@ $(document).ready(function(){
                     "phonenumber": $phone.val(),
                     "category": $category.val()
                 };
+                console.log(JSON.stringify(formData));
             }
         }
 
@@ -122,7 +123,9 @@ function showEmployeeInput(){
 
 function addUser(data){
     console.log("OK", data);
-
+    var feedback = $('.feedback');
+    feedback.show();
+    feedback.text("Passord for bruker med id = "+data.id+ " er: " + data.password);
     $('.modal').show();
 
 }

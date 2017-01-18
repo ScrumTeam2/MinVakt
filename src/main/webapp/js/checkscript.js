@@ -4,7 +4,7 @@
 
 $(document).ready(function(){
 
-    if(sessionStorage.getItem("SessionId")){
+ /*   if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
         var timeNow = date.getTime();
@@ -19,8 +19,10 @@ $(document).ready(function(){
         }
     } else{
         redirect();
-    }
+    }*/
 });
+
+//Hvorfor funker ikke dette?
 
 function renewSession(){
     console.log("renew");

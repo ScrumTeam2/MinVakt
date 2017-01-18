@@ -200,3 +200,4 @@ function createAllShiftsHtml(data) {
     });
     createInfoListeners()
 }
+
