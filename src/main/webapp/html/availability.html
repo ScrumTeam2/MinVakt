@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MinVakt | Logg inn</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header class="logo">
+    <h1>MinVakt</h1>
+</header>
+
+<div class="container">
+  <div class="icons"> 
+      <i class="symbol x2 left">
+    <i class="material-icons">people</i>
+  </i>
+  <h3 class="ledige-vakter">Ledige <br> Vakter</h3>
+      <i class="symbol x2 right">
+    <i class="material-icons">today</i>
+  </i>
+    </div>
+    <h3 class="headmessage"> Velg tilgjengelighet </h3>
+    <div class="calendar" id="calendar">
+    <div class="calendar-header">
+      <a href="#" class="prev">
+        <i class="material-icons">chevron_left</i>
+      </a>
+      <h3>Januar 2014</h3>
+      <a href="#" class="next">
+        <i class="material-icons">chevron_right</i>
+      </a>
+    </div>
+    
+    <table id="calendar-availability" class="calendar">
+      <thead>
+        <tr>
+          <!--
+          <td>Man</td>
+          <td>Tir</td>
+          <td>Ons</td>
+          <td>Tor</td>
+          <td>Fre</td>
+          <td>Lør</td>
+          <td>Søn</td>
+        -->
+        </tr>
+      </thead>
+      <tbody>
+        <!--
+        <tr>
+          
+          <td class="disabled">30</td>
+          <td class="disabled">31</td>
+          <td>1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td>5</td>
+
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>7</td>
+          <td>8</td>
+          <td>9</td>
+          <td>10</td>
+          <td>11</td>
+          <td>12</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>14</td>
+          <td>15</td>
+          <td>16</td>
+          <td>17</td>
+          <td>18</td>
+          <td>19</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>21</td>
+          <td>22</td>
+          <td>23</td>
+          <td>24</td>
+          <td>25</td>
+          <td>26</td>
+        </tr>
+        <tr>
+          <td>27</td>
+          <td>28</td>
+          <td>29</td>
+          <td>30</td>
+          <td>31</td>
+          <td class="disabled">1</td>
+          <td class="disabled">2</td>
+        </tr>
+        <tr>
+          <td class="disabled">3</td>
+          <td class="disabled">4</td>
+          <td class="disabled">5</td>
+          <td class="disabled">6</td>
+          <td class="disabled">7</td>
+          <td class="disabled">8</td>
+          <td class="disabled">9</td>
+        </tr>
+      -->
+      </tbody>
+    </table>
+  </div>
+<div class="error">
+  <p id="error"></p>
+</div>
+  <button type="submit" id="userBtn">Tilbake</button>
+</div>
+<script src="../js/calendar.js"></script>
+<script src="../js/availabilityScript.js"></script>
+
+
+</body>
+</html>

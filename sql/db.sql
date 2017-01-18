@@ -230,9 +230,9 @@ INSERT INTO admin VALUES(19, true);
  -- department 2
  -- shift(shift_id, staff_number, date, time, dept_id)
  -- DAG 1
- INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-11', 1, 2);
- INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-11', 2, 2);
- INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-11', 3, 2);
+ INSERT INTO shift VALUES(DEFAULT, 3, '2017-03-11', 1, 2);
+ INSERT INTO shift VALUES(DEFAULT, 3, '2017-03-11', 2, 2);
+ INSERT INTO shift VALUES(DEFAULT, 3, '2017-03-11', 3, 2);
 
  -- employee_shift(user_id, shift_id, responsibility, valid_absence, shift_change)
  -- dag 1, shift 1
