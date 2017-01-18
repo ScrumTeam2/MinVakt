@@ -139,7 +139,7 @@ ALTER TABLE overtime
  INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'password', 'password', 'email17','phone17',2);
  INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email18', 'phone18',2);
 
-INSERT INTO user VALUES(DEFAULT, 'Admin', '', 'password', 'password', 'admin', 'admin',0);
+INSERT INTO user VALUES(DEFAULT, 'Admin', '', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'admin', 'admin',0);
 INSERT INTO admin VALUES(19, true);
 
  -- (user_id, percentage_work)
