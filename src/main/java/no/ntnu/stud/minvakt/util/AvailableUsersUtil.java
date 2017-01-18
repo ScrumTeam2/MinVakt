@@ -49,7 +49,7 @@ public class AvailableUsersUtil {
         return userList;
     }
 
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(Date date){
+    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(Date date, int limit){
         OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
         ShiftDBManager shiftDBManager = new ShiftDBManager();
 
@@ -62,7 +62,7 @@ public class AvailableUsersUtil {
         java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDayThisWeek);
 
         //Fetches available employees for a shift
-        ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay);
+        ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
 
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {

@@ -1,12 +1,15 @@
 package no.ntnu.stud.minvakt.controller.encryption;
 
 import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.ShiftUser;
 import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -17,9 +20,19 @@ import static org.junit.Assert.*;
 public class ShiftCandidateControllerTest {
     @Test
     public void getPossibleCandidates() throws Exception {
-        Shift shift = new ShiftDBManager().getShift(10);
+        ShiftDBManager shiftDBManager = new ShiftDBManager();
+        int shiftId = shiftDBManager.createNewShift(new Shift(-1, 5, Date.valueOf(LocalDate.now()), 1, 1, new ArrayList<ShiftUser>()));
+        Shift shift = shiftDBManager.getShift(shiftId);
+
         ShiftCandidateController controller = new ShiftCandidateController(shift);
         ArrayList<UserBasicWorkHours> candidates = controller.getPossibleCandidates();
+        controller.savePossibleCandidates();
+
+        // Retrieve shift with candidates, check them
+        Shift retrievedShift = shiftDBManager.getShift(shiftId);
+        Assert.assertEquals(candidates.size(), retrievedShift.getShiftUsers().size());
+
+        shiftDBManager.deleteShift(shiftId);
 
         int lastWorkHours = -1;
         User.UserCategory lastCategory = User.UserCategory.NURSE;
