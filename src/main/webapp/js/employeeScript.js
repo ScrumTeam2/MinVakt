@@ -78,7 +78,7 @@ function dropDownUser(user, element){
             "<p><i class='symbol'>" +
                 "<i class='material-icons'>panorama_fish_eye</i>" +
                 "<i class='material-icons'>phone</i></i>"
-            + user.phonenumber + "</p>" +
+            + user.phoneNumber + "</p>" +
             "<p>100% stilling</p>";
         console.log(html);
         userDataElement.append(html)
