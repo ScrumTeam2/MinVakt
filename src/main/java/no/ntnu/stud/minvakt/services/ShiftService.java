@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
-import com.google.common.collect.Lists;
+import jersey.repackaged.com.google.common.collect.Lists;
 import no.ntnu.stud.minvakt.controller.encryption.ShiftCandidateController;
 import no.ntnu.stud.minvakt.data.*;
 import no.ntnu.stud.minvakt.database.DBManager;
@@ -136,7 +136,7 @@ public class ShiftService extends SecureService{
         }
 
         Shift shift = new ShiftDBManager().getShift(shiftId);
-        if(shift == null) {
+        if (shift == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
@@ -144,10 +144,12 @@ public class ShiftService extends SecureService{
         ArrayList<UserBasicWorkHours> candidates = controller.getPossibleCandidates();
 
         GenericEntity<List<UserBasicWorkHours>> entity =
-                new GenericEntity<List<UserBasicWorkHours>>(Lists.newArrayList(candidates)) {};
+                new GenericEntity<List<UserBasicWorkHours>>(Lists.newArrayList(candidates)) {
+                };
 
 
         return Response.ok().entity(entity).build();
+    }
 
     @GET
     @Path("user/{userId}")
