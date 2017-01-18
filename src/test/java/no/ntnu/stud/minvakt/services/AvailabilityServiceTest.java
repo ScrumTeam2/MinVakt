@@ -17,6 +17,7 @@ public class AvailabilityServiceTest {
         availabilityService = new AvailabilityService();
     }
 
+    /*
     @Test
     public void checkGetAvailability(){
         Response response = availabilityService.getAvailability(19);
@@ -27,6 +28,7 @@ public class AvailabilityServiceTest {
         Response response = availabilityService.getAvailability(10);
         Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
+    */
 
     @Test
     public void deleteAvailability(){

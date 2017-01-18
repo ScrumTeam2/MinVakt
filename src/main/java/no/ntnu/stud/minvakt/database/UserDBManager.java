@@ -31,7 +31,6 @@ public class UserDBManager extends DBManager {
     private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
 
-
     //If string contains @, it's an email
    /* if(username.contains("@")) {
      checkLogin(username, password); //Email

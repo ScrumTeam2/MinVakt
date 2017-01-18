@@ -1,16 +1,18 @@
 package no.ntnu.stud.minvakt.services;
 
 
+import no.ntnu.stud.minvakt.data.ShiftAvailable;
+import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
+import no.ntnu.stud.minvakt.database.UserDBManager;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
-/**
- * Created by Marit on 11.01.2017.
- */
 @Path("/availability")
 public class AvailabilityService {
     AvailabilityDBManager availabilityDB = new AvailabilityDBManager();
@@ -26,6 +28,19 @@ public class AvailabilityService {
         }
     }
 
+    /*
+    @Path("/date")
+    @POST
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getShiftForRequestedDate(@Context HttpServletRequest request, @FormParam("dateSelection") String dateString ) {
+        // Return if already logged in
+        if (request.getSession() == null) return Response.status(Response.Status.UNAUTHORIZED).build();
+        //ArrayList<ShiftAvailable> out = availabilityDB.getAvailabilityForDate(dateString);
+        //return out;
+    }
+    */
+    /*
     @GET
     @Path("/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,8 +49,20 @@ public class AvailabilityService {
         if(out.isEmpty()){
             return Response.status(400).entity("Unable to find available employees.").build();
         }else {
-            return Response.status(200).entity(out).build();
+            String json = "{\"id\": \"" + out + "\"}";
+            //return Response.status(200).entity(json).build();
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
+
         }
+    }
+    */
+    //Gets available shifts for specific date
+    @GET
+    @Path("/{dateString}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftAvailable> getShiftsAvailable(@PathParam("dateString") String dateString) {
+        ArrayList<ShiftAvailable> out = availabilityDB.getAvailabilityForDate(dateString);
+        return out;
     }
 
     @DELETE

@@ -4,11 +4,14 @@
 $(document).ready(function () {
     createPeopleListeners();
 });
+
 createAjaxForOwnShifts();
-function createAjaxForOwnShifts() {
+
+//});
+function createAjaxForUser(userId) {
     $.ajax({
         //     url: "rest/shift/user/"+userId,
-        url: "../rest/shift/user",
+        url: "../rest/shift/user/"+userId,
         type: 'GET',
         dataType: 'json',
         success: createUserShiftHtml,
@@ -18,8 +21,6 @@ function createAjaxForOwnShifts() {
         }
     });
 }
-//});
-
 function addShiftInfoHtml (element, shiftId, data) {
 
     employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsemedarbeider', 'NURSE': 'Sykepleier'};
@@ -81,15 +82,15 @@ function createUserShiftHtml(data) {
     $.each(data, function (index, element) {
         var html =
             "<div class='container-title'>" +
-                "<h3>"+convertDate(element.date)+"</h3>" +
+            "<h3>"+convertDate(element.date)+"</h3>" +
             "</div>" +
             "<div class='watch'>" +
-                "<div class='watch-info'>" +
-                    "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
-                    "<p class='sub'>"+shiftTimes[element.shiftType]+"</p>" +
-                "</div>" +
-                "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
-                "<div class='more-info'></div>" +
+            "<div class='watch-info'>" +
+            "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
+            "<p class='sub'>"+shiftTimes[element.shiftType]+"</p>" +
+            "</div>" +
+            "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
+            "<div class='more-info'></div>" +
             "</div>";
         calendarList.append(html)
     });
@@ -125,78 +126,4 @@ function createInfoListeners() {
             });
         }
     });
-}
-
-function createPeopleListeners() {
-    $('.person').click(function (e) {
-        var title;
-        if ($(this).hasClass("person")){
-            $(this).text("people");
-            $(this).removeClass("person");
-            $(this).addClass("people");
-            title = $(".my-shifts");
-            title.removeClass("my-shifts");
-            title.addClass("all-shifts");
-            title.text("Alle vakter");
-            $.ajax({
-                //     url: "rest/shift/user/"+userId,
-                url: "../rest/shift",
-                data: {daysForward : 300}, //TODO: edit to 7?
-                type: 'GET',
-                dataType: 'json',
-                success: createAllShiftsHtml,
-                error: function (data) {
-                    console.log("Error, no data found");
-                    var calendarList = $(".list");
-                    calendarList.append("<p>" + data + "</p>");
-                }
-            });
-        }
-        else {
-            $(this).text("person");
-            $(this).removeClass("people");
-            $(this).addClass("person");
-            title = $(".all-shifts");
-            title.removeClass("all-shifts");
-            title.addClass("my-shifts");
-            title.text("Mine vakter");
-            createAjaxForOwnShifts();
-        }
-    })
-}
-function createAllShiftsHtml(data) {
-    console.log("heihei");
-    var calendarList = $(".list");
-    calendarList.html("");
-    var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
-    var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
-    console.log(data);
-    $.each(data, function (index, element) {
-        var html =
-            "<div class='container-title'>" +
-            "<h3>" + convertDate(element.date) + "</h3>" +
-            "</div>" +
-            "<div class='watch'>" +
-            "<div class='watch-info'>" +
-            "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
-            "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
-            "</div>";
-        if (element.hasUser) {
-            html +=
-                "<div class='watch-info'>" +
-                "<p class='sub'>Din vakt</p>" +
-                "</div>";
-        }
-        else if (element.available) {
-            html +=
-                "<div class='watch-info'>" +
-                "<p class='sub'>Ledig vakt</p>" +
-                "</div>";
-        }
-        html +=
-            "<i class='symbol info-button' data-id='" + element.shiftId + "'><i class='material-icons'>info_outlines</i></i>" +
-            "<div class='more-info'></div></div>";
-        calendarList.append(html);
-    });
-    createInfoListeners()
 }

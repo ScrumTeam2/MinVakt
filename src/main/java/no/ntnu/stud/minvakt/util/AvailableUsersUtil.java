@@ -5,6 +5,8 @@ import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,13 +39,39 @@ public class AvailableUsersUtil {
 
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {
-            user.setShiftHours(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
-            user.setOvertime(shiftDBManager.getShiftHours(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setShiftHours(shiftDBManager.getShiftHours(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
         }
 
         //Sorts list of employees by workhours, ascending order
-        userList.sort(UserBasicWorkHours.workhoursComparator);
+        userList.sort(UserBasicWorkHours.workHoursComparator);
+        return userList;
+    }
+
+    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(Date date, int limit){
+        OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
+        ShiftDBManager shiftDBManager = new ShiftDBManager();
+
+        LocalDate localDate = TimeUtil.convertJavaDate(date);
+        //Finds first and last day of week to calculate total workhours for 1 week
+        LocalDate firstDayThisWeek = localDate.with(DayOfWeek.MONDAY);
+        LocalDate lastDayThisWeek = localDate.with(DayOfWeek.SUNDAY);
+
+        java.sql.Date sqlFirstDay = java.sql.Date.valueOf(firstDayThisWeek);
+        java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDayThisWeek);
+
+        //Fetches available employees for a shift
+        ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
+
+        //Fetches workhours from DB
+        for (UserBasicWorkHours user : userList) {
+            user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
+            user.calculateTotalWorkHours();
+        }
+
+        //Sorts list of employees by workhours, ascending order
+        userList.sort(UserBasicWorkHours.workHoursComparator);
         return userList;
     }
 }
