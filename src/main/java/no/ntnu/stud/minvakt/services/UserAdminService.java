@@ -34,6 +34,7 @@ public class UserAdminService extends SecureService {
         // Verify user data
 
         // TODO: Better verification of mail
+        System.out.println(user);
         if(user.getEmail() == null || user.getEmail().isEmpty()) {
             return Response.ok(Entity.json(new ErrorInfo("Invalid mail"))).build();
         }
@@ -55,14 +56,28 @@ public class UserAdminService extends SecureService {
 
         // Insert into database
         UserDBManager userDBManager = new UserDBManager();
-        int userId = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getCategory().getValue());
-        user.setId(userId);
-
-        if(userId > 0) {
-            return Response.ok(user).build();
+        Object[] userInfo = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getCategory().getValue());
+        user.setId((int)userInfo[0]);
+        if(user.getId() > 0) {
+            String json = "{\"id\": \"" + user.getId() + "\", \"password\":\"" + userInfo[1]+"\"}";
+            System.out.println(json);
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
         }
-
         log.log(Level.WARNING, "Failed to insert user: " + user);
         return Response.serverError().build();
+    }
+    @DELETE
+    @Path("/deleteuser/{userId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Boolean deleteUser(@PathParam("userId") int userId) {
+        Session session = getSession();
+        if(!session.isAdmin()) {
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+        }
+
+        UserDBManager userDBManager = new UserDBManager();
+        boolean isDeleted = userDBManager.deleteUser(userId);
+        if(!isDeleted)log.log(Level.WARNING, "Failed to delete user: " + userId);
+        return isDeleted;
     }
 }

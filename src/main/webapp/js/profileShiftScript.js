@@ -3,6 +3,7 @@
  */
 $(document).ready(function () {
     createPeopleListeners();
+    createCalendarListener();
 });
 createAjaxForOwnShifts();
 function createAjaxForOwnShifts() {
@@ -74,15 +75,22 @@ function convertDate(dateInput){
 }
 
 function createUserShiftHtml(data) {
+    var html = "";
     var calendarList = $(".list");
     calendarList.html("");
     var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
     var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
+    var currentDate = "";
     $.each(data, function (index, element) {
-        var html =
-            "<div class='container-title'>" +
+        console.log(shiftTypes[element.shiftType]);
+        if(element.date != currentDate){
+            currentDate = element.date;
+            html =
+                "<div class='container-title'>" +
                 "<h3>"+convertDate(element.date)+"</h3>" +
-            "</div>" +
+                "</div>";
+        }
+        html +=
             "<div class='watch'>" +
                 "<div class='watch-info'>" +
                     "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
@@ -91,7 +99,8 @@ function createUserShiftHtml(data) {
                 "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
                 "<div class='more-info'></div>" +
             "</div>";
-        calendarList.append(html)
+        calendarList.append(html);
+        html = "";
     });
     createInfoListeners();
 }
@@ -165,22 +174,29 @@ function createPeopleListeners() {
     })
 }
 function createAllShiftsHtml(data) {
-    //console.log("heihei");
+
     var calendarList = $(".list");
     calendarList.html("");
     var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
     var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
+    var currentDate = "";
+    var html = "";
     //console.log(data);
+  
     $.each(data, function (index, element) {
-        var html =
-            "<div class='container-title'>" +
-            "<h3>" + convertDate(element.date) + "</h3>" +
-            "</div>" +
-            "<div class='watch'>" +
-            "<div class='watch-info'>" +
-            "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
-            "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
-            "</div>";
+        if(element.date != currentDate) {
+            currentDate = element.date;
+
+            html =
+                "<div class='container-title'>" +
+                "<h3>" + convertDate(element.date) + "</h3>" +
+                "</div>";
+        }
+        html = "<div class='watch'>" +
+        "<div class='watch-info'>" +
+        "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
+        "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
+        "</div>";
         if (element.hasUser) {
             html +=
                 "<div class='watch-info'>" +
@@ -200,3 +216,11 @@ function createAllShiftsHtml(data) {
     });
     createInfoListeners()
 }
+function createCalendarListener(){
+    var calendarIcon = $("#today");
+    calendarIcon.click(function () {
+        var calendar = $("#calendar");
+        calendar.toggle();
+    });
+}
+

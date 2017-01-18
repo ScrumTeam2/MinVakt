@@ -31,7 +31,6 @@ public class UserDBManager extends DBManager {
     private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
 
-
     //If string contains @, it's an email
    /* if(username.contains("@")) {
      checkLogin(username, password); //Email
@@ -73,10 +72,9 @@ public class UserDBManager extends DBManager {
 
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
                         //New user
-                        //User user = new User(res.getInt("user_id"), res.getString("first_name"), res.getString("last_name"), res.getString("email"), res.getString("phonenumber"), res.getInt("rights"), res.getInt("category"), res.getInt("percentage_work");
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
-                                res.getString("last_name"), null,
-                                null, User.UserCategory.valueOf(res.getInt("category")));
+                                res.getString("last_name"), null,null,res.getString("email"), res.getString("phonenumber"),
+                                User.UserCategory.valueOf(res.getInt("category")), 0);
                         return user;
                     }
                     else{
@@ -95,7 +93,7 @@ public class UserDBManager extends DBManager {
     /**
      * Checks whether the user ID and password matches a row in the database
      * @param userId
-     * @param Password plaintext
+     * @param pass plaintext
      * @return Integer>-1 if success, -1 if fail
      */
     public int checkLoginId(String userId, String pass) {
@@ -284,8 +282,9 @@ public class UserDBManager extends DBManager {
      * @return Integer > -1 if success, -1 if fail
      */
     //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
-    public int createNewUser(String first_name, String last_name, String email, String phone, int category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
-        int creation = -1;
+    public Object[] createNewUser(String first_name, String last_name, String email, String phone, int category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
+        Object[] obj = new Object[2];
+        obj[0] = -1;
         String randomPass = GeneratePassword.generateRandomPass();
         //sendEmailWithGeneratedPass to registered user in this method
         String hashedPass[] = en.passEncoding(randomPass);
@@ -302,8 +301,13 @@ public class UserDBManager extends DBManager {
                 prep.setString(5, email);
                 prep.setString(6, phone);
                 prep.setInt(7, category);
-                creation = prep.executeUpdate();
-                return QueryUtil.getGeneratedKeys(prep);
+                int creation = prep.executeUpdate();
+                if (creation != 0) {
+                    obj[0] = QueryUtil.getGeneratedKeys(prep);
+                    obj[1] = randomPass;
+                }
+                return obj;
+
             } catch (Exception e) {
                 System.out.println("Issue creating new ansatt");
                 e.printStackTrace();
@@ -312,12 +316,12 @@ public class UserDBManager extends DBManager {
                 finallyStatement(prep);
             }
         }
-        return -1;
+        return obj;
     }
 
      /**
      * Changes a user's password
-     * @param userId
+     * @param user_id
      * @param prev_password, the previous password
      * @param new_password, the new password
      * @return Integer > -1 if success, -1 if fail
@@ -391,11 +395,6 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
-    /**
-    * Changes department for user
-    * @param userId
-    * @return Integer >-1 if success, -1 if fail
-    */
 
     public ArrayList<UserBasicList> getUserBasics() {
         ArrayList<UserBasicList> userBasics = new ArrayList<>();
