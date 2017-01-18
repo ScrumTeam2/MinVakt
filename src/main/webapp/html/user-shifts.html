@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Ansatte</title>
+    <title>MinVakt | Hjem</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="../js/employeeScript.js"></script>
+    <script src="../js/getUserShifts.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -15,12 +15,20 @@
     <i class="material-icons">more_vert</i>
 </header>
 <div class="container">
-    <input type="search" id="search" placeholder="Søk etter ansatt" />
-    <label for="search"><i class="material-icons">search</i></label>
+    <div class="container-header">
+        <div>
+            <i class="symbol x2">
+                <i class="material-icons person">person</i>
+            </i>
+            <h2 id="user-head"></h2>
+        </div>
+        <i class="symbol x2">
+            <i class="material-icons" id="today">today</i>
+        </i>
+    </div>
     <section class="list">
 
     </section>
 </div>
-<script src="../js/checkscript.js"></script>
 </body>
 </html>
