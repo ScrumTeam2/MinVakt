@@ -493,7 +493,7 @@ button {
     margin: 0;
     font-weight: normal;
     font-size: .875rem;
-    display: -webkit-inline-box;
+ /*   display: -webkit-inline-box;*/
     display: -ms-inline-flexbox;
     display: inline-flex;
     -webkit-box-align: center;
@@ -657,7 +657,6 @@ button {
 }
 .calendar table tr td{
   cursor:pointer;
-  display: none;    
 }
 .hide {
   display:none;
@@ -666,7 +665,7 @@ button {
   text-align:center;
 }
   
-  .weekdays {
+.weekdays {
     color: black;
   }
   
@@ -674,12 +673,12 @@ button {
     height: 40px;
     text-align: center;
   }
-  
+ /*
   .week {
     .day {
       background: #eee;
     }
-  }
+  }*/
   .error {
     border: 1px solid transparent;
     border-radius: 4px;

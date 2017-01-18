@@ -54,8 +54,10 @@ public class ShiftService extends SecureService{
     }
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward){
-        return shiftDB.getShifts(daysForward, getSession().getUser().getId());
+    public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward,
+                                                      @QueryParam("date") Date date){
+        if(date == null) date = new Date(System.currentTimeMillis());
+        return shiftDB.getShifts(daysForward, getSession().getUser().getId(), date);
     }
 
     @DELETE
@@ -118,8 +120,9 @@ public class ShiftService extends SecureService{
     @GET
     @Path("/user/")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ShiftUserBasic> getUserBasicFromSession() {
-        return shiftDB.getShiftWithUserId(getSession().getUser().getId());
+    public ArrayList<ShiftUserBasic> getUserBasicFromSession(@QueryParam("date") Date date) {
+        if(date == null)date = new Date(System.currentTimeMillis());
+        return shiftDB.getShiftWithUserId(getSession().getUser().getId(), date);
     }
 
     /**
@@ -156,7 +159,7 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
         //if(getSession().isAdmin()){
-            return shiftDB.getShiftWithUserId(userId);
+            return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
 }
