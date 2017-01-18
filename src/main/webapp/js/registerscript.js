@@ -3,6 +3,7 @@
  */
 
 $(document).ready(function(){
+    //checkAccess();
 
     sessionStorage.getItem("SessionId");
     console.log(sessionStorage.getItem("SessionId"));
@@ -154,3 +155,12 @@ window.onclick = function(event) {
         $('.register-form')[0].reset();
     }
 };
+
+/*function checkAccess(){
+    var userCategory = sessionStorage.getItem("SessionIdCat");
+    if(userCategory === 'ADMIN'){
+        console.log("OK");
+    } else{
+        window.location = "home-e.html"
+    }
+}*/
