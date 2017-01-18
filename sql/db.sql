@@ -25,13 +25,6 @@ CREATE TABLE user(
 ALTER TABLE user ADD UNIQUE INDEX (email);
 ALTER TABLE user ADD UNIQUE INDEX (phonenumber);
 
--- Administration user. (rights: needed?)
-CREATE TABLE admin(
-  user_id INTEGER NOT NULL,
-  rights BOOLEAN,
-  CONSTRAINT pk_admin PRIMARY KEY(user_id)
-);
-
 -- Employee user
 -- (user_id, percentage_work)
 CREATE TABLE employee(
@@ -82,10 +75,6 @@ CREATE TABLE overtime(
   end_time INTEGER,
   CONSTRAINT pk_overtime PRIMARY KEY(user_id, date, start_time)
 );
-
-ALTER TABLE admin
-  ADD CONSTRAINT fk_admin FOREIGN KEY(user_id)
-  REFERENCES user(user_id);
 
 ALTER TABLE employee
   ADD CONSTRAINT fk_employee FOREIGN KEY(user_id)
@@ -140,7 +129,6 @@ ALTER TABLE overtime
  INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email18', 'phone18',2);
 
 INSERT INTO user VALUES(DEFAULT, 'Admin', '', 'password', 'password', 'admin', 'admin',0);
-INSERT INTO admin VALUES(19, true);
 
  -- (user_id, percentage_work)
  INSERT INTO employee VALUES(1, 100);

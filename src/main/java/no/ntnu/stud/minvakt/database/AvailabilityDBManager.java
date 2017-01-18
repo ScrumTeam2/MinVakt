@@ -1,5 +1,9 @@
 package no.ntnu.stud.minvakt.database;
 
+import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.UserBasic;
+import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
+
 import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
@@ -12,6 +16,7 @@ public class AvailabilityDBManager extends DBManager{
     private final String sqlGetAvailability = "SELECT user_id, first_name, last_name FROM availability NATURAL JOIN user WHERE shift_id=?";
     private final String sqlSetAvailability = "INSERT INTO availability VALUES(?,?);";
     private final String sqlDeleteAvailability = "DELETE FROM availability WHERE user_id=? AND shift_id=?";
+    private final String sqlGetAvailabilityUserBasic = "SELECT user_id, first_name, last_name, category FROM availability NATURAL JOIN user WHERE shift_id=?";
 
     Connection conn;
     PreparedStatement prep;
@@ -96,5 +101,39 @@ public class AvailabilityDBManager extends DBManager{
             }
         }
         return out != 0;
+    }
+
+    // Find available staff for a given shift, returns arraylist with UserbasicWorkHours objects
+    public ArrayList<UserBasicWorkHours> getAvailabilityUserBasic(int shiftID){
+        ArrayList<UserBasicWorkHours> userList = new ArrayList<>();
+
+        ResultSet res = null;
+
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetAvailabilityUserBasic);
+
+                prep.setInt(1, shiftID);
+                res = prep.executeQuery();
+
+                while(res.next()){
+                    UserBasicWorkHours tempUser = new UserBasicWorkHours();
+                    tempUser.setId(res.getInt("user_id"));
+                    tempUser.setFirstName(res.getString("first_name"));
+                    tempUser.setLastName(res.getString("last_name"));
+                    tempUser.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    userList.add(tempUser);
+                }
+
+            } catch (SQLException sqlE) {
+                log.log(Level.WARNING, "Error finding available staff for shift with ID = " + shiftID, sqlE);
+            } finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return userList;
     }
 }

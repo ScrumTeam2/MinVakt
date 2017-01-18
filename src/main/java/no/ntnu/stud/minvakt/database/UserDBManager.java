@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import no.ntnu.stud.minvakt.data.UserBasic;
-
 public class UserDBManager extends DBManager {
     public UserDBManager() {
         super();
@@ -32,7 +30,6 @@ public class UserDBManager extends DBManager {
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
     private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
-
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -243,7 +240,7 @@ public class UserDBManager extends DBManager {
                     user.setFirstName(res.getString("first_name"));
                     user.setLastName(res.getString("last_name"));
                     user.setEmail(res.getString("email"));
-                    user.setPhonenumber(res.getString("phonenumber"));
+                    user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     users.add(user);
                 }
@@ -270,7 +267,7 @@ public class UserDBManager extends DBManager {
                     u.setFirstName(res.getString("first_name"));
                     u.setLastName(res.getString("last_name"));
                     u.setEmail(res.getString("email"));
-                    u.setPhonenumber(res.getString("phonenumber"));
+                    u.setPhoneNumber(res.getString("phonenumber"));
                     u.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     user = u;
                 }
@@ -380,7 +377,7 @@ public class UserDBManager extends DBManager {
                     prep.setString(1, user.getFirstName());
                     prep.setString(2, user.getLastName());
                     prep.setString(3, user.getEmail());
-                    prep.setString(4, user.getPhonenumber());
+                    prep.setString(4, user.getPhoneNumber());
                    // prep.setInt(5, user.getCategory());
                     change = prep.executeUpdate();
                 } catch (Exception e) {

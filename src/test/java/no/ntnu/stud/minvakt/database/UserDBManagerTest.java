@@ -3,11 +3,9 @@ package no.ntnu.stud.minvakt.database;
 import no.ntnu.stud.minvakt.data.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static org.junit.Assert.assertTrue;
 
@@ -41,7 +39,7 @@ public class UserDBManagerTest {
         Assert.assertEquals("testFornavn", user.getFirstName());
         Assert.assertEquals("testEtternavn", user.getLastName());
         Assert.assertEquals("createAndDeleteNewUser@gmail.com", user.getEmail());
-        Assert.assertEquals("10101010", user.getPhonenumber());
+        Assert.assertEquals("10101010", user.getPhoneNumber());
         Assert.assertEquals(User.UserCategory.ASSISTANT, user.getCategory());
     }
 
