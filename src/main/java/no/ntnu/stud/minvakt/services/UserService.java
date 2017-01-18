@@ -15,8 +15,6 @@ import java.util.Collection;
  */
 
 /*
-    Class for creating shifts
-    Parameter date needs to be on correct format
  */
 @Path("/user")
 public class UserService {
@@ -27,4 +25,13 @@ public class UserService {
     public ArrayList<UserBasicList> getUserBasics() {
         return userDB.getUserBasics();
     }
+
+    @GET
+    @Path("/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUserBasics(@PathParam("userId") int userId) {
+        return userDB.getUserById(userId);
+    }
+
+
 }

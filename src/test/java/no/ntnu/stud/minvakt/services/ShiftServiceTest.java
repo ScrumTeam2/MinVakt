@@ -68,11 +68,11 @@ public class ShiftServiceTest {
         assertTrue(statusOk.getStatus() == 200);
     }
 
-    @Ignore
-    public void getEmployeeBasicsWithUserId() {
+    @Test
+    public void getShifts(){
         logInUser();
-        ArrayList<ShiftUserBasic> shiftUserBasics = shiftService.getUserBasicFromId();
-        assertFalse(shiftUserBasics.isEmpty());
+        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300);
+        assertFalse(statusOk.isEmpty());
     }
 
     @Test

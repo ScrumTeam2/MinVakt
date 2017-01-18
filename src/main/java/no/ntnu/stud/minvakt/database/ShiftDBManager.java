@@ -25,15 +25,18 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id = ?;";
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
     private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?;";
-    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?) AND date >= CURDATE()" +
-            "ORDER BY date ASC, time ASC;";
+    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?)" +
+            " AND date >= CURDATE() ORDER BY date ASC, time ASC;";
 
     private final String sqlGetShiftHours = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
+    private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
+            "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= CURDATE() " +
+            "AND date <= DATE_ADD(CURDATE(), INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
+    private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
 
     Connection conn;
     PreparedStatement prep;
-
     /*
         Creates new shift for a specific employee
 
@@ -230,8 +233,8 @@ public class ShiftDBManager extends DBManager {
                                     res.getInt("shift_id"),
                                     res.getDate("date"),
                                     Shift.ShiftType.valueOf(res.getInt("time"))
-                            )
-                    );
+                    ));
+
                 }
             }
             catch (SQLException e){
@@ -337,5 +340,50 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return users;
+    }
+    public ArrayList<ShiftUserAvailability> getShifts(int daysForward, int userId){
+        ArrayList<ShiftUserAvailability> out = new ArrayList<>();
+        if (setUp()){
+            ResultSet res = null;
+            ResultSet res2 = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetShifts);
+                prep.setInt(1, daysForward);
+                startTransaction();
+                res = prep.executeQuery();
+                boolean isInShift = false;
+                while(res.next()){
+                    isInShift = false;
+                    int shiftId = res.getInt("shift_id");
+                    prep = conn.prepareStatement(sqlGetShiftsIsUser);
+                    prep.setInt(1,userId);
+                    prep.setInt(2, shiftId);
+                    res2 = prep.executeQuery();
+                    if(res2.next()){
+                        isInShift = true;
+                    }
+                    ShiftUserAvailability obj = new ShiftUserAvailability(
+                            shiftId, res.getDate("date"),
+                            Shift.ShiftType.valueOf(res.getInt("time")),
+                            res.getInt("staff_number") ==
+                                    res.getInt("current_staff_numb"),
+                            isInShift
+                    );
+                    out.add(obj);
+
+                }
+
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Error getting shifts with connected to availability and user");
+                sqle.printStackTrace();
+            }
+            finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return out;
     }
 }

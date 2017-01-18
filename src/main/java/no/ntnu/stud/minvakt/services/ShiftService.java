@@ -1,4 +1,5 @@
 package no.ntnu.stud.minvakt.services;
+
 import com.google.common.collect.Lists;
 import no.ntnu.stud.minvakt.controller.encryption.ShiftCandidateController;
 import no.ntnu.stud.minvakt.data.*;
@@ -50,6 +51,11 @@ public class ShiftService extends SecureService{
         else{
             return Response.status(Response.Status.UNAUTHORIZED).entity("User is not an admin").build();
         }
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward){
+        return shiftDB.getShifts(daysForward, getSession().getUser().getId());
     }
 
     @DELETE
@@ -112,7 +118,7 @@ public class ShiftService extends SecureService{
     @GET
     @Path("/user/")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ShiftUserBasic> getUserBasicFromId() {
+    public ArrayList<ShiftUserBasic> getUserBasicFromSession() {
         return shiftDB.getShiftWithUserId(getSession().getUser().getId());
     }
 
@@ -142,5 +148,13 @@ public class ShiftService extends SecureService{
 
 
         return Response.ok().entity(entity).build();
+
+    @GET
+    @Path("user/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
+        //if(getSession().isAdmin()){
+            return shiftDB.getShiftWithUserId(userId);
+        //}
     }
 }
