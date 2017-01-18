@@ -40,31 +40,31 @@ $(document).ready(function(){
 //Menu button
 $('#menu_icon').click(function(e) {
     e.preventDefault();
-    //$("#popup_menu").toggle("slide");
-    console.log("menu");
     var $menu = $('#popup_menu');
     $menu.toggle();
-    //$menu.removeClass("hide");
 });
 
 //More button
 $('#more_icon').click(function(e) {
     e.preventDefault();
-    //$("#popup_menu").toggle("slide");
-    console.log("more");
     var $more = $('#popup_more');
-    $more.removeClass("hide");
+    $more.toggle();
+});
+
+$('#logout').click(function(e){
+    e.preventDefault();
+    logOut();
 });
 
 
-/*function logOut(){
+function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
         type: 'GET',
         success: redirect
     });
     console.log("log out function");
-}*/
+}
 
 
 function renewSession(){
@@ -113,6 +113,7 @@ var adminlinks = [
     "/html/home-a.html",
     "/html/register.html",
     "/html/user-a.html",
+    "/html/user-e.html",
     "/html/new-shift.html",
     "/html/login.html",
     "/html/resetpassword.html",
