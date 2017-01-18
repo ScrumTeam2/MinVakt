@@ -38,12 +38,12 @@ $(document).ready(function() {
             //console.log(data[i]);
             //console.log(data[i].userBasics);
             userListElement.append(html);
-            console.log("index = "+i);
+            //console.log("index = "+i);
             for(j = 0; j < data[i].userBasics.length;j++){
                 data[i].userBasics[j]["orderCharacter"] = data[i].orderCharacter;
                 users.push(data[i].userBasics[j]);
                 user = data[i].userBasics[j];
-                console.log(user);
+                //console.log(user);
                 name = user.firstName + " " + user.lastName;
                 html =
                     "<div class='watch' data-id='"+user.id+"'>" +
@@ -54,7 +54,7 @@ $(document).ready(function() {
                         "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";
                 userListElement.append(html);
-                console.log("index = "+i+" J = "+j+"Userbasics"+data[i].userBasics.length);
+                //console.log("index = "+i+" J = "+j+"Userbasics"+data[i].userBasics.length);
 
             }
 
@@ -68,20 +68,20 @@ $(document).ready(function() {
 
     function dropDownUser(user, element){
         var userDataElement = element.children(".user-data");
-        console.log(userDataElement.length);
+        //console.log(userDataElement.length);
         if(userDataElement.data("hasInfo") != "1") {
             userDataElement.data("hasInfo", "1");
             html =
-                "<p><i class='symbol'>" +
+                "<p class='more-info__text'><i class='symbol'>" +
                     "<i class='material-icons'>panorama_fish_eye</i>" +
                     "<i class='material-icons'>mail_outline</i>" +
                 "</i>"+ user.email + "</p>" +
-                "<p><i class='symbol'>" +
+                "<p class='more-info__text'><i class='symbol'>" +
                     "<i class='material-icons'>panorama_fish_eye</i>" +
                     "<i class='material-icons'>phone</i></i>"
                 + user.phoneNumber + "</p>" +
-                "<p>100% stilling</p>";
-            console.log(html);
+                "<p class='more-info__text'>100% stilling</p>";
+            //console.log(html);
             userDataElement.append(html)
         }
         else {
@@ -98,7 +98,7 @@ $(document).ready(function() {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     dropDownUser(data, watchElement)
                 },
                 error: function (data) {
@@ -129,9 +129,9 @@ $(document).ready(function() {
             str = str.toLowerCase();
             searchStr = searchStr.toLowerCase();
 
-            console.log(str, searchStr);
+            //console.log(str, searchStr);
             if (str.includes(searchStr)) {
-                console.log("Match!");
+                //console.log("Match!");
                 if (users[i].orderCharacter !== currentChar) {
                     output.push({
                         char : currentChar,
@@ -160,7 +160,7 @@ $(document).ready(function() {
 
 
                 var user = output[i].data[j];
-                console.log(user);
+                //console.log(user);
                 var name = user.firstName + " " + user.lastName;
                 var html =
                     "<div class='watch' data-id='" + user.id + "'>" +

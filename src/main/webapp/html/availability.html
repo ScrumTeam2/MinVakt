@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <title>MinVakt | Logg inn</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
 <body>
-<header class="logo">
+<header>
+    <a href="#" class="white" id="menu_icon">
+        <i class="material-icons">menu</i>
+    </a>
     <h1>MinVakt</h1>
+    <a href="#" class="white" id="more_icon">
+        <i class="material-icons">more_vert</i>
+    </a>
 </header>
-
 <div class="container">
-  <div class="icons"> 
-      <i class="symbol x2 left">
-    <i class="material-icons">people</i>
-  </i>
-  <h3 class="ledige-vakter">Ledige <br> Vakter</h3>
-      <i class="symbol x2 right">
-    <i class="material-icons">today</i>
-  </i>
+    <div class="container-header">
+        <h2>Ledige vakter</h2>
+        <i class="symbol x2 right">
+            <i class="material-icons">today</i>
+        </i>
     </div>
     <h3 class="headmessage"> Velg tilgjengelighet </h3>
     <div class="calendar" id="calendar">
@@ -116,6 +117,7 @@
 </div>
   <button type="submit" id="userBtn">Tilbake</button>
 </div>
+<script src="../js/checkscript.js"></script>
 <script src="../js/calendar.js"></script>
 <script src="../js/availabilityScript.js"></script>
 

@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>MinVakt | Registrer bruker</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link rel="stylesheet" href="../css/style.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 </head>
 <body>
 <header>
-    <i class="material-icons">menu</i>
+    <a href="#" class="white" id="menu_icon">
+        <i class="material-icons">menu</i>
+    </a>
     <h1>MinVakt</h1>
-    <i class="material-icons">more_vert</i>
+    <a href="#" class="white" id="more_icon">
+        <i class="material-icons">more_vert</i>
+    </a>
 </header>
+<div class="popup-menu hide" id="popup_menu">POPUP</div>
+<div class="popup-more hide" id="popup_more">popup</div>
 <div class="container">
     <div class="container-header">
         <div>
@@ -59,9 +64,7 @@
 
     </div>
 </div>
-
-<script src="../js/registerscript.js?version=1.1"></script>
-<script src="../js/checkscript.js?version=1.1"></script>
-
+<script src="../js/checkscript.js"></script>
+<script src="../js/registerscript.js"></script>
 </body>
 </html>
