@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.lang.invoke.MethodHandles;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,11 +48,15 @@ public class User {
     private int id;
     private String firstName;
     private String lastName;
-    private String hash;
-    private String salt;
     private String email;
-    private String phonenumber;
+    private String phoneNumber;
     private UserCategory category;
+
+    @JsonIgnore
+    private String hash;
+
+    @JsonIgnore
+    private String salt;
 
     public User() {
 
@@ -105,12 +111,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPhonenumber() {
-        return phonenumber;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public UserCategory getCategory() {
@@ -139,7 +145,7 @@ public class User {
                 ", hash='" + hash + '\'' +
                 ", salt='" + salt + '\'' +
                 ", email='" + email + '\'' +
-                ", phonenumber='" + phonenumber + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", category=" + category +
                 '}';
     }
