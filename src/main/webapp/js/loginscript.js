@@ -57,7 +57,7 @@ function login(data){
     var timeNow = date.getTime();
     sessionStorage.SessionExpires = timeNow;
 
-    if(data.category === 0){
+    if(sessionStorage.getItem("SessionIdCat") === 'ADMIN'){
         console.log("admin");
         window.location = "home-a.html";
     } else{

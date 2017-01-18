@@ -24,11 +24,11 @@ public class ShiftDBManagerTest {
         shiftDB = new ShiftDBManager();
     }
 
-    @Ignore
+    @Test
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,false));
-        Shift shift = new Shift(-1,1, new java.sql.Date(System.currentTimeMillis()), 1,1, shiftUsers);
+        Shift shift = new Shift(-1,1, java.sql.Date.valueOf("1995-01-01"), 1,1, shiftUsers);
         int shiftId = shiftDB.createNewShift(shift);
         if(shiftId != 0){
             boolean ok = shiftDB.deleteShift(shiftId);
@@ -36,7 +36,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
-    @Ignore
+    @Test
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
@@ -46,16 +46,15 @@ public class ShiftDBManagerTest {
         assertTrue(statusOk);
     }
     //Skaper problemer med at det ikke er koblet noen skift i databasen
-    @Ignore
+    @Test
     public void getShiftsFromUserId(){
         ArrayList<ShiftUserBasic> result = shiftDB.getShiftWithUserId(1,new java.sql.Date(System.currentTimeMillis()));
-        System.out.println(result);
         assertTrue(result.get(0) instanceof ShiftUserBasic);
     }
 
 
     // int getShiftHours(int userId, Date startDate, Date endDate)
-    @Ignore
+    @Test
     public void getTotalHoursTest(){
         String stringDate1 = "2017-01-01";
         String stringDate2 = "2017-01-31";
