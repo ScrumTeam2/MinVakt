@@ -648,6 +648,21 @@ button {
 
 }
 
+#popup_more {
+    background-color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+}
+
+#popup_menu {
+    background-color: #ffffff;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 .logo {
     text-align:center;
 }

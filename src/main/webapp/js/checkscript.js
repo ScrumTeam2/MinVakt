@@ -38,22 +38,24 @@ $(document).ready(function(){
 
 
 //Menu button
-/*$('#menu_icon').click(function(e) {
+$('#menu_icon').click(function(e) {
     e.preventDefault();
     //$("#popup_menu").toggle("slide");
-    console.log("hei");
+    console.log("menu");
     var $menu = $('#popup_menu');
-    $menu.removeClass("hide");
-    $menu.css('position', 'absolute');
-    $menu.css('width', '100%');
-    $menu.css('height', '100%');
-});*/
+    $menu.toggle();
+    //$menu.removeClass("hide");
+});
 
 //More button
-/*$('#more_icon').click(function() {
-    $("#popup_more").toggle("right");
+$('#more_icon').click(function(e) {
+    e.preventDefault();
+    //$("#popup_menu").toggle("slide");
+    console.log("more");
+    var $more = $('#popup_more');
+    $more.removeClass("hide");
 });
-*/
+
 
 /*function logOut(){
     $.ajax({
