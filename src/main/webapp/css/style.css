@@ -745,11 +745,7 @@ height: 40px;
 text-align: center;
 }
 
-.week .day {
-  background: #eee;
-}
-
-  .error {
+.error {
     border: 1px solid transparent;
     border-radius: 4px;
     color: #a94442;
@@ -759,7 +755,8 @@ text-align: center;
     width: 50%;
     text-align: center;
     margin: 0 auto;
-  }
-  .disabled-month {
-    opacity: 0.5;
-  }
+}
+.disabled-month {
+    background: #f2f2f2;
+    //opacity: 0.5;
+}
