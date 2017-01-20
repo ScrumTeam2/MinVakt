@@ -258,7 +258,7 @@ public class ShiftDBManager extends DBManager {
     public int getShiftHours(int userId, Date startDate, Date endDate){
         int out = 0;
         ResultSet res = null;
-        int shiftLength = 32; // Given each shift is 8 hours (4 * 8)
+        int shiftLength = 60; // minutes
 
         if(setUp()){
             try {
@@ -273,7 +273,7 @@ public class ShiftDBManager extends DBManager {
                while(res.next()){
                    out += res.getInt("shift_id");
                }
-               out *= shiftLength;
+               out /= shiftLength;
 
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId);
@@ -340,6 +340,8 @@ public class ShiftDBManager extends DBManager {
                 }
             } catch (Exception e) {
                 log.log(Level.WARNING, "Could not get work hour list", e);
+            } finally {
+                finallyStatement(prep);
             }
         }
         return users;
@@ -410,4 +412,5 @@ public class ShiftDBManager extends DBManager {
         }
         return status != 0;
     }
+
 }
