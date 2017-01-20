@@ -28,7 +28,7 @@ public class UserDBManager extends DBManager {
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
-    private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
+    //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
 
     //If string contains @, it's an email
@@ -113,6 +113,10 @@ public class UserDBManager extends DBManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            finally {
+                endTransaction();
+                finallyStatement(res,prep);
+            }
         }
         return login;
     }
@@ -147,7 +151,7 @@ public class UserDBManager extends DBManager {
     }
 
 
-    public int changeDepartment(int user_id) {
+  /*  public int changeDepartment(int user_id) {
         int change = -1;
         if (setUp()) {
             try {
@@ -164,7 +168,7 @@ public class UserDBManager extends DBManager {
             }
         }
         return change;
-    }
+    }*/
     
      /**
      * Returns an array with user objects.
@@ -190,6 +194,9 @@ public class UserDBManager extends DBManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            finally {
+                finallyStatement(res,prep);
             }
         }
         return users;
@@ -273,6 +280,9 @@ public class UserDBManager extends DBManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            finally {
+                finallyStatement(res,prep);
+            }
         }
       return user;
     }
@@ -337,31 +347,24 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(prev_password, res.getString("hash"), res.getString("salt"))) {
-                        oldPassCorrect = true;
+                        String[] passInfoNew = en.passEncoding(prev_password);
+                        String hashNew = passInfoNew[0];
+                        String saltNew = passInfoNew[1];
+                        prep = getConnection().prepareStatement(sqlChangePass);
+                        prep.setString(1, hashNew);
+                        prep.setString(2, saltNew);
+                        prep.setString(3, user_id);
+                        change = prep.executeUpdate();
                     }
+
                 }
-            } catch (Exception e) {
+            } catch (SQLException sqle) {
                 System.out.println("Error at changePasswordUserId()");
-                e.printStackTrace();
+                sqle.printStackTrace();
+            } finally {
+                endTransaction();
+                finallyStatement(res, prep);
             }
-        }
-        if(oldPassCorrect) {
-            //Change Pass
-            String[] passInfoNew = en.passEncoding(prev_password);
-            String hashNew = passInfoNew[0];
-            String saltNew = passInfoNew[1];
-            try {
-                prep = getConnection().prepareStatement(sqlChangePass);
-                prep.setString(1, hashNew);
-                prep.setString(2, saltNew);
-                prep.setString(3, user_id);
-                change = prep.executeUpdate();
-            } catch (Exception e) {
-                System.out.println("Error at changePasswordUserId() update");
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Login incorrect");
         }
         return change;
     }
@@ -389,6 +392,7 @@ public class UserDBManager extends DBManager {
                     System.out.println("Error at changeUserInfo()");
                     e.printStackTrace();
                 } finally {
+                    endTransaction();
                     finallyStatement(res,prep);
                 }
             }

@@ -760,26 +760,61 @@ button {
 }
   
 .weekdays {
-    color: black;
+    color: #000000;
 }
   
 .day {
-height: 40px;
-text-align: center;
+    height: 40px;
+    text-align: center;
 }
 
-.error {
-    border: 1px solid transparent;
-    border-radius: 4px;
-    color: #a94442;
-    background-color: #f2dede;
-    border-color: #f79dac;
-    border-style: solid;
-    width: 50%;
-    text-align: center;
-    margin: 0 auto;
-}
 .disabled-month {
     background: #f2f2f2;
     //opacity: 0.5;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 2px;
+    box-shadow: 0 19px 38px rgba(0, 0, 0, 0.5);
+    max-width: 80%;
+    display: none;
+}
+
+.popup h3 {
+    font-weight: normal;
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.popup p {
+    color: #757575;
+    margin: 1rem 0;
+}
+
+.popup .links {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.popup .links a {
+    padding: 0 1.25rem;
+    font-size: .875rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #02407B;
+}
+
+.popup .links a:hover {
+    text-decoration: underline;
 }

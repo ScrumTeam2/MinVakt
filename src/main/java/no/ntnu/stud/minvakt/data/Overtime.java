@@ -7,31 +7,38 @@ import java.sql.Date;
  */
 public class Overtime {
 
-    private Date date;
+    private int userId;
+    private int shiftId;
     private int startTime;
-    private int endTime;
+    private int minutes;
+    private boolean approved;
 
-    public Overtime(Date date, int startTime, int endTime){
-        this.date = date;
-        this.startTime = startTime;
-        this.endTime = endTime;
+   public Overtime(int userId, int shiftId, int startTime, int minutes, boolean approved){
+       this.userId = userId;
+       this.shiftId = shiftId;
+       this.startTime = startTime;
+       this.minutes = minutes;
+       this.approved = approved;
+   }
+
+   public int getUserId(){
+       return userId;
     }
-    public Date getDate(){
-        return date;
+
+    public int getShiftId(){
+       return shiftId;
     }
+
     public int getStartTime(){
         return startTime;
     }
-    public int getEndTime(){
-        return endTime;
+
+    public int getMinutes(){
+        return minutes;
     }
 
-    public String toString(){
-        String res = "";
-        res += "Date: " + date;
-        res+= " Start time: " +startTime;
-        res+= " End time: " + endTime;
-        return res;
+    public boolean getApproved(){
+        return approved;
     }
 
     @Override
@@ -41,9 +48,10 @@ public class Overtime {
 
         Overtime overtime = (Overtime) o;
 
+        if (userId != overtime.userId) return false;
+        if (shiftId != overtime.shiftId) return false;
         if (startTime != overtime.startTime) return false;
-        if (endTime != overtime.endTime) return false;
-
-        return date != null ? date.equals(overtime.date) : overtime.date == null;
+        if (minutes != overtime.minutes) return false;
+        return approved == overtime.approved;
     }
 }

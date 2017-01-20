@@ -63,7 +63,7 @@ public class ShiftServiceTest {
         ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, false);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 2);
         if (statusOk.getStatus() == 200) {
-            statusOk = shiftService.deleteEmployeeFromShift(1, 2);
+            statusOk = shiftService.deleteEmployeeFromShift(1, 2,false);
         }
         assertTrue(statusOk.getStatus() == 200);
     }
