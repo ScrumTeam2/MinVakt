@@ -85,7 +85,7 @@ $(document).ready(function() {
             userDataElement.append(html);
         }
         else {
-            userDataElement.slideToggle();
+            userDataElement.slideToggle(200);
         }
 
     }
