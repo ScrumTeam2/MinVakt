@@ -2,7 +2,6 @@ DROP TABLE IF EXISTS overtime;
 DROP TABLE IF EXISTS employee_shift;
 DROP TABLE IF EXISTS availability;
 DROP TABLE IF EXISTS shift;
-DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS department;
@@ -26,77 +25,79 @@ ALTER TABLE user ADD UNIQUE INDEX (phonenumber);
 
 -- Employee user
 CREATE TABLE employee(
-user_id INTEGER NOT NULL,
-percentage_work FLOAT,
-CONSTRAINT pk_employee PRIMARY KEY(user_id)
+  user_id INTEGER NOT NULL,
+  percentage_work FLOAT,
+  CONSTRAINT pk_employee PRIMARY KEY(user_id)
 );
 
 -- Department where a shift is scheduled
 CREATE TABLE department(
-dept_id INTEGER NOT NULL AUTO_INCREMENT,
-dept_name VARCHAR(30),
-CONSTRAINT pk_dept PRIMARY KEY(dept_id)
+  dept_id INTEGER NOT NULL AUTO_INCREMENT,
+  dept_name VARCHAR(30),
+  CONSTRAINT pk_dept PRIMARY KEY(dept_id)
 );
 
 -- Shift, with number of employees working, date, time of day and department
 CREATE TABLE shift(
-shift_id INTEGER NOT NULL AUTO_INCREMENT,
-staff_number INTEGER,
-date DATE,
-time TINYINT,
-dept_id INTEGER,
-CONSTRAINT pk_shift PRIMARY KEY(shift_id)
+  shift_id INTEGER NOT NULL AUTO_INCREMENT,
+  staff_number INTEGER,
+  date DATE,
+  time TINYINT,
+  dept_id INTEGER,
+  CONSTRAINT pk_shift PRIMARY KEY(shift_id)
 );
 
 -- If valid_absence is true, the employee is absent this shift, but should still be payed.
 CREATE TABLE employee_shift(
-user_id INTEGER,
-shift_id INTEGER,
-responsibility BOOLEAN,
-valid_absence BOOLEAN,
-shift_change BOOLEAN, 
-CONSTRAINT pk_employee_shift PRIMARY KEY(user_id, shift_id)
+  user_id INTEGER,
+  shift_id INTEGER,
+  responsibility BOOLEAN,
+  valid_absence BOOLEAN,
+  shift_change BOOLEAN,
+  CONSTRAINT pk_employee_shift PRIMARY KEY(user_id, shift_id)
 );
 
--- If a worker is available to work on a spesific shift
+-- If a worker is available to work on a specific shift
 CREATE TABLE availability(
-user_id INTEGER,
-shift_id INTEGER,
-CONSTRAINT pk_availability PRIMARY KEY(user_id, shift_id)
+  user_id INTEGER,
+  shift_id INTEGER,
+  CONSTRAINT pk_availability PRIMARY KEY(user_id, shift_id)
 );
 
--- Used to register hours worked over the scheduled work hours
+-- Used to register minutes worked over the scheduled work hours
 CREATE TABLE overtime(
-user_id INTEGER NOT NULL,
-date DATE,
-start_time INTEGER,
-end_time INTEGER,
-CONSTRAINT pk_overtime PRIMARY KEY(user_id, date, start_time)
+  user_id INTEGER,
+  shift_id INTEGER,
+  start_time INTEGER,
+  minutes INTEGER,
+  approved BOOLEAN,
+  CONSTRAINT pk_overtime PRIMARY KEY(user_id, shift_id, start_time)
 );
 
 ALTER TABLE employee
-ADD CONSTRAINT fk_employee FOREIGN KEY(user_id)
-REFERENCES user(user_id);
+  ADD CONSTRAINT fk_employee FOREIGN KEY(user_id)
+  REFERENCES user(user_id);
 
 ALTER TABLE shift
-ADD CONSTRAINT fk_shift FOREIGN KEY(dept_id)
-REFERENCES department(dept_id);
+  ADD CONSTRAINT fk_shift FOREIGN KEY(dept_id)
+  REFERENCES department(dept_id);
 
 ALTER TABLE employee_shift
-ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
-REFERENCES employee(user_id),
-ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
-REFERENCES shift(shift_id);
+  ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
+  REFERENCES employee(user_id),
+  ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
+  REFERENCES shift(shift_id);
 
 ALTER TABLE availability
-ADD CONSTRAINT fk1_availability FOREIGN KEY(user_id)
-REFERENCES employee(user_id),
-ADD CONSTRAINT fk2_availability FOREIGN KEY(shift_id)
-REFERENCES shift(shift_id);
+  ADD CONSTRAINT fk1_availability FOREIGN KEY(user_id)
+  REFERENCES employee(user_id),
+  ADD CONSTRAINT fk2_availability FOREIGN KEY(shift_id)
+  REFERENCES shift(shift_id);
 
 ALTER TABLE overtime
-ADD CONSTRAINT fk_overtime FOREIGN KEY(user_id)
-REFERENCES employee(user_id);
+  ADD CONSTRAINT fk1_overtime FOREIGN KEY(user_id, shift_id)
+  REFERENCES employee_shift(user_id, shift_id);
+
 
 -- DEPARTMENTS
 INSERT INTO department VALUES(1, 'Avdeling 1');
@@ -570,9 +571,8 @@ INSERT INTO availability VALUES(7, 42);
 INSERT INTO availability VALUES(3, 43);
 INSERT INTO availability VALUES(2, 43);
 
-
--- overtime
-INSERT INTO overtime VALUES(1, '2017-01-01', 24, 26);
-INSERT INTO overtime VALUES(1, '2017-01-02', 86, 88);
-INSERT INTO overtime VALUES(1, '2017-01-04', 24, 30);
-INSERT INTO overtime VALUES(1, '2017-01-05', 86, 2);
+-- OVERTIME
+INSERT INTO overtime VALUES(5, 60, 960, 60, false);
+INSERT INTO overtime VALUES(3, 52, 960, 35, false);
+INSERT INTO overtime VALUES(4, 61, 840, -60, false);
+INSERT INTO overtime VALUES(4, 28, 780, -120, false);
