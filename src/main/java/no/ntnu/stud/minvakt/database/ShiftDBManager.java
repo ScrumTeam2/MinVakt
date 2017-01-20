@@ -34,6 +34,7 @@ public class ShiftDBManager extends DBManager {
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
             "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
+    private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
 
     Connection conn;
     PreparedStatement prep;
@@ -388,5 +389,24 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return out;
+    }
+    public boolean setStaffNumberOnShift(int shiftId, int staffNumber){
+        int status = 0;
+        if(setUp()){
+            try{
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetStaffNumberOnShift);
+                prep.setInt(2, shiftId);
+                prep.setInt(1,staffNumber);
+                status = prep.executeUpdate();
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Error editing number of staff number on shift "+shiftId);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return status != 0;
     }
 }

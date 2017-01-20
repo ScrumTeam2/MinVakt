@@ -38,7 +38,7 @@ $(document).ready(function() {
                                 <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
                                 <p class="sub">${shiftTypes[data[i].category]}</p>
                             </div>
-                            <a href="#" data-id="${data[i].id}" class="link">Endre</a>
+                            <a href="" data-id="${data[i].id}" class="link">Endre</a>
                         </div>`;
         }
 
