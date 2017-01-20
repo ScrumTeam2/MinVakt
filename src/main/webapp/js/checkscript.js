@@ -4,6 +4,20 @@
 
 $(document).ready(function(){
 
+    var currPage = window.location.pathname.replace("/html/", "");
+    var $menu = $('#popup_menu');
+    var test = $menu.find($("a"));
+
+    for (var i in test) {
+        var $link = $(test[i]);
+        if($link.attr("href") === currPage) {
+            $link.addClass("active");
+        }
+    }
+
+
+        //.addClass("active");
+
     if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
@@ -42,6 +56,10 @@ $('#menu_icon').click(function(e) {
     e.preventDefault();
     var $menu = $('#popup_menu');
     $menu.toggle();
+    var $more = $('#popup_more');
+    if ($more.is(":visible")) {
+        $more.hide();
+    }
 });
 
 //More button
@@ -49,6 +67,10 @@ $('#more_icon').click(function(e) {
     e.preventDefault();
     var $more = $('#popup_more');
     $more.toggle();
+    var $menu = $('#popup_menu');
+    if ($menu.is(":visible")) {
+        $menu.hide();
+    }
 });
 
 $('#logout').click(function(e){
@@ -63,20 +85,20 @@ function logOut(){
         type: 'GET',
         success: redirect
     });
-    console.log("log out function");
+    //console.log("log out function");
 }
 
 
 function renewSession(){
-    console.log("renew");
+    //console.log("renew");
     var date = new Date();
     date.setTime(date.getTime() + (2 * 60 * 60 * 1000));
     sessionStorage.SessionExpires = date;
 }
 
 function redirect(){
-    console.log("log out");
-    console.log("login again");
+    //console.log("log out");
+    //console.log("login again");
     sessionStorage.clear();
     window.location = "login.html";
 }
@@ -137,27 +159,27 @@ var employeelinks = [
 
 function adminAccess(){
     var currentLocation = window.location.pathname;
-    console.log("location: ", currentLocation);
+    //console.log("location: ", currentLocation);
 
     var found = $.inArray(currentLocation, adminlinks) > -1;
 
     if(found){
-        console.log("OK a");
+        //console.log("OK a");
     } else{
-        console.log("FAIL for A go to");
+        //console.log("FAIL for A go to");
         window.location.replace("/html/index.html");
     }
 }
 
 function employeeAccess(){
     var currentLocation = window.location.pathname;
-    console.log("location: ", currentLocation);
+    //console.log("location: ", currentLocation);
 
     var found = $.inArray(currentLocation, employeelinks) > -1;
     if(found){
-        console.log("OK e");
+        //console.log("OK e");
     } else{
-        console.log("FAIL for E go to");
+        //console.log("FAIL for E go to");
         window.location.replace("/html/index.html");
     }
 }
