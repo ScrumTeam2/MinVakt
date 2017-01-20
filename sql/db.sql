@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS newsfeed;
 DROP TABLE IF EXISTS employee_shift;
 DROP TABLE IF EXISTS availability;
 DROP TABLE IF EXISTS shift;
-DROP TABLE IF EXISTS admin;
 DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS department;
@@ -67,21 +66,23 @@ CREATE TABLE availability(
   CONSTRAINT pk_availability PRIMARY KEY(user_id, shift_id)
 );
 
--- Used to register hours worked over the scheduled work hours
+-- Used to register minutes worked over the scheduled work hours
 CREATE TABLE overtime(
-user_id INTEGER NOT NULL,
-date DATE,
-start_time INTEGER,
-end_time INTEGER,
-CONSTRAINT pk_overtime PRIMARY KEY(user_id, date, start_time)
+  user_id INTEGER,
+  shift_id INTEGER,
+  start_time INTEGER,
+  minutes INTEGER,
+  approved BOOLEAN,
+  CONSTRAINT pk_overtime PRIMARY KEY(user_id, shift_id, start_time)
 );
 
 -- newsfeed has two user_ids, first one is the one the newsfeed "belongs" to
 -- second one is, together with shift_id, a reference to the employee_shift
 CREATE TABLE newsfeed (
-  feed_id INTEGER NOT NULL,
+  feed_id INTEGER AUTO_INCREMENT,
   date_time DATETIME,
   content VARCHAR(200),
+  resolved BOOLEAN,
   user_id INTEGER,
   shift_id INTEGER,
   shift_user_id INTEGER,
@@ -109,8 +110,9 @@ ALTER TABLE availability
   REFERENCES shift(shift_id);
 
 ALTER TABLE overtime
-ADD CONSTRAINT fk_overtime FOREIGN KEY(user_id)
-REFERENCES employee(user_id);
+  ADD CONSTRAINT fk1_overtime FOREIGN KEY(user_id, shift_id)
+  REFERENCES employee_shift(user_id, shift_id);
+
 
 ALTER TABLE newsfeed
   ADD CONSTRAINT fk1_newsfeed FOREIGN KEY(user_id)
@@ -591,9 +593,8 @@ INSERT INTO availability VALUES(7, 42);
 INSERT INTO availability VALUES(3, 43);
 INSERT INTO availability VALUES(2, 43);
 
-
--- overtime
-INSERT INTO overtime VALUES(1, '2017-01-01', 24, 26);
-INSERT INTO overtime VALUES(1, '2017-01-02', 86, 88);
-INSERT INTO overtime VALUES(1, '2017-01-04', 24, 30);
-INSERT INTO overtime VALUES(1, '2017-01-05', 86, 2);
+-- OVERTIME
+INSERT INTO overtime VALUES(5, 60, 960, 60, false);
+INSERT INTO overtime VALUES(3, 52, 960, 35, false);
+INSERT INTO overtime VALUES(4, 61, 840, -60, false);
+INSERT INTO overtime VALUES(4, 28, 780, -120, false);
