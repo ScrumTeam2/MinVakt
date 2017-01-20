@@ -692,9 +692,10 @@ button {
     -ms-flex-align: center;
     align-items: center;
     padding: .5rem 1rem;
+    transition: background .2s ease-in-out;
 }
 
-#popup_menu a:hover {
+#popup_menu a:hover, #popup_more a:hover {
     background: #f2f2f2;
 }
 
