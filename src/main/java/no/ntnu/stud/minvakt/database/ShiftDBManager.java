@@ -28,13 +28,15 @@ public class ShiftDBManager extends DBManager {
     private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?)" +
             " AND date >= ? ORDER BY date ASC, time ASC;";
 
-    private final String sqlGetShiftHours = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
+    private final String sqlGetNumberOfShifts = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
     private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
             "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
+
+    private final String sqlGetAvailableShifts = "";
 
     Connection conn;
     PreparedStatement prep;
@@ -255,25 +257,24 @@ public class ShiftDBManager extends DBManager {
      NB overtime hours are calculated in OvertimeDBManager
       */
 
-    public int getShiftHours(int userId, Date startDate, Date endDate){
+    public int getNumberOfShifts(int userId, Date startDate, Date endDate){
         int out = 0;
         ResultSet res = null;
-        int shiftLength = 60; // minutes
 
         if(setUp()){
             try {
-               conn = getConnection();
-               prep = conn.prepareStatement(sqlGetShiftHours);
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetNumberOfShifts);
 
-               prep.setInt(1,userId);
-               prep.setDate(2,startDate);
-               prep.setDate(3, endDate);
+                prep.setInt(1,userId);
+                prep.setDate(2,startDate);
+                prep.setDate(3, endDate);
 
-               res = prep.executeQuery();
-               while(res.next()){
-                   out += res.getInt("shift_id");
-               }
-               out /= shiftLength;
+                res = prep.executeQuery();
+                res.next();
+
+                out = res.getInt(1);
 
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId);
@@ -413,5 +414,5 @@ public class ShiftDBManager extends DBManager {
         }
         return status != 0;
     }
-
+    
 }
