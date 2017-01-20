@@ -3,6 +3,7 @@ package no.ntnu.stud.minvakt.database;
 import no.ntnu.stud.minvakt.data.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -116,7 +117,7 @@ public class UserDBManagerTest {
 
     
 
-    @Test
+    @Ignore
     public void changePassword() {
         String userId = "1";
         String prevPassword = "password";
