@@ -88,4 +88,20 @@ public class OvertimeDBManagerTest {
 
         assertEquals(expRes, res);
     }
+
+    @Test
+    public void getMinutesTest(){
+        int userId = 4;
+        String fromDateString = "2017-02-01";
+        String toDateString = "2017-02-12";
+
+        Date fromDate = Date.valueOf(fromDateString);
+        Date toDate = Date.valueOf(toDateString);
+
+
+        int res = overtimeDB.getMinutes(userId,fromDate,toDate);
+        int expRes = -180;
+
+        assertEquals(expRes, res);
+    }
 }

@@ -54,15 +54,15 @@ public class ShiftDBManagerTest {
 
 
     // int getShiftHours(int userId, Date startDate, Date endDate)
-    @Ignore
-    public void getTotalHoursTest(){
+    @Test
+    public void getNumberOfShiftsTest(){
         String stringDate1 = "2017-01-01";
         String stringDate2 = "2017-01-31";
         java.sql.Date date1 = java.sql.Date.valueOf(stringDate1);
         java.sql.Date date2 = java.sql.Date.valueOf(stringDate2);
 
-        int res = shiftDB.getShiftHours(10, date1, date2);
-        int expRes = 3 * 32;
+        int res = shiftDB.getNumberOfShifts(10, date1, date2);
+        int expRes = 3;
         assertEquals(expRes, res);
     }
 
