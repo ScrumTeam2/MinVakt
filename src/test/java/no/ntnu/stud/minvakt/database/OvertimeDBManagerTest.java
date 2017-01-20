@@ -41,8 +41,8 @@ public class OvertimeDBManagerTest {
         }
     }
 
-@Ignore
-    //@Test
+
+    @Test
     public void getUnapprovedOvertimeTest(){
         Overtime[] res = overtimeDB.getUnapprovedOvertime();
         Overtime[] expRes = {
