@@ -123,37 +123,37 @@ function showEmployeeInput(){
 
 function addUser(data){
     console.log("OK", data);
-    var feedback = $('.feedback');
-    feedback.show();
-    feedback.text("Passord for bruker med id = "+data.id+ " er: " + data.password);
-    $('.modal').show();
+    console.log("Adduser");
+    $('.result').text("Bruker ble laget med passord: " + data.password);
 
+    //go to submitted users profile
+    $('#userViewBtn').click(function() {
+        window.location="user-a.html";
+    });
+
+    $('.popup').show();
 }
 
 function invalidField(data){
-    $('.feedback').show();
+    $('.result').text("Email eller passord er allerede i bruk.");
+    $('#userViewBtn').hide();
     console.log("Invalid data", data);
 }
 
-
-
-//close modal
+//close popup
 $('#userCloseBtn').click(function() {
-    $('.modal').hide();
+    $('.popup').hide();
     $('.register-form')[0].reset();
 });
 
-//go to submitted users profile
-$('#userViewBtn').click(function() {
-    window.location="user-a.html";
-});
 
 
-//close modal when clicking outside of the modal
-var modal = document.getElementById('userModal');
+
+//close popup when clicking outside of the popup
+var popup = document.getElementById('userPopup');
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.hide();
+    if (event.target == popup) {
+        popup.hide();
         $('.register-form')[0].reset();
     }
 };

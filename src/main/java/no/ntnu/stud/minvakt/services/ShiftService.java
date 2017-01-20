@@ -162,4 +162,16 @@ public class ShiftService extends SecureService{
             return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
+    @GET
+    @Path("{shiftId}")
+    public Response setStaffNumberOnShift(@PathParam("shiftId") int shiftId,
+                                          @QueryParam("staffNumber") int staffNumber){
+        boolean isOk = shiftDB.setStaffNumberOnShift(shiftId,staffNumber);
+        if(isOk){
+            return Response.ok().entity("Staff number on shift "+shiftId+ " was edited to "+staffNumber).build();
+        }
+        else{
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
 }

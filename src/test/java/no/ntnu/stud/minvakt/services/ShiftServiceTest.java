@@ -82,4 +82,11 @@ public class ShiftServiceTest {
         ArrayList<UserBasicWorkHours> candidates = (ArrayList<UserBasicWorkHours>)response.getEntity();
         Assert.assertTrue(candidates.size() > 0);
     }
+    @Test
+    public void setStaffNumberOnShift(){
+        Response response = shiftService.setStaffNumberOnShift(-1,5);
+        assertTrue(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
+        response = shiftService.setStaffNumberOnShift(1,4);
+        assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+    }
 }
