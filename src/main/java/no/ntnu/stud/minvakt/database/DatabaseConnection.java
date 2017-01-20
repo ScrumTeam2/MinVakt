@@ -16,12 +16,9 @@ import java.util.logging.Logger;
 public class DatabaseConnection {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    //    private final String username = TravisUtil.isTravis() ? "root" : "g_scrum02";
-//    private final String password = TravisUtil.isTravis() ? "" : "82dvE5og";
-//    private final String databasename = TravisUtil.isTravis() ? "jdbc:mysql://localhost/test" : "jdbc:mysql://mysql.stud.iie.ntnu.no/g_scrum02";
-    private final String username = TravisUtil.isTravis() ? "root" : "audunwar_scrum";
-    private final String password = TravisUtil.isTravis() ? "" : "c?6qUDAy";
-    private final String databasename = TravisUtil.isTravis() ? "jdbc:mysql://localhost/test" : "jdbc:mysql://mysql.stud.ntnu.no/audunwar_scrum_db";
+    private final String username = TravisUtil.isTravis() ? "root" : "g_scrum02";
+    private final String password = TravisUtil.isTravis() ? "" : "82dvE5og";
+    private final String databasename = TravisUtil.isTravis() ? "jdbc:mysql://localhost/test" : "jdbc:mysql://mysql.stud.iie.ntnu.no/g_scrum02";
 
     private final String databasedriver = "com.mysql.cj.jdbc.Driver";
     private Connection connection = null;

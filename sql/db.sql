@@ -72,7 +72,7 @@ CREATE TABLE overtime(
 -- newsfeed has two user_ids, first one is the one the newsfeed "belongs" to
 -- second one is, together with shift_id, a reference to the employee_shift
 CREATE TABLE newsfeed (
-  feed_id INTEGER NOT NULL,
+  feed_id INTEGER AUTO_INCREMENT,
   date_time DATETIME,
   content VARCHAR(200),
   user_id INTEGER,
