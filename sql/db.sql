@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS newsfeed;
 DROP TABLE IF EXISTS employee_shift;
 DROP TABLE IF EXISTS availability;
 DROP TABLE IF EXISTS shift;
+DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS department;
 
