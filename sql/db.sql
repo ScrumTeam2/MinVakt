@@ -83,6 +83,7 @@ CREATE TABLE newsfeed (
   date_time DATETIME,
   content VARCHAR(200),
   resolved BOOLEAN,
+  category INTEGER,
   user_id INTEGER,
   shift_id INTEGER,
   shift_user_id INTEGER,

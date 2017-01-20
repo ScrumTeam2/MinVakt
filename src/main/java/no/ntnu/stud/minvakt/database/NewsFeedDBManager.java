@@ -16,9 +16,10 @@ public class NewsFeedDBManager extends DBManager{
     private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ?";
-    private final String sqlGetNewsFeedForAdmin = "SELECT date_time, content, shift_id, FROM newsfeed NATURAL JOIN user " +
+    private final String sqlGetNewsFeedForAdmin = "SELECT date_time, content, shift_id FROM newsfeed NATURAL JOIN user " +
             "WHERE category = ?;";
     private final String sqlGetNewsFeedItem = "SELECT * FROM newsfeed WHERE feed_id = ?;";
+    private final String sqlSetNewsFeedItemResolved = "UPDATE newsfeed SET resolved = ? WHERE feed_id = ?;";
 
     Connection conn;
     PreparedStatement prep;
@@ -92,7 +93,8 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getString("content"),
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
-                                    res.getInt("shift_id"))
+                                    res.getInt("shift_id"),
+                            NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")))
                     );
                 }
 
@@ -120,7 +122,8 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getString("content"),
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
-                                    res.getInt("shift_id")
+                                    res.getInt("shift_id"),
+                                    NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category"))
                     );
                 }
 
@@ -150,7 +153,8 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getString("content"),
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
-                                    res.getInt("shift_id"))
+                                    res.getInt("shift_id"),
+                            NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")))
                     );
                 }
 
@@ -158,10 +162,30 @@ public class NewsFeedDBManager extends DBManager{
                 log.log(Level.WARNING, "Not able to delete notification from news feed");
                 sqle.printStackTrace();
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res,prep);
             }
         }
         return out;
     }
+    public boolean setNewsFeedItemResolved(int feedId, boolean resolved){
+        int status = 0;
+        if(setUp()) {
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetNewsFeedItemResolved);
+                prep.setBoolean(1,resolved);
+                prep.setInt(2,feedId);
+                status = prep.executeUpdate();
+
+            } catch (SQLException sqle) {
+                log.log(Level.WARNING, "Not able to update notification resolve to "+resolved);
+                sqle.printStackTrace();
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return status != 0;
+    }
+
 }
 
