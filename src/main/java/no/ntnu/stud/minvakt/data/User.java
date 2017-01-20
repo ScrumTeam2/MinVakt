@@ -154,11 +154,12 @@ public class User {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", hash='" + hash + '\'' +
-                ", salt='" + salt + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", category=" + category +
+                ", percentageWork=" + percentageWork +
+                ", hash='" + hash + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
     }
 }

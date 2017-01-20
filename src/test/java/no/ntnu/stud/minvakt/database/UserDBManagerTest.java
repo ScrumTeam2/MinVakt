@@ -99,18 +99,28 @@ public class UserDBManagerTest {
         }
         assertTrue(successObtain);
     }
-    
-    
+
+
     @Test
     public void getUsers() {
-        ArrayList<User> users = userDB.getUsers();
+        ArrayList<User> users = userDB.getUsers(true);
         /*boolean successGetUsers = false;
         if(users.size() >0) {
             successGetUsers = true;
         }assertTrue(successGetUsers);
         */
 
-   
+
+        assertTrue(users.get(0) instanceof User);
+    }
+
+    @Test
+    public void getUsersNoAdmins() {
+        ArrayList<User> users = userDB.getUsers(false);
+        for(User user : users) {
+            Assert.assertNotEquals(User.UserCategory.ADMIN, user.getCategory());
+        }
+
         assertTrue(users.get(0) instanceof User);
     }
 

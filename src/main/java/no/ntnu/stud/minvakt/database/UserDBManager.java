@@ -226,12 +226,12 @@ public class UserDBManager extends DBManager {
     }
     */
 
-    public ArrayList<User> getUsers(){
+    public ArrayList<User> getUsers(boolean includeAdmins){
         ArrayList<User> users = new ArrayList<User>();
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement("SELECT * FROM user;");
+                prep = conn.prepareStatement(includeAdmins ? "SELECT * FROM user" : "SELECT * FROM user WHERE category != 0");
                 res = prep.executeQuery();
                 while (res.next()){
                     User user = new User();
@@ -241,6 +241,7 @@ public class UserDBManager extends DBManager {
                     user.setEmail(res.getString("email"));
                     user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    user.setPercentageWork(100); // TODO Lapp: Flytt employee-tabell inn i user
                     users.add(user);
                 }
             } catch (Exception e) {

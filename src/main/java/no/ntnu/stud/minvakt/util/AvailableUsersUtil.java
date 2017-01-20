@@ -49,26 +49,16 @@ public class AvailableUsersUtil {
         return userList;
     }
 
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(Date date, int limit){
-        OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
+    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(LocalDate startDate, int limit){
         ShiftDBManager shiftDBManager = new ShiftDBManager();
 
-        LocalDate localDate = TimeUtil.convertJavaDate(date);
-        //Finds first and last day of week to calculate total workhours for 1 week
-        LocalDate firstDayThisWeek = localDate.with(DayOfWeek.MONDAY);
-        LocalDate lastDayThisWeek = localDate.with(DayOfWeek.SUNDAY);
+        LocalDate lastDate = startDate.plusWeeks(6);
 
-        java.sql.Date sqlFirstDay = java.sql.Date.valueOf(firstDayThisWeek);
-        java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDayThisWeek);
+        java.sql.Date sqlFirstDay = java.sql.Date.valueOf(startDate);
+        java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDate);
 
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
-
-        //Fetches workhours from DB
-        for (UserBasicWorkHours user : userList) {
-            user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
-            user.calculateTotalWorkHours();
-        }
 
         //Sorts list of employees by workhours, ascending order
         userList.sort(UserBasicWorkHours.workHoursComparator);
