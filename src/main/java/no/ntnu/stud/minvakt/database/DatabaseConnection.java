@@ -28,7 +28,7 @@ public class DatabaseConnection {
 
         try {
             Class.forName(databasedriver);
-            connection = DriverManager.getConnection(databasename,username,password);
+            connection = DriverManager.getConnection(databasename, username, password);
         } catch (ClassNotFoundException e) {
             log.log(Level.SEVERE, "Issue with database driver.", e);
         } catch (SQLException e) {
@@ -38,9 +38,10 @@ public class DatabaseConnection {
 
     /**
      * Gets the current connection
+     *
      * @return The current database connection
      */
-    public Connection getConnection(){
+    public Connection getConnection() {
         return connection;
     }
 

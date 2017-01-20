@@ -3,7 +3,6 @@ DROP TABLE IF EXISTS newsfeed;
 DROP TABLE IF EXISTS employee_shift;
 DROP TABLE IF EXISTS availability;
 DROP TABLE IF EXISTS shift;
-DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS department;
 
@@ -17,19 +16,13 @@ CREATE TABLE user(
   email VARCHAR(40) NOT NULL,
   phonenumber VARCHAR(8),
   category INTEGER,
+  percentage_work FLOAT,
   CONSTRAINT pk_user PRIMARY KEY(user_id)
 );
 
 -- Make login identifiers unique
 ALTER TABLE user ADD UNIQUE INDEX (email);
 ALTER TABLE user ADD UNIQUE INDEX (phonenumber);
-
--- Employee user
-CREATE TABLE employee(
-  user_id INTEGER NOT NULL,
-  percentage_work FLOAT,
-  CONSTRAINT pk_employee PRIMARY KEY(user_id)
-);
 
 -- Department where a shift is scheduled
 CREATE TABLE department(
@@ -90,23 +83,19 @@ CREATE TABLE newsfeed (
   CONSTRAINT pk_newsfeed PRIMARY KEY(feed_id)
 );
 
-ALTER TABLE employee
-  ADD CONSTRAINT fk_employee FOREIGN KEY(user_id)
-  REFERENCES user(user_id);
-
 ALTER TABLE shift
   ADD CONSTRAINT fk_shift FOREIGN KEY(dept_id)
   REFERENCES department(dept_id);
 
 ALTER TABLE employee_shift
   ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
-  REFERENCES employee(user_id),
+  REFERENCES user(user_id),
   ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
   REFERENCES shift(shift_id);
 
 ALTER TABLE availability
   ADD CONSTRAINT fk1_availability FOREIGN KEY(user_id)
-  REFERENCES employee(user_id),
+  REFERENCES user(user_id),
   ADD CONSTRAINT fk2_availability FOREIGN KEY(shift_id)
   REFERENCES shift(shift_id);
 
@@ -128,65 +117,37 @@ INSERT INTO department VALUES(2, 'Avdeling 2');
 -- USERS
 
 -- category: 0 - Admin, 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
-INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1);
-INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2', 1);
-INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3', 1);
-INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'password', 'password', 'email4', 'phone4', 1);
-INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'password', 'password', 'email5', 'phone5', 1);
+INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8);
+INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2', 1, 0.8);
+INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3', 1, 1);
+INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'password', 'password', 'email4', 'phone4', 1, 1);
+INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'password', 'password', 'email5', 'phone5', 1, 0.8);
 
-INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'password', 'password', 'email6', 'phone6',2);
-INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'password', 'password', 'email7', 'phone7',2);
-INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'passord', 'password', 'email8', 'phone8',2);
-INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'password', 'password', 'email9', 'phone9',2);
-INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'password', 'password', 'email10','phone10',2);
+INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'password', 'password', 'email6', 'phone6',2, 0.2);
+INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'password', 'password', 'email7', 'phone7',2, 0.5);
+INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'passord', 'password', 'email8', 'phone8',2, 0.9);
+INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'password', 'password', 'email9', 'phone9',2, 0.75);
+INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'password', 'password', 'email10','phone10',2, 1);
 
-INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'password', 'password', 'email11', 'phone11',2);
-INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'password', 'password', 'email12', 'phone12',2);
-INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'password', 'password', 'email13','phone13',2);
-INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email14', 'phone14',2);
-INSERT INTO user VALUES(DEFAULT, 'Bente', 'Svendsen', 'password', 'password', 'email15', 'phone15', 2);
+INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'password', 'password', 'email11', 'phone11',2, 1);
+INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'password', 'password', 'email12', 'phone12',2, 1);
+INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'password', 'password', 'email13','phone13',2, 0.6);
+INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email14', 'phone14',2, 0.1);
+INSERT INTO user VALUES(DEFAULT, 'Bente', 'Svendsen', 'password', 'password', 'email15', 'phone15', 2, 0.5);
 
-INSERT INTO user VALUES(DEFAULT, 'Anna', 'Kristiansen', 'password', 'password', 'email16', 'phone16',2);
-INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'password', 'password', 'email17', 'phone17',3);
-INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'password', 'password', 'email18', 'phone18',3);
-INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'password', 'password', 'email19', 'phone19',3);
-INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'password', 'password', 'email20', 'phone20',3);
+INSERT INTO user VALUES(DEFAULT, 'Anna', 'Kristiansen', 'password', 'password', 'email16', 'phone16',2, 1);
+INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'password', 'password', 'email17', 'phone17',3, 1);
+INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'password', 'password', 'email18', 'phone18',3, 1);
+INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'password', 'password', 'email19', 'phone19',3, 0.65);
+INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'password', 'password', 'email20', 'phone20',3, 0.8);
 
-INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'password','password', 'email21', 'phone21',3);
-INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'password', 'password', 'email22', 'phone22',3);
-INSERT INTO user VALUES(DEFAULT, 'Vincent', 'Hagen', 'password', 'password', 'email23', 'phone23', 3);
-INSERT INTO user VALUES(DEFAULT, 'Erik', 'Jørgensen', 'password', 'password', 'email24', 'phone24', 3);
-INSERT INTO user VALUES(DEFAULT, 'Heidi', 'Helmersen', 'password', 'password', 'email25', 'phone25', 3);
+INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'password','password', 'email21', 'phone21',3, 0.5);
+INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'password', 'password', 'email22', 'phone22',3, 0.80);
+INSERT INTO user VALUES(DEFAULT, 'Vincent', 'Hagen', 'password', 'password', 'email23', 'phone23', 3, 0.6);
+INSERT INTO user VALUES(DEFAULT, 'Erik', 'Jørgensen', 'password', 'password', 'email24', 'phone24', 3, 0.15);
+INSERT INTO user VALUES(DEFAULT, 'Heidi', 'Helmersen', 'password', 'password', 'email25', 'phone25', 3, 1);
 
-INSERT INTO user VALUES(DEFAULT, 'Jens', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'admin', 'admin', 0);
-
--- (user_id, percentage_work)
-INSERT INTO employee VALUES(1, 100);
-INSERT INTO employee VALUES(2, 100);
-INSERT INTO employee VALUES(3, 100);
-INSERT INTO employee VALUES(4, 100);
-INSERT INTO employee VALUES(5, 100);
-INSERT INTO employee VALUES(6, 100);
-INSERT INTO employee VALUES(7, 100);
-INSERT INTO employee VALUES(8, 100);
-INSERT INTO employee VALUES(9, 100);
-
-INSERT INTO employee VALUES(10, 100);
-INSERT INTO employee VALUES(11, 100);
-INSERT INTO employee VALUES(12, 100);
-INSERT INTO employee VALUES(13, 100);
-INSERT INTO employee VALUES(14, 100);
-INSERT INTO employee VALUES(15, 100);
-INSERT INTO employee VALUES(16, 100);
-INSERT INTO employee VALUES(17, 100);
-INSERT INTO employee VALUES(18, 100);
-INSERT INTO employee VALUES(19, 100);
-INSERT INTO employee VALUES(20, 100);
-INSERT INTO employee VALUES(21, 100);
-INSERT INTO employee VALUES(22, 100);
-INSERT INTO employee VALUES(23, 100);
-INSERT INTO employee VALUES(24, 100);
-INSERT INTO employee VALUES(25, 100);
+INSERT INTO user VALUES(DEFAULT, 'Jens', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'admin', 'admin', 0, 1);
 
 -- SCHEDULED SHIFTS
 -- shift(shift_id, staff_number, date, time, approved, dept_id)
