@@ -78,6 +78,10 @@ public class ShiftDBManagerTest {
         assertFalse(status.isEmpty());
 
     }
-
+    @Test
+    public void setStaffNumberOnShift() {
+        assertFalse(shiftDB.setStaffNumberOnShift(-1, 10));
+        assertTrue(shiftDB.setStaffNumberOnShift(1, 4));
+    }
 }
 
