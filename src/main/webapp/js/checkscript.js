@@ -142,7 +142,8 @@ var adminlinks = [
     "/html/add-users-to-shift.html",
     "/html/calendar-a.html",
     "/html/user-shifts.html",
-    "/html/index.html"
+    "/html/index.html",
+    "/html/endre-ansatt.html"
 ];
 
 var employeelinks = [
