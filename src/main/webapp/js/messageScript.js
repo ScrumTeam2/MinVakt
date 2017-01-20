@@ -1,11 +1,13 @@
 /**
- * Created by marith 18.01.2017.
+ * Created by ingvildbroen on 20.01.2017.
  */
 
-
 $(document).ready(function(){
-    //$('.watch').hide();
-    //$('.right-arrow-circle').toggleClass("rotate90");
+    $.ajax({
+        url: "/rest/user/",
+        type: 'GET',
+        success: showMessages
+    });
 });
 
 $('.container-title').click(function() {
@@ -15,3 +17,7 @@ $('.container-title').click(function() {
 });
 
 
+function showMessages(data){
+    console.log("Got messages for current user", data);
+
+}

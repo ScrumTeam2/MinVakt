@@ -154,7 +154,8 @@ var employeelinks = [
     "/html/login.html",
     "/html/user-shifts.html",
     "/html/resetpassword.html",
-    "/html/index.html"
+    "/html/index.html",
+    "/html/messages-e.html"
 ];
 
 function adminAccess(){
