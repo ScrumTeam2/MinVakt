@@ -76,17 +76,17 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void getPossibleCandidates() throws Exception {
-        logInUser();
-        Response response = shiftService.getPossibleCandidates(10);
-        ArrayList<UserBasicWorkHours> candidates = (ArrayList<UserBasicWorkHours>)response.getEntity();
-        Assert.assertTrue(candidates.size() > 0);
-    }
-    @Test
     public void setStaffNumberOnShift(){
         Response response = shiftService.setStaffNumberOnShift(-1,5);
         assertTrue(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
         response = shiftService.setStaffNumberOnShift(1,4);
         assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
     }
+//    @Test
+//    public void getPossibleCandidates() throws Exception {
+//        logInUser();
+//        Response response = shiftService.getPossibleCandidates(10);
+//        ArrayList<UserBasicWorkHours> candidates = (ArrayList<UserBasicWorkHours>)response.getEntity();
+//        Assert.assertTrue(candidates.size() > 0);
+//    }
 }

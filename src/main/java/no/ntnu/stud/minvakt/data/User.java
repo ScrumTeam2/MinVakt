@@ -51,7 +51,7 @@ public class User {
     private String email;
     private String phoneNumber;
     private UserCategory category;
-    private int percentageWork;
+    private float workPercentage;
 
     @JsonIgnore
     private String hash;
@@ -128,15 +128,15 @@ public class User {
         this.category = category;
     }
 
-    public int getPercentageWork() {
-        return percentageWork;
+    public float getWorkPercentage() {
+        return workPercentage;
     }
 
-    public void setPercentageWork(int percentageWork) {
-        this.percentageWork = percentageWork;
+    public void setWorkPercentage(float workPercentage) {
+        this.workPercentage = workPercentage;
     }
 
-    public User(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, int percentageWork) {
+    public User(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, float workPercentage) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -145,7 +145,7 @@ public class User {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.category = userCategory;
-        this.percentageWork = percentageWork;
+        this.workPercentage = workPercentage;
     }
 
     @Override
@@ -154,11 +154,12 @@ public class User {
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", hash='" + hash + '\'' +
-                ", salt='" + salt + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", category=" + category +
+                ", workPercentage=" + workPercentage +
+                ", hash='" + hash + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
     }
 }

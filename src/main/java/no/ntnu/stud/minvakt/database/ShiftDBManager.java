@@ -337,6 +337,7 @@ public class ShiftDBManager extends DBManager {
                     int category = res.getInt("category");
                     int normalShifts = res.getInt("shifts_worked");
                     UserBasicWorkHours user = new UserBasicWorkHours(userId,firstName,lastName, User.UserCategory.valueOf(category), normalShifts, 0);
+                    user.calculateTotalWorkHours();
                     users.add(user);
                 }
             } catch (Exception e) {
