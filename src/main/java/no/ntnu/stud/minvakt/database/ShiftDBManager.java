@@ -15,7 +15,7 @@ public class ShiftDBManager extends DBManager {
         super();
     }
 
-    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?);";
+    private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?);";
     private final String sqlCreateNewShiftStaff = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
@@ -58,7 +58,8 @@ public class ShiftDBManager extends DBManager {
                 System.out.println("sqlDate: "+sqlDate);
                 prep.setDate(2, sqlDate);
                 prep.setInt(3, shift.getType().getValue());
-                prep.setInt(4, shift.getDeptId());
+                prep.setBoolean(4, false);
+                prep.setInt(5, shift.getDeptId());
 
                 if(prep.executeUpdate() != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
@@ -70,7 +71,7 @@ public class ShiftDBManager extends DBManager {
                         for(ShiftUser shiftUser : shiftUsers){
                             prep = conn.prepareStatement(sqlCreateNewShiftStaff);
                             prep.setInt(1, shiftUser.getUserId());
-                            prep.setInt(2,shift.getId());
+                            prep.setInt(2, shift.getId());
                             prep.setBoolean(3,shiftUser.isResponsibility());
                             prep.setBoolean(4,shiftUser.isValid_absence());
                             prep.setBoolean(5,false);
