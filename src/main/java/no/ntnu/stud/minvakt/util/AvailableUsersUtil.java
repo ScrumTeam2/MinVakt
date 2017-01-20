@@ -81,8 +81,6 @@ public class AvailableUsersUtil {
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
 
-        //Fetches workhours from DB
-
 /* Må rettes
         for (UserBasicWorkHours user : userList) {
             user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
