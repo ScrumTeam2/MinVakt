@@ -10,8 +10,8 @@ import java.util.logging.Level;
  */
 public class NewsFeedDBManager extends DBManager{
 
-    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,?,?,?)";
-    private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE shift_id = ?";
+    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?)";
+    private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ?";
     private final String sqlGetNewsFeedForAdmin = "SELECT date_time, content, shift_id, FROM newsfeed NATURAL JOIN user " +
@@ -27,6 +27,7 @@ public class NewsFeedDBManager extends DBManager{
     public int createNotification(NewsFeedItem notification){
         int id = 0;
         if(setUp()) {
+            ResultSet res = null;
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlCreateNotification);
@@ -41,7 +42,10 @@ public class NewsFeedDBManager extends DBManager{
                 System.out.println(prep.toString());
                 if(id != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
-                    id = prep.executeUpdate();
+                    res = prep.executeQuery();
+                    if(res.next()){
+                        id = res.getInt(1);
+                    }
                 }
 
             } catch (SQLException sqle) {
@@ -64,6 +68,7 @@ public class NewsFeedDBManager extends DBManager{
 
             } catch (SQLException sqle) {
                 log.log(Level.WARNING, "Not able to delete notification from news feed");
+                sqle.printStackTrace();
             } finally {
                 finallyStatement(prep);
             }
