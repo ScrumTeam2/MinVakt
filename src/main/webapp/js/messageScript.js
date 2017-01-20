@@ -3,11 +3,11 @@
  */
 
 $(document).ready(function(){
-    $.ajax({
+    /*$.ajax({
         url: "/rest/user/",
         type: 'GET',
         success: showMessages
-    });
+    });*/
 });
 
 $('.container-title').click(function() {
@@ -17,46 +17,97 @@ $('.container-title').click(function() {
 });
 
 
-$('#open-popup').click(function(){
+function showMessages(data){
+    showChangeover();
+    showTimebank();
+    showRequest();
+}
 
+
+$('#open-popup').click(function(){
+    var $popup = $('#accept-pop');
+
+    var time = "tid";
+    var department = "avdeling";
+
+    $popup.html(
+        `<h3>Godkjenne vakt?</h3>
+         <p>Tid: ${time}</p>
+         <p>Avdeling: ${department}</p>
+         <div class="links">
+            <a href="#" id="userCloseBtn">Ja</a>
+            <a href="#" id="userViewBtn">Nei</a>
+         </div>`
+    );
 });
 
-/*function showMessages(data){
-    console.log("Got messages for current user", data);
+function showEmpty(){
+    console.log("no messages");
+}
 
-    //forespørsel om vaktbytte
+
+//Requests for a new shift
+function showRequest(data){
+    //console.log("Got requests for current user", data);
+
     var $requests = $('#requests');
-    html =
-        "<div class='watch' id='open-popup'>"+
-        "<div class='watch-info'>" +
-        "<p class='lead'>Navn</p>" +
-        "<p class='sub'>Tid</p>" +
-        "<p class='sub'>Avdeling</p>" +
-        "</div>" + "</div>" +
-        "<i class='symbol right-arrow'>"+
-        "<i class='material-icons'>chevron_right</i></i>"
-        + user.phoneNumber + "</i>" +
-        "<p class='more-info__text'>100% stilling</p>";
+    var name = "Navn";
+    var time = "Tid";
+    var department = "Avdeling";
 
-
-    $requests.html("");
     for (var request in data.stuff) {
         $requests.append(
-            '<div class="watch" id="open-popup">Sykkel nr. </div>' +
-            '<div class="watch" tabindex="0">' +
-            '<div class="bike__info">' +
-            '<h3>' + data.availableBikes[bike].id + '</h3>' +
-            '<div class="progress" aria-valuenow="' + (data.availableBikes[bike].battery * 100) + '">' +
-            '<div class="progress-bar progress-bar-' + (((data.availableBikes[bike].battery * 100) > 50) ? 'success' : 'danger') + '" aria-valuenow="' + (data.availableBikes[bike].battery * 100) + '" aria-valuemin="0" aria-valuemax="100" style="width:' + (data.availableBikes[bike].battery * 100) + '%">  </div>' +
-            '</div>' +
-            '</div>' +
-            '</div>'
+            `<div class="watch" id="open-popup">
+                <div class="watch-info">
+                    <p class="lead">${name}</p>
+                    <p class="sub">${time}</p>
+                    <p class="sub">${department}</p>
+                </div>
+                <i class="symbol right-arrow">
+                    <i class="material-icons">chevron_right</i>
+                </i>
+            </div>`
         );
     }
-
-    //godkjent vaktbytte
-
-    //godkjent timebank
-
 }
-*/
+
+//Solved/unsolved changeover
+function showChangeover(data){
+    console.log("Got changeover for current user", data);
+
+    var $changeovers = $('#changeovers');
+    var status = "Godkjent/ikke godkjent";
+    var time = "Tid";
+
+    for (var changeover in data.stuff) {
+        $changeovers.append(
+            `<div class="watch" id="remove">
+                <div class="watch-info">
+                    <p class="lead">${status}</p>
+                    <p class="sub">${time}</p>
+                </div>
+                <i class="material-icons">close</i>
+            </div>`
+        );
+    }
+}
+
+//Accepted timebank
+function showTimebank(data){
+    console.log("Got timebank for current user", data);
+
+    var $timebanks = $('#timebanks');
+    var period = "Periode";
+
+    for (var timebank in data.stuff) {
+        $timebanks.append(
+            `<div class="watch" id="remove">
+                <div class="watch-info">
+                    <p class="lead">Godkjent overtid</p>
+                    <p class="sub">${period}</p>
+                </div>
+                <i class="material-icons">close</i>
+            </div>`
+        );
+    }
+}

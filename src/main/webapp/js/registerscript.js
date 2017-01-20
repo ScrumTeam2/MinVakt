@@ -150,10 +150,10 @@ $('#userCloseBtn').click(function() {
 
 
 //close popup when clicking outside of the popup
-var popup = document.getElementById('userPopup');
+var $popup = $('#userPopup');
 window.onclick = function(event) {
-    if (event.target == popup) {
-        popup.hide();
+    if (event.target == $popup) {
+        $popup.hide();
         $('.register-form')[0].reset();
     }
 };
