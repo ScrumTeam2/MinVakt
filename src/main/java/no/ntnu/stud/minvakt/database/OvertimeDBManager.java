@@ -1,4 +1,5 @@
 package no.ntnu.stud.minvakt.database;
+import com.mysql.cj.api.mysqla.result.Resultset;
 import no.ntnu.stud.minvakt.data.Overtime;
 
 import java.sql.*;
@@ -19,6 +20,7 @@ public class OvertimeDBManager extends DBManager{
 
     private final String getSqlGetOvertimeByUserId = "SELECT * FROM overtime WHERE user_id =?";
     private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
+    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ?";
 
 
     Connection conn;
@@ -227,5 +229,34 @@ public class OvertimeDBManager extends DBManager{
             }
         }
         return count;
+    }
+
+    public int getMinutes(int userId, Date fromDate, Date toDate){
+        int minutes = 0;
+        ResultSet res = null;
+
+        if(setUp()){
+            try {
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetMinutes);
+
+                prep.setInt(1, userId);
+                prep.setDate(2, fromDate);
+                prep.setDate(3, toDate);
+
+                res = prep.executeQuery();
+                res.next();
+
+                minutes = res.getInt("minute_sum");
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+
+        return minutes;
     }
 }
