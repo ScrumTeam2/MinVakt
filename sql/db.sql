@@ -75,6 +75,7 @@ CREATE TABLE newsfeed (
   feed_id INTEGER AUTO_INCREMENT,
   date_time DATETIME,
   content VARCHAR(200),
+  resolved BOOLEAN,
   user_id INTEGER,
   shift_id INTEGER,
   shift_user_id INTEGER,
