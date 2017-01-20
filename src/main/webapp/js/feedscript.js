@@ -4,11 +4,14 @@
 
 
 $(document).ready(function(){
-    $('.watch').hide();
+    //$('.watch').hide();
+    $('.right-arrow-circle').toggleClass("rotate90");
 });
 
-$('.right-arrow-circle').click(function() {
-    $(this).parent().siblings('.watch').toggle('1000');
-    $(this).toggleClass("rotate90");
+$('.container-title').click(function() {
+    var $this = $(this);
+    $this.siblings('.watch').toggle('1000');
+    $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
 });
+
 
