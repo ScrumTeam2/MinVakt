@@ -1,4 +1,5 @@
 DROP TABLE IF EXISTS overtime;
+DROP TABLE IF EXISTS newsfeed;
 DROP TABLE IF EXISTS employee_shift;
 DROP TABLE IF EXISTS availability;
 DROP TABLE IF EXISTS shift;
@@ -26,43 +27,44 @@ ALTER TABLE user ADD UNIQUE INDEX (phonenumber);
 
 -- Employee user
 CREATE TABLE employee(
-user_id INTEGER NOT NULL,
-percentage_work FLOAT,
-CONSTRAINT pk_employee PRIMARY KEY(user_id)
+  user_id INTEGER NOT NULL,
+  percentage_work FLOAT,
+  CONSTRAINT pk_employee PRIMARY KEY(user_id)
 );
 
 -- Department where a shift is scheduled
 CREATE TABLE department(
-dept_id INTEGER NOT NULL AUTO_INCREMENT,
-dept_name VARCHAR(30),
-CONSTRAINT pk_dept PRIMARY KEY(dept_id)
+  dept_id INTEGER NOT NULL AUTO_INCREMENT,
+  dept_name VARCHAR(30),
+  CONSTRAINT pk_dept PRIMARY KEY(dept_id)
 );
 
 -- Shift, with number of employees working, date, time of day and department
 CREATE TABLE shift(
-shift_id INTEGER NOT NULL AUTO_INCREMENT,
-staff_number INTEGER,
-date DATE,
-time TINYINT,
-dept_id INTEGER,
-CONSTRAINT pk_shift PRIMARY KEY(shift_id)
+  shift_id INTEGER NOT NULL AUTO_INCREMENT,
+  staff_number INTEGER,
+  date DATE,
+  time TINYINT,
+  approved BOOLEAN,
+  dept_id INTEGER,
+  CONSTRAINT pk_shift PRIMARY KEY(shift_id)
 );
 
 -- If valid_absence is true, the employee is absent this shift, but should still be payed.
 CREATE TABLE employee_shift(
-user_id INTEGER,
-shift_id INTEGER,
-responsibility BOOLEAN,
-valid_absence BOOLEAN,
-shift_change BOOLEAN, 
-CONSTRAINT pk_employee_shift PRIMARY KEY(user_id, shift_id)
+  user_id INTEGER,
+  shift_id INTEGER,
+  responsibility BOOLEAN,
+  valid_absence BOOLEAN,
+  shift_change BOOLEAN,
+  CONSTRAINT pk_employee_shift PRIMARY KEY(user_id, shift_id)
 );
 
--- If a worker is available to work on a spesific shift
+-- If a worker is available to work on a specific shift
 CREATE TABLE availability(
-user_id INTEGER,
-shift_id INTEGER,
-CONSTRAINT pk_availability PRIMARY KEY(user_id, shift_id)
+  user_id INTEGER,
+  shift_id INTEGER,
+  CONSTRAINT pk_availability PRIMARY KEY(user_id, shift_id)
 );
 
 -- Used to register hours worked over the scheduled work hours
@@ -74,29 +76,47 @@ end_time INTEGER,
 CONSTRAINT pk_overtime PRIMARY KEY(user_id, date, start_time)
 );
 
+-- newsfeed has two user_ids, first one is the one the newsfeed "belongs" to
+-- second one is, together with shift_id, a reference to the employee_shift
+CREATE TABLE newsfeed (
+  feed_id INTEGER NOT NULL,
+  date_time DATETIME,
+  content VARCHAR(200),
+  user_id INTEGER,
+  shift_id INTEGER,
+  shift_user_id INTEGER,
+  CONSTRAINT pk_newsfeed PRIMARY KEY(feed_id)
+);
+
 ALTER TABLE employee
-ADD CONSTRAINT fk_employee FOREIGN KEY(user_id)
-REFERENCES user(user_id);
+  ADD CONSTRAINT fk_employee FOREIGN KEY(user_id)
+  REFERENCES user(user_id);
 
 ALTER TABLE shift
-ADD CONSTRAINT fk_shift FOREIGN KEY(dept_id)
-REFERENCES department(dept_id);
+  ADD CONSTRAINT fk_shift FOREIGN KEY(dept_id)
+  REFERENCES department(dept_id);
 
 ALTER TABLE employee_shift
-ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
-REFERENCES employee(user_id),
-ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
-REFERENCES shift(shift_id);
+  ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
+  REFERENCES employee(user_id),
+  ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
+  REFERENCES shift(shift_id);
 
 ALTER TABLE availability
-ADD CONSTRAINT fk1_availability FOREIGN KEY(user_id)
-REFERENCES employee(user_id),
-ADD CONSTRAINT fk2_availability FOREIGN KEY(shift_id)
-REFERENCES shift(shift_id);
+  ADD CONSTRAINT fk1_availability FOREIGN KEY(user_id)
+  REFERENCES employee(user_id),
+  ADD CONSTRAINT fk2_availability FOREIGN KEY(shift_id)
+  REFERENCES shift(shift_id);
 
 ALTER TABLE overtime
 ADD CONSTRAINT fk_overtime FOREIGN KEY(user_id)
 REFERENCES employee(user_id);
+
+ALTER TABLE newsfeed
+  ADD CONSTRAINT fk1_newsfeed FOREIGN KEY(user_id)
+  REFERENCES user(user_id),
+  ADD CONSTRAINT fk2_newsfeed FOREIGN KEY(shift_user_id,shift_id)
+  REFERENCES employee_shift(user_id, shift_id);
 
 -- DEPARTMENTS
 INSERT INTO department VALUES(1, 'Avdeling 1');
@@ -165,99 +185,100 @@ INSERT INTO employee VALUES(23, 100);
 INSERT INTO employee VALUES(24, 100);
 INSERT INTO employee VALUES(25, 100);
 
--- SHCEDULED SHIFTS 
+-- SCHEDULED SHIFTS
+-- shift(shift_id, staff_number, date, time, approved, dept_id)
 -- WEEK 1
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-23', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-23', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-23', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-23', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-23', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-23', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-24', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-24', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-24', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-24', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-24', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-24', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-25', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-25', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-25', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-25', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-25', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-25', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-26', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-26', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-26', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-26', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-26', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-26', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-27', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-27', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-27', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-27', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-27', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-27', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-28', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-28', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-28', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-28', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-28', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-28', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-29', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-29', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-29', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-29', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-29', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-29', 2, true, 1);
 
 -- WEEK 2
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-30', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-30', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-30', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-30', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-30', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-30', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-31', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-31', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-31', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-01-31', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-31', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-01-31', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-01', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-01', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-01', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-01', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-01', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-01', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-02', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-02', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-02', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-02', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-02', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-02', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-03', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-03', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-03', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-03', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-03', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-03', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-04', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-04', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-04', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-04', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-04', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-04', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-05', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-05', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-05', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-05', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-05', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-05', 2, true, 1);
 
 -- WEEK 3
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-06', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-06', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-06', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-06', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-06', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-06', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-07', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-07', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-07', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-07', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-07', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-07', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-08', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-08', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-08', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-08', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-08', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-08', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-09', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-09', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-09', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-09', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-09', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-09', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-10', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-10', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-10', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-10', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-10', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-10', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-11', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-11', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-11', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-11', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-11', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-11', 2, true, 1);
 
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-12', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-12', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-12', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-12', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-12', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-12', 2, true, 1);
 
 
 -- WEEK 4 : Day 1 (Shifts with no employees)
-INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-13', 0, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-13', 1, 1);
-INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-13', 2, 1);
+INSERT INTO shift VALUES(DEFAULT, 4, '2017-02-13', 0, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-13', 1, true, 1);
+INSERT INTO shift VALUES(DEFAULT, 3, '2017-02-13', 2, true, 1);
 
 
 -- EMPLOYEE_SHIFT : employee_shift(user_id, shift_id, responsibility, valid_absence, shift_change)
