@@ -131,7 +131,7 @@ function addUser(data){
         window.location="user-a.html";
     });
 
-    $('.modal').show();
+    $('.popup').show();
 }
 
 function invalidField(data){
@@ -140,20 +140,20 @@ function invalidField(data){
     console.log("Invalid data", data);
 }
 
-//close modal
+//close popup
 $('#userCloseBtn').click(function() {
-    $('.modal').hide();
+    $('.popup').hide();
     $('.register-form')[0].reset();
 });
 
 
 
 
-//close modal when clicking outside of the modal
-var modal = document.getElementById('userModal');
+//close popup when clicking outside of the popup
+var popup = document.getElementById('userPopup');
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.hide();
+    if (event.target == popup) {
+        popup.hide();
         $('.register-form')[0].reset();
     }
 };
