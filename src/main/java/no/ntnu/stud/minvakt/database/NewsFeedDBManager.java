@@ -31,7 +31,6 @@ public class NewsFeedDBManager extends DBManager{
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlCreateNotification);
-                System.out.println(prep.toString());
 
                 prep.setTimestamp(1, notification.getDateTime());
                 prep.setString(2, notification.getContent());
@@ -39,7 +38,6 @@ public class NewsFeedDBManager extends DBManager{
                 prep.setInt(4, notification.getShiftId());
                 prep.setInt(5, notification.getUserIdInvolving());
                 id = prep.executeUpdate();
-                System.out.println(prep.toString());
                 if(id != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
                     res = prep.executeQuery();
