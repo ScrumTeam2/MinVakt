@@ -16,7 +16,7 @@ public class ShiftPlanUser extends User {
         return shiftAmount;
     }
 
-    public void incrementShiftAmout() {
+    public void incrementShiftAmount() {
         shiftAmount++;
     }
 

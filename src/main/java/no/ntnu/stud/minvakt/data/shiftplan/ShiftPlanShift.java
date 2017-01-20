@@ -53,6 +53,7 @@ public class ShiftPlanShift {
     public void addShiftUser(ShiftPlanUser user) {
         shift.getShiftUsers().add(new ShiftUser(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getCategory(), needResponsibilityUser, false));
         updateCounters(user);
+        user.incrementShiftAmount();
 
         // First user in queue always gets set as responisibility user. This user is guaranteed to be a nurse
         needResponsibilityUser = false;

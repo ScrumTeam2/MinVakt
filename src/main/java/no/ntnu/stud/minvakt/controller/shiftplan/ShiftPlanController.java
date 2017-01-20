@@ -48,13 +48,13 @@ public class ShiftPlanController {
     public void calculateShifPlan() {
         ShiftPlanWeek templateWeek = shiftPlan.getTemplateWeek();
 
-        for(int i = 0; i < 6; i++) {
+        for (int i = 0; i < 6; i++) {
             ShiftPlanWeek week = new ShiftPlanWeek();
 
-            for(int j = 0; j < 7; j++) {
+            for (int j = 0; j < 7; j++) {
                 ShiftPlanDay day = new ShiftPlanDay(DayOfWeek.of(j + 1));
 
-                for(int k = 0; k < 3; k++) {
+                for (int k = 0; k < 3; k++) {
                     ShiftPlanShift templateShift = templateWeek.getDays()[j].getShifts()[k];
                     ShiftPlanShift shift = new ShiftPlanShift();
                     Shift generatedShift = new Shift(-1, templateShift.getShift().getStaffNumb(), calculateDate(i, j), k, templateShift.getShift().getDeptId(), new ArrayList<>());
@@ -77,18 +77,19 @@ public class ShiftPlanController {
     private void generateCandidatesNew(ShiftPlanDay day) {
         HashMap<Integer, ShiftPlanUser> usersWorkingToday = new HashMap<>();
 
-        for(ShiftPlanShift shiftPlanShift : day.getShifts()) {
+        for (ShiftPlanShift shiftPlanShift : day.getShifts()) {
             usersWorkingToday.putAll(shiftPlanShift.generateCandidates(userList));
 
             // Remove users that has been set up today
             userList.removeAll(usersWorkingToday.values());
         }
 
-        for(ShiftPlanUser user : usersWorkingToday.values()) {
-            // Add back to list if this user still needs shifts
-            if(user.needsMoreWork()) {
-                userList.add(user);
-            }
+        for (ShiftPlanUser user : usersWorkingToday.values()) {
+            // Remove comment to ignore users when they've worked their work percentage
+            //Add back to list if this user still needs shifts
+//            if(user.needsMoreWork()) {
+            userList.add(user);
+//            }
         }
     }
 }
