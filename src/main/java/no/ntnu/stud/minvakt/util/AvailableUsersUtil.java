@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.util;
 
+import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.UserBasic;
 import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Marit on 13.01.2017.
@@ -17,7 +20,7 @@ import java.util.Date;
 
 public class AvailableUsersUtil {
 
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, Date date){
+    public static ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, Date date){
         AvailabilityDBManager availDBManager = new AvailabilityDBManager();
         OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
         ShiftDBManager shiftDBManager = new ShiftDBManager();
@@ -49,7 +52,23 @@ public class AvailableUsersUtil {
         return userList;
     }
 
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(Date date, int limit){
+    public static ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(
+            Date date, int shiftId, User.UserCategory category){
+        ArrayList<UserBasicWorkHours> sortedEmployees = AvailableUsersUtil.sortAvailableEmployees(shiftId, date);
+        ArrayList<UserBasicWorkHours> outputEmployees = new ArrayList<>();
+        for (UserBasicWorkHours user : sortedEmployees) {
+            if (user.getCategory() == category) {
+                outputEmployees.add(user);
+            }
+        }
+        for (UserBasicWorkHours user : sortedEmployees) {
+            if (user.getCategory() != category) {
+                outputEmployees.add(user);
+            }
+        }
+        return outputEmployees;
+    }
+    public static ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(Date date, int limit){
         OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
         ShiftDBManager shiftDBManager = new ShiftDBManager();
 

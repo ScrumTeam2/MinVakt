@@ -5,6 +5,9 @@ import no.ntnu.stud.minvakt.controller.encryption.ShiftCandidateController;
 import no.ntnu.stud.minvakt.data.*;
 import no.ntnu.stud.minvakt.database.DBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
+import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
+import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -29,6 +32,7 @@ import java.util.List;
 @Path("/shift")
 public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
+    UserDBManager userDB = new UserDBManager();
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -90,7 +94,7 @@ public class ShiftService extends SecureService{
 
      */
     @POST
-    @Path("/{shiftId}")
+    @Path("/{shiftId}/user/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addEmployeeToShift(ShiftUser shiftUser, @PathParam("shiftId") int shiftId) {
         if(getSession() == null) return null;
@@ -106,10 +110,16 @@ public class ShiftService extends SecureService{
     @DELETE
     @Path("/{shiftId}/user/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId) {
-        if (getSession() == null) return null;
+    public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId,
+                                            @QueryParam("findNewEmployee") boolean findNewEmployee) {
+        boolean statusOk = false;
+        if(findNewEmployee) {
+            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
 
-        boolean statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
+        }
+        else {
+            statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
+        }
         if (statusOk) {
             return Response.status(200).build();
         } else {
@@ -162,8 +172,8 @@ public class ShiftService extends SecureService{
             return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
-    @GET
-    @Path("{shiftId}")
+    @POST
+    @Path("/{shiftId}")
     public Response setStaffNumberOnShift(@PathParam("shiftId") int shiftId,
                                           @QueryParam("staffNumber") int staffNumber){
         boolean isOk = shiftDB.setStaffNumberOnShift(shiftId,staffNumber);
