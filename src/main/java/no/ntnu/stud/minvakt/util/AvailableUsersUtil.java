@@ -37,13 +37,14 @@ public class AvailableUsersUtil {
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = availDBManager.getAvailabilityUserBasic(shiftId);
 
+/*      Må rettes
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {
             user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
             user.setShiftHours(shiftDBManager.getShiftHours(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
         }
-
+*/
         //Sorts list of employees by workhours, ascending order
         userList.sort(UserBasicWorkHours.workHoursComparator);
         return userList;
@@ -65,10 +66,13 @@ public class AvailableUsersUtil {
         ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
 
         //Fetches workhours from DB
+
+/* Må rettes
         for (UserBasicWorkHours user : userList) {
             user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
         }
+*/
 
         //Sorts list of employees by workhours, ascending order
         userList.sort(UserBasicWorkHours.workHoursComparator);
