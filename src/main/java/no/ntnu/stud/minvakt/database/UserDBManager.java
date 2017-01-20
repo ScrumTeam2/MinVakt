@@ -74,7 +74,7 @@ public class UserDBManager extends DBManager {
                         //New user
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
                                 res.getString("last_name"), null,null,res.getString("email"), res.getString("phonenumber"),
-                                User.UserCategory.valueOf(res.getInt("category")), 0);
+                                User.UserCategory.valueOf(res.getInt("category")), res.getFloat("percentage_work"));
                         return user;
                     }
                     else{
@@ -248,7 +248,7 @@ public class UserDBManager extends DBManager {
                     user.setEmail(res.getString("email"));
                     user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
-                    user.setPercentageWork(100); // TODO Lapp: Flytt employee-tabell inn i user
+                    user.setWorkPercentage(res.getFloat("percentage_work"));
                     users.add(user);
                 }
             } catch (Exception e) {
