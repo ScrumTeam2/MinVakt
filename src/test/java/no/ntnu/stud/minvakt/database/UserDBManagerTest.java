@@ -117,7 +117,7 @@ public class UserDBManagerTest {
 
     
 
-    @Iggit nore
+    @Ignore
     public void changePassword() {
         String userId = "1";
         String prevPassword = "password";
