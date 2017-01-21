@@ -1,4 +1,6 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.shift;
+
+import no.ntnu.stud.minvakt.data.shift.Shift;
 
 import java.sql.Date;
 

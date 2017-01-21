@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

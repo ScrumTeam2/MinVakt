@@ -2,12 +2,11 @@ package no.ntnu.stud.minvakt.controller.shiftplan;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import no.ntnu.stud.minvakt.data.Shift;
+import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlan;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanDay;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanShift;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanWeek;
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 

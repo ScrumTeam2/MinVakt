@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.data.shiftplan;
 
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 
 /**
  * Created by Audun on 20.01.2017.

@@ -3,9 +3,9 @@ package no.ntnu.stud.minvakt.database;
 import com.mysql.cj.api.jdbc.Statement;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.UserBasic;
-import no.ntnu.stud.minvakt.data.UserBasicList;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasic;
+import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
 import java.sql.Connection;

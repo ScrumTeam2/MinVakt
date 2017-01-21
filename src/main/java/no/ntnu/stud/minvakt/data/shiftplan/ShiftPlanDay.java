@@ -1,7 +1,5 @@
 package no.ntnu.stud.minvakt.data.shiftplan;
 
-import no.ntnu.stud.minvakt.data.Shift;
-
 import java.time.DayOfWeek;
 
 /**

@@ -1,4 +1,6 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.user;
+
+import no.ntnu.stud.minvakt.data.user.User;
 
 /**
  * Created by evend on 1/13/2017.

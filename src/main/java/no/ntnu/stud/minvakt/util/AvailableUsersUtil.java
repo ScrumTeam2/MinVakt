@@ -1,18 +1,15 @@
 package no.ntnu.stud.minvakt.util;
 
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.UserBasic;
-import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * Created by Marit on 13.01.2017.

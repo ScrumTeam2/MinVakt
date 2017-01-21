@@ -2,6 +2,9 @@ package no.ntnu.stud.minvakt.data;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.logging.Level;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
  * Created by evend on 1/20/2017.
@@ -13,21 +16,59 @@ public class NewsFeedItem {
     private int userIdTo;
     private int userIdInvolving;
     private int shiftId;
+    private NewsFeedCategory category;
 
-    public NewsFeedItem(int feedId, Timestamp dateTime, String content, int userIdTo, int userIdInvolving, int shiftId) {
+    public enum NewsFeedCategory {
+        SHIFT_CHANGE;
+
+
+
+        public int getValue() {
+            return super.ordinal();
+        }
+
+        public static NewsFeedCategory valueOf(int newsFeedNr) {
+            for (NewsFeedCategory type : NewsFeedCategory.values()) {
+                if (type.ordinal() == newsFeedNr) {
+                    return type;
+                }
+            }
+            return null;
+        }
+
+
+        @Override
+        public String toString() {
+            String constName = super.toString();
+            return constName.substring(0, 1) + constName.substring(1).toLowerCase();
+        }
+
+    }
+
+    public NewsFeedItem(int feedId, Timestamp dateTime, String content, int userIdTo, int userIdInvolving, int shiftId,
+                        NewsFeedCategory category) {
         this.feedId = feedId;
         this.dateTime = dateTime;
         this.content = content;
         this.userIdTo = userIdTo;
         this.userIdInvolving = userIdInvolving;
         this.shiftId = shiftId;
+        this.category = category;
     }
 
-    public int getFeedItemId() {
+    public NewsFeedCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(NewsFeedCategory category) {
+        this.category = category;
+    }
+
+    public int getFeedId() {
         return feedId;
     }
 
-    public void setFeedItemId(int feedId) {
+    public void setFeedId(int feedId) {
         this.feedId = feedId;
     }
 
