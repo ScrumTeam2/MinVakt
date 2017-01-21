@@ -1,3 +1,6 @@
+-- KEEP ON START OF FILE
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS overtime;
 DROP TABLE IF EXISTS newsfeed;
 DROP TABLE IF EXISTS employee_shift;
@@ -545,7 +548,7 @@ INSERT INTO employee_shift VALUES(3, 63, false, false, false);
 INSERT INTO employee_shift VALUES(14, 63, false, false, false);
 INSERT INTO employee_shift VALUES(24, 63, true, false, false);
 
-                 
+
 -- AVAILABILITY
 -- (user_id, shift_id)
 INSERT INTO availability VALUES(10, 41);
@@ -560,3 +563,6 @@ INSERT INTO overtime VALUES(5, 60, 960, 60, false);
 INSERT INTO overtime VALUES(3, 52, 960, 35, false);
 INSERT INTO overtime VALUES(4, 61, 840, -60, false);
 INSERT INTO overtime VALUES(4, 28, 780, -120, false);
+
+-- KEEP ON END OF FILE
+SET FOREIGN_KEY_CHECKS = 1;
