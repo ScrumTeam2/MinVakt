@@ -113,7 +113,7 @@ public class ShiftService extends SecureService{
 
         }
         else {
-            statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
+          //  statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
         }
         if (statusOk) {
             return Response.status(200).build();
