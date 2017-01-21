@@ -1,7 +1,7 @@
 package no.ntnu.stud.minvakt.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import no.ntnu.stud.minvakt.data.user.User;
 
 import java.io.Serializable;
 

@@ -1,13 +1,7 @@
 package no.ntnu.stud.minvakt.util;
 
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by evend on 1/20/2017.

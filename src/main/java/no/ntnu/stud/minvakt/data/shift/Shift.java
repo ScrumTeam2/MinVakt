@@ -1,6 +1,4 @@
-package no.ntnu.stud.minvakt.data;
-
-import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanUser;
+package no.ntnu.stud.minvakt.data.shift;
 
 import java.sql.Date;
 import java.util.ArrayList;

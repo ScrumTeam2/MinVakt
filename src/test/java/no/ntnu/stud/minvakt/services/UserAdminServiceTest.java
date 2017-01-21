@@ -1,18 +1,13 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftUser;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-import java.sql.Date;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 

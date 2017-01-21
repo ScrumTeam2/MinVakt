@@ -1,9 +1,9 @@
 package no.ntnu.stud.minvakt.controller.shiftplan;
 
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shiftplan.*;
+import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 
 import java.sql.Date;
 import java.time.DayOfWeek;

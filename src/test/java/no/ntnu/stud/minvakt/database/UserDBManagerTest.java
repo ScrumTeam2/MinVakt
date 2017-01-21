@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

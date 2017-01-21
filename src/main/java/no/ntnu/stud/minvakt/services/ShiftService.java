@@ -1,22 +1,20 @@
 package no.ntnu.stud.minvakt.services;
 
-import jersey.repackaged.com.google.common.collect.Lists;
-import no.ntnu.stud.minvakt.controller.shiftplan.ShiftPlanController;
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by evend on 1/10/2017.
