@@ -4,6 +4,7 @@ import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.util.ErrorInfo;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.InputUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -17,6 +18,8 @@ import java.util.logging.Level;
  */
 @Path("admin")
 public class UserAdminService extends SecureService {
+    private UserDBManager userDBManager = new UserDBManager();
+
     public UserAdminService(@Context HttpServletRequest request) {
         super(request);
     }
@@ -31,40 +34,32 @@ public class UserAdminService extends SecureService {
         }
 
         // Verify user data
+        Response errorResponse = InputUtil.verifyUser(user);
+        if (errorResponse != null) return errorResponse;
 
-        // TODO: Better verification of mail
-        System.out.println(user);
-        if(user.getEmail() == null || user.getEmail().isEmpty()) {
-            return Response.ok(new ErrorInfo("Invalid mail")).build();
+        // Check that identifiers doesn't already exist
+        if(userDBManager.isPhoneNumberTaken(user.getPhoneNumber())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorInfo("Telefonnummeret er allerede i bruk")).build();
         }
 
-        if(user.getFirstName() == null || user.getFirstName().isEmpty()) {
-            return Response.ok(new ErrorInfo("Invalid first name")).build();
+        if(userDBManager.isEmailTaken(user.getEmail())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorInfo("E-posten er allerede i bruk")).build();
         }
-
-        if(user.getLastName() == null || user.getLastName().isEmpty()) {
-            return Response.ok(new ErrorInfo("Invalid last name")).build();
-        }
-
-        // TODO: Better verification of phone number?
-        if(user.getPhoneNumber() == null || user.getPhoneNumber().isEmpty()) {
-            return Response.ok(new ErrorInfo("Invalid phone number")).build();
-        }
-
-        // TODO: Verify user category
 
         // Insert into database
-        UserDBManager userDBManager = new UserDBManager();
-        Object[] userInfo = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getCategory().getValue());
+        Object[] userInfo = userDBManager.createNewUser(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getCategory(), user.getWorkPercentage());
         user.setId((int)userInfo[0]);
+
         if(user.getId() > 0) {
             String json = "{\"id\": \"" + user.getId() + "\", \"password\":\"" + userInfo[1]+"\"}";
             System.out.println(json);
             return Response.ok(json, MediaType.APPLICATION_JSON).build();
+        } else {
+            log.log(Level.WARNING, "Failed to insert user: " + user);
+            return Response.serverError().build();
         }
-        log.log(Level.WARNING, "Failed to insert user: " + user);
-        return Response.serverError().build();
     }
+
     @DELETE
     @Path("/deleteuser/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,7 +69,6 @@ public class UserAdminService extends SecureService {
             throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
 
-        UserDBManager userDBManager = new UserDBManager();
         boolean isDeleted = userDBManager.deleteUser(userId);
         if(!isDeleted)log.log(Level.WARNING, "Failed to delete user: " + userId);
         return isDeleted;

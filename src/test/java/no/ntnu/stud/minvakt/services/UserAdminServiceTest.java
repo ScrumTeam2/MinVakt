@@ -32,7 +32,7 @@ public class UserAdminServiceTest {
     @Test
     public void createUser() {
         logInUser();
-        User user = new User(-1, "Even","Dalen", "hash","salt","email","phnumber", User.UserCategory.HEALTH_WORKER, 1);
+        User user = new User(-1, "Even","Dalen", "hash","salt","even@mail.com","20012111", User.UserCategory.HEALTH_WORKER, 1);
         Response response = userAdminService.addUser(user);
         if (response.getStatus() == 200) {
             String rawJson = (String) response.getEntity();

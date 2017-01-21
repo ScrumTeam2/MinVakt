@@ -49,6 +49,7 @@
         <input type="text" name="lastname" id="lastname" placeholder="Etternavn"/>
         <input type="email" name="email" id="email" placeholder="E-post"/>
         <input type="tel" name="phone" id="phone" placeholder="Mobilnummer"/>
+        <input type="number" name="percentage" id="percentage" placeholder="Stillingsprosent" min="0" max="100"/>
         <div class="select-container">
             <select name="category" id="category">
                 <option selected disabled>Velg en kategori</option>
@@ -61,7 +62,7 @@
     </form>
 
     <div id="userPopup" class="popup">
-        <h3>Tittel</h3>
+        <h3 class="title">Tittel</h3>
         <p class="result"></p>
         <div class="links">
             <a href="#" id="userCloseBtn">Lukk</a>
