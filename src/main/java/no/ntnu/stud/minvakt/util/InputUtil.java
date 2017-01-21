@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.util;
 
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 
 import javax.ws.rs.core.Response;
 
