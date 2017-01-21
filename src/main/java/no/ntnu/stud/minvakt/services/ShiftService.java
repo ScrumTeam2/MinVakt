@@ -96,7 +96,9 @@ public class ShiftService extends SecureService{
 
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
         if (statusOk) {
-            return Response.status(200).build();
+            Response res = Response.status(200).build();
+            System.out.println(res.getStatus());
+            return res;
         } else {
             return Response.status(400).entity("Unable to add employee").build();
         }
@@ -108,7 +110,7 @@ public class ShiftService extends SecureService{
     public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId,
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
-        if(findNewEmployee) {
+        if(!findNewEmployee) {
             statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
 
         }

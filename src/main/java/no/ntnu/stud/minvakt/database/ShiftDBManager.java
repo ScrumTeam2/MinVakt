@@ -187,7 +187,6 @@ public class ShiftDBManager extends DBManager {
     public boolean addEmployeeToShift(ShiftUser shiftUser, int shiftId){
         boolean out = false;
         if(setUp()){
-
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(addEmployeeToShift);
@@ -201,6 +200,7 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
+                e.printStackTrace();
             }
             finally {
                 finallyStatement(prep);
