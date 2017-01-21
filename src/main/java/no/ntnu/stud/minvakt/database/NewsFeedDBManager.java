@@ -1,7 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import java.util.logging.Level;
  */
 public class NewsFeedDBManager extends DBManager{
 
-    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?)";
+    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?)";
     private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
-    private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ?";
-    private final String sqlGetNewsFeedForAdmin = "SELECT date_time, content, shift_id FROM newsfeed NATURAL JOIN user " +
-            "WHERE category = ?;";
+    private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
+    private final String sqlGetNewsFeedForAdmin = "SELECT feed_id, date_time,content,category, user_id, shift_id, shift_user_id " +
+            "FROM newsfeed NATURAL JOIN user WHERE category = ? AND resolved = 0;";
     private final String sqlGetNewsFeedItem = "SELECT * FROM newsfeed WHERE feed_id = ?;";
     private final String sqlSetNewsFeedItemResolved = "UPDATE newsfeed SET resolved = ? WHERE feed_id = ?;";
 
@@ -38,9 +38,10 @@ public class NewsFeedDBManager extends DBManager{
 
                 prep.setTimestamp(1, notification.getDateTime());
                 prep.setString(2, notification.getContent());
-                prep.setInt(3, notification.getUserIdTo());
-                prep.setInt(4, notification.getShiftId());
-                prep.setInt(5, notification.getUserIdInvolving());
+                prep.setInt(3,notification.getCategory().getValue());
+                prep.setInt(4, notification.getUserIdTo());
+                prep.setInt(5, notification.getShiftId());
+                prep.setInt(6, notification.getUserIdInvolving());
                 id = prep.executeUpdate();
                 if(id != 0){
                     prep = conn.prepareStatement(sqlGetLastID);

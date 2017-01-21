@@ -49,7 +49,7 @@ public class NewsFeedDBManagerTest {
     @Test
     public void getNewsFeed() {
         int id = createTestData();
-        ArrayList<NewsFeedItem> items = newsFeedDB.getNewsFeed(1);
+        ArrayList<NewsFeedItem> items = newsFeedDB.getNewsFeed(26);
         assertFalse(items.isEmpty());
         deleteTestData(id);
 
