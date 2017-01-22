@@ -4,23 +4,23 @@ import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
+import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 /**
  * Created by evend on 1/20/2017.
  */
-@Path("newsfeed")
+@Path("/newsfeed")
 public class NewsFeedService extends SecureService{
     NewsFeedDBManager newsDB = new NewsFeedDBManager();
     public NewsFeedService(@Context HttpServletRequest request) {
@@ -34,6 +34,19 @@ public class NewsFeedService extends SecureService{
         }
         else{
             return newsDB.getNewsFeed(getSession().getUser().getId());
+        }
+    }
+
+    @POST
+    @Path("/{feedId}")
+    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true")
+    @QueryParam("accepted") boolean accepted){
+        boolean isUpdated = ShiftChangeUtil.updateNotification(feedId, accepted);
+        if(isUpdated){
+            return Response.status(Response.Status.OK).build();
+        }
+        else{
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 }

@@ -17,9 +17,9 @@ import java.util.Date;
  * Created by evend on 1/20/2017.
  */
 public class ShiftChangeUtil {
-    ShiftDBManager shiftDB = new ShiftDBManager();
-    UserDBManager userDB = new UserDBManager();
-    NewsFeedDBManager newsDB = new NewsFeedDBManager();
+    static ShiftDBManager shiftDB = new ShiftDBManager();
+    static UserDBManager userDB = new UserDBManager();
+    static NewsFeedDBManager newsDB = new NewsFeedDBManager();
 
     public boolean findNewUserToShift(int shiftId, int userId){
         boolean statusOk = shiftDB.deleteEmployeeFromShift(userId,shiftId);
@@ -39,8 +39,14 @@ public class ShiftChangeUtil {
         }*/
         return statusOk;
     }
-    public boolean approveShiftChange(int feedId, boolean shiftAccepted){
+    public static boolean updateNotification(int feedId, boolean shiftAccepted){
         NewsFeedItem newsFeedItem = newsDB.getNewsFeedItem(feedId);
+        if(newsFeedItem.getCategory() == NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE){
+            return approveShiftChange(newsFeedItem, shiftAccepted);
+        }
+        return false;
+    }
+    public static boolean approveShiftChange(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted) {
             User userFrom = userDB.getUserById(newsFeedItem.getUserIdTo());
             User userTo = userDB.getUserById(newsFeedItem.getUserIdTo());
@@ -64,7 +70,7 @@ public class ShiftChangeUtil {
         }
         else {
             //Removes admin notification if not accepted
-            newsDB.setNewsFeedItemResolved(feedId, true);
+            newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             return true;
         }
 
