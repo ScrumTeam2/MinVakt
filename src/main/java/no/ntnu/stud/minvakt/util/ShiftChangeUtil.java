@@ -44,9 +44,13 @@ public class ShiftChangeUtil {
         if(newsFeedItem.getCategory() == NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE){
             return approveShiftChange(newsFeedItem, shiftAccepted);
         }
+        else if(newsFeedItem.getCategory() == NewsFeedItem.NewsFeedCategory.NOTIFICATION){
+            return newsDB.setNewsFeedItemResolved(feedId, shiftAccepted);
+        }
+
         return false;
     }
-    public static boolean approveShiftChange(NewsFeedItem newsFeedItem, boolean shiftAccepted){
+    private static boolean approveShiftChange(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted) {
             User userFrom = userDB.getUserById(newsFeedItem.getUserIdTo());
             User userTo = userDB.getUserById(newsFeedItem.getUserIdTo());
@@ -64,14 +68,20 @@ public class ShiftChangeUtil {
             //Creates new update notification to the user who wants to change shift.
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
                     "Din vakt den " + shift.getDate() + " er byttet bort til " + userTo.getFirstName() + " " + userTo.getLastName()
-                            + ".", userTo.getId(), userFrom.getId(), shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE);
+                            + ".", userTo.getId(), userFrom.getId(), shift.getId(), NewsFeedItem.NewsFeedCategory.NOTIFICATION);
             newsDB.createNotification(notification);
+
+            //Creates update notification for user who accepted the shift change
+            NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
+                    "Dit vaktbytte den " + shift.getDate() + " er godkjent av administrator!",
+                    userFrom.getId(), userTo.getId(), shift.getId(), NewsFeedItem.NewsFeedCategory.NOTIFICATION);
+            newsDB.createNotification(notification);
+            newsDB.createNotification(notification2);
             return true;
         }
         else {
             //Removes admin notification if not accepted
-            newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
-            return true;
+            return newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
         }
 
     }
