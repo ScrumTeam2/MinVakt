@@ -159,7 +159,7 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
         //if(getSession().isAdmin()){
-            return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
+        return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
     @GET

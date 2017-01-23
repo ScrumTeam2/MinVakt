@@ -1,10 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.UserBasic;
-import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftAvailable;
+import no.ntnu.stud.minvakt.data.*;
 
 import java.util.ArrayList;
 import java.sql.*;
@@ -16,6 +12,7 @@ public class AvailabilityDBManager extends DBManager{
     private final String sqlSetAvailability = "INSERT INTO availability VALUES(?,?);";
     private final String sqlDeleteAvailability = "DELETE FROM availability WHERE user_id=? AND shift_id=?";
     private final String sqlGetAvailableShiftsForDate = "SELECT *, COUNT(employee_shift.shift_id) AS current_staff_numb FROM shift JOIN employee_shift ON (employee_shift.shift_id = shift.shift_id) JOIN department ON (shift.dept_id = department.dept_id) WHERE valid_absence=0 AND shift_change = 0 AND date =? GROUP BY date, time, shift.dept_id";
+    private final String sqlGetAvailabilityForUser = "SELECT * FROM availability WHERE user_id = ?";
     private final String sqlGetAvailabilityUserBasic = "SELECT user_id, first_name, last_name, category FROM availability NATURAL JOIN user WHERE shift_id=?";
 
     Connection conn;
@@ -55,6 +52,61 @@ public class AvailabilityDBManager extends DBManager{
         return userList;
     }
 
+    // Find available staff for a given shift, returns arraylist with userIDs
+    public ArrayList<Integer> getAvailabilityForUser2(int userId){
+        ArrayList<Integer> userList = new ArrayList<>();
+        ResultSet res = null;
+
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetAvailability);
+
+                prep.setInt(1, userId);
+                res = prep.executeQuery();
+
+                while(res.next()){
+                    userList.add(res.getInt("user_id"));
+                }
+
+            } catch (SQLException sqlE) {
+                log.log(Level.WARNING, "Error finding available staff for shift with ID = " + userId, sqlE);
+            } finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return userList;
+    }
+
+    public UserAvailableShifts getAvailabilityForUser(int userId){
+        ArrayList<Integer> shiftList = new ArrayList<>();
+        UserAvailableShifts u = null;
+        ResultSet res = null;
+
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetAvailabilityForUser);
+
+                prep.setInt(1, userId);
+                res = prep.executeQuery();
+
+                while(res.next()){
+                    shiftList.add(res.getInt("shift_id"));
+                }
+                u = new UserAvailableShifts(userId, shiftList);
+            } catch (SQLException sqlE) {
+                log.log(Level.WARNING, "Error grabbing shifts for user with user ID = " + userId, sqlE);
+            } finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return u;
+    }
     // Sets staff member available for given shift, returns true or false
     public boolean setAvailability(int userID, int shiftID){
         int out = 0;
@@ -169,4 +221,5 @@ public class AvailabilityDBManager extends DBManager{
         }
         return out;
     }
+
 }
