@@ -36,7 +36,8 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
 
-    private final String sqlGetAvailableShifts = "";
+    private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
+            "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
 
     Connection conn;
     PreparedStatement prep;
@@ -413,5 +414,34 @@ public class ShiftDBManager extends DBManager {
         }
         return status != 0;
     }
-    
+
+    // Returns array with shifts that need more employees (shifts with not enough employees connected)
+    public ArrayList<ShiftAvailable> getAvailableShifts(){
+        ArrayList<ShiftAvailable> shiftList = new ArrayList<>();
+
+        ResultSet res = null;
+
+        if(setUp()){
+            try{
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetAvailableShifts);
+                res = prep.executeQuery();
+
+                int index = 0;
+                while(res.next()){
+                    shiftList.add(new ShiftAvailable(
+                            res.getInt("shift_id"),
+                            res.getDate("date"),
+                            Shift.ShiftType.valueOf(res.getInt("time")),
+                            null));
+                }
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING, "Error getting shifts that need more employees", sqlE);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return shiftList;
+    }
 }

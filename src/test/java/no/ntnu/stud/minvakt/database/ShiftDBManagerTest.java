@@ -83,5 +83,11 @@ public class ShiftDBManagerTest {
         assertFalse(shiftDB.setStaffNumberOnShift(-1, 10));
         assertTrue(shiftDB.setStaffNumberOnShift(1, 4));
     }
+
+    @Test
+    public void getAvailableShiftsTest(){
+        ArrayList<ShiftAvailable> resList = shiftDB.getAvailableShifts();
+        assertFalse(resList.isEmpty());
+    }
 }
 
