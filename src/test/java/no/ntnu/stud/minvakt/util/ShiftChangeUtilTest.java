@@ -8,6 +8,7 @@ import no.ntnu.stud.minvakt.database.UserDBManager;
 import no.ntnu.stud.minvakt.services.ShiftService;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -61,7 +62,7 @@ public class ShiftChangeUtilTest{
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
         newsFeedDB.deleteNotification(feedId);
     }
-    @Test
+    @Ignore
     public void updateTimeBank(){
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
 
