@@ -157,4 +157,8 @@ public class UserDBManagerTest {
     public void getUserBasics(){
         assertFalse(userDB.getUserBasics().isEmpty());
     }
+    @Test
+    public void getAdminId(){
+        assertTrue(userDB.getAdminId() != 0);
+    }
 }

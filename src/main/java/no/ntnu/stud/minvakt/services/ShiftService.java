@@ -111,7 +111,7 @@ public class ShiftService extends SecureService{
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
         if(!findNewEmployee) {
-            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
+            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId, false);
 
         }
         else {

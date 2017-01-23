@@ -38,6 +38,8 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
     private final String sqlGetUserFromShift = "SELECT * FROM employee_shift WHERE shift_id = ? AND user_id = ?";
+    private final String sqlUpdateNewsFeedForeignKey = "UPDATE newsfeed SET shift_user_id = NULL WHERE user_id = ? AND shift_id = ?;";
+    private final String sqlSetValidAbsence = "UPDATE employee_shift SET valid_absence = ? WHERE user_id = ? AND shift_id = ?;";
 
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
             "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
@@ -206,15 +208,21 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
-    public boolean deleteEmployeeFromShift(int userId, int shiftId){
+    public boolean deleteEmployeeFromShift(int userId, int shiftId, boolean fromNewsFeed){
         boolean out = false;
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(deleteEmployeeFromShift);
-                prep.setInt(1,shiftId);
-                prep.setInt(2, userId);
+                prep = conn.prepareStatement(sqlUpdateNewsFeedForeignKey);
+                prep.setInt(1,userId);
+                prep.setInt(2, shiftId);
                 out = prep.executeUpdate() != 0;
+                if(out || !fromNewsFeed) {
+                    prep = conn.prepareStatement(deleteEmployeeFromShift);
+                    prep.setInt(1, shiftId);
+                    prep.setInt(2, userId);
+                    out = prep.executeUpdate() != 0;
+                }
 
             }
             catch (SQLException e){
@@ -475,5 +483,26 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return shiftUser;
+    }
+    public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
+        int result = 0;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetValidAbsence);
+                prep.setBoolean(1,valid_absence);
+                prep.setInt(2,userId);
+                prep.setInt(3,shiftId);
+                result = prep.executeUpdate();
+            }
+            catch (SQLException sqle){
+                sqle.printStackTrace();
+                log.log(Level.WARNING, "Issue updating valid absence for user_id = "+userId);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return result != 0;
     }
 }

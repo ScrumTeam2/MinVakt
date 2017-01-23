@@ -38,9 +38,9 @@ public class ShiftDBManagerTest {
     @Test
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
-        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 9);
         if(statusOk){
-            shiftDB.deleteEmployeeFromShift(1, 2);
+            shiftDB.deleteEmployeeFromShift(1, 9, false);
         }
         assertTrue(statusOk);
     }
@@ -81,6 +81,11 @@ public class ShiftDBManagerTest {
     public void setStaffNumberOnShift() {
         assertFalse(shiftDB.setStaffNumberOnShift(-1, 10));
         assertTrue(shiftDB.setStaffNumberOnShift(1, 4));
+    }
+    @Test
+    public void setValidAbsence(){
+        assertTrue(shiftDB.setValidAbsence(1,4,true));
+        assertTrue(shiftDB.setValidAbsence(1,4,false));
     }
 
     @Test
