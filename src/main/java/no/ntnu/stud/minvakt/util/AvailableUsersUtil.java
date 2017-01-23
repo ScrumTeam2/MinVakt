@@ -66,28 +66,28 @@ public class AvailableUsersUtil {
         return outputEmployees;
     }
 
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(LocalDate startDate, int limit) {
-        ShiftDBManager shiftDBManager = new ShiftDBManager();
-        OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
-
-        LocalDate lastDate = startDate.plusWeeks(6);
-
-        java.sql.Date sqlFirstDay = java.sql.Date.valueOf(startDate);
-        java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDate);
-
-        //Fetches available employees for a shift
-        ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
-
-
-        for (UserBasicWorkHours user : userList) {
-
-            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
-            user.setShiftMinutes(SHIFT_LENGTH_MINUTES*shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
-            user.calculateTotalWorkHours();
-        }
-
-        //Sorts list of employees by workhours, ascending order
-        userList.sort(UserBasicWorkHours.workHoursComparator);
-        return userList;
-    }
+//    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(LocalDate startDate, int limit) {
+//        ShiftDBManager shiftDBManager = new ShiftDBManager();
+//        OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
+//
+//        LocalDate lastDate = startDate.plusWeeks(6);
+//
+//        java.sql.Date sqlFirstDay = java.sql.Date.valueOf(startDate);
+//        java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDate);
+//
+//        //Fetches available employees for a shift
+//        ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
+//
+//
+//        for (UserBasicWorkHours user : userList) {
+//
+//            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+//            user.setShiftMinutes(SHIFT_LENGTH_MINUTES*shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
+//            user.calculateTotalWorkHours();
+//        }
+//
+//        //Sorts list of employees by workhours, ascending order
+//        userList.sort(UserBasicWorkHours.workHoursComparator);
+//        return userList;
+//    }
 }
