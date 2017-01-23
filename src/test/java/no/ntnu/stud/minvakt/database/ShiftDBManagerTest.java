@@ -1,12 +1,14 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

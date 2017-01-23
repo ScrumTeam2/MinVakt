@@ -1,6 +1,11 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,6 +40,7 @@ public class ShiftDBManager extends DBManager {
             "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
+    private final String sqlGetUserFromShift = "SELECT * FROM employee_shift WHERE shift_id = ? AND user_id = ?";
 
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
             "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
@@ -182,7 +188,6 @@ public class ShiftDBManager extends DBManager {
     public boolean addEmployeeToShift(ShiftUser shiftUser, int shiftId){
         boolean out = false;
         if(setUp()){
-
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(addEmployeeToShift);
@@ -196,6 +201,7 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
+                e.printStackTrace();
             }
             finally {
                 finallyStatement(prep);
@@ -338,6 +344,7 @@ public class ShiftDBManager extends DBManager {
                     int category = res.getInt("category");
                     int normalShifts = res.getInt("shifts_worked");
                     UserBasicWorkHours user = new UserBasicWorkHours(userId,firstName,lastName, User.UserCategory.valueOf(category), normalShifts, 0);
+                    user.calculateTotalWorkHours();
                     users.add(user);
                 }
             } catch (Exception e) {
@@ -443,5 +450,33 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return shiftList;
+    }
+    public ShiftUser getUserFromShift(int userId, int shiftId){
+        ShiftUser shiftUser = null;
+        if(setUp()){
+            ResultSet res = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUserFromShift);
+                prep.setInt(2,userId);
+                prep.setInt(1,shiftId);
+                res = prep.executeQuery();
+                if(res.next()){
+                    UserDBManager userDb = new UserDBManager();
+                    User user = userDb.getUserById(userId);
+                    shiftUser = new ShiftUser(userId, user.getFirstName()+ " " +user.getLastName(),
+                           user.getCategory(), res.getBoolean("responsibility"),
+                            res.getBoolean("valid_absence"));
+                }
+            }
+            catch (SQLException sqle){
+                sqle.printStackTrace();
+                log.log(Level.WARNING, "Issue getting user from shift");
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return shiftUser;
     }
 }

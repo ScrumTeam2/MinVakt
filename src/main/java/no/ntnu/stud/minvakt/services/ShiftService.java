@@ -1,25 +1,20 @@
 package no.ntnu.stud.minvakt.services;
 
-import jersey.repackaged.com.google.common.collect.Lists;
-import no.ntnu.stud.minvakt.controller.encryption.ShiftCandidateController;
-import no.ntnu.stud.minvakt.data.*;
-import no.ntnu.stud.minvakt.database.DBManager;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by evend on 1/10/2017.
@@ -101,7 +96,9 @@ public class ShiftService extends SecureService{
 
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
         if (statusOk) {
-            return Response.status(200).build();
+            Response res = Response.status(200).build();
+            System.out.println(res.getStatus());
+            return res;
         } else {
             return Response.status(400).entity("Unable to add employee").build();
         }
@@ -113,12 +110,12 @@ public class ShiftService extends SecureService{
     public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId,
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
-        if(findNewEmployee) {
+        if(!findNewEmployee) {
             statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
 
         }
         else {
-            statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
+          //  statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
         }
         if (statusOk) {
             return Response.status(200).build();
@@ -135,34 +132,37 @@ public class ShiftService extends SecureService{
         return shiftDB.getShiftWithUserId(getSession().getUser().getId(), date);
     }
 
-    /**
-     * Generates a list of possible candidates for a specific shift
-     * @param shiftId
-     * @return A Response containing an array of Users
-     */
-    @GET
-    @Path("/{shiftId}/possiblecandidates")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPossibleCandidates(@PathParam("shiftId") int shiftId) {
-        if (getSession() == null || !getSession().isAdmin()) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-
-        Shift shift = new ShiftDBManager().getShift(shiftId);
-        if (shift == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-
-        ShiftCandidateController controller = new ShiftCandidateController(shift);
-        ArrayList<UserBasicWorkHours> candidates = controller.getPossibleCandidates();
-
-        GenericEntity<List<UserBasicWorkHours>> entity =
-                new GenericEntity<List<UserBasicWorkHours>>(Lists.newArrayList(candidates)) {
-                };
-
-
-        return Response.ok().entity(entity).build();
-    }
+//    /**
+//     * Generates a list of possible candidates for a specific shift
+//     * @param shiftId
+//     * @return A Response containing an array of Users
+//     */
+//    @GET
+//    @Path("/{shiftId}/possiblecandidates")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getPossibleCandidates(@PathParam("shiftId") int shiftId) {
+//        if (getSession() == null || !getSession().isAdmin()) {
+//            return Response.status(Response.Status.UNAUTHORIZED).build();
+//        }
+//
+//        Shift shift = new ShiftDBManager().getShift(shiftId);
+//        if (shift == null) {
+//            return Response.status(Response.Status.BAD_REQUEST).build();
+//        }
+//
+//        ShiftPlanController controller = new ShiftPlanController(shift);
+//        ArrayList<UserBasicWorkHours> candidates = controller.getPossibleCandidates();
+//
+//        // Add the candidates to db (admin can change these)
+//        controller.savePossibleCandidates();
+//
+//        GenericEntity<List<UserBasicWorkHours>> entity =
+//                new GenericEntity<List<UserBasicWorkHours>>(Lists.newArrayList(candidates)) {
+//                };
+//
+//
+//        return Response.ok().entity(entity).build();
+//    }
 
     @GET
     @Path("user/{userId}")

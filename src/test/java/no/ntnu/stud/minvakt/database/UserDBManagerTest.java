@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -16,6 +16,7 @@ import static junit.framework.TestCase.assertFalse;
  * Created by evend on 1/13/2017.
  */
 public class UserDBManagerTest {
+
     private static UserDBManager userDB;
 
     @BeforeClass
@@ -29,8 +30,20 @@ public class UserDBManagerTest {
     }
 
     @Test
+    public void isPhoneNumberTaken() {
+        Assert.assertFalse(userDB.isPhoneNumberTaken("a"));
+        Assert.assertTrue(userDB.isPhoneNumberTaken("phone1"));
+    }
+
+    @Test
+    public void isEmailTaken() {
+        Assert.assertFalse(userDB.isEmailTaken("a"));
+        Assert.assertTrue(userDB.isEmailTaken("email1"));
+    }
+
+    @Test
     public void createAndDeleteNewUser() {
-        Object[] userInfo = userDB.createNewUser("testFornavn", "testEtternavn", "createAndDeleteNewUser@gmail.com", "10101010", User.UserCategory.ASSISTANT.getValue());
+        Object[] userInfo = userDB.createNewUser("testFornavn", "testEtternavn", "createAndDeleteNewUser@gmail.com", "10101010", User.UserCategory.ASSISTANT, 1);
 
         Assert.assertTrue((int)userInfo[0] > 0);
 
@@ -46,21 +59,21 @@ public class UserDBManagerTest {
 
     @Test
     public void createNewUserDuplicateMail() {
-        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "01010101", 1);
+        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "01010101", User.UserCategory.ASSISTANT, 1);
 
         Assert.assertTrue((int)userInfo1[0] > 0);
 
-        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "11111111", 1);
+        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "11111111", User.UserCategory.ASSISTANT, 1);
         Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }
 
     @Test
     public void createNewUserDuplicatePhone() {
-        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone@gmail.com", "11001100", 1);
+        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1);
 
         Assert.assertTrue((int)userInfo1[0] > 0);
-        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone2@gmail.com", "11001100", 1);
+        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone2@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1);
         Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }
@@ -100,18 +113,28 @@ public class UserDBManagerTest {
         }
         assertTrue(successObtain);
     }
-    
-    
+
+
     @Test
     public void getUsers() {
-        ArrayList<User> users = userDB.getUsers();
+        ArrayList<User> users = userDB.getUsers(true);
         /*boolean successGetUsers = false;
         if(users.size() >0) {
             successGetUsers = true;
         }assertTrue(successGetUsers);
         */
 
-   
+
+        assertTrue(users.get(0) instanceof User);
+    }
+
+    @Test
+    public void getUsersNoAdmins() {
+        ArrayList<User> users = userDB.getUsers(false);
+        for(User user : users) {
+            Assert.assertNotEquals(User.UserCategory.ADMIN, user.getCategory());
+        }
+
         assertTrue(users.get(0) instanceof User);
     }
 

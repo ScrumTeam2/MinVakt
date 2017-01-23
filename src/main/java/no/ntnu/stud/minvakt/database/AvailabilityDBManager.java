@@ -1,10 +1,9 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.UserBasic;
-import no.ntnu.stud.minvakt.data.UserBasicWorkHours;
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftAvailable;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 
 import java.util.ArrayList;
 import java.sql.*;

@@ -1,6 +1,7 @@
 /**
  * Created by ingvildbroen on 11.01.2017.
  */
+var createSuccess = false;
 
 $(document).ready(function(){
 
@@ -66,8 +67,8 @@ $(document).ready(function(){
                     "lastName": $last.val(),
                     "email": $email.val(),
                     "phoneNumber": $phone.val(),
-                    "category": 'ADMIN'
-                    //"workpercentage": 100 eller null
+                    "category": 'ADMIN',
+                    "workPercentage": 1
                 };
             }
 
@@ -77,10 +78,10 @@ $(document).ready(function(){
                 $category.addClass('error');
                 emptyField = true;
             }
-            /*if(!$percent.val()){
+            if(!$percent.val()){
              $percent.addClass('error');
              emptyField = true;
-             }*/
+             }
 
             if(!emptyField){
                 formData = {
@@ -88,7 +89,8 @@ $(document).ready(function(){
                     "lastName": $last.val(),
                     "email": $email.val(),
                     "phoneNumber": $phone.val(),
-                    "category": $category.val()
+                    "category": $category.val(),
+                    "workPercentage": parseFloat($percent.val()) / 100
                 };
                 console.log(JSON.stringify(formData));
             }
@@ -122,8 +124,10 @@ function showEmployeeInput(){
 }
 
 function addUser(data){
+    createSuccess = true;
     console.log("OK", data);
     console.log("Adduser");
+    $('.title').text("Vellykket!");
     $('.result').text("Bruker ble laget med passord: " + data.password);
 
     //go to submitted users profile
@@ -135,25 +139,36 @@ function addUser(data){
 }
 
 function invalidField(data){
-    $('.result').text("Email eller passord er allerede i bruk.");
+    $('.title').text("Feil");
+
+    if(data.responseJSON == null) {
+        $('.result').text("En uventet feil oppsto");
+    } else {
+        $('.result').text(data.responseJSON.error);
+    }
+
     $('#userViewBtn').hide();
-    console.log("Invalid data", data);
+    $('.popup').show();
 }
 
 //close popup
 $('#userCloseBtn').click(function() {
     $('.popup').hide();
-    $('.register-form')[0].reset();
+
+    if(createSuccess) {
+        $('.register-form')[0].reset();
+    }
+    createSuccess = false;
 });
-
-
-
 
 //close popup when clicking outside of the popup
 var popup = document.getElementById('userPopup');
 window.onclick = function(event) {
     if (event.target == popup) {
         popup.hide();
-        $('.register-form')[0].reset();
+        if(createSuccess) {
+            $('.register-form')[0].reset();
+        }
+        createSuccess = false;
     }
 };
