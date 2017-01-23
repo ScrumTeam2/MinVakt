@@ -62,9 +62,9 @@ function convertDate(dateInput){
         "september", "oktober", "november",
         "desember"];
 
-    var dayNames = ["Mandag", "Tirsdag",
+    var dayNames = ["Søndag", "Mandag", "Tirsdag",
         "Onsdag", "Torsdag", "Fredag",
-        "Lørdag", "Søndag"];
+        "Lørdag"];
 
     var date = new Date(dateInput);
     var day = date.getDate();

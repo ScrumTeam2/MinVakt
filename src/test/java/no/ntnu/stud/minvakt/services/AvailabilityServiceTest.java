@@ -3,18 +3,24 @@ package no.ntnu.stud.minvakt.services;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
 /**
  * Created by Marit on 12.01.2017.
  */
 public class AvailabilityServiceTest {
+    private static ShiftService shiftService;
+    private static HttpServletRequest request;
+
     private static AvailabilityService availabilityService;
 
     @BeforeClass
     public static void objectSetUp() {
-        availabilityService = new AvailabilityService();
+        request = new MockHttpServletRequest();
+        availabilityService = new AvailabilityService(request);
     }
 
     /*
