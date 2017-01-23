@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -458,6 +459,36 @@ public class ShiftDBManager extends DBManager {
         return status != 0;
     }
 
+    private static final String sqlAnyShiftsInPeriod = "SELECT 1 FROM shift WHERE date BETWEEN ? AND ?";
+
+    /**
+     * Checks if there are any shifts registered in the given period
+     * @param startDate The start of the period
+     * @param endDate The end of the period
+     * @return True if there is any shifts in the period
+     */
+    public boolean hasAnyShiftsInPeriod(LocalDate startDate, LocalDate endDate) {
+        if (!setUp()) {
+            log.log(Level.WARNING, "Failed to set up db connection");
+            return true;
+        }
+
+        ResultSet result = null;
+
+        try {
+            prep = getConnection().prepareStatement(sqlAnyShiftsInPeriod);
+            prep.setDate(1, Date.valueOf(startDate));
+            prep.setDate(2, Date.valueOf(endDate));
+            result = prep.executeQuery();
+            return result.next();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Failed to check any shifts in period", e);
+        } finally {
+            finallyStatement(result, prep);
+        }
+        return true;
+    }
+
     // Returns array with shifts that need more employees (shifts with not enough employees connected)
     public ArrayList<ShiftAvailable> getAvailableShifts(){
         ArrayList<ShiftAvailable> shiftList = new ArrayList<>();
@@ -487,6 +518,7 @@ public class ShiftDBManager extends DBManager {
         }
         return shiftList;
     }
+
     public ShiftUser getUserFromShift(int userId, int shiftId){
         ShiftUser shiftUser = null;
         if(setUp()){
@@ -515,6 +547,7 @@ public class ShiftDBManager extends DBManager {
         }
         return shiftUser;
     }
+
     public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
         int result = 0;
         if(setUp()){

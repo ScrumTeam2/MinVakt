@@ -2,6 +2,10 @@ package no.ntnu.stud.minvakt.data.shiftplan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import no.ntnu.stud.minvakt.util.LocalDateDeserializer;
+import no.ntnu.stud.minvakt.util.LocalDateSerializer;
 
 import java.time.LocalDate;
 
@@ -15,10 +19,11 @@ public class ShiftPlan {
      * The week used as a template for all 6 weeks.
      * Retrieved as a parameter from REST
      */
+    @JsonIgnore
     private ShiftPlanWeek templateWeek;
 
     @JsonIgnore
-    private ShiftPlanWeek[] generatedWeeks;
+    private ShiftPlanWeek[] generatedWeeks = new ShiftPlanWeek[6];
 
     public LocalDate getStartDate() {
         return startDate;
@@ -33,6 +38,9 @@ public class ShiftPlan {
     }
 
     public void setTemplateWeek(ShiftPlanWeek templateWeek) {
+        if(templateWeek.getDays().length != 7)
+            throw new IllegalArgumentException("templateWeek need to have 7 days");
+
         this.templateWeek = templateWeek;
     }
 
@@ -47,19 +55,10 @@ public class ShiftPlan {
     }
 
     public ShiftPlan() {
-        setUp();
     }
 
     public ShiftPlan(ShiftPlanWeek templateWeek, LocalDate startDate) {
         this.templateWeek = templateWeek;
         this.startDate = startDate;
-        setUp();
-    }
-
-    private void setUp() {
-        if(templateWeek.getDays().length != 7)
-            throw new IllegalArgumentException("templateWeek need to have 7 days");
-
-        generatedWeeks = new ShiftPlanWeek[6];
     }
 }
