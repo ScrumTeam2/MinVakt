@@ -38,7 +38,7 @@ $(document).ready(function() {
                     <h3>Ansatte</h3>
                 </div>`;
         userListElement.append(html);
-        
+
         for(i = 0; i<data.length;i++){
             for(j = 0; j < data[i].userBasics.length; j++){
 
@@ -53,6 +53,7 @@ $(document).ready(function() {
                                 <p class='lead'>${name}</p>
                                 <p class='sub'>${shiftTypes[user.category]}</p>
                             </div>
+                            <a href="#" class="link changeEmployee">Endre</a>
                         </div>`;
 
                 userListElement.append(html);
@@ -60,6 +61,12 @@ $(document).ready(function() {
             }
 
         }
+
+        $(".changeEmployee").click(function(e) {
+            e.preventDefault();
+            var changeId = $(e.currentTarget).parent().data("id");
+            addToShift(changeId);
+        });
     }
 
     var $search = $('#search');
@@ -111,3 +118,35 @@ $(document).ready(function() {
     }
 
 });
+
+function addToShift(id) {
+    var shiftId = getUrlParameter("shift");
+    console.log(shiftId);
+    console.log(id);
+    $.ajax({
+        url: "/rest/shift/" + shiftId + "/user/" + id,
+        type: 'POST',
+        dataType: 'json',
+        success: function(data) {
+            console.log("Yay!", data);
+        },
+        error: function (data) {
+            console.log("Ney!", data);
+        }
+    });
+}
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURI(sParameterName[1]);
+        }
+    }
+};
