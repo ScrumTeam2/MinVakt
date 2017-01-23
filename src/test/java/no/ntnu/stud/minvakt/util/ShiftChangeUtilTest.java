@@ -44,11 +44,9 @@ public class ShiftChangeUtilTest{
     @Test
     public void acceptShiftChangeAdmin(){
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
-
         NewsFeedItem notification = new NewsFeedItem(-1, date,
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
         newsFeedDB.deleteNotification(feedId);
     }
@@ -71,6 +69,5 @@ public class ShiftChangeUtilTest{
         overtimeDB.setOvertime(1,1,0,60);
         int feedId = newsFeedDB.createNotification(notification);
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
-        newsFeedDB.deleteNotification(feedId);
     }
 }

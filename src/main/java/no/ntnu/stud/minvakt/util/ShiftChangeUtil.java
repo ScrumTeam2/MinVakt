@@ -69,19 +69,25 @@ public class ShiftChangeUtil {
 
                 Timestamp timestamp = Timestamp.from(Instant.now());
                 Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
+                if(!overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())) return false;
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten den "+shift.getDate()+ " er blitt godkjent av" +
-                        " administrasjonen", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                        " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                         newsFeedItem.getShiftId(), TIMEBANK);
+                newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
                 return newsDB.createNotification(notification) != 0;
             }
             else return false;
         }
-        Timestamp timestamp = Timestamp.from(Instant.now());
-        Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
-        NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten den "+shift.getDate()+ " er ikke blitt godkjent av" +
-                " administrasjonen!", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
-                newsFeedItem.getShiftId(), TIMEBANK);
-        return newsDB.createNotification(notification) != 0;
+        else {
+            Timestamp timestamp = Timestamp.from(Instant.now());
+            Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
+            NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten den " + shift.getDate() + " er ikke blitt godkjent av" +
+                    " administrasjonen!", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                    newsFeedItem.getShiftId(), TIMEBANK);
+            overtimeDB.deleteOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
+            newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
+            return newsDB.createNotification(notification) != 0;
+        }
     }
 
     private static boolean approveValidAbsence(NewsFeedItem newsFeedItem, boolean shiftAccepted){
@@ -122,7 +128,7 @@ public class ShiftChangeUtil {
             ShiftUser shiftUser = shiftDB.getUserFromShift(userTo.getId(), newsFeedItem.getShiftId());
 
             //Removes old user and adds new user to shift, if something goes wrong, returns false.
-            if (!shiftDB.deleteEmployeeFromShift(userFrom.getId(), newsFeedItem.getShiftId(), true)||
+            if (!shiftDB.deleteEmployeeFromShift(userFrom.getId(), newsFeedItem.getShiftId())||
                     !shiftDB.addEmployeeToShift(shiftUser, newsFeedItem.getShiftId())) return false;
 
             //Sets news feed items resolved
