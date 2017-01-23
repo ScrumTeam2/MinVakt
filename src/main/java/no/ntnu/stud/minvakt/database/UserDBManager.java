@@ -3,9 +3,9 @@ package no.ntnu.stud.minvakt.database;
 import com.mysql.cj.api.jdbc.Statement;
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
-import no.ntnu.stud.minvakt.data.User;
-import no.ntnu.stud.minvakt.data.UserBasic;
-import no.ntnu.stud.minvakt.data.UserBasicList;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasic;
+import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
 import java.sql.Connection;
@@ -24,12 +24,13 @@ public class UserDBManager extends DBManager {
     private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
     private final String sqlGetUsers = "SELECT * FROM user;";
     private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
-    private final String sqlCreateNewUser = "INSERT INTO user (first_name, last_name, hash, salt, email, phonenumber, category) VALUES (?,?,?,?,?,?,?);";
+    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
-    private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
+    //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
+    private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? LIMIT 1;";
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -74,7 +75,7 @@ public class UserDBManager extends DBManager {
                         //New user
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
                                 res.getString("last_name"), null,null,res.getString("email"), res.getString("phonenumber"),
-                                User.UserCategory.valueOf(res.getInt("category")), 0);
+                                User.UserCategory.valueOf(res.getInt("category")), res.getFloat("percentage_work"));
                         return user;
                     }
                     else{
@@ -113,6 +114,10 @@ public class UserDBManager extends DBManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            finally {
+                endTransaction();
+                finallyStatement(res,prep);
+            }
         }
         return login;
     }
@@ -147,7 +152,7 @@ public class UserDBManager extends DBManager {
     }
 
 
-    public int changeDepartment(int user_id) {
+  /*  public int changeDepartment(int user_id) {
         int change = -1;
         if (setUp()) {
             try {
@@ -164,7 +169,7 @@ public class UserDBManager extends DBManager {
             }
         }
         return change;
-    }
+    }*/
     
      /**
      * Returns an array with user objects.
@@ -190,6 +195,9 @@ public class UserDBManager extends DBManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+            finally {
+                finallyStatement(res,prep);
             }
         }
         return users;
@@ -226,12 +234,12 @@ public class UserDBManager extends DBManager {
     }
     */
 
-    public ArrayList<User> getUsers(){
+    public ArrayList<User> getUsers(boolean includeAdmins){
         ArrayList<User> users = new ArrayList<User>();
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement("SELECT * FROM user;");
+                prep = conn.prepareStatement(includeAdmins ? "SELECT * FROM user" : "SELECT * FROM user WHERE category != 0");
                 res = prep.executeQuery();
                 while (res.next()){
                     User user = new User();
@@ -241,6 +249,7 @@ public class UserDBManager extends DBManager {
                     user.setEmail(res.getString("email"));
                     user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    user.setWorkPercentage(res.getFloat("percentage_work"));
                     users.add(user);
                 }
             } catch (Exception e) {
@@ -273,16 +282,17 @@ public class UserDBManager extends DBManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            finally {
+                finallyStatement(res,prep);
+            }
         }
       return user;
     }
      /**
      * Creates a new user in the database
-     * @param
-     * @return Integer > -1 if success, -1 if fail
+     * @return An object containing the user's ID (index 0), and the user's password (index 1)
      */
-    //Returnerer int 1 dersom bruker har blitt opprettet. Kan ogsÃ¥ endres til Ã¥ returnere objekt med brukernavn, passord, email og phone (for Ã¥ da sende email til brukeren med brukerdata)
-    public Object[] createNewUser(String first_name, String last_name, String email, String phone, int category) { //AnsattNr? , Navn = etternavn, fornavn mellomnavn. Parse etternavn (fÃ¸r komma)
+    public Object[] createNewUser(String firstName, String lastName, String email, String phone, User.UserCategory category, float workPercentage) {
         Object[] obj = new Object[2];
         obj[0] = -1;
         String randomPass = GeneratePassword.generateRandomPass();
@@ -292,15 +302,15 @@ public class UserDBManager extends DBManager {
         String hash = hashedPass[1];
         if (setUp()) {
             try {
-                startTransaction();
                 prep = getConnection().prepareStatement(sqlCreateNewUser, Statement.RETURN_GENERATED_KEYS);
-                prep.setString(1, first_name);
-                prep.setString(2, last_name);
+                prep.setString(1, firstName);
+                prep.setString(2, lastName);
                 prep.setString(3, hash);
                 prep.setString(4, salt);
                 prep.setString(5, email);
                 prep.setString(6, phone);
-                prep.setInt(7, category);
+                prep.setInt(7, category.getValue());
+                prep.setFloat(8, workPercentage);
                 int creation = prep.executeUpdate();
                 if (creation != 0) {
                     obj[0] = QueryUtil.getGeneratedKeys(prep);
@@ -309,14 +319,63 @@ public class UserDBManager extends DBManager {
                 return obj;
 
             } catch (Exception e) {
-                System.out.println("Issue creating new ansatt");
-                e.printStackTrace();
+                log.log(Level.WARNING, "Issue creating new user", e);
             } finally {
-                endTransaction();
                 finallyStatement(prep);
             }
         }
         return obj;
+    }
+
+    private static final String sqlCheckPhoneNumber = "SELECT 1 FROM user WHERE phonenumber = ?";
+
+    /**
+     * Checks if there is an user with the given phone number
+     * @param phoneNumber The phone number to check
+     * @return true if an user exists with this phone number
+     */
+    public boolean isPhoneNumberTaken(String phoneNumber) {
+        if (!setUp()) {
+            log.log(Level.WARNING, "Failed to set up db connection");
+            return true;
+        }
+
+        try {
+            prep = getConnection().prepareStatement(sqlCheckPhoneNumber);
+            prep.setString(1, phoneNumber);
+            res = prep.executeQuery();
+            return res.next();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Failed to check phone number", e);
+        } finally {
+            finallyStatement(res, prep);
+        }
+        return true;
+    }
+
+    private static final String sqlCheckEmail = "SELECT 1 FROM user WHERE email = ?";
+    /**
+     * Checks if there is an user with the given phone number
+     * @param email The email to check
+     * @return true if an user exists with this phone number
+     */
+    public boolean isEmailTaken(String email) {
+        if (!setUp()) {
+            log.log(Level.WARNING, "Failed to set up db connection");
+            return true;
+        }
+
+        try {
+            prep = getConnection().prepareStatement(sqlCheckEmail);
+            prep.setString(1, email);
+            res = prep.executeQuery();
+            return res.next();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Failed to check email", e);
+        } finally {
+            finallyStatement(res, prep);
+        }
+        return true;
     }
 
      /**
@@ -337,31 +396,24 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(prev_password, res.getString("hash"), res.getString("salt"))) {
-                        oldPassCorrect = true;
+                        String[] passInfoNew = en.passEncoding(prev_password);
+                        String hashNew = passInfoNew[0];
+                        String saltNew = passInfoNew[1];
+                        prep = getConnection().prepareStatement(sqlChangePass);
+                        prep.setString(1, hashNew);
+                        prep.setString(2, saltNew);
+                        prep.setString(3, user_id);
+                        change = prep.executeUpdate();
                     }
+
                 }
-            } catch (Exception e) {
+            } catch (SQLException sqle) {
                 System.out.println("Error at changePasswordUserId()");
-                e.printStackTrace();
+                sqle.printStackTrace();
+            } finally {
+                endTransaction();
+                finallyStatement(res, prep);
             }
-        }
-        if(oldPassCorrect) {
-            //Change Pass
-            String[] passInfoNew = en.passEncoding(prev_password);
-            String hashNew = passInfoNew[0];
-            String saltNew = passInfoNew[1];
-            try {
-                prep = getConnection().prepareStatement(sqlChangePass);
-                prep.setString(1, hashNew);
-                prep.setString(2, saltNew);
-                prep.setString(3, user_id);
-                change = prep.executeUpdate();
-            } catch (Exception e) {
-                System.out.println("Error at changePasswordUserId() update");
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Login incorrect");
         }
         return change;
     }
@@ -389,6 +441,7 @@ public class UserDBManager extends DBManager {
                     System.out.println("Error at changeUserInfo()");
                     e.printStackTrace();
                 } finally {
+                    endTransaction();
                     finallyStatement(res,prep);
                 }
             }
@@ -432,6 +485,29 @@ public class UserDBManager extends DBManager {
             }
         }
         return userBasics;
+    }
+    public int getAdminId(){
+         int out = 0;
+         if(setUp()){
+             ResultSet res = null;
+             try {
+                 conn = getConnection();
+                 prep = conn.prepareStatement(sqlGetAdminId);
+                 prep.setInt(1, User.UserCategory.ADMIN.getValue());
+                 res = prep.executeQuery();
+                 if(res.next()) {
+                     out = res.getInt(1);
+                 }
+             }catch (SQLException sqle){
+                 log.log(Level.WARNING, "Issue with getting an admin ID");
+                 sqle.printStackTrace();
+
+             }
+             finally {
+                 finallyStatement(res, prep);
+             }
+         }
+         return out;
     }
     //If string contains @, it's an email
    /* if(username.contains("@")) {

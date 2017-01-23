@@ -2,6 +2,10 @@ package no.ntnu.stud.minvakt.database;
 
 
 import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 
 import java.util.ArrayList;
 import java.sql.*;
@@ -12,8 +16,8 @@ public class AvailabilityDBManager extends DBManager{
     private final String sqlGetAvailability = "SELECT user_id, first_name, last_name FROM availability NATURAL JOIN user WHERE shift_id=?";
     private final String sqlSetAvailability = "INSERT INTO availability VALUES(?,?);";
     private final String sqlDeleteAvailability = "DELETE FROM availability WHERE user_id=? AND shift_id=?";
-    private final String sqlGetAvailableShiftsForDate = "SELECT *, COUNT(employee_shift.shift_id) AS current_staff_numb FROM shift JOIN employee_shift ON (employee_shift.shift_id = shift.shift_id) JOIN department ON (shift.dept_id = department.dept_id) WHERE valid_absence=0 AND shift_change = 0 AND date =? GROUP BY date, time, shift.dept_id";
     private final String sqlGetAvailabilityForUser = "SELECT * FROM availability WHERE user_id = ?";
+    private final String sqlGetAvailableShiftsForDate = "SELECT *, COUNT(employee_shift.shift_id) AS current_staff_numb FROM shift JOIN employee_shift ON (employee_shift.shift_id = shift.shift_id) JOIN department ON (shift.dept_id = department.dept_id) WHERE valid_absence=0 AND shift_change = 0 AND date =? AND approved = TRUE GROUP BY date, time, shift.dept_id";
     private final String sqlGetAvailabilityUserBasic = "SELECT user_id, first_name, last_name, category FROM availability NATURAL JOIN user WHERE shift_id=?";
 
     Connection conn;

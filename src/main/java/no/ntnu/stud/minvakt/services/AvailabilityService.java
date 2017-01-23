@@ -8,9 +8,10 @@ import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
