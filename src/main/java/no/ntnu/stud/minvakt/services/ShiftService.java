@@ -124,6 +124,20 @@ public class ShiftService extends SecureService{
         }
     }
 
+    @POST
+    @Path("/{shiftId}/replaceuser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response replaceEmployeeOnShift(@PathParam("shiftId") int shiftId, int oldUserId, int newUserId) {
+        if(getSession() == null || !getSession().isAdmin()) return null;
+
+        boolean statusOk = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+        if (statusOk) {
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Unable to add employee").build();
+        }
+    }
+
     @GET
     @Path("/user/")
     @Produces(MediaType.APPLICATION_JSON)

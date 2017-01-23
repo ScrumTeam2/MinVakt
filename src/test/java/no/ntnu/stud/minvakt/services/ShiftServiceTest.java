@@ -8,6 +8,7 @@ import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -33,6 +34,32 @@ public class ShiftServiceTest {
     private void logInUser() {
         SessionService sessionService = new SessionService();
         sessionService.checkLogin(request, "email1", "password");
+    }
+
+    private void logInAdmin() {
+        SessionService sessionService = new SessionService();
+        sessionService.checkLogin(request, "admin", "password");
+    }
+
+    @Test
+    public void replaceEmployeeOnShift() {
+        final int shiftId = 2;
+        final int oldUserId = 1;
+        final int newUserId = 15;
+
+        logInAdmin();
+
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        shiftService.addEmployeeToShift(shiftUser, shiftId);
+
+        Response response = shiftService.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            shiftService.deleteEmployeeFromShift(newUserId, shiftId, false);
+        } else {
+            shiftService.deleteEmployeeFromShift(oldUserId, shiftId, false);
+        }
+
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test

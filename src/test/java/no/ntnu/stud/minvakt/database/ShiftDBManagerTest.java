@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
 import no.ntnu.stud.minvakt.data.user.User;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,6 +39,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
+
     @Test
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
@@ -47,6 +49,33 @@ public class ShiftDBManagerTest {
         }
         assertTrue(statusOk);
     }
+
+    @Test
+    public void replaceEmployeeOnShift() {
+        final int shiftId = 2;
+        final int oldUserId = 1;
+        final int newUserId = 15;
+
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser newUser = null;
+
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
+        if(statusOk){
+            boolean replaceOK = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+            if(replaceOK) {
+                newUser = shiftDB.getUserFromShift(newUserId, shiftId);
+                shiftDB.deleteEmployeeFromShift(newUserId, shiftId);
+            } else {
+                shiftDB.deleteEmployeeFromShift(oldUserId, shiftId);
+            }
+
+            assertTrue(replaceOK);
+            Assert.assertNotNull(newUser);
+            Assert.assertEquals(newUserId, newUser.getUserId());
+        }
+        assertTrue(statusOk);
+    }
+
     //Skaper problemer med at det ikke er koblet noen skift i databasen
     @Test
     public void getShiftsFromUserId(){

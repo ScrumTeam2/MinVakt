@@ -208,6 +208,7 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
+
     public boolean deleteEmployeeFromShift(int userId, int shiftId){
         boolean out = false;
         if(setUp()){
@@ -221,6 +222,36 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to delete shift with shift ID = " + shiftId + " and user ID = " + userId, e);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return out;
+    }
+
+    private static final String sqlReplaceUser = "UPDATE employee_shift SET user_id = ? WHERE user_id = ? AND shift_id = ?";
+
+    /**
+     * Replaces an user with another on a shift. Responsibility will not be transferred.
+     * @param shiftId The shift we want to edit
+     * @param oldUserId The ID of the user which already is on the shift
+     * @param newUserId THe ID of the replacement user
+     * @return True if the replacement was successful
+     */
+    public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId){
+        boolean out = false;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlReplaceUser);
+                prep.setInt(1, newUserId);
+                prep.setInt(2, oldUserId);
+                prep.setInt(3, shiftId);
+                out = prep.executeUpdate() != 0;
+            }
+            catch (SQLException e){
+                log.log(Level.WARNING, "Not able to replace user on shift ID = " + shiftId + ", user ID " + oldUserId + " with " + newUserId , e);
             }
             finally {
                 finallyStatement(prep);
