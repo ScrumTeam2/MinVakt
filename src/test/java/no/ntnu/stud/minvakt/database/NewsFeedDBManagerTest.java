@@ -25,7 +25,7 @@ public class NewsFeedDBManagerTest {
     public int createTestData() {
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
         NewsFeedItem notification = new NewsFeedItem(-1, date, "Test", 26, 1, 1,
-                NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE);
+                NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
         return newsFeedDB.createNotification(notification);
     }
 
@@ -37,7 +37,7 @@ public class NewsFeedDBManagerTest {
     public void createAndDeleteNotification() {
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
         NewsFeedItem notification = new NewsFeedItem(-1, date, "Test", 1, 1, 1,
-                NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE);
+                NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
         int id = newsFeedDB.createNotification(notification);
         assertTrue(id != 0);
         boolean isDeleted = newsFeedDB.deleteNotification(id);

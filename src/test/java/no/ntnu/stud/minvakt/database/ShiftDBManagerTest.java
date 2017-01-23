@@ -85,5 +85,10 @@ public class ShiftDBManagerTest {
         assertFalse(shiftDB.setStaffNumberOnShift(-1, 10));
         assertTrue(shiftDB.setStaffNumberOnShift(1, 4));
     }
+    @Test
+    public void setValidAbsence(){
+        assertTrue(shiftDB.setValidAbsence(1,4,true));
+        assertTrue(shiftDB.setValidAbsence(1,4,false));
+    }
 }
 
