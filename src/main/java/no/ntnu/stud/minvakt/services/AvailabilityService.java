@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.services;
 
 
+import no.ntnu.stud.minvakt.controller.email.Mail;
 import no.ntnu.stud.minvakt.data.*;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
@@ -19,6 +20,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static no.ntnu.stud.minvakt.controller.email.Mail.*;
 
 @Path("/availability")
 public class AvailabilityService extends SecureService {
@@ -48,6 +51,9 @@ public class AvailabilityService extends SecureService {
         int id = getSession().getUser().getId();
         UserAvailableShifts us = availabilityDB.getAvailabilityForUser(id);
         System.out.println(us.getShifts());
+        System.out.println("Sending email now---");
+        Mail m = new Mail();
+        Mail.sendMailConfirm();
         return us;
     }
 
