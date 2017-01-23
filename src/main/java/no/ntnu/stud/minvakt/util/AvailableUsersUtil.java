@@ -6,6 +6,7 @@ import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,42 +17,40 @@ import java.util.Date;
  */
 
 public class AvailableUsersUtil {
+    private static final int SHIFT_LENGTH_MINUTES = 60*8;
 
-    public static ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, Date date){
+    public static ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, LocalDate date){
         AvailabilityDBManager availDBManager = new AvailabilityDBManager();
         OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
         ShiftDBManager shiftDBManager = new ShiftDBManager();
 
         //Finds first and last day of week to calculate total workhours for 1 week
-        Calendar c = Calendar.getInstance();
-        c.setTime(date);
+        LocalDate firstDayOfWeek = date.with(DayOfWeek.MONDAY);
+        LocalDate lastDayOfWeek = date.with(DayOfWeek.SUNDAY);
 
-        c.set(Calendar.DAY_OF_WEEK, 1);
-        Date firstDayOfWeek = c.getTime();
-        java.sql.Date sqlFirstDay = new java.sql.Date(firstDayOfWeek.getTime());
-
-        c.set(Calendar.DAY_OF_WEEK, 7);
-        Date lastDayOfWeek = c.getTime();
-        java.sql.Date sqlLastDay = new java.sql.Date(lastDayOfWeek.getTime());
+        java.sql.Date sqlFirstDay = java.sql.Date.valueOf(firstDayOfWeek);
+        java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDayOfWeek);
+        //System.out.println("Dato: "+ date);
+        //System.out.println("Fra dato: "+ sqlFirstDay);
+        //System.out.println("Til dato: "+ sqlLastDay);
 
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = availDBManager.getAvailabilityUserBasic(shiftId);
 
-/*      Må rettes
+
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {
-            user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
-            user.setShiftHours(shiftDBManager.getShiftHours(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setShiftMinutes(SHIFT_LENGTH_MINUTES*shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
         }
-*/
+
         //Sorts list of employees by workhours, ascending order
         userList.sort(UserBasicWorkHours.workHoursComparator);
         return userList;
     }
 
-    public static ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(
-            Date date, int shiftId, User.UserCategory category){
+    public static ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(LocalDate date, int shiftId, User.UserCategory category){
         ArrayList<UserBasicWorkHours> sortedEmployees = AvailableUsersUtil.sortAvailableEmployees(shiftId, date);
         ArrayList<UserBasicWorkHours> outputEmployees = new ArrayList<>();
         for (UserBasicWorkHours user : sortedEmployees) {
@@ -69,6 +68,7 @@ public class AvailableUsersUtil {
 
     public ArrayList<UserBasicWorkHours> sortAvailableEmployeesIgnoreAvailability(LocalDate startDate, int limit) {
         ShiftDBManager shiftDBManager = new ShiftDBManager();
+        OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
 
         LocalDate lastDate = startDate.plusWeeks(6);
 
@@ -78,12 +78,13 @@ public class AvailableUsersUtil {
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = shiftDBManager.getOrdinaryWorkHoursForPeriod(sqlFirstDay, sqlLastDay, limit);
 
-/* Må rettes
+
         for (UserBasicWorkHours user : userList) {
-            user.setOvertime(overtimeDBManager.getOvertimeHours(user.getId(), sqlFirstDay, sqlLastDay));
+
+            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setShiftMinutes(SHIFT_LENGTH_MINUTES*shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
         }
-*/
 
         //Sorts list of employees by workhours, ascending order
         userList.sort(UserBasicWorkHours.workHoursComparator);
