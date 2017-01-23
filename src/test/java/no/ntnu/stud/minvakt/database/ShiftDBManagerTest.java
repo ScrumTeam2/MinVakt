@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -100,17 +101,26 @@ public class ShiftDBManagerTest {
         boolean expRes = true;
         assertEquals(expRes, res);
     }
+
     @Test
     public void getShifts(){
         ArrayList<ShiftUserAvailability> status = shiftDB.getShifts(300, 1,new java.sql.Date(System.currentTimeMillis()));
         assertFalse(status.isEmpty());
 
     }
+
     @Test
     public void setStaffNumberOnShift() {
         assertFalse(shiftDB.setStaffNumberOnShift(-1, 10));
         assertTrue(shiftDB.setStaffNumberOnShift(1, 4));
     }
+
+    @Test
+    public void hasAnyShiftsInPeriod() throws Exception {
+        assertFalse(shiftDB.hasAnyShiftsInPeriod(LocalDate.parse("2014-01-01"), LocalDate.parse("2014-02-14")));
+        assertTrue(shiftDB.hasAnyShiftsInPeriod(LocalDate.parse("2017-01-01"), LocalDate.parse("2017-02-14")));
+    }
+
     @Test
     public void setValidAbsence(){
         assertTrue(shiftDB.setValidAbsence(1,4,true));
