@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
+
 import no.ntnu.stud.minvakt.data.*;
 
 import java.util.ArrayList;
