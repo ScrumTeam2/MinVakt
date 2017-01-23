@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
@@ -39,8 +40,8 @@ public class NewsFeedService extends SecureService{
 
     @POST
     @Path("/{feedId}")
-    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true")
-    @QueryParam("accepted") boolean accepted){
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true") boolean accepted){
         boolean isUpdated = ShiftChangeUtil.updateNotification(feedId, accepted);
         if(isUpdated){
             return Response.status(Response.Status.OK).build();
