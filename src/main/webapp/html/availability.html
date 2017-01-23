@@ -6,6 +6,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="../js/menuScript.js"></script>
+
 </head>
 <body>
 <header>
@@ -34,13 +36,18 @@
     </ul>
 </aside>
 <div class="container">
-    <div class="container-header">
-        <h2>Ledige vakter</h2>
-        <i class="symbol x2 right">
-            <i class="material-icons">today</i>
-        </i>
-    </div>
-    <h3 class="headmessage"> Velg tilgjengelighet </h3>
+   <div class="container-header">
+            <div class="person cursor-point">
+                <i class="symbol x2">
+                    <i class="material-icons">person</i>
+                </i>
+                <h2 class="my-shifts">Tilgjengelige vakter</h2>
+            </div>
+            <i class="symbol x2">
+                <i class="material-icons hidden" id="today">today</i>
+            </i>
+        </div>
+    <h3 class="headmessage"> Velg dato for tilgjengelighet </h3>
     <div class="calendar" id="calendar">
     <div class="calendar-header">
       <a href="#" class="prev">
@@ -128,14 +135,18 @@
       </tbody>
     </table>
   </div>
-<div class="error">
-  <p id="error"></p>
+
+
+<div class="error2">
+  <p id="error" style="display:none;"></p>
 </div>
-  <button type="submit" id="userBtn">Tilbake</button>
+
+<section class="list">
+</section>
+  <button type="submit" id="submitAvailability">Lagre valg</button>
 </div>
 <script src="../js/checkscript.js"></script>
-<script src="../js/calendar.js"></script>
-<script src="../js/availabilityScript.js"></script>
+<script src="../js/calendarAvailability.js"></script>
 
 
 </body>
