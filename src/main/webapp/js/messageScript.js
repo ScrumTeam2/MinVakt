@@ -3,11 +3,11 @@
  */
 
 $(document).ready(function(){
-    /*$.ajax({
-        url: "/rest/user/",
+    $.ajax({
+        url: "/rest/newsfeed/",
         type: 'GET',
         success: showMessages
-    });*/
+    });
 });
 
 $('.container-title').click(function() {
