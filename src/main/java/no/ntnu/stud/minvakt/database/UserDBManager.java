@@ -343,8 +343,8 @@ public class UserDBManager extends DBManager {
         try {
             prep = getConnection().prepareStatement(sqlCheckPhoneNumber);
             prep.setString(1, phoneNumber);
-            ResultSet result = prep.executeQuery();
-            return result.next();
+            res = prep.executeQuery();
+            return res.next();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Failed to check phone number", e);
         } finally {
@@ -368,8 +368,8 @@ public class UserDBManager extends DBManager {
         try {
             prep = getConnection().prepareStatement(sqlCheckEmail);
             prep.setString(1, email);
-            ResultSet result = prep.executeQuery();
-            return result.next();
+            res = prep.executeQuery();
+            return res.next();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Failed to check email", e);
         } finally {
