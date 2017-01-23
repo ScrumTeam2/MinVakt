@@ -126,7 +126,10 @@ function addToShift(id) {
     $.ajax({
         url: "/rest/shift/" + shiftId + "/user/" + id,
         type: 'POST',
-        dataType: 'json',
+        data: {
+            oldUserId: 1,
+            newUserId: id
+        },
         success: function(data) {
             console.log("Yay!", data);
         },
