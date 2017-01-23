@@ -11,7 +11,7 @@
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:6.0.5" />
           <element id="library" level="project" name="Maven: junit:junit:4.12" />
           <element id="library" level="project" name="Maven: org.hamcrest:hamcrest-core:1.3" />
-          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0" />
+          <element id="library" level="project" name="Maven: javax.ws.rs:javax.ws.rs-api:2.0.1" />
           <element id="library" level="project" name="Maven: org.json:json:20160810" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-server:2.25" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.core:jersey-common:2.25" />
@@ -50,6 +50,8 @@
           <element id="library" level="project" name="Maven: org.glassfish.grizzly:grizzly-http-servlet:2.3.8" />
           <element id="library" level="project" name="Maven: org.ow2.asm:asm-debug-all:5.0.2" />
           <element id="library" level="project" name="Maven: org.glassfish.jersey.bundles.repackaged:jersey-guava:2.6" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.5" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.8.5" />
         </element>
       </element>
       <element id="directory" name="META-INF">
