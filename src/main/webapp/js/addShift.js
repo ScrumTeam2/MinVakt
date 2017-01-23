@@ -4,98 +4,105 @@
 
 
 $(document).ready(function() {
+    var dayCodes = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
+    var shiftTypeCodes = ["DAY", "EVENING", "NIGHT"];
+    generateDaysHTML();
+    function generateDaysHTML() {
+        var days = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"];
+
+        var $container = $("#days-placeholder");
+
+        days.forEach(function(day, index) {
+            $container.append(`
+            <div class="container-day" data-day-code="${dayCodes[index]}">
+                <div class="container-title">
+                    <h3>${day}</h3>
+                </div>
+                <div class="num-employees">
+                    <label for="day">Dag</label>
+                    <input type="number" name="day" id="day" placeholder="Antall ansatte" />
+                    <label for="evening">Kveld</label>
+                    <input type="number" name="evening" id="evening" placeholder="Antall ansatte" />
+                    <label for="night">Natt</label>
+                    <input type="number" name="night" id="night" placeholder="Antall ansatte" />
+                </div>
+            </div>`);
+        });
+    }
+
     $('#createShiftBtn').on("click", function(e) {
         e.preventDefault();
 
+        var shiftNames = ["day", "evening", "night"];
+        var shiftsEmployeeCount = [ ];
+
         var data = $('#shiftForm').serializeArray()
-            .reduce(function(a, x) { a[x.name] = x.value; return a; }, {});
+            .reduce(function(a, x) {
+                console.log(x.name + " " + x.value);
+                if(shiftNames.indexOf(x.name) > -1) {
+                    shiftsEmployeeCount.push(parseInt(x.value));
+                }
+                a[x.name] = x.value;
+                return a;
+            }, {});
+
+        console.log(data);
+        console.log(shiftsEmployeeCount);
 
         var id = -1;
-        var staffDay = parseInt(data.day);
-        var staffEvening = parseInt(data.evening);
-        var staffNight = parseInt(data.night);
         var date = data.date;
         var shiftUsers = [];
         var deptId = parseInt(data.department);
+        var days = [ ];
 
-        var day = {
-            id: id,
-            staffNumb: staffDay,
-            date: date,
-            type: "DAY",
-            deptId: deptId,
-            shiftUsers: shiftUsers,
+        // Counter variable
+        var shiftCounter = 0;
+
+        // Seven days
+        for(var i = 0; i < 7; i++) {
+            var day = {
+                dayOfWeek: dayCodes[i],
+                shifts: [ ]
+            };
+
+            for(var j = 0; j < 3; j++) {
+                var shift = {};
+                shift.shift = {
+                    staffNumb: shiftsEmployeeCount[shiftCounter++],
+                    deptId: deptId,
+                    type: shiftTypeCodes[j]
+                };
+                day.shifts.push(shift);
+            }
+            days.push(day);
+        }
+
+        console.log(days);
+        console.log(JSON.stringify(days));
+
+
+        var shiftPlan = {
+            templateWeek: {
+                days: days
+            }
         };
 
-        var evening = {
-            id: id,
-            staffNumb: staffEvening,
-            date: date,
-            type: "EVENING",
-            deptId: deptId,
-            shiftUsers: shiftUsers,
-        };
-
-        var night = {
-            id: id,
-            staffNumb: staffNight,
-            date: date,
-            type: "NIGHT",
-            deptId: deptId,
-            shiftUsers: shiftUsers,
-        };
+        console.log(shiftPlan);
 
         $.ajax({
-                url: "/rest/shift",
+                url: "/rest/shiftplan/" + date,
                 type: "POST",
                 dataType: "json",
                 contentType: "application/json",
-                data: JSON.stringify(day)
+                data: JSON.stringify(shiftPlan)
         })
         .done(function(data) {
             console.log( "success", data );
-            localStorage.setItem("TempDayId", data.id);
-            createEvening();
+            localStorage.setItem("TempShiftPlan", data);
+            window.location = "add-users-to-shift.html";
         })
         .fail(function(error) {
             console.log( "error", error );
         });
-
-        function createEvening() {
-            $.ajax({
-                    url: "/rest/shift",
-                    type: "POST",
-                    dataType: "json",
-                    contentType: "application/json",
-                    data: JSON.stringify(evening)
-                })
-                .done(function(data) {
-                    console.log( "success", data );
-                    localStorage.setItem("TempEveningId", data.id);
-                    createNight()
-                })
-                .fail(function(error) {
-                    console.log( "error", error );
-                });
-        }
-
-        function createNight() {
-            $.ajax({
-                    url: "/rest/shift",
-                    type: "POST",
-                    dataType: "json",
-                    contentType: "application/json",
-                    data: JSON.stringify(night)
-                })
-                .done(function(data) {
-                    console.log( "success", data );
-                    localStorage.setItem("TempNightId", data.id);
-                    window.location = "add-users-to-shift.html";
-                })
-                .fail(function(error) {
-                    console.log( "error", error );
-                });
-        }
-
     });
 });
