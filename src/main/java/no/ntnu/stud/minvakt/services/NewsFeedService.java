@@ -2,17 +2,10 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import no.ntnu.stud.minvakt.data.NewsFeedItem;
-import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,6 +22,7 @@ public class NewsFeedService extends SecureService{
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<NewsFeedItem> getNewsFeed(){
         if(getSession().isAdmin()){
             return newsDB.getNewsFeedAdmin();

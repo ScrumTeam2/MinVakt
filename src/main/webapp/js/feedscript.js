@@ -5,9 +5,10 @@
 
 $(document).ready(function(){
     $.ajax({
-        url: "/rest/newsfeed/",
+        url: "/rest/newsfeed",
         type: 'GET',
-        success: showMessages
+        success: showMessages,
+        error: showEmpty
     });
 });
 
@@ -18,11 +19,11 @@ $('.container-title').click(function() {
 });
 
 
-
 function showMessages(data){
-    acceptChangeover();
-    acceptTimebank();
-    acceptAbsence();
+    console.log("ok");
+    //acceptChangeover();
+    //acceptTimebank();
+    //acceptAbsence();
 }
 
 //popups
@@ -85,7 +86,7 @@ $('#acceptTimeBtn').click(function(){
 function showEmpty(){
     console.log("no messages");
     var $list = $('.list');
-    $list.html(
+    $list.append(
         `<div class="watch">
                 <div class="watch-info">
                     <p class="lead">Ingen meldinger</p>

@@ -4,9 +4,10 @@
 
 $(document).ready(function(){
     $.ajax({
-        url: "/rest/newsfeed/",
+        url: "/rest/newsfeed",
         type: 'GET',
-        success: showMessages
+        success: showMessages,
+        error: showEmpty
     });
 });
 
@@ -18,9 +19,10 @@ $('.container-title').click(function() {
 
 
 function showMessages(data){
-    showChangeover();
-    showTimebank();
-    showRequest();
+    console.log("Ok e");
+    //showChangeover();
+    //showTimebank();
+    //showRequest();
 }
 
 
