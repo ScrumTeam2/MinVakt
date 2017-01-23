@@ -56,6 +56,8 @@ public class NewsFeedItem {
         this.category = category;
     }
 
+    public NewsFeedItem(){}
+
     public NewsFeedCategory getCategory() {
         return category;
     }

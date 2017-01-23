@@ -29,12 +29,13 @@ public class NewsFeedService extends SecureService{
     }
 
     @GET
-    public ArrayList<NewsFeedItem> getNewsFeed(){
+    @Produces(MediaType.APPLICATION_JSON)
+    public NewsFeedItem getNewsFeed(){
         if(getSession().isAdmin()){
-            return newsDB.getNewsFeedAdmin();
+            return newsDB.getNewsFeedAdmin().get(0);
         }
         else{
-            return newsDB.getNewsFeed(getSession().getUser().getId());
+            return newsDB.getNewsFeed(getSession().getUser().getId()).get(0);
         }
     }
 
