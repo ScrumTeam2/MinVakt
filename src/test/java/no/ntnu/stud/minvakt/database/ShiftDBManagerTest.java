@@ -1,10 +1,8 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.shift.Shift;
-import no.ntnu.stud.minvakt.data.shift.ShiftUser;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,15 +36,43 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
+
     @Test
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
-        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 9);
         if(statusOk){
-            shiftDB.deleteEmployeeFromShift(1, 2);
+            shiftDB.deleteEmployeeFromShift(1, 9, false);
         }
         assertTrue(statusOk);
     }
+
+    @Test
+    public void replaceEmployeeOnShift() {
+        final int shiftId = 2;
+        final int oldUserId = 1;
+        final int newUserId = 15;
+
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser newUser = null;
+
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
+        if(statusOk){
+            boolean replaceOK = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+            if(replaceOK) {
+                newUser = shiftDB.getUserFromShift(newUserId, shiftId);
+                shiftDB.deleteEmployeeFromShift(newUserId, shiftId, false);
+            } else {
+                shiftDB.deleteEmployeeFromShift(oldUserId, shiftId, false);
+            }
+
+            assertTrue(replaceOK);
+            Assert.assertNotNull(newUser);
+            Assert.assertEquals(newUserId, newUser.getUserId());
+        }
+        assertTrue(statusOk);
+    }
+
     //Skaper problemer med at det ikke er koblet noen skift i databasen
     @Test
     public void getShiftsFromUserId(){
@@ -84,6 +110,17 @@ public class ShiftDBManagerTest {
     public void setStaffNumberOnShift() {
         assertFalse(shiftDB.setStaffNumberOnShift(-1, 10));
         assertTrue(shiftDB.setStaffNumberOnShift(1, 4));
+    }
+    @Test
+    public void setValidAbsence(){
+        assertTrue(shiftDB.setValidAbsence(1,4,true));
+        assertTrue(shiftDB.setValidAbsence(1,4,false));
+    }
+
+    @Test
+    public void getAvailableShiftsTest(){
+        ArrayList<ShiftAvailable> resList = shiftDB.getAvailableShifts();
+        assertFalse(resList.isEmpty());
     }
 }
 

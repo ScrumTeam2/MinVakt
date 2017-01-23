@@ -19,7 +19,7 @@ public class NewsFeedItem {
     private NewsFeedCategory category;
 
     public enum NewsFeedCategory {
-        SHIFT_CHANGE;
+        SHIFT_CHANGE_EMPLOYEE, SHIFT_CHANGE_ADMIN, VALID_ABSENCE, TIMEBANK, NOTIFICATION;
 
 
 
