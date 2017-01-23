@@ -22,10 +22,10 @@ import java.util.Date;
  * Created by evend on 1/20/2017.
  */
 public class ShiftChangeUtil {
-    static ShiftDBManager shiftDB = new ShiftDBManager();
-    static UserDBManager userDB = new UserDBManager();
-    static NewsFeedDBManager newsDB = new NewsFeedDBManager();
-    static OvertimeDBManager overtimeDB = new OvertimeDBManager();
+    private static ShiftDBManager shiftDB = new ShiftDBManager();
+    private static UserDBManager userDB = new UserDBManager();
+    private static NewsFeedDBManager newsDB = new NewsFeedDBManager();
+    private static OvertimeDBManager overtimeDB = new OvertimeDBManager();
 
     public boolean findNewUserToShift(int shiftId, int userId){
        // boolean statusOk = shiftDB.deleteEmployeeFromShift(userId,shiftId, false);
@@ -64,6 +64,7 @@ public class ShiftChangeUtil {
 
     }
     private static boolean approveTimeBank(NewsFeedItem newsFeedItem, boolean shiftAccepted){
+
         if(shiftAccepted){
             if(overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())){
 
@@ -94,9 +95,25 @@ public class ShiftChangeUtil {
         if(shiftAccepted){
             if(!newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), shiftAccepted) ||
             !shiftDB.setValidAbsence(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), true)) return false;
+            Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
+            NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
+                    "Du har fått godkjent fravær på vakten din den "+shift.getDate()+".",
+                    newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
+            newsDB.createNotification(notification);
+            boolean result = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
+            System.out.println(result);
+            return result;
         }
-        newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
-        return true;
+        else {
+            Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
+            NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
+                    "Du har ikke fått godkjent fravær på vakten din den " + shift.getDate() + ", og burde kontakte administrasjonen.",
+                    newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
+
+            newsDB.createNotification(notification);
+            return newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
+        }
+
     }
     private static boolean approveShiftChangeEmployee(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted){
@@ -144,7 +161,7 @@ public class ShiftChangeUtil {
 
             //Creates update notification for user who accepted the shift change
             NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    "Dit vaktbytte den " + shift.getDate() + " er godkjent av administrator!",
+                    "Ditt vaktbytte den " + shift.getDate() + " er godkjent av administrator!",
                     userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
             newsDB.createNotification(notification2);
