@@ -2,6 +2,7 @@ package no.ntnu.stud.minvakt.controller.shiftplan;
 
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shiftplan.*;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
@@ -15,6 +16,7 @@ import java.util.*;
  */
 public class ShiftPlanController {
     private UserDBManager userDBManager = new UserDBManager();
+    private ShiftDBManager shiftDBManager = new ShiftDBManager();
     private ShiftPlan shiftPlan;
 
     /**
@@ -32,8 +34,7 @@ public class ShiftPlanController {
     }
 
     public boolean verifyValidity() {
-        // TODO Lapp: "Sjekk allerede registrert (Back-end)"
-        return true;
+        return !shiftDBManager.hasAnyShiftsInPeriod(shiftPlan.getStartDate(), shiftPlan.getStartDate().plusWeeks(6));
     }
 
     private void loadUsers() {
@@ -62,7 +63,7 @@ public class ShiftPlanController {
                     day.getShifts()[k] = shift;
                 }
 
-                generateCandidatesNew(day); // Magic happens here
+                generateCandidates(day); // Magic happens here
                 week.getDays()[j] = day;
             }
             shiftPlan.getGeneratedWeeks()[i] = week;
@@ -74,7 +75,7 @@ public class ShiftPlanController {
         return Date.valueOf(date.plusWeeks(week).plusDays(day));
     }
 
-    private void generateCandidatesNew(ShiftPlanDay day) {
+    private void generateCandidates(ShiftPlanDay day) {
         HashMap<Integer, ShiftPlanUser> usersWorkingToday = new HashMap<>();
 
         for (ShiftPlanShift shiftPlanShift : day.getShifts()) {
@@ -91,5 +92,19 @@ public class ShiftPlanController {
             userList.add(user);
 //            }
         }
+    }
+
+    /**
+     * Adds all the generated shifts into the database, and updates their IDs
+     */
+    public void insertShiftsIntoDatabase() {
+       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+           for(ShiftPlanDay day : week.getDays()) {
+               for(ShiftPlanShift shift : day.getShifts()) {
+                   int shiftId = shiftDBManager.createNewShift(shift.getShift());
+                   shift.getShift().setId(shiftId);
+               }
+           }
+       }
     }
 }

@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -28,9 +29,10 @@ public class ShiftDBManager extends DBManager {
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?,DEFAULT);";
     private final String deleteEmployeeFromShift = "UPDATE employee_shift SET removed = 1 WHERE shift_id = ? and user_id = ?;";
     private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ? AND removed = 0)" +
-            " AND date >= ? ORDER BY date ASC, time ASC;";
+            " AND date >= ? AND approved = TRUE ORDER BY date ASC, time ASC;";
 
-    private final String sqlGetNumberOfShifts = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
+
+    private final String sqlGetNumberOfShifts = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ? AND shift.approved = TRUE ";
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
     private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
@@ -308,7 +310,7 @@ public class ShiftDBManager extends DBManager {
                 out = res.getInt(1);
 
             } catch (SQLException sqlE){
-                log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId);
+                log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId, sqlE);
             } finally{
                 finallyStatement(prep);
             }
@@ -341,12 +343,14 @@ public class ShiftDBManager extends DBManager {
             "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
             "LEFT JOIN shift USING(shift_id) " +
             "NATURAL JOIN user " +
-            "WHERE shift.date BETWEEN ? AND ? " +
+            "WHERE shift.date IS NULL OR shift.date BETWEEN ? AND ? " +
             "AND user.category != 0 " +
+            "AND shift.approved = TRUE " +
             "GROUP BY user_id " +
             "UNION " +
             "SELECT *, 0 AS shifts_worked FROM user " +
             "WHERE category != 0 " +
+            "AND shift.approved = TRUE " +
             "ORDER BY shifts_worked DESC " +
             "LIMIT ?";
 
@@ -416,7 +420,7 @@ public class ShiftDBManager extends DBManager {
 
             }
             catch (SQLException sqle){
-                log.log(Level.WARNING, "Error getting shifts with connected to availability and user");
+                log.log(Level.WARNING, "Error getting shifts with connected to availability and user", sqle);
                 sqle.printStackTrace();
             }
             finally {
@@ -437,13 +441,43 @@ public class ShiftDBManager extends DBManager {
                 status = prep.executeUpdate();
             }
             catch (SQLException sqle){
-                log.log(Level.WARNING, "Error editing number of staff number on shift "+shiftId);
+                log.log(Level.WARNING, "Error editing number of staff number on shift "+shiftId, sqle);
             }
             finally {
                 finallyStatement(prep);
             }
         }
         return status != 0;
+    }
+
+    private static final String sqlAnyShiftsInPeriod = "SELECT 1 FROM shift WHERE date BETWEEN ? AND ?";
+
+    /**
+     * Checks if there are any shifts registered in the given period
+     * @param startDate The start of the period
+     * @param endDate The end of the period
+     * @return True if there is any shifts in the period
+     */
+    public boolean hasAnyShiftsInPeriod(LocalDate startDate, LocalDate endDate) {
+        if (!setUp()) {
+            log.log(Level.WARNING, "Failed to set up db connection");
+            return true;
+        }
+
+        ResultSet result = null;
+
+        try {
+            prep = getConnection().prepareStatement(sqlAnyShiftsInPeriod);
+            prep.setDate(1, Date.valueOf(startDate));
+            prep.setDate(2, Date.valueOf(endDate));
+            result = prep.executeQuery();
+            return result.next();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Failed to check any shifts in period", e);
+        } finally {
+            finallyStatement(result, prep);
+        }
+        return true;
     }
 
     // Returns array with shifts that need more employees (shifts with not enough employees connected)
@@ -475,6 +509,7 @@ public class ShiftDBManager extends DBManager {
         }
         return shiftList;
     }
+
     public ShiftUser getUserFromShift(int userId, int shiftId){
         ShiftUser shiftUser = null;
         if(setUp()){
@@ -494,8 +529,7 @@ public class ShiftDBManager extends DBManager {
                 }
             }
             catch (SQLException sqle){
-                sqle.printStackTrace();
-                log.log(Level.WARNING, "Issue getting user from shift");
+                log.log(Level.WARNING, "Issue getting user from shift", sqle);
             }
             finally {
                 finallyStatement(res, prep);
@@ -503,6 +537,7 @@ public class ShiftDBManager extends DBManager {
         }
         return shiftUser;
     }
+
     public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
         int result = 0;
         if(setUp()){
@@ -515,8 +550,7 @@ public class ShiftDBManager extends DBManager {
                 result = prep.executeUpdate();
             }
             catch (SQLException sqle){
-                sqle.printStackTrace();
-                log.log(Level.WARNING, "Issue updating valid absence for user_id = "+userId);
+                log.log(Level.WARNING, "Issue updating valid absence for user_id = "+userId, sqle);
             }
             finally {
                 finallyStatement(prep);
