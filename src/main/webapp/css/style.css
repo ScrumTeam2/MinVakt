@@ -577,6 +577,7 @@ button {
     -ms-flex-align: center;
     align-items: center;
     border: 2px solid #e6e6e6;
+    margin-bottom: 1rem;
 }
 
 .calendar-header {
@@ -818,4 +819,68 @@ button {
 
 .popup .links a:hover {
     text-decoration: underline;
+}
+
+@media(min-width: 500px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+
+    #popup_menu, #popup_more {
+        width: auto;
+        background: #f2f2f2;
+        box-shadow: 0 0 5px 0 #000000;
+    }
+
+    #popup_menu a:hover, #popup_more a:hover {
+        background: #ffffff;
+    }
+
+    #popup_more {
+        right: 0;
+    }
+
+    .list {
+        column-count: 2;
+        column-gap: 33px;
+        column-rule: 1px solid black;
+    }
+
+    .list.menuItem {
+        columns: auto auto;
+    }
+
+    .list .watch, .list .container-title {
+        -webkit-column-break-inside: avoid; /* Chrome, Safari */
+        page-break-inside: avoid;           /* Theoretically FF 20+ */
+        break-inside: avoid-column;         /* IE 11 */
+    }
+}
+
+@media(min-width: 750px) {
+    header h1 {
+       width: 696px;
+        text-align: center;
+    }
+
+    header a:first-child {
+        margin-left: auto;
+    }
+
+    header a:last-child {
+        margin-right: auto;
+    }
+
+    .list {
+        column-count: 3;
+        column-gap: 33px;
+        column-rule: 1px solid black;
+    }
+
+    .list .watch, .list .container-title {
+        -webkit-column-break-inside: avoid; /* Chrome, Safari */
+        page-break-inside: avoid;           /* Theoretically FF 20+ */
+        break-inside: avoid-column;         /* IE 11 */
+    }
 }
