@@ -487,6 +487,7 @@ public class ShiftDBManager extends DBManager {
             finallyStatement(result, prep);
         }
         return true;
+    }
 
     // Returns array with shifts that need more employees (shifts with not enough employees connected)
     public ArrayList<ShiftAvailable> getAvailableShifts(){
@@ -517,6 +518,7 @@ public class ShiftDBManager extends DBManager {
         }
         return shiftList;
     }
+
     public ShiftUser getUserFromShift(int userId, int shiftId){
         ShiftUser shiftUser = null;
         if(setUp()){
@@ -545,6 +547,7 @@ public class ShiftDBManager extends DBManager {
         }
         return shiftUser;
     }
+
     public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
         int result = 0;
         if(setUp()){
