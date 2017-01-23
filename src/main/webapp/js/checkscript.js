@@ -139,7 +139,8 @@ var adminlinks = [
     "/html/add-users-to-shift.html",
     "/html/calendar-a.html",
     "/html/user-shifts.html",
-    "/html/index.html"
+    "/html/index.html",
+    "/html/change-employee.html"
 ];
 
 var employeelinks = [
@@ -181,3 +182,44 @@ function employeeAccess(){
         window.location.replace("/html/index.html");
     }
 }
+
+
+// URL PARAMETERS
+function setUrlParameter(key, value)
+{
+    key = encodeURI(key); value = encodeURI(value);
+
+    var kvp = document.location.search.substr(1).split('&');
+
+    var i=kvp.length; var x; while(i--)
+{
+    x = kvp[i].split('=');
+
+    if (x[0]==key)
+    {
+        x[1] = value;
+        kvp[i] = x.join('=');
+        break;
+    }
+}
+
+    if(i<0) {kvp[kvp.length] = [key,value].join('=');}
+
+    //Set back url
+    window.history.replaceState('', '', window.location.href.split("?")[0] + "?" + kvp.join('&'));
+}
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURI(sParameterName[1]);
+        }
+    }
+};
