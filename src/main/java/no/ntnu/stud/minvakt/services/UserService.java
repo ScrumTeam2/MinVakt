@@ -1,14 +1,11 @@
 package no.ntnu.stud.minvakt.services;
-import no.ntnu.stud.minvakt.data.*;
-import no.ntnu.stud.minvakt.database.DBManager;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by evend on 1/10/2017.
