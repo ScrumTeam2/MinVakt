@@ -111,7 +111,7 @@ public class ShiftService extends SecureService{
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
         if(!findNewEmployee) {
-            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
+            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId, false);
 
         }
         else {
@@ -121,6 +121,20 @@ public class ShiftService extends SecureService{
             return Response.status(200).build();
         } else {
             return Response.status(400).entity("Unable to delete employee").build();
+        }
+    }
+
+    @POST
+    @Path("/{shiftId}/replaceuser")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response replaceEmployeeOnShift(@PathParam("shiftId") int shiftId, @FormParam("oldUserId") int oldUserId, @FormParam("newUserId") int newUserId) {
+        if(getSession() == null || !getSession().isAdmin()) return null;
+
+        boolean statusOk = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+        if (statusOk) {
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Unable to add employee").build();
         }
     }
 

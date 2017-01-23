@@ -1,9 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.shift.Shift;
-import no.ntnu.stud.minvakt.data.shift.ShiftUser;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 
@@ -41,8 +38,11 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
     private final String sqlGetUserFromShift = "SELECT * FROM employee_shift WHERE shift_id = ? AND user_id = ?";
+    private final String sqlUpdateNewsFeedForeignKey = "UPDATE newsfeed SET shift_user_id = NULL WHERE user_id = ? AND shift_id = ?;";
+    private final String sqlSetValidAbsence = "UPDATE employee_shift SET valid_absence = ? WHERE user_id = ? AND shift_id = ?;";
 
-    private final String sqlGetAvailableShifts = "";
+    private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
+            "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
 
     Connection conn;
     PreparedStatement prep;
@@ -208,19 +208,56 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
-    public boolean deleteEmployeeFromShift(int userId, int shiftId){
+
+    public boolean deleteEmployeeFromShift(int userId, int shiftId, boolean fromNewsFeed){
         boolean out = false;
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(deleteEmployeeFromShift);
-                prep.setInt(1,shiftId);
-                prep.setInt(2, userId);
+                prep = conn.prepareStatement(sqlUpdateNewsFeedForeignKey);
+                prep.setInt(1,userId);
+                prep.setInt(2, shiftId);
                 out = prep.executeUpdate() != 0;
+                if(out || !fromNewsFeed) {
+                    prep = conn.prepareStatement(deleteEmployeeFromShift);
+                    prep.setInt(1, shiftId);
+                    prep.setInt(2, userId);
+                    out = prep.executeUpdate() != 0;
+                }
 
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to delete shift with shift ID = " + shiftId + " and user ID = " + userId, e);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return out;
+    }
+
+    private static final String sqlReplaceUser = "UPDATE employee_shift SET user_id = ?, valid_absence = FALSE, responsibility = FALSE WHERE user_id = ? AND shift_id = ?";
+
+    /**
+     * Replaces an user with another on a shift. Responsibility will not be transferred.
+     * @param shiftId The shift we want to edit
+     * @param oldUserId The ID of the user which already is on the shift
+     * @param newUserId THe ID of the replacement user
+     * @return True if the replacement was successful
+     */
+    public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId){
+        boolean out = false;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlReplaceUser);
+                prep.setInt(1, newUserId);
+                prep.setInt(2, oldUserId);
+                prep.setInt(3, shiftId);
+                out = prep.executeUpdate() != 0;
+            }
+            catch (SQLException e){
+                log.log(Level.WARNING, "Not able to replace user on shift ID = " + shiftId + ", user ID " + oldUserId + " with " + newUserId , e);
             }
             finally {
                 finallyStatement(prep);
@@ -420,6 +457,36 @@ public class ShiftDBManager extends DBManager {
         }
         return status != 0;
     }
+
+    // Returns array with shifts that need more employees (shifts with not enough employees connected)
+    public ArrayList<ShiftAvailable> getAvailableShifts(){
+        ArrayList<ShiftAvailable> shiftList = new ArrayList<>();
+
+        ResultSet res = null;
+
+        if(setUp()){
+            try{
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetAvailableShifts);
+                res = prep.executeQuery();
+
+                int index = 0;
+                while(res.next()){
+                    shiftList.add(new ShiftAvailable(
+                            res.getInt("shift_id"),
+                            res.getDate("date"),
+                            Shift.ShiftType.valueOf(res.getInt("time")),
+                            null));
+                }
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING, "Error getting shifts that need more employees", sqlE);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return shiftList;
+    }
     public ShiftUser getUserFromShift(int userId, int shiftId){
         ShiftUser shiftUser = null;
         if(setUp()){
@@ -447,5 +514,26 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return shiftUser;
+    }
+    public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
+        int result = 0;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetValidAbsence);
+                prep.setBoolean(1,valid_absence);
+                prep.setInt(2,userId);
+                prep.setInt(3,shiftId);
+                result = prep.executeUpdate();
+            }
+            catch (SQLException sqle){
+                sqle.printStackTrace();
+                log.log(Level.WARNING, "Issue updating valid absence for user_id = "+userId);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return result != 0;
     }
 }

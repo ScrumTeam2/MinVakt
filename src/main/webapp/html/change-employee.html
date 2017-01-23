@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Ansatte</title>
+    <title>MinVakt | Endre ansatt</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 
@@ -21,14 +21,12 @@
         <i class="material-icons">more_vert</i>
     </a>
 </header>
-<aside class="popup-menu employee hide" id="popup_menu">
+<aside class="popup-menu admin hide" id="popup_menu">
     <ul>
-        <li><a href="home-e.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="#">Vaktbytte<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="user-e.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="#">Fravær<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="#">Timebank<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="availability.html">Tilgjengelighet<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="new-shift.html">Opprett vakt<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
 <aside class="popup-more employee hide" id="popup_more">
@@ -40,19 +38,31 @@
 <div class="container">
     <div class="container-header">
         <div>
-            <h2>Ansatte</h2>
+            <h2>Endre ansatt</h2>
         </div>
     </div>
-    <div class="search-wrapper">
-        <input type="search" id="search" placeholder="Søk etter ansatt" />
-        <label for="search"><i class="material-icons">search</i></label>
+    <div class="watch-info">
+        <p class="lead">Siri Andresen</p>
+        <p class="sub">Assistent</p>
     </div>
+
+    <form class="search-check" action="">
+        <div class="search-wrapper">
+            <input type="search" id="search" placeholder="Søk etter ansatt" />
+            <label for="search"><i class="material-icons">search</i></label>
+        </div>
+        <div>
+            <input type="checkbox" name="check" id="check1" value="employee" checked>
+            <label for="check1">Samme kategori</label>
+        </div>
+    </form>
 
     <section class="list">
 
     </section>
 </div>
 <script src="../js/checkscript.js"></script>
-<script src="../js/employeeScript.js"></script>
+<!--<script src="../js/employeeScript.js"></script> -->
+<script src="../js/changeEmployee.js"></script>
 </body>
 </html>
