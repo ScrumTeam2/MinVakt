@@ -99,9 +99,9 @@ public class ShiftChangeUtil {
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
                     "Du har fått godkjent fravær på vakten din den "+shift.getDate()+".",
                     newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
+
             newsDB.createNotification(notification);
             boolean result = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
-            System.out.println(result);
             return result;
         }
         else {
@@ -173,5 +173,8 @@ public class ShiftChangeUtil {
         }
 
     }
+ /*   public static User findResponibleUserForSHift(int shiftId){
+        ArrayList<User> users = userDB.
+    }*/
 
 }
