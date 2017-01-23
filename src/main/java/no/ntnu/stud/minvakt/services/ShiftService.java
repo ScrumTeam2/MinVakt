@@ -126,7 +126,7 @@ public class ShiftService extends SecureService{
 
     @POST
     @Path("/{shiftId}/replaceuser")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response replaceEmployeeOnShift(@PathParam("shiftId") int shiftId, @FormParam("oldUserId") int oldUserId, @FormParam("newUserId") int newUserId) {
         if(getSession() == null || !getSession().isAdmin()) return null;
 

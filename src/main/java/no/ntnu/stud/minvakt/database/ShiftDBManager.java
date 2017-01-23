@@ -230,7 +230,7 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
-    private static final String sqlReplaceUser = "UPDATE employee_shift SET user_id = ? WHERE user_id = ? AND shift_id = ?";
+    private static final String sqlReplaceUser = "UPDATE employee_shift SET user_id = ?, valid_absence = FALSE, responsibility = FALSE WHERE user_id = ? AND shift_id = ?";
 
     /**
      * Replaces an user with another on a shift. Responsibility will not be transferred.

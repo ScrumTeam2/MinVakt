@@ -72,8 +72,7 @@ $(document).ready(function() {
     var $search = $('#search');
     $search.on('input keypress', function() {
         search($search.val());
-        window.history.replaceState('', '', window.location.href.split("?")[0] + "?search=" + $search.val());
-        setEventListeners();
+        setUrlParameter("search", $search.val());
     });
 
 
@@ -111,6 +110,7 @@ $(document).ready(function() {
                         <p class='lead'>${name}</p>
                         <p class='sub'>${shiftTypes[user.category]}</p>
                     </div>
+                    <a href="#" class="link changeEmployee">Endre</a>
                 </div>`;
             userListElement.append(html);
 
@@ -121,35 +121,22 @@ $(document).ready(function() {
 
 function addToShift(id) {
     var shiftId = getUrlParameter("shift");
+    var oldUserId = getUrlParameter("user");
     console.log(shiftId);
     console.log(id);
     $.ajax({
-        url: "/rest/shift/" + shiftId + "/user/" + id,
+        url: "/rest/shift/" + shiftId + "/replaceuser/",
         type: 'POST',
         data: {
-            oldUserId: 1,
+            oldUserId: oldUserId,
             newUserId: id
         },
         success: function(data) {
             console.log("Yay!", data);
+            window.location = "add-users-to-shift.html";
         },
         error: function (data) {
             console.log("Ney!", data);
         }
     });
 }
-
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURI(sParameterName[1]);
-        }
-    }
-};
