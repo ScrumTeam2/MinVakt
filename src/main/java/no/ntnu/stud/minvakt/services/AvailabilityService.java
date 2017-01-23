@@ -1,7 +1,9 @@
 package no.ntnu.stud.minvakt.services;
 
 
-import no.ntnu.stud.minvakt.data.ShiftAvailable;
+import no.ntnu.stud.minvakt.data.*;
+        //ShiftAvailable;
+
 import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
