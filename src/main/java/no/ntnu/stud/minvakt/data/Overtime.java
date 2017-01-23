@@ -41,6 +41,26 @@ public class Overtime {
         return approved;
     }
 
+    public void setUserId(int userId){
+        this.userId = userId;
+    }
+
+    public void setShiftId(int shiftId) {
+        this.shiftId = shiftId;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

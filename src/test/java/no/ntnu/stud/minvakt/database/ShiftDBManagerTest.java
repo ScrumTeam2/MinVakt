@@ -81,7 +81,7 @@ public class ShiftDBManagerTest {
     }
 
 
-    // int getShiftHours(int userId, Date startDate, Date endDate)
+    // int getShiftMinutes(int userId, Date startDate, Date endDate)
     @Test
     public void getNumberOfShiftsTest(){
         String stringDate1 = "2017-01-01";
