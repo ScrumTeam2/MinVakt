@@ -1,9 +1,6 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.shift.Shift;
-import no.ntnu.stud.minvakt.data.shift.ShiftUser;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -89,6 +86,12 @@ public class ShiftDBManagerTest {
     public void setValidAbsence(){
         assertTrue(shiftDB.setValidAbsence(1,4,true));
         assertTrue(shiftDB.setValidAbsence(1,4,false));
+    }
+
+    @Test
+    public void getAvailableShiftsTest(){
+        ArrayList<ShiftAvailable> resList = shiftDB.getAvailableShifts();
+        assertFalse(resList.isEmpty());
     }
 }
 
