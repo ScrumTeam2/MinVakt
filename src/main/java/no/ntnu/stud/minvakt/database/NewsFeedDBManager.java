@@ -12,7 +12,7 @@ import java.util.logging.Level;
  */
 public class NewsFeedDBManager extends DBManager{
 
-    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?)";
+    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?,?)";
     private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
@@ -42,6 +42,7 @@ public class NewsFeedDBManager extends DBManager{
                 prep.setInt(4, notification.getUserIdTo());
                 prep.setInt(5, notification.getShiftId());
                 prep.setInt(6, notification.getUserIdInvolving());
+                prep.setInt(7,notification.getStartTimeTimebank());
                 id = prep.executeUpdate();
                 if(id != 0){
                     prep = conn.prepareStatement(sqlGetLastID);

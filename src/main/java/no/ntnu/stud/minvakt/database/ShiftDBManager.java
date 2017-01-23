@@ -18,31 +18,32 @@ public class ShiftDBManager extends DBManager {
     }
 
     private final String sqlCreateNewShift = "INSERT INTO shift VALUES(DEFAULT,?,?,?,?,?);";
-    private final String sqlCreateNewShiftStaff = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
+    private final String sqlCreateNewShiftStaff = "INSERT INTO employee_shift VALUES(?,?,?,?,?,DEFAULT);";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
     private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence FROM employee_shift " +
             "NATURAL JOIN user WHERE shift_id = ?;";
     private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id = ?;";
-    private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?);";
-    private final String deleteEmployeeFromShift = "DELETE FROM employee_shift WHERE shift_id = ? and user_id = ?;";
-    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ?)" +
+    private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?,DEFAULT);";
+    private final String deleteEmployeeFromShift = "UPDATE employee_shift SET removed = 1 WHERE shift_id = ? and user_id = ?;";
+    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ? AND removed = 0)" +
             " AND date >= ? ORDER BY date ASC, time ASC;";
 
     private final String sqlGetNumberOfShifts = "SELECT COUNT(*) shift_id FROM employee_shift NATURAL JOIN shift WHERE user_id =? AND DATE BETWEEN ? AND ?";
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
     private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
-            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
-    private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ?";
+            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
+    private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ? AND removed = 0";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
     private final String sqlGetUserFromShift = "SELECT * FROM employee_shift WHERE shift_id = ? AND user_id = ?";
-    private final String sqlUpdateNewsFeedForeignKey = "UPDATE newsfeed SET shift_user_id = NULL WHERE user_id = ? AND shift_id = ?;";
+
     private final String sqlSetValidAbsence = "UPDATE employee_shift SET valid_absence = ? WHERE user_id = ? AND shift_id = ?;";
 
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
             "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
+    private final String sqlWasEmployeeOnShift = "UPDATE employee_shift SET removed = 0 WHERE user_id = ? AND shift_id = ?;";
 
     Connection conn;
     PreparedStatement prep;
@@ -189,14 +190,21 @@ public class ShiftDBManager extends DBManager {
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(addEmployeeToShift);
-                prep.setInt(1,shiftUser.getUserId());
+                prep = conn.prepareStatement(sqlWasEmployeeOnShift);
+                prep.setInt(1, shiftUser.getUserId());
                 prep.setInt(2, shiftId);
-                prep.setBoolean(3, shiftUser.isResponsibility());
-                prep.setBoolean(4, shiftUser.isValid_absence());
-                prep.setBoolean(5, false);
                 out = prep.executeUpdate() != 0;
+                if (!out){
+                    prep = conn.prepareStatement(addEmployeeToShift);
+                    prep.setInt(1, shiftUser.getUserId());
+                    prep.setInt(2, shiftId);
+                    prep.setBoolean(3,shiftUser.isResponsibility());
+                    prep.setBoolean(4,false);
+                    prep.setBoolean(5,false);
 
+
+                    out = prep.executeUpdate() != 0;
+                }
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
@@ -209,22 +217,15 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
-    public boolean deleteEmployeeFromShift(int userId, int shiftId, boolean fromNewsFeed){
+    public boolean deleteEmployeeFromShift(int userId, int shiftId){
         boolean out = false;
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlUpdateNewsFeedForeignKey);
-                prep.setInt(1,userId);
-                prep.setInt(2, shiftId);
+                prep = conn.prepareStatement(deleteEmployeeFromShift);
+                prep.setInt(1, shiftId);
+                prep.setInt(2, userId);
                 out = prep.executeUpdate() != 0;
-                if(out || !fromNewsFeed) {
-                    prep = conn.prepareStatement(deleteEmployeeFromShift);
-                    prep.setInt(1, shiftId);
-                    prep.setInt(2, userId);
-                    out = prep.executeUpdate() != 0;
-                }
-
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to delete shift with shift ID = " + shiftId + " and user ID = " + userId, e);
@@ -246,24 +247,11 @@ public class ShiftDBManager extends DBManager {
      * @return True if the replacement was successful
      */
     public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId){
-        boolean out = false;
-        if(setUp()){
-            try {
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlReplaceUser);
-                prep.setInt(1, newUserId);
-                prep.setInt(2, oldUserId);
-                prep.setInt(3, shiftId);
-                out = prep.executeUpdate() != 0;
-            }
-            catch (SQLException e){
-                log.log(Level.WARNING, "Not able to replace user on shift ID = " + shiftId + ", user ID " + oldUserId + " with " + newUserId , e);
-            }
-            finally {
-                finallyStatement(prep);
-            }
+        ShiftUser shiftUser = new ShiftUser(newUserId, null,null,false,false);
+        if(addEmployeeToShift(shiftUser, shiftId)){
+            return deleteEmployeeFromShift(oldUserId, shiftId);
         }
-        return out;
+        return false;
     }
 
     public ArrayList<ShiftUserBasic> getShiftWithUserId(int userId, Date date){
