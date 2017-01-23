@@ -30,6 +30,7 @@ public class UserDBManager extends DBManager {
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
     //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
+    private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? LIMIT 1;";
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -342,8 +343,8 @@ public class UserDBManager extends DBManager {
         try {
             prep = getConnection().prepareStatement(sqlCheckPhoneNumber);
             prep.setString(1, phoneNumber);
-            ResultSet result = prep.executeQuery();
-            return result.next();
+            res = prep.executeQuery();
+            return res.next();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Failed to check phone number", e);
         } finally {
@@ -367,8 +368,8 @@ public class UserDBManager extends DBManager {
         try {
             prep = getConnection().prepareStatement(sqlCheckEmail);
             prep.setString(1, email);
-            ResultSet result = prep.executeQuery();
-            return result.next();
+            res = prep.executeQuery();
+            return res.next();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Failed to check email", e);
         } finally {
@@ -484,6 +485,29 @@ public class UserDBManager extends DBManager {
             }
         }
         return userBasics;
+    }
+    public int getAdminId(){
+         int out = 0;
+         if(setUp()){
+             ResultSet res = null;
+             try {
+                 conn = getConnection();
+                 prep = conn.prepareStatement(sqlGetAdminId);
+                 prep.setInt(1, User.UserCategory.ADMIN.getValue());
+                 res = prep.executeQuery();
+                 if(res.next()) {
+                     out = res.getInt(1);
+                 }
+             }catch (SQLException sqle){
+                 log.log(Level.WARNING, "Issue with getting an admin ID");
+                 sqle.printStackTrace();
+
+             }
+             finally {
+                 finallyStatement(res, prep);
+             }
+         }
+         return out;
     }
     //If string contains @, it's an email
    /* if(username.contains("@")) {

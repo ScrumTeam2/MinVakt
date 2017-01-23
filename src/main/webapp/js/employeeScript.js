@@ -59,11 +59,11 @@ $(document).ready(function() {
             }
 
         }
-        setEventListeners();
         if (getUrlParameter("search")) {
             $search.val(getUrlParameter("search"));
             search(getUrlParameter("search"));
         }
+        setEventListeners();
     }
 
     function dropDownUser(user, element){
@@ -82,10 +82,10 @@ $(document).ready(function() {
                 + user.phoneNumber + "</p>" +
                 "<p class='more-info__text'>100% stilling</p>";
             //console.log(html);
-            userDataElement.append(html)
+            userDataElement.append(html);
         }
         else {
-            userDataElement.toggle();
+            userDataElement.slideToggle(200);
         }
 
     }
@@ -99,7 +99,7 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function (data) {
                     //console.log(data);
-                    dropDownUser(data, watchElement)
+                    dropDownUser(data, watchElement);
                 },
                 error: function (data) {
                     var calendarList = $(".list");
@@ -112,7 +112,8 @@ $(document).ready(function() {
     var $search = $('#search');
     $search.on('input keypress', function() {
         search($search.val());
-        window.history.replaceState('', '', window.location.href.split("?")[0] + "?search=" + $search.val());
+        setUrlParameter("search",$search.val());
+        setEventListeners();
     });
 
 
@@ -177,19 +178,3 @@ $(document).ready(function() {
     }
 
 });
-
-
-var getUrlParameter = function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
-        sURLVariables = sPageURL.split('&'),
-        sParameterName,
-        i;
-
-    for (i = 0; i < sURLVariables.length; i++) {
-        sParameterName = sURLVariables[i].split('=');
-
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1] === undefined ? true : decodeURI(sParameterName[1]);
-        }
-    }
-};
