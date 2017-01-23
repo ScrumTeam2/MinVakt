@@ -1,8 +1,9 @@
 package no.ntnu.stud.minvakt.controller.shiftplan;
 
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shiftplan.*;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
+import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
 import java.sql.Date;

@@ -1,18 +1,13 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftUser;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-import java.sql.Date;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
@@ -37,7 +32,7 @@ public class UserAdminServiceTest {
     @Test
     public void createUser() {
         logInUser();
-        User user = new User(-1, "Even","Dalen", "hash","salt","email","phnumber", User.UserCategory.HEALTH_WORKER, 1);
+        User user = new User(-1, "Even","Dalen", "hash","salt","even@mail.com","20012111", User.UserCategory.HEALTH_WORKER, 1);
         Response response = userAdminService.addUser(user);
         if (response.getStatus() == 200) {
             String rawJson = (String) response.getEntity();

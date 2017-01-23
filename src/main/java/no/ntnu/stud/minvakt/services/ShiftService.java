@@ -1,22 +1,20 @@
 package no.ntnu.stud.minvakt.services;
 
-import jersey.repackaged.com.google.common.collect.Lists;
-import no.ntnu.stud.minvakt.controller.shiftplan.ShiftPlanController;
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by evend on 1/10/2017.
@@ -98,7 +96,9 @@ public class ShiftService extends SecureService{
 
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
         if (statusOk) {
-            return Response.status(200).build();
+            Response res = Response.status(200).build();
+            System.out.println(res.getStatus());
+            return res;
         } else {
             return Response.status(400).entity("Unable to add employee").build();
         }
@@ -110,17 +110,31 @@ public class ShiftService extends SecureService{
     public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId,
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
-        if(findNewEmployee) {
-            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
+        if(!findNewEmployee) {
+            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId, false);
 
         }
         else {
-            statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
+          //  statusOk = ShiftChangeUtil.findNewUserToShift(shiftId, userId);
         }
         if (statusOk) {
             return Response.status(200).build();
         } else {
             return Response.status(400).entity("Unable to delete employee").build();
+        }
+    }
+
+    @POST
+    @Path("/{shiftId}/replaceuser")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response replaceEmployeeOnShift(@PathParam("shiftId") int shiftId, @FormParam("oldUserId") int oldUserId, @FormParam("newUserId") int newUserId) {
+        if(getSession() == null || !getSession().isAdmin()) return null;
+
+        boolean statusOk = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+        if (statusOk) {
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Unable to add employee").build();
         }
     }
 

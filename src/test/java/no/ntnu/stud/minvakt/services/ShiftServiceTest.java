@@ -3,11 +3,13 @@ package no.ntnu.stud.minvakt.services;
 /**
  * Created by evend on 1/10/2017.
  */
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.user.User;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
@@ -32,6 +34,32 @@ public class ShiftServiceTest {
     private void logInUser() {
         SessionService sessionService = new SessionService();
         sessionService.checkLogin(request, "email1", "password");
+    }
+
+    private void logInAdmin() {
+        SessionService sessionService = new SessionService();
+        sessionService.checkLogin(request, "admin", "password");
+    }
+
+    @Test
+    public void replaceEmployeeOnShift() {
+        final int shiftId = 2;
+        final int oldUserId = 1;
+        final int newUserId = 15;
+
+        logInAdmin();
+
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        shiftService.addEmployeeToShift(shiftUser, shiftId);
+
+        Response response = shiftService.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+        if(response.getStatus() == Response.Status.OK.getStatusCode()) {
+            shiftService.deleteEmployeeFromShift(newUserId, shiftId, false);
+        } else {
+            shiftService.deleteEmployeeFromShift(oldUserId, shiftId, false);
+        }
+
+        Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
@@ -61,9 +89,9 @@ public class ShiftServiceTest {
     public void addEmployeeToShift() {
         logInUser();
         ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, false);
-        Response statusOk = shiftService.addEmployeeToShift(shiftUser, 2);
+        Response statusOk = shiftService.addEmployeeToShift(shiftUser, 9);
         if (statusOk.getStatus() == 200) {
-            statusOk = shiftService.deleteEmployeeFromShift(1, 2,false);
+            statusOk = shiftService.deleteEmployeeFromShift(1, 9,false);
         }
         assertTrue(statusOk.getStatus() == 200);
     }

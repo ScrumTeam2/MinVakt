@@ -1,9 +1,9 @@
 package no.ntnu.stud.minvakt.data.shiftplan;
 
 import no.ntnu.stud.minvakt.controller.shiftplan.ShiftPlanComparator;
-import no.ntnu.stud.minvakt.data.Shift;
-import no.ntnu.stud.minvakt.data.ShiftUser;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.user.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;

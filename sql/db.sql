@@ -1,8 +1,12 @@
+-- KEEP ON START OF FILE
+SET FOREIGN_KEY_CHECKS = 0;
+
 DROP TABLE IF EXISTS overtime;
 DROP TABLE IF EXISTS newsfeed;
 DROP TABLE IF EXISTS employee_shift;
 DROP TABLE IF EXISTS availability;
 DROP TABLE IF EXISTS shift;
+DROP TABLE IF EXISTS employee;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS department;
 
@@ -76,6 +80,7 @@ CREATE TABLE newsfeed (
   date_time DATETIME,
   content VARCHAR(200),
   resolved BOOLEAN,
+  category INTEGER,
   user_id INTEGER,
   shift_id INTEGER,
   shift_user_id INTEGER,
@@ -544,7 +549,7 @@ INSERT INTO employee_shift VALUES(3, 63, false, false, false);
 INSERT INTO employee_shift VALUES(14, 63, false, false, false);
 INSERT INTO employee_shift VALUES(24, 63, true, false, false);
 
-                 
+
 -- AVAILABILITY
 -- (user_id, shift_id)
 INSERT INTO availability VALUES(10, 41);
@@ -553,9 +558,19 @@ INSERT INTO availability VALUES(17, 42);
 INSERT INTO availability VALUES(7, 42);
 INSERT INTO availability VALUES(3, 43);
 INSERT INTO availability VALUES(2, 43);
+INSERT INTO availability VALUES(4, 43);
+INSERT INTO availability VALUES(5, 43);
+INSERT INTO availability VALUES(7, 43);
+INSERT INTO availability VALUES(11, 43);
+INSERT INTO availability VALUES(13, 43);
+
+-- shift: 43, date: 2017-02-06, users: 2, 3, 4, 5, 7, 11, 13
 
 -- OVERTIME
 INSERT INTO overtime VALUES(5, 60, 960, 60, false);
 INSERT INTO overtime VALUES(3, 52, 960, 35, false);
 INSERT INTO overtime VALUES(4, 61, 840, -60, false);
 INSERT INTO overtime VALUES(4, 28, 780, -120, false);
+
+-- KEEP ON END OF FILE
+SET FOREIGN_KEY_CHECKS = 1;

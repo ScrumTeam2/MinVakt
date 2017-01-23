@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.controller.shiftplan;
 
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanShift;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanUser;
 
