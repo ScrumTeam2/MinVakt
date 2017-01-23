@@ -1,9 +1,8 @@
 package no.ntnu.stud.minvakt.database;
+import com.mysql.cj.api.mysqla.result.Resultset;
 import no.ntnu.stud.minvakt.data.Overtime;
 
-import javax.xml.transform.Result;
 import java.sql.*;
-import java.util.Arrays;
 import java.util.logging.Level;
 
 /**
@@ -12,9 +11,17 @@ import java.util.logging.Level;
 public class OvertimeDBManager extends DBManager{
 
 
-    private final String sqlSetOvertime = "INSERT INTO overtime VALUES(?,?,?,?);";
-    private final String sqlGetRowCount = "SELECT COUNT(*) FROM overtime WHERE user_id=? AND date BETWEEN ? AND ?;";
-    private final String sqlGetOvertime = "SELECT date, start_time, end_time FROM overtime WHERE user_id = ? AND date BETWEEN ? AND ?;";
+    private final String sqlSetOvertime = "INSERT INTO overtime VALUES(?,?,?,?,?)";
+    private final String sqlApproveOvertime = "UPDATE overtime SET approved=1 WHERE user_id = ? AND shift_id = ?";
+    private final String sqlDeleteOvertime = "DELETE FROM overtime WHERE user_id = ? AND shift_id = ? AND start_time = ?";
+
+    private final String sqlGetUnapprovedOvertime = "SELECT * FROM overtime WHERE approved = 0";
+    private final String sqlCountUnapproved = "SELECT COUNT(*) FROM overtime WHERE approved = 0";
+
+    private final String getSqlGetOvertimeByUserId = "SELECT * FROM overtime WHERE user_id =?";
+    private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
+    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
+
 
     Connection conn;
     PreparedStatement prep;
@@ -24,7 +31,7 @@ public class OvertimeDBManager extends DBManager{
     }
 
     // Registers overtime on a given user. Returns true or false
-    public boolean setOvertime(int userId, Date date, int startTime, int endTime){
+    public boolean setOvertime(int userId, int shiftId, int startTime, int minutes){
         int out = 0;
 
         if(setUp()){
@@ -33,18 +40,17 @@ public class OvertimeDBManager extends DBManager{
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlSetOvertime);
 
-                prep.setInt(1, userId);
-                prep.setDate(2, date);
+                prep.setInt(1,userId);
+                prep.setInt(2,shiftId);
                 prep.setInt(3, startTime);
-                prep.setInt(4, endTime);
+                prep.setInt(4, minutes);
+                prep.setBoolean(5, false);
 
                 out = prep.executeUpdate();
 
             } catch (SQLException sqlE){
-                System.err.println("Error register overtime on user with ID = " + userId + " on date: " + date);
-                sqlE.printStackTrace();
+                log.log(Level.WARNING,"Error register overtime on user with ID = " + userId, sqlE);
             } finally {
-                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -52,12 +58,55 @@ public class OvertimeDBManager extends DBManager{
         return out != 0;
     }
 
-    // Returns array with Overtime object on given userId. It contains hours and date from given start date til end date
-    public Overtime[] getOvertimeList(int userId, Date startDate, Date endDate){
+    public boolean deleteOvertime(int userId, int shiftId, int startTime){
+        int out = 0;
 
-        Overtime listObject = null;
-        int rowCount = getRowCount(userId, startDate, endDate);
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlDeleteOvertime);
+                prep.setInt(1, userId);
+                prep.setInt(2, shiftId);
+                prep.setInt(3,startTime);
 
+                out = prep.executeUpdate();
+            } catch(SQLException sqlE){
+                log.log(Level.WARNING, "Error deleting overtime for user with id = " + userId + " and shift id = " + shiftId, sqlE);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return out != 0;
+    }
+
+    // For admin to approve overtime, sets approved to true in DB for given user on given shift
+    public boolean approveOvertime(int userId, int shiftId){
+        int out = 0;
+
+        if(setUp()){
+            try {
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlApproveOvertime);
+                prep.setInt(1, userId);
+                prep.setInt(2, shiftId);
+
+                out = prep.executeUpdate();
+
+            } catch (SQLException sqlE) {
+                log.log(Level.WARNING, "Error approving overtime for user with id = " + userId + " on shift with id = " + shiftId, sqlE);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return out != 0;
+    }
+
+    // returns array with overtime for given user
+    public Overtime[] getOvertimeByUserId(int userId){
+        Overtime overtimeObj = null;
+        int rowCount = getRowCountUser(userId);
         Overtime[] timeList = new Overtime[rowCount];
 
         ResultSet res = null;
@@ -66,18 +115,21 @@ public class OvertimeDBManager extends DBManager{
             try{
                 startTransaction();
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetOvertime);
-                prep.setInt(1, userId);
-                prep.setDate(2, startDate);
-                prep.setDate(3, endDate);
+                prep = conn.prepareStatement(getSqlGetOvertimeByUserId);
+                prep.setInt(1,userId);
 
                 res = prep.executeQuery();
 
                 int index = 0;
                 while(res.next()){
 
-                    listObject = new Overtime(res.getDate("date"), res.getInt("start_time"), res.getInt("end_time"));
-                    timeList[index] = listObject;
+                    overtimeObj = new Overtime(
+                            res.getInt("user_id"),
+                            res.getInt("shift_id"),
+                            res.getInt("start_time"),
+                            res.getInt("minutes"),
+                            res.getBoolean("approved"));
+                    timeList[index] = overtimeObj;
 
                     index++;
                 }
@@ -92,45 +144,119 @@ public class OvertimeDBManager extends DBManager{
         return timeList;
     }
 
-    // Returns overtime for given user. Hours are returned from given start date until given number of days
-    public int getOvertimeHours(int userId, Date startDate, Date endDate){
-        int hours = 0;
+    // Returns array of Overtime objects with the overtimes not yet approved
+    public Overtime[] getUnapprovedOvertime(){
+        Overtime overtimeObj = null;
+        int rowCount = getRowCount();
+        Overtime[] timeList = new Overtime[rowCount];
 
-        Overtime[] list = getOvertimeList(userId, startDate, endDate);
-        for(int i = 0; i < list.length; i++){
-            if(list[i].getEndTime() > list[i].getStartTime()) {
-                hours += list[i].getEndTime() - list[i].getStartTime();
-            } else {
-                hours += (list[i].getEndTime() + 90) - list[i].getStartTime();
+        ResultSet res = null;
+
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUnapprovedOvertime);
+
+                res = prep.executeQuery();
+
+                int index = 0;
+                while(res.next()){
+
+                    overtimeObj = new Overtime(
+                            res.getInt("user_id"),
+                            res.getInt("shift_id"),
+                            res.getInt("start_time"),
+                            res.getInt("minutes"),
+                            res.getBoolean("approved"));
+                    timeList[index] = overtimeObj;
+
+                    index++;
+                }
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING, "Error returning unapproved overtime", sqlE);
+            } finally {
+                endTransaction();
+                finallyStatement(prep);
             }
         }
-        return hours;
+        return timeList;
     }
 
-    // Returns number of rows
-    public int getRowCount(int userId, Date startDate, Date endDate){
+
+    private int getRowCount() {
         int count = 0;
         ResultSet res = null;
         if(setUp()){
             try{
                 startTransaction();
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetRowCount);
-                prep.setInt(1,userId);
-                prep.setDate(2, startDate);
-                prep.setDate(3, endDate);
+                prep = conn.prepareStatement(sqlCountUnapproved);
 
                 res = prep.executeQuery();
                 while(res.next()){
                     count += res.getInt("COUNT(*)");
                 }
             } catch (SQLException sqlE){
-                log.log(Level.WARNING, "Error getting row count for user with ID = " + userId, sqlE);
+                log.log(Level.WARNING, "Error getting row count", sqlE);
             } finally{
-                endTransaction();
                 finallyStatement(prep);
             }
         }
         return count;
+    }
+    private int getRowCountUser(int userId) {
+        int count = 0;
+        ResultSet res = null;
+        if(setUp()){
+            try{
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlCountOvertimeUser);
+                prep.setInt(1, userId);
+
+                res = prep.executeQuery();
+
+                prep.setInt(1, userId);
+                while(res.next()){
+                    count += res.getInt("COUNT(*)");
+                }
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING, "Error getting row count", sqlE);
+            } finally{
+                finallyStatement(prep);
+            }
+        }
+        return count;
+    }
+
+    public int getMinutes(int userId, Date fromDate, Date toDate){
+        int minutes = 0;
+        ResultSet res = null;
+
+        if(setUp()){
+            try {
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetMinutes);
+
+                prep.setInt(1, userId);
+                prep.setDate(2, fromDate);
+                prep.setDate(3, toDate);
+
+                res = prep.executeQuery();
+                res.next();
+
+                minutes = res.getInt("minute_sum");
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+
+        return minutes;
     }
 }

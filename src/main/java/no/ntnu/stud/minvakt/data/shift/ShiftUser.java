@@ -1,6 +1,7 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.shift;
 
-import java.util.ArrayList;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 
 /**
  * Created by evend on 1/11/2017.
