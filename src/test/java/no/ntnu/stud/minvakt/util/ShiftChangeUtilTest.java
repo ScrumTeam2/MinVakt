@@ -37,7 +37,18 @@ public class ShiftChangeUtilTest{
         newsFeedDB.deleteNotification(feedId);
     }
     @Test
-    public void acceptShiftChange(){
+    public void acceptShiftChangeAdmin(){
+        Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
+
+        NewsFeedItem notification = new NewsFeedItem(-1, date,
+                "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
+        int feedId = newsFeedDB.createNotification(notification);
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, false));
+        newsFeedDB.deleteNotification(feedId);
+    }
+    @Test
+    public void acceptShiftChangeEmployee(){
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
 
         NewsFeedItem notification = new NewsFeedItem(-1, date,

@@ -28,7 +28,7 @@ public class ShiftChangeUtil {
     static OvertimeDBManager overtimeDB = new OvertimeDBManager();
 
     public boolean findNewUserToShift(int shiftId, int userId){
-        boolean statusOk = shiftDB.deleteEmployeeFromShift(userId,shiftId);
+       // boolean statusOk = shiftDB.deleteEmployeeFromShift(userId,shiftId, false);
         /*if(statusOk) {
             User deletedUser = userDB.getUserById(userId);
             Shift shift = shiftDB.getShift(shiftId);
@@ -43,7 +43,7 @@ public class ShiftChangeUtil {
                 sendNotificationToUsers(users)
             }
         }*/
-        return statusOk;
+        return false;
     }
     public static boolean updateNotification(int feedId, boolean shiftAccepted){
         NewsFeedItem newsFeedItem = newsDB.getNewsFeedItem(feedId);
@@ -122,7 +122,7 @@ public class ShiftChangeUtil {
             ShiftUser shiftUser = shiftDB.getUserFromShift(userTo.getId(), newsFeedItem.getShiftId());
 
             //Removes old user and adds new user to shift, if something goes wrong, returns false.
-            if (!shiftDB.deleteEmployeeFromShift(userFrom.getId(), newsFeedItem.getShiftId())||
+            if (!shiftDB.deleteEmployeeFromShift(userFrom.getId(), newsFeedItem.getShiftId(), true)||
                     !shiftDB.addEmployeeToShift(shiftUser, newsFeedItem.getShiftId())) return false;
 
             //Sets news feed items resolved

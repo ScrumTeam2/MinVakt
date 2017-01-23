@@ -59,6 +59,6 @@ public class NewsFeedDBManagerTest {
         int id = createTestData();
         ArrayList<NewsFeedItem> items = newsFeedDB.getNewsFeedAdmin();
         assertFalse(items.isEmpty());
-        deleteTestData(id);
+        //deleteTestData(id);
     }
 }

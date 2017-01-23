@@ -208,7 +208,7 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
-    public boolean deleteEmployeeFromShift(int userId, int shiftId){
+    public boolean deleteEmployeeFromShift(int userId, int shiftId, boolean fromNewsFeed){
         boolean out = false;
         if(setUp()){
             try {
@@ -217,7 +217,7 @@ public class ShiftDBManager extends DBManager {
                 prep.setInt(1,userId);
                 prep.setInt(2, shiftId);
                 out = prep.executeUpdate() != 0;
-                if(out) {
+                if(out || !fromNewsFeed) {
                     prep = conn.prepareStatement(deleteEmployeeFromShift);
                     prep.setInt(1, shiftId);
                     prep.setInt(2, userId);

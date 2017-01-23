@@ -38,9 +38,9 @@ public class ShiftDBManagerTest {
     @Test
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
-        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 2);
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 9);
         if(statusOk){
-            shiftDB.deleteEmployeeFromShift(1, 2);
+            shiftDB.deleteEmployeeFromShift(1, 9, false);
         }
         assertTrue(statusOk);
     }
