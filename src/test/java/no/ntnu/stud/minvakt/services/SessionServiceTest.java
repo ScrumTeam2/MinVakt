@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.util.ErrorInfo;
 import org.junit.Assert;
 import org.junit.Before;

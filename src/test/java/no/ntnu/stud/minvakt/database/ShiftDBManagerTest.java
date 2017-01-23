@@ -1,12 +1,15 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftUser;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.user.User;
+import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -36,6 +39,7 @@ public class ShiftDBManagerTest {
         }
         assertTrue(shiftId != 0);
     }
+
     @Test
     public void addEmployeeToShift(){
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
@@ -45,6 +49,33 @@ public class ShiftDBManagerTest {
         }
         assertTrue(statusOk);
     }
+
+    @Test
+    public void replaceEmployeeOnShift() {
+        final int shiftId = 2;
+        final int oldUserId = 1;
+        final int newUserId = 15;
+
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser newUser = null;
+
+        boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
+        if(statusOk){
+            boolean replaceOK = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
+            if(replaceOK) {
+                newUser = shiftDB.getUserFromShift(newUserId, shiftId);
+                shiftDB.deleteEmployeeFromShift(newUserId, shiftId);
+            } else {
+                shiftDB.deleteEmployeeFromShift(oldUserId, shiftId);
+            }
+
+            assertTrue(replaceOK);
+            Assert.assertNotNull(newUser);
+            Assert.assertEquals(newUserId, newUser.getUserId());
+        }
+        assertTrue(statusOk);
+    }
+
     //Skaper problemer med at det ikke er koblet noen skift i databasen
     @Test
     public void getShiftsFromUserId(){
@@ -54,15 +85,15 @@ public class ShiftDBManagerTest {
 
 
     // int getShiftHours(int userId, Date startDate, Date endDate)
-    @Ignore
-    public void getTotalHoursTest(){
+    @Test
+    public void getNumberOfShiftsTest(){
         String stringDate1 = "2017-01-01";
         String stringDate2 = "2017-01-31";
         java.sql.Date date1 = java.sql.Date.valueOf(stringDate1);
         java.sql.Date date2 = java.sql.Date.valueOf(stringDate2);
 
-        int res = shiftDB.getShiftHours(10, date1, date2);
-        int expRes = 3 * 32;
+        int res = shiftDB.getNumberOfShifts(10, date1, date2);
+        int expRes = 3;
         assertEquals(expRes, res);
     }
 

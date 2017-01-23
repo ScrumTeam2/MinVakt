@@ -1,14 +1,10 @@
 package no.ntnu.stud.minvakt.services;
 
 
-import no.ntnu.stud.minvakt.data.ShiftAvailable;
-import no.ntnu.stud.minvakt.data.User;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
-import no.ntnu.stud.minvakt.database.UserDBManager;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
