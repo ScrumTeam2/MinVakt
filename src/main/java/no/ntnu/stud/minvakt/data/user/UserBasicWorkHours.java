@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.user;
 
 import java.util.Comparator;
 
@@ -6,16 +6,16 @@ import java.util.Comparator;
  * Created by Marit on 17.01.2017.
  */
 public class UserBasicWorkHours extends UserBasic {
-    private int shiftHours;
+    private int shiftMinutes;
     private int overTime;
     private int totalWorkHours;
 
-    public int getShiftHours() {
-        return shiftHours;
+    public int getShiftMinutes() {
+        return shiftMinutes;
     }
 
-    public void setShiftHours(int shiftHours) {
-        this.shiftHours = shiftHours;
+    public void setShiftMinutes(int shiftMinutes) {
+        this.shiftMinutes = shiftMinutes;
     }
 
     public int getOverTime() {
@@ -35,12 +35,12 @@ public class UserBasicWorkHours extends UserBasic {
     }
 
     public void calculateTotalWorkHours() {
-        totalWorkHours = overTime + shiftHours;
+        totalWorkHours = overTime + shiftMinutes;
     }
 
-    public UserBasicWorkHours(int id, String firstName, String lastName, User.UserCategory category, int shiftHours, int overTime) {
+    public UserBasicWorkHours(int id, String firstName, String lastName, User.UserCategory category, int shiftMinutes, int overTime) {
         super(id, firstName, lastName, category);
-        this.shiftHours = shiftHours;
+        this.shiftMinutes = shiftMinutes;
         this.overTime = overTime;
     }
 
@@ -52,4 +52,14 @@ public class UserBasicWorkHours extends UserBasic {
             return a.getTotalWorkHours() - b.getTotalWorkHours();
         }
     };
+
+    @Override
+    public String toString() {
+        return "\nUserId: " + super.getId() +
+                ", UserBasicWorkHours{" +
+                "shiftMinutes=" + shiftMinutes +
+                ", overTime=" + overTime +
+                ", totalWorkHours=" + totalWorkHours +
+                "}";
+    }
 }

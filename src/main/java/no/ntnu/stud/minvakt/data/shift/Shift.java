@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.shift;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -41,13 +41,17 @@ public class Shift {
 
     }
 
-    public Shift(int id, int staffNumb, Date date, int type, int deptId, ArrayList<ShiftUser> shiftUsers) {
+    public Shift(int id, int staffNumb, Date date, ShiftType type, int deptId, ArrayList<ShiftUser> shiftUsers) {
         this.id = id;
         this.date = date;
         this.staffNumb = staffNumb;
-        this.type = ShiftType.valueOf(type);
+        this.type = type;
         this.shiftUsers = shiftUsers;
         this.deptId = deptId;
+    }
+
+    public Shift(int id, int staffNumb, Date date, int type, int deptId, ArrayList<ShiftUser> shiftUsers) {
+        this(id, staffNumb, date, ShiftType.valueOf(type), deptId, shiftUsers);
     }
 
     public int getId() {
@@ -70,6 +74,7 @@ public class Shift {
     public int getStaffNumb(){
         return staffNumb;
     }
+
     public ArrayList<ShiftUser> getShiftUsers(){
         return shiftUsers;
     }

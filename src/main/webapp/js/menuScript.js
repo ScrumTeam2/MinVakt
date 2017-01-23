@@ -28,7 +28,7 @@ $(document).ready(function() {
 
             // Ansatte
         } else if(String(this.id)=="item3") {
-            window.location = "user-e.html";
+            window.location = "/html/user-e.html";
 
         // Fravær
         } else if(String(this.id)=="item4") {

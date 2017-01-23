@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
-
+import no.ntnu.stud.minvakt.data.*;
 import no.ntnu.stud.minvakt.data.ShiftAvailable;
 import no.ntnu.stud.minvakt.data.User;
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
@@ -8,6 +8,8 @@ import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
+import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
