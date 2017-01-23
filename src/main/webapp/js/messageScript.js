@@ -46,6 +46,8 @@ function showEmpty(){
 }
 
 
+//employee feed
+
 //Requests for a new shift
 function showRequest(data){
     //console.log("Got requests for current user", data);
