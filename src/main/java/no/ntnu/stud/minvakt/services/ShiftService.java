@@ -109,7 +109,7 @@ public class ShiftService extends SecureService{
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
         if(!findNewEmployee) {
-            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId, false);
+            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
 
         }
         else {
@@ -181,7 +181,7 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
         //if(getSession().isAdmin()){
-            return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
+        return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
     @POST

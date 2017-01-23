@@ -18,6 +18,9 @@ public class NewsFeedItem {
     private int shiftId;
     private NewsFeedCategory category;
 
+    //Default value -1, if
+    private int startTimeTimebank;
+
     public enum NewsFeedCategory {
         SHIFT_CHANGE_EMPLOYEE, SHIFT_CHANGE_ADMIN, VALID_ABSENCE, TIMEBANK, NOTIFICATION;
 
@@ -44,7 +47,6 @@ public class NewsFeedItem {
         }
 
     }
-
     public NewsFeedItem(int feedId, Timestamp dateTime, String content, int userIdTo, int userIdInvolving, int shiftId,
                         NewsFeedCategory category) {
         this.feedId = feedId;
@@ -54,9 +56,29 @@ public class NewsFeedItem {
         this.userIdInvolving = userIdInvolving;
         this.shiftId = shiftId;
         this.category = category;
+        this.startTimeTimebank = -1;
+    }
+    public NewsFeedItem(int feedId, Timestamp dateTime, String content, int userIdTo, int userIdInvolving, int shiftId,
+                        NewsFeedCategory category, int startTimeTimebank) {
+        this.feedId = feedId;
+        this.dateTime = dateTime;
+        this.content = content;
+        this.userIdTo = userIdTo;
+        this.userIdInvolving = userIdInvolving;
+        this.shiftId = shiftId;
+        this.category = category;
+        this.startTimeTimebank = startTimeTimebank;
     }
 
     public NewsFeedItem(){}
+
+    public int getStartTimeTimebank() {
+        return startTimeTimebank;
+    }
+
+    public void setStartTimeTimebank(int startTimeTimebank) {
+        this.startTimeTimebank = startTimeTimebank;
+    }
 
     public NewsFeedCategory getCategory() {
         return category;

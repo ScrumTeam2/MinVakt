@@ -44,7 +44,7 @@ public class ShiftDBManagerTest {
         ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 9);
         if(statusOk){
-            shiftDB.deleteEmployeeFromShift(1, 9, false);
+            shiftDB.deleteEmployeeFromShift(1, 9);
         }
         assertTrue(statusOk);
     }
@@ -63,9 +63,9 @@ public class ShiftDBManagerTest {
             boolean replaceOK = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
             if(replaceOK) {
                 newUser = shiftDB.getUserFromShift(newUserId, shiftId);
-                shiftDB.deleteEmployeeFromShift(newUserId, shiftId, false);
+                shiftDB.deleteEmployeeFromShift(newUserId, shiftId);
             } else {
-                shiftDB.deleteEmployeeFromShift(oldUserId, shiftId, false);
+                shiftDB.deleteEmployeeFromShift(oldUserId, shiftId);
             }
 
             assertTrue(replaceOK);
