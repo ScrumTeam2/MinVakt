@@ -20,7 +20,7 @@ public class OvertimeDBManager extends DBManager{
 
     private final String getSqlGetOvertimeByUserId = "SELECT * FROM overtime WHERE user_id =?";
     private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
-    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date AND shift.approved = TRUE BETWEEN ? AND ?";
+    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
 
 
     Connection conn;
