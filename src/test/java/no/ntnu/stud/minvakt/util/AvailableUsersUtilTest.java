@@ -16,13 +16,13 @@ public class AvailableUsersUtilTest {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Test
-    public void sortAvailableEmployeesIgnoreAvailability() throws Exception {
-        AvailableUsersUtil availableUsersUtil = new AvailableUsersUtil();
-        LocalDate localDate = LocalDate.parse("2027-01-01", formatter);
-        ArrayList<UserBasicWorkHours> sortedUsers = availableUsersUtil.sortAvailableEmployeesIgnoreAvailability(localDate, 5);
-        Assert.assertEquals(5, sortedUsers.size());
-    }
+//    @Test
+//    public void sortAvailableEmployeesIgnoreAvailability() throws Exception {
+//        AvailableUsersUtil availableUsersUtil = new AvailableUsersUtil();
+//        LocalDate localDate = LocalDate.parse("2027-01-01", formatter);
+//        ArrayList<UserBasicWorkHours> sortedUsers = availableUsersUtil.sortAvailableEmployeesIgnoreAvailability(localDate, 5);
+//        Assert.assertEquals(5, sortedUsers.size());
+//    }
 
     @Test
     public void sortAvailableEmployees() throws Exception {
