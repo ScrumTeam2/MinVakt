@@ -107,4 +107,19 @@ public class ShiftPlanController {
            }
        }
     }
+
+    public ArrayList<Integer> getShiftIds() {
+       ArrayList<Integer> ids = new ArrayList<>();
+
+        int i = 0;
+        for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+            for(ShiftPlanDay day : week.getDays()) {
+                for(ShiftPlanShift shift : day.getShifts()) {
+                    ids.add(shift.getShift().getId());
+                }
+            }
+        }
+
+        return ids;
+    }
 }
