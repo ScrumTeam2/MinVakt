@@ -85,6 +85,7 @@ public abstract class DBManager{
         }
         closeConnection();
     }
+
     protected void finallyStatement(PreparedStatement prep) {
         try {
             if (!connection.getAutoCommit()) {

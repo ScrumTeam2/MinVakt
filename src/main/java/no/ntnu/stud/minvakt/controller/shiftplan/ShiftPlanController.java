@@ -98,14 +98,23 @@ public class ShiftPlanController {
      * Adds all the generated shifts into the database, and updates their IDs
      */
     public void insertShiftsIntoDatabase() {
-       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
-           for(ShiftPlanDay day : week.getDays()) {
-               for(ShiftPlanShift shift : day.getShifts()) {
-                   int shiftId = shiftDBManager.createNewShift(shift.getShift());
-                   shift.getShift().setId(shiftId);
-               }
-           }
-       }
+//       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+//           for(ShiftPlanDay day : week.getDays()) {
+//               for(ShiftPlanShift shift : day.getShifts()) {
+//                   int shiftId = shiftDBManager.createNewShift(shift.getShift());
+//                   shift.getShift().setId(shiftId);
+//               }
+//           }
+//       }
+        ArrayList<Shift> shifts = new ArrayList<>();
+        for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+            for(ShiftPlanDay day : week.getDays()) {
+                for(ShiftPlanShift shift : day.getShifts()) {
+                    shifts.add(shift.getShift());
+                }
+            }
+        }
+        shiftDBManager.bulkInsertShifts(shifts);
     }
 
     public ArrayList<Integer> getShiftIds() {

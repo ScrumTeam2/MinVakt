@@ -7,6 +7,7 @@ import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -111,6 +112,60 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return out;
+    }
+
+    /**
+     * Same as createNewShift, just optimized for multiple shifts
+     * @param shifts An array containing the shifts to create
+     * @return True if all shifts were created
+     */
+    public boolean bulkInsertShifts(List<Shift> shifts) {
+        if (!setUp()) {
+            return false;
+        }
+        try {
+            startTransaction();
+            conn = getConnection();
+            prep = conn.prepareStatement(sqlCreateNewShift, PreparedStatement.RETURN_GENERATED_KEYS);
+
+            for (Shift shift : shifts) {
+                prep.setInt(1, shift.getStaffNumb());
+                prep.setDate(2, shift.getDate());
+                prep.setInt(3, shift.getType().getValue());
+                prep.setBoolean(4, shift.isApproved());
+                prep.setInt(5, shift.getDeptId());
+                prep.addBatch();
+            }
+            int[] result = prep.executeBatch();
+            ResultSet generatedKeys = prep.getGeneratedKeys();
+            int i = 0;
+            while (generatedKeys.next()) {
+                Shift shift = shifts.get(i++);
+                shift.setId(generatedKeys.getInt(1));
+
+                prep = conn.prepareStatement(sqlCreateNewShiftStaff);
+
+                ArrayList<ShiftUser> shiftUsers = shift.getShiftUsers();
+                for (ShiftUser shiftUser : shiftUsers) {
+                    prep.setInt(1, shiftUser.getUserId());
+                    prep.setInt(2, shift.getId());
+                    prep.setBoolean(3, shiftUser.isResponsibility());
+                    prep.setBoolean(4, shiftUser.isValid_absence());
+                    prep.setBoolean(5, false);
+                    prep.addBatch();
+                }
+                log.log(Level.INFO, "Created new shift with ID " + shift.getId());
+            }
+            prep.executeBatch();
+            return true;
+
+        } catch (SQLException e) {
+            rollbackStatement();
+            log.log(Level.WARNING, "Issue with bulk creating new shifts, data rolled back", e);
+        } finally {
+            finallyStatement(prep);
+        }
+        return false;
     }
 
     //Deletes a shift using the shift ID. Meant mainly for cleaning up database when running tests.
@@ -604,7 +659,7 @@ public class ShiftDBManager extends DBManager {
 
         try {
             conn = getConnection();
-            conn.setAutoCommit(false);
+            startTransaction();
             prep = conn.prepareStatement("UPDATE shift SET approved = TRUE WHERE shift_id = ?");
             for(Integer id : shiftIds) {
                 prep.setInt(1, id);
@@ -618,6 +673,7 @@ public class ShiftDBManager extends DBManager {
             }
             return true;
         } catch (SQLException e){
+            rollbackStatement();
             log.log(Level.WARNING, "Issue approving shifts", e);
         }
         finally {
