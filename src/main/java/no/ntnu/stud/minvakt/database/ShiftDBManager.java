@@ -51,6 +51,8 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
             "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
     private final String sqlWasEmployeeOnShift = "UPDATE employee_shift SET removed = 0 WHERE user_id = ? AND shift_id = ?;";
+    private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work" +
+            " FROM user WHERE user_id IN(SELECT user_id FROM employee_shift WHERE shift_id = ?);";
 
     Connection conn;
     PreparedStatement prep;
@@ -562,5 +564,36 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return result != 0;
+    }
+    public ArrayList<User> getUsersFromShift(int shiftId){
+        ArrayList<User> out = new ArrayList<>();
+        if(setUp()){
+            ResultSet res = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUsersFromShift);
+                prep.setInt(1,shiftId);
+                res = prep.executeQuery();
+                while(res.next()){
+                    out.add(new User(
+                            res.getInt("user_id"),
+                            res.getString("first_name"),
+                            res.getString("last_name"),
+                            null,null,
+                            res.getString("email"),
+                            res.getString("phonenumber"),
+                            User.UserCategory.valueOf(res.getInt("category")),
+                            res.getFloat("percentage_work")
+                    ));
+                }
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Issue getting users from shift with id = "+shiftId,sqle);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return out;
     }
 }

@@ -133,5 +133,9 @@ public class ShiftDBManagerTest {
         ArrayList<ShiftAvailable> resList = shiftDB.getAvailableShifts();
         assertFalse(resList.isEmpty());
     }
+    @Test
+    public void getUsersFromShift(){
+        assertFalse(shiftDB.getUsersFromShift(1).isEmpty());
+    }
 }
 

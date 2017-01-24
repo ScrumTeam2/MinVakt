@@ -574,5 +574,14 @@ INSERT INTO overtime VALUES(3, 52, 960, 35, false);
 INSERT INTO overtime VALUES(4, 61, 840, -60, false);
 INSERT INTO overtime VALUES(4, 28, 780, -120, false);
 
+-- newsfeed
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36',     'Overtid', false, 3, 26, 52, 3, 960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Avspasering', false, 3, 26, 28, 4, 780);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Avspasering', false, 3, 26, 61, 4, 840);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36',     'Overtid', false, 3, 26, 60, 5, 960);
+
+
+
+
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;
