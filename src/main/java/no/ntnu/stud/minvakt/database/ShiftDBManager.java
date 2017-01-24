@@ -25,7 +25,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
     private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence FROM employee_shift " +
-            "NATURAL JOIN user WHERE shift_id = ?;";
+            "NATURAL JOIN user WHERE shift_id = ? AND removed = 0;";
     private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id = ?;";
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?,DEFAULT);";
     private final String deleteEmployeeFromShift = "UPDATE employee_shift SET removed = 1 WHERE shift_id = ? and user_id = ?;";
