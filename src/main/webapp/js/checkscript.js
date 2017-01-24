@@ -143,7 +143,8 @@ var adminlinks = [
     "/html/calendar-a.html",
     "/html/user-shifts.html",
     "/html/index.html",
-    "/html/change-employee.html"
+    "/html/change-employee.html",
+    "/html/change-password.html"
 ];
 
 var employeelinks = [
@@ -155,7 +156,8 @@ var employeelinks = [
     "/html/login.html",
     "/html/user-shifts.html",
     "/html/resetpassword.html",
-    "/html/index.html"
+    "/html/index.html",
+    "/html/change-password.html"
 ];
 
 function adminAccess(){
