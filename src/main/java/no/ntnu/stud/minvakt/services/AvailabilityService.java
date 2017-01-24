@@ -1,7 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
 
-import no.ntnu.stud.minvakt.controller.email.Mail;
 import no.ntnu.stud.minvakt.data.*;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
@@ -22,8 +21,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static no.ntnu.stud.minvakt.controller.email.Mail.*;
 
 @Path("/availability")
 public class AvailabilityService extends SecureService {
