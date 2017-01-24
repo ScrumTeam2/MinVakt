@@ -1,22 +1,20 @@
 package no.ntnu.stud.minvakt.services;
 
-import jersey.repackaged.com.google.common.collect.Lists;
 import no.ntnu.stud.minvakt.controller.shiftplan.ShiftPlanController;
 import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlan;
-import no.ntnu.stud.minvakt.util.ErrorInfo;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
+import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
+import no.ntnu.stud.minvakt.util.rest.IntArrayWrapper;
 import org.json.JSONArray;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Created by Audun on 20.01.2017.
@@ -25,6 +23,7 @@ import java.util.List;
  */
 @Path("shiftplan")
 public class ShiftPlanService extends SecureService {
+    private ShiftDBManager shiftDBManager = new ShiftDBManager();
 
     public ShiftPlanService(@Context HttpServletRequest request) {
         super(request);
@@ -53,4 +52,17 @@ public class ShiftPlanService extends SecureService {
         }
         return Response.ok(array.toString()).build();
     }
+
+    @Path("/approve")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response approveShiftPlan(IntArrayWrapper container) {
+        if(shiftDBManager.approveShifts(container.getContent())) {
+            return Response.ok().build();
+        } else {
+            log.log(Level.WARNING, "Could not approve shifts");
+            return Response.serverError().build();
+        }
+    }
+
 }

@@ -58,7 +58,7 @@ public class ShiftPlanController {
                 for (int k = 0; k < 3; k++) {
                     ShiftPlanShift templateShift = templateWeek.getDays()[j].getShifts()[k];
                     ShiftPlanShift shift = new ShiftPlanShift();
-                    Shift generatedShift = new Shift(-1, templateShift.getShift().getStaffNumb(), calculateDate(i, j), k, templateShift.getShift().getDeptId(), new ArrayList<>());
+                    Shift generatedShift = new Shift(-1, templateShift.getShift().getStaffNumb(), calculateDate(i, j), k, templateShift.getShift().getDeptId(), new ArrayList<>(), false);
                     shift.setShift(generatedShift);
                     day.getShifts()[k] = shift;
                 }
