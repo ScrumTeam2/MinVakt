@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.data.shift.Shift;
@@ -18,6 +19,11 @@ public class AvailabilityDBManager extends DBManager{
     private final String sqlGetAvailabilityForUser = "SELECT * FROM availability WHERE user_id = ?";
     private final String sqlGetAvailableShiftsForDate = "SELECT *, COUNT(employee_shift.shift_id) AS current_staff_numb FROM shift JOIN employee_shift ON (employee_shift.shift_id = shift.shift_id) JOIN department ON (shift.dept_id = department.dept_id) WHERE valid_absence=0 AND shift_change = 0 AND date =? AND approved = TRUE GROUP BY date, time, shift.dept_id";
     private final String sqlGetAvailabilityUserBasic = "SELECT user_id, first_name, last_name, category FROM availability NATURAL JOIN user WHERE shift_id=?";
+    private final String sqlGetShiftAvailableForDate = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb, " +
+            "dept_name FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) " +
+            " JOIN department ON (shift.dept_id = department.dept_id) WHERE date >= ? " +
+            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 GROUP BY shift.shift_id,shift.dept_id ORDER BY date ASC, time ASC;";
+    private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ? AND removed = 0";
 
     Connection conn;
     PreparedStatement prep;
@@ -193,7 +199,58 @@ public class AvailabilityDBManager extends DBManager{
         return userList;
     }
 
+    public ArrayList<ShiftAvailable> getShiftsForDate(int daysForward, int userId, Date date){
+        ArrayList<ShiftAvailable> out = new ArrayList<>();
+        if (setUp()){
+            ResultSet res = null;
+            ResultSet res2 = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetShiftAvailableForDate);
+                prep.setDate(1, date);
+                prep.setDate(2, date);
+                prep.setInt(3, daysForward);
+                startTransaction();
+                res = prep.executeQuery();
+                boolean isInShift = false;
+                while(res.next()){
+                    isInShift = false;
+                    int shiftId = res.getInt("shift_id");
+                    prep = conn.prepareStatement(sqlGetShiftsIsUser);
+                    prep.setInt(1,userId);
+                    prep.setInt(2, shiftId);
+                    res2 = prep.executeQuery();
+                    if(res2.next()){
+                        isInShift = true;
+                    }
+                    boolean isAvailable = res.getInt("staff_number") != res.getInt("current_staff_numb");
+
+                    ShiftAvailable obj = new ShiftAvailable(
+                            shiftId, res.getDate("date"),
+                            Shift.ShiftType.valueOf(res.getInt("time")),
+                            res.getString("dept_name"),
+                            isAvailable,
+                            isInShift
+                    );
+                    out.add(obj);
+
+                }
+
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Error getting shifts with connected to availability and user", sqle);
+                sqle.printStackTrace();
+            }
+            finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return out;
+    }
+
     // Find all available shifts for a specific date
+    @Deprecated
     public ArrayList<ShiftAvailable> getAvailabilityForDate(String day){
         ArrayList<ShiftAvailable> out = new ArrayList<>();
         ResultSet res = null;
@@ -211,7 +268,7 @@ public class AvailabilityDBManager extends DBManager{
                                 res.getInt("shift_id"),
                                 res.getDate("date"),
                                 Shift.ShiftType.valueOf(res.getInt("time")),
-                                res.getString("dept_name")
+                                res.getString("dept_name"),false,false
                             )
                     );
                 }

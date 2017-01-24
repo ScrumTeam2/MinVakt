@@ -137,5 +137,11 @@ public class ShiftDBManagerTest {
     public void getUsersFromShift(){
         assertFalse(shiftDB.getUsersFromShift(1).isEmpty());
     }
+    @Test
+    public void setResponsibleUser(){
+        assertTrue(shiftDB.setResponsibleUser(1,1,true));
+        assertTrue(shiftDB.setResponsibleUser(1,1,false));
+
+    }
 }
 

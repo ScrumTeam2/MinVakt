@@ -388,7 +388,6 @@ public class UserDBManager extends DBManager {
 
     public int changePasswordUserId(String user_id, String prev_password, String new_password) {
         int change = -1;
-        boolean oldPassCorrect = false;
         if (setUp()) {
             try {
                 startTransaction();
@@ -397,9 +396,9 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(prev_password, res.getString("hash"), res.getString("salt"))) {
-                        String[] passInfoNew = en.passEncoding(prev_password);
-                        String hashNew = passInfoNew[0];
-                        String saltNew = passInfoNew[1];
+                        String[] passInfoNew = en.passEncoding(new_password);
+                        String saltNew = passInfoNew[0];
+                        String hashNew = passInfoNew[1];
                         prep = getConnection().prepareStatement(sqlChangePass);
                         prep.setString(1, hashNew);
                         prep.setString(2, saltNew);
@@ -516,5 +515,6 @@ public class UserDBManager extends DBManager {
      } else {
      checkLogin(username, password); //Phone
      }*/
+
 
 }
