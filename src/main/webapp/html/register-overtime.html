@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Overtid</title>
+    <title>MinVakt | Timebank</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 
@@ -42,28 +42,22 @@
         <div class="container-header">
             <div>
                 <!--<i class="material-icons">chevron_left</i>-->
-                <h2>Registrer overtid</h2>
+                <h2>Registrer timer</h2>
             </div>
         </div>
 
-
-        <!-- Registrerer overtid
-        // Tar inn user_id, shift_id, start_time, minutes
-        // checkbox fravær/overtid
-        // velg tid - rullegardin?
-        -->
         <div class="radio-group">
-            <input type="radio" name="overtime-type" id="overtime" value="overtime" checked>
-            <label for="overtime">Overtid</label>
-            <input type="radio" name="overtime-type" id="absence" value="absence">
-            <label for="absence">Fravær</label>
+            <input type="radio" name="overtime-type" id="overtime-type" value="overtime" checked>
+            <label for="overtime-type">Overtid</label>
+            <input type="radio" name="overtime-type" id="absence-type" value="absence">
+            <label for="absence-type">Fravær</label>
         </div>
         <form class="register-form" method="POST">
 
 
-            <input type="date" name="date" placeholder="Dato" />
-            <input type="time" name="time" />
-            <input name="minutes" placeholder="Minutter"/>
+            <input type="date" name="date" id="date" placeholder="Dato" />
+            <input type="time" name="time" id="time" placeholder="Tid"/>
+            <input name="minutes" id="minutes" placeholder="Minutter"/>
             <button type="submit" id="userBtn">Send inn</button>
         </form>
 
@@ -75,10 +69,9 @@
                 <a href="#" id="userViewBtn">Se bruker</a>
             </div>
         </div>
-
-
-
     </div>
+
+    <script src="../js/overtimeScript.js"></script>
 
 </body>
 </html>
