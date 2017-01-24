@@ -34,7 +34,13 @@
 </aside>
 
 <div class="container">
-    <div class="list menuItem" id="accept_change">
+    <div class="container-header">
+        <div>
+            <!--<i class="material-icons">chevron_left</i>-->
+            <h2>Godkjenninger</h2>
+        </div>
+    </div>
+    <div class="list menuItem">
         <div class="container-title cursor-point" id="shiftItems">
             <div>
                 <i class="symbol right-arrow-circle rotate90">
@@ -44,21 +50,23 @@
                 <h3>Vaktbytte</h3>
             </div>
         </div>
+        <div class="feed-messages" id="accept_change"></div>
     </div>
 
-    <div class="list menuItems" id="accept_absence">
+    <div class="list menuItem">
         <div class="container-title cursor-point">
             <div>
                 <i class="symbol right-arrow-circle rotate90">
                     <i class="material-icons">panorama_fish_eye</i>
                     <i class="material-icons">chevron_right</i>
                 </i>
-                <h3>Sykdom</h3>
+                <h3>Fravær</h3>
             </div>
         </div>
+        <div class="feed-messages" id="accept_absence"></div>
     </div>
 
-    <div class="list menuItems" id="accept_timebank">
+    <div class="list menuItem">
         <div class="container-title cursor-point">
             <div>
                 <i class="symbol right-arrow-circle rotate90">
@@ -68,8 +76,31 @@
                 <h3>Timebank</h3>
             </div>
         </div>
+        <div class="feed-messages" id="accept_timebank"></div>
+    </div>
+
+    <div class="list menuItem">
+        <div class="container-title cursor-point">
+            <div>
+                <i class="symbol right-arrow-circle rotate90">
+                    <i class="material-icons">panorama_fish_eye</i>
+                    <i class="material-icons">chevron_right</i>
+                </i>
+                <h3>Notifikasjoner</h3>
+            </div>
+        </div>
+        <div class="feed-messages" id="show_notification"></div>
+    </div>
+
+    <div id="feed-popup" class="popup">
+        <div class="popup-content" id="content"></div>
+        <div class="links">
+            <a href="#" id="acceptBtn">Ja</a>
+            <a href="#" id="denyBtn">Nei</a>
+        </div>
     </div>
 </div>
+
 <script src="../js/checkscript.js"></script>
 <script src="../js/feedscript.js"></script>
 </body>

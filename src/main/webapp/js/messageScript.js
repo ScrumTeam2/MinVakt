@@ -3,115 +3,188 @@
  */
 
 $(document).ready(function(){
+    loadMessages();
+});
+
+function loadMessages(){
     $.ajax({
         url: "/rest/newsfeed",
         type: 'GET',
         success: showMessages,
-        error: showEmpty
+        error: function(e) {
+            console.error("Load feed", e);
+        }
     });
-});
+}
 
+// Toggle messages
 $('.container-title').click(function() {
     var $this = $(this);
-    $this.siblings('.watch').toggle('1000');
+    $this.siblings('.feed-messages').toggle('1000');
     $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
 });
 
+var $this, feedId, shiftId, categoryPop;
 
+// display messages sorted by category
 function showMessages(data){
-    console.log("Ok e");
-    //showChangeover();
-    //showTimebank();
-    //showRequest();
+    var $shifts = $('#requests');
+    var $notifications = $('#notifications');
+
+    $shifts.html("");
+    $notifications.html("");
+
+    var shift = 0;
+    var notification = 0;
+    for(var i in data){
+        switch(data[i].category){
+            case "SHIFT_CHANGE_EMPLOYEE":
+                acceptShift(data[i]);
+                shift++;
+                break;
+            case "NOTIFICATION":
+                showNotification(data[i]);
+                notification++;
+                break;
+            default:
+                console.log("Category not known", data[i].category);
+        }
+    }
+
+    //display category as empty if no messages
+    var empty = `<div class="watch">
+                <div class="watch-info">
+                    <p class="lead greyed-out">Ingen meldinger</p>
+                </div>
+            </div>`;
+
+    if(shift === 0){
+        $shifts.html(empty);
+    }
+    if(notification === 0){
+        $notifications.html(empty);
+    }
 }
 
+//open popup
+function openPopup(e){
+    e.preventDefault();
+    $this = $(e.currentTarget);
+    feedId = $this.children().first().data("feed");
+    shiftId = $this.children().first().data("shift");
+    categoryPop = $this.children().first().data("cat");
+    var content = $this.children().first().children().first().children().first().html();
+    var $popup = $('#content');
+    var $showPop = $('#feed-popup');
 
-$('#open-popup').click(function(){
-    var $popup = $('#accept-pop');
+    switch(categoryPop){
+        case "SHIFT_CHANGE_EMPLOYEE":
+            $popup.html(
+                `<h3>Vil du ta denne vakten?</h3>
+                <p>${content}</p>`
+            );
+            $showPop.show();
+            break;
+        case "NOTIFICATION":
+            // removes directly
+            setResolved(feedId);
+            break;
+        default:
+            console.log("Category not known", categoryPop);
+    }
+}
 
-    var time = "tid";
-    var department = "avdeling";
-
-    $popup.html(
-        `<h3>Godkjenne vakt?</h3>
-         <p>Tid: ${time}</p>
-         <p>Avdeling: ${department}</p>
-         <div class="links">
-            <a href="#" id="userCloseBtn">Ja</a>
-            <a href="#" id="userViewBtn">Nei</a>
-         </div>`
-    );
+//no button
+var $deny = $('#denyBtn');
+$deny.on("click", function(e, feedId){
+    e.preventDefault();
+    setUnResolved(feedId);
+    closePopup(e, feedId);
 });
 
-function showEmpty(){
-    console.log("no messages");
+//yes button
+var $accept = $('#acceptBtn');
+$accept.on("click", function(e){
+    e.preventDefault();
+    setResolved(feedId);
+    closePopup(e, feedId);
+});
+
+//closes popup after pressing yes or no
+function closePopup(e, feedId){
+    e.preventDefault();
+    $('#feed-popup').hide();
+}
+
+// set boolean to true
+function setResolved(feedId){
+    var resolvedTo = true;
+    resolveTask(feedId, resolvedTo);
+}
+
+// set boolean to false
+function setUnResolved(feedId){
+    var resolvedTo = false;
+    resolveTask(feedId, resolvedTo);
+}
+
+// post resolved/unresolved
+function resolveTask(feedId, resolvedTo){
+    $.ajax({
+        url: "/rest/newsfeed/" + feedId,
+        type: 'POST',
+        data: {
+            accepted: resolvedTo
+        },
+        success: function(){
+            console.log("ok post", feedId);
+            loadMessages();
+        },
+        error: function(){
+            console.log("ikke ok post", feedId);
+        }
+    });
 }
 
 
-//employee feed
-
-//Requests for a new shift
-function showRequest(data){
-    //console.log("Got requests for current user", data);
-
+// add request for shift messages
+function acceptShift(data){
     var $requests = $('#requests');
-    var name = "Navn";
-    var time = "Tid";
-    var department = "Avdeling";
-
-    for (var request in data.stuff) {
-        $requests.append(
-            `<div class="watch" id="open-popup">
+    var content = data.content;
+    var html=
+        `<a href="#" id="open-popup">
+            <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
                 <div class="watch-info">
-                    <p class="lead">${name}</p>
-                    <p class="sub">${time}</p>
-                    <p class="sub">${department}</p>
+                    <p class="lead">${content}</p>
                 </div>
                 <i class="symbol right-arrow">
                     <i class="material-icons">chevron_right</i>
                 </i>
-            </div>`
-        );
-    }
+            </div>
+        </a>`;
+    var $html = $(html);
+    $requests.append($html);
+    $html.on("click", function(e){
+        openPopup(e);
+    });
 }
 
-//Solved/unsolved changeover
-function showChangeover(data){
-    console.log("Got changeover for current user", data);
-
-    var $changeovers = $('#changeovers');
-    var status = "Godkjent/ikke godkjent";
-    var time = "Tid";
-
-    for (var changeover in data.stuff) {
-        $changeovers.append(
-            `<div class="watch" id="remove">
+// add notification messages
+function showNotification(data){
+    var $notifications = $('#notifications');
+    var content = data.content;
+    var html=
+        `<a href="#" id="open-popup">
+            <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
                 <div class="watch-info">
-                    <p class="lead">${status}</p>
-                    <p class="sub">${time}</p>
+                    <p class="lead">${content}</p>
                 </div>
                 <i class="material-icons">close</i>
-            </div>`
-        );
-    }
-}
-
-//Accepted timebank
-function showTimebank(data){
-    console.log("Got timebank for current user", data);
-
-    var $timebanks = $('#timebanks');
-    var period = "Periode";
-
-    for (var timebank in data.stuff) {
-        $timebanks.append(
-            `<div class="watch" id="remove">
-                <div class="watch-info">
-                    <p class="lead">Godkjent overtid</p>
-                    <p class="sub">${period}</p>
-                </div>
-                <i class="material-icons">close</i>
-            </div>`
-        );
-    }
+            </div>
+        </a>`;
+    var $html = $(html);
+    $notifications.append($html);
+    $html.on("click", function(e){
+        openPopup(e);
+    });
 }

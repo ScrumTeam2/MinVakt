@@ -41,7 +41,7 @@
             <h2>Meldinger</h2>
         </div>
     </div>
-    <div class="list menuItem" id="requests">
+    <div class="list menuItem">
         <div class="container-title cursor-point" id="shiftItems">
             <div>
                 <i class="symbol right-arrow-circle rotate90">
@@ -51,34 +51,29 @@
                 <h3>Forespørsel om ny vakt</h3>
             </div>
         </div>
+        <div class="feed-messages" id="requests"></div>
     </div>
 
-    <div class="list menuItems" id="changeovers">
+    <div class="list menuItem">
         <div class="container-title cursor-point">
             <div>
                 <i class="symbol right-arrow-circle rotate90">
                     <i class="material-icons">panorama_fish_eye</i>
                     <i class="material-icons">chevron_right</i>
                 </i>
-                <h3>Dine vaktbytter</h3>
+                <h3>Notifikasjoner</h3>
             </div>
         </div>
+        <div class="feed-messages" id="notifications"></div>
     </div>
 
-    <div class="list menuItems" id="timebanks">
-        <div class="container-title cursor-point">
-            <div>
-                <i class="symbol right-arrow-circle rotate90">
-                    <i class="material-icons">panorama_fish_eye</i>
-                    <i class="material-icons">chevron_right</i>
-                </i>
-                <h3>Timebank</h3>
-            </div>
+    <div id="feed-popup" class="popup">
+        <div class="popup-content" id="content"></div>
+        <div class="links">
+            <a href="#" id="acceptBtn">Ja</a>
+            <a href="#" id="denyBtn">Nei</a>
         </div>
     </div>
-
-    <div id="accept-popup" class="popup"></div>
-
 </div>
 
 <script src="../js/checkscript.js"></script>
