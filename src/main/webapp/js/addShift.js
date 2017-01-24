@@ -33,6 +33,10 @@ $(document).ready(function() {
     $('#createShiftBtn').on("click", function(e) {
         e.preventDefault();
 
+        $('#createShiftBtn').html(
+            `<div class="typing_loader"></div>`
+        );
+
         var shiftNames = ["day", "evening", "night"];
         var shiftsEmployeeCount = [ ];
 
