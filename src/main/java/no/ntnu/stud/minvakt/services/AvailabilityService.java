@@ -3,6 +3,7 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.controller.email.Mail;
 import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
@@ -17,6 +18,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +55,7 @@ public class AvailabilityService extends SecureService {
         System.out.println(us.getShifts());
         System.out.println("Sending email now---");
         Mail m = new Mail();
-        Mail.sendMailConfirm();
+        m.sendMailConfirm();
         return us;
     }
 
@@ -126,12 +128,22 @@ public class AvailabilityService extends SecureService {
     }
     */
     //Gets available shifts for specific date
+    @Deprecated
     @GET
     @Path("/{dateString}")
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftAvailable> getShiftsAvailable(@PathParam("dateString") String dateString) {
         ArrayList<ShiftAvailable> out = availabilityDB.getAvailabilityForDate(dateString);
         return out;
+    }
+
+    @GET
+    @Path("/date")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftAvailable> getShifts(@QueryParam("daysForward") int daysForward,
+                                                      @QueryParam("date") Date date){
+        if(date == null) date = new Date(System.currentTimeMillis());
+        return availabilityDB.getShiftsForDate(daysForward, getSession().getUser().getId(), date);
     }
 
     @Path("/deleteAvailable")
