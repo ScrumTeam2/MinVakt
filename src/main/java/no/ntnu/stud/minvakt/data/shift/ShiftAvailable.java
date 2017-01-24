@@ -12,12 +12,16 @@ public class ShiftAvailable {
     private Date date;
     private Shift.ShiftType shiftType;
     private String deptName = "";
+    private boolean isAvailable;
+    private boolean hasUser;
 
-    public ShiftAvailable(int shiftId, Date date, Shift.ShiftType shiftType, String deptName) {
+    public ShiftAvailable(int shiftId, Date date, Shift.ShiftType shiftType, String deptName, boolean isAvailable, boolean hasUser) {
         this.shiftId = shiftId;
         this.date = date;
         this.shiftType = shiftType;
         this.deptName = deptName;
+        this.isAvailable = isAvailable;
+        this.hasUser = hasUser;
     }
 
     @SuppressWarnings("unused")
@@ -54,5 +58,33 @@ public class ShiftAvailable {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
+    public boolean isHasUser() {
+        return hasUser;
+    }
+
+    public void setHasUser(boolean hasUser) {
+        this.hasUser = hasUser;
+    }
+
+    @Override
+    public String toString() {
+        return "ShiftUserAvailability{" +
+                "shiftId=" + shiftId +
+                ", date=" + date +
+                ", shiftType=" + shiftType +
+                ", DeptName=" + deptName +
+                ", isAvailable=" + isAvailable +
+                ", hasUser=" + hasUser +
+                '}';
     }
 }

@@ -343,8 +343,8 @@ public class UserDBManager extends DBManager {
         try {
             prep = getConnection().prepareStatement(sqlCheckPhoneNumber);
             prep.setString(1, phoneNumber);
-            ResultSet result = prep.executeQuery();
-            return result.next();
+            res = prep.executeQuery();
+            return res.next();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Failed to check phone number", e);
         } finally {
@@ -368,8 +368,8 @@ public class UserDBManager extends DBManager {
         try {
             prep = getConnection().prepareStatement(sqlCheckEmail);
             prep.setString(1, email);
-            ResultSet result = prep.executeQuery();
-            return result.next();
+            res = prep.executeQuery();
+            return res.next();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Failed to check email", e);
         } finally {
@@ -387,7 +387,6 @@ public class UserDBManager extends DBManager {
      */
     public int changePasswordUserId(String user_id, String prev_password, String new_password) {
         int change = -1;
-        boolean oldPassCorrect = false;
         if (setUp()) {
             try {
                 startTransaction();
@@ -396,9 +395,9 @@ public class UserDBManager extends DBManager {
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(prev_password, res.getString("hash"), res.getString("salt"))) {
-                        String[] passInfoNew = en.passEncoding(prev_password);
-                        String hashNew = passInfoNew[0];
-                        String saltNew = passInfoNew[1];
+                        String[] passInfoNew = en.passEncoding(new_password);
+                        String saltNew = passInfoNew[0];
+                        String hashNew = passInfoNew[1];
                         prep = getConnection().prepareStatement(sqlChangePass);
                         prep.setString(1, hashNew);
                         prep.setString(2, saltNew);
@@ -515,5 +514,6 @@ public class UserDBManager extends DBManager {
      } else {
      checkLogin(username, password); //Phone
      }*/
+
 
 }

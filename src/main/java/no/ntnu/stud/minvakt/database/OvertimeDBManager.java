@@ -20,7 +20,7 @@ public class OvertimeDBManager extends DBManager{
 
     private final String getSqlGetOvertimeByUserId = "SELECT * FROM overtime WHERE user_id =?";
     private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
-    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ?";
+    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
 
 
     Connection conn;
@@ -51,6 +51,7 @@ public class OvertimeDBManager extends DBManager{
             } catch (SQLException sqlE){
                 log.log(Level.WARNING,"Error register overtime on user with ID = " + userId, sqlE);
             } finally {
+                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -74,6 +75,7 @@ public class OvertimeDBManager extends DBManager{
             } catch(SQLException sqlE){
                 log.log(Level.WARNING, "Error deleting overtime for user with id = " + userId + " and shift id = " + shiftId, sqlE);
             } finally {
+                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -97,6 +99,7 @@ public class OvertimeDBManager extends DBManager{
             } catch (SQLException sqlE) {
                 log.log(Level.WARNING, "Error approving overtime for user with id = " + userId + " on shift with id = " + shiftId, sqlE);
             } finally {
+                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -201,6 +204,7 @@ public class OvertimeDBManager extends DBManager{
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting row count", sqlE);
             } finally{
+                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -225,6 +229,7 @@ public class OvertimeDBManager extends DBManager{
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting row count", sqlE);
             } finally{
+                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -253,6 +258,7 @@ public class OvertimeDBManager extends DBManager{
             } catch (SQLException sqlE){
                 log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);
             } finally {
+                endTransaction();
                 finallyStatement(prep);
             }
         }

@@ -26,11 +26,12 @@ function addShiftInfoHtml (element, shiftId, data) {
     employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsemedarbeider', 'NURSE': 'Sykepleier'};
     categoriesForLoop = ['ASSISTANT', 'HEALTH_WORKER', 'NURSE'];
     var shiftUsers = data.shiftUsers;
-    var hasPerson = false;
     var html = "";
+    var iAmOnShift = false;
     //Could be made more efficient
     var baseUrl = "../html/user-e.html?search=";
     for (var i = 0; i < categoriesForLoop.length; i++) {
+        var hasPerson = false;
         //console.log(categoriesForLoop[i]);
         //console.log(html);
         $.each(shiftUsers, function (index, user) {
@@ -47,32 +48,26 @@ function addShiftInfoHtml (element, shiftId, data) {
                     html += "<a href='"+baseUrl+user.userName+"' class='link'>" + user.userName + "<i class='material-icons'>chevron_right</i></a>"
                 }
             }
+
+            if(user.userId == sessionStorage.SessionId) {
+                iAmOnShift = true;
+            }
         });
     }
     //console.log(html);
+
+    // Add shift change button + illness button
+    if(iAmOnShift) {
+        html +=
+            `<div class="button-group">
+                  <button type="submit" id="userBtn">Bytt vakt</button>
+                  <button type="submit" id="userBtn">Sykdom</button>
+            </div>`;
+    }
+
     element.append(html);
 }
 
-
-function convertDate(dateInput){
-    var monthNames = [
-        "januar", "februar",
-        "mars", "april", "mai",
-        "juni", "juli", "august",
-        "september", "oktober", "november",
-        "desember"];
-
-    var dayNames = ["Mandag", "Tirsdag",
-        "Onsdag", "Torsdag", "Fredag",
-        "Lørdag", "Søndag"];
-
-    var date = new Date(dateInput);
-    var day = date.getDate();
-    var monthIndex = date.getMonth();
-    var dayIndex = date.getDay();
-
-    return dayNames[dayIndex] + " " + day + ". " + monthNames[monthIndex];
-}
 
 function createUserShiftHtml(data) {
     var html = "";
@@ -86,19 +81,19 @@ function createUserShiftHtml(data) {
         if(element.date !== currentDate){
             currentDate = element.date;
             html =
-                "<div class='container-title'>" +
-                "<h3>"+convertDate(element.date)+"</h3>" +
-                "</div>";
+                `<div class='container-title'>
+                <h3>${convertDate(element.date)}</h3>
+                </div>`;
         }
         html +=
-            "<div class='watch'>" +
-                "<div class='watch-info'>" +
-                    "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
-                    "<p class='sub'>"+shiftTimes[element.shiftType]+"</p>" +
-                "</div>" +
-                "<i class='symbol info-button' data-id='"+element.shiftId+"'><i class='material-icons'>info_outlines</i></i>" +
-                "<div class='more-info'></div>" +
-            "</div>";
+            `<div class='watch'>
+                <div class='watch-info'>
+                    <p class='lead'>${shiftTypes[element.shiftType]}</p>
+                    <p class='sub'>${shiftTimes[element.shiftType]}</p>
+                </div>
+                <i class='symbol info-button' data-id='${element.shiftId}'><i class='material-icons'>info_outlines</i></i>
+                <div class='more-info'></div>
+            </div>`;
         calendarList.append(html);
         html = "";
     });
@@ -194,10 +189,10 @@ function createAllShiftsHtml(data) {
                 "</div>";
         }
         html += "<div class='watch'>" +
-        "<div class='watch-info'>" +
-        "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
-        "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
-        "</div>";
+            "<div class='watch-info'>" +
+            "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
+            "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
+            "</div>";
         if (element.hasUser) {
             html +=
                 "<div class='watch-info'>" +

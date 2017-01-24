@@ -1,19 +1,25 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
+import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
+import javax.management.Notification;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 
 /**
@@ -28,6 +34,8 @@ import java.util.ArrayList;
 public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
     UserDBManager userDB = new UserDBManager();
+    NewsFeedDBManager newsDB = new NewsFeedDBManager();
+
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -111,7 +119,7 @@ public class ShiftService extends SecureService{
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
         boolean statusOk = false;
         if(!findNewEmployee) {
-            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId, false);
+            statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
 
         }
         else {
@@ -183,7 +191,7 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
         //if(getSession().isAdmin()){
-            return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
+        return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
     @POST
@@ -196,6 +204,24 @@ public class ShiftService extends SecureService{
         }
         else{
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+    @GET
+    @Path("/user/valid_absence/{shiftId}")
+    public Response requestValidAbsence(@PathParam("shiftId") int shiftId){
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        User user = getSession().getUser();
+        Shift shift = shiftDB.getShift(shiftId);
+        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt den"+
+                shift.getDate() + ".";
+        int adminId = userDB.getAdminId();
+        NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), shiftId,
+                NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
+        if(newsDB.createNotification(notification) != 0){
+            return Response.ok().entity("Notification sent to administration.").build();
+        }
+        else{
+            return Response.notModified().entity("Notification not created.").build();
         }
     }
 }

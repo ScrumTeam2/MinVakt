@@ -12,7 +12,7 @@ import java.util.logging.Level;
  */
 public class NewsFeedDBManager extends DBManager{
 
-    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?)";
+    private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?,?)";
     private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
@@ -20,6 +20,9 @@ public class NewsFeedDBManager extends DBManager{
             "FROM newsfeed JOIN user ON(user.user_id = newsfeed.user_id) WHERE user.category = ? AND resolved = 0;";
     private final String sqlGetNewsFeedItem = "SELECT * FROM newsfeed WHERE feed_id = ?;";
     private final String sqlSetNewsFeedItemResolved = "UPDATE newsfeed SET resolved = ? WHERE feed_id = ?;";
+
+    private final String sqlGetNewsFeedIdFromOvertime = "SELECT feed_id FROM overtime JOIN newsfeed ON overtime.shift_id = newsfeed.shift_id AND overtime.user_id = newsfeed.shift_user_id AND overtime.start_time = newsfeed.start_time WHERE overtime.user_id = ? AND overtime.shift_id = ? AND overtime.start_time = ?;";
+
 
     Connection conn;
     PreparedStatement prep;
@@ -42,6 +45,7 @@ public class NewsFeedDBManager extends DBManager{
                 prep.setInt(4, notification.getUserIdTo());
                 prep.setInt(5, notification.getShiftId());
                 prep.setInt(6, notification.getUserIdInvolving());
+                prep.setInt(7,notification.getStartTimeTimebank());
                 id = prep.executeUpdate();
                 if(id != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
@@ -187,6 +191,27 @@ public class NewsFeedDBManager extends DBManager{
         }
         return status != 0;
     }
+    public int getNewsFeedIdThroughOvertime(int userId, int shiftId, int startTime){
+        int feedId = 0;
 
+        if(setUp()){
+            try{
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetNewsFeedIdFromOvertime);
+                prep.setInt(1, userId);
+                prep.setInt(2, shiftId);
+                prep.setInt(3, startTime);
+                ResultSet res = prep.executeQuery();
+                res.next();
+                feedId = res.getInt("feed_id");
+            } catch (SQLException sqle) {
+                log.log(Level.WARNING, "Not able to find feedId for userID: "+userId+", shiftID: " +shiftId+ ", startTime: "+startTime);
+                sqle.printStackTrace();
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return feedId;
+    }
 }
 
