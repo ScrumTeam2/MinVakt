@@ -154,5 +154,24 @@ public class ShiftDBManagerTest {
             shiftDB.deleteShift(shiftId);
         }
     }
+
+    @Test
+    public void bulkInsertShifts() throws Exception {
+        ArrayList<Shift> shifts = new ArrayList<>();
+        shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.DAY, 1, new ArrayList<>(), false));
+        shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.EVENING, 1, new ArrayList<>(), false));
+        shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.NIGHT, 1, new ArrayList<>(), false));
+        Assert.assertTrue(shiftDB.bulkInsertShifts(shifts));
+        try {
+            for(Shift shift : shifts) {
+                Shift selectedShift = shiftDB.getShift(shift.getId());
+                Assert.assertNotNull(selectedShift);
+            }
+        } finally {
+            for(Shift shift : shifts) {
+                shiftDB.deleteShift(shift.getId());
+            }
+        }
+    }
 }
 
