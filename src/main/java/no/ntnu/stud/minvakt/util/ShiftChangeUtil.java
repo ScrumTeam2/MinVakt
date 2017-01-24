@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 
 
 /**
@@ -27,24 +28,17 @@ public class ShiftChangeUtil {
     private static NewsFeedDBManager newsDB = new NewsFeedDBManager();
     private static OvertimeDBManager overtimeDB = new OvertimeDBManager();
 
-    public boolean findNewUserToShift(int shiftId, int userId){
-       // boolean statusOk = shiftDB.deleteEmployeeFromShift(userId,shiftId, false);
-        /*if(statusOk) {
-            User deletedUser = userDB.getUserById(userId);
-            Shift shift = shiftDB.getShift(shiftId);
-            ArrayList<UserBasicWorkHours> users = AvailableUsersUtil.sortAvailableEmployeesWithCategory(Shift shift, User deletedUser);
-            if(users.isEmpty()){
-                sendNotificationToAdmin();
-            }
-            else if(users.get(0).getCategory() == deletedUser.getCategory()){
-                sendApprovalToAdmin(users)
-            }
-            else{
-                sendNotificationToUsers(users)
-            }
-        }*/
-        return false;
+    public static boolean sendNewResponsibleChangeNotification(int userId, int shiftId){
+        User user = userDB.getUserById(userId);
+        Shift shift = shiftDB.getShift(shiftId);
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        String content = user.getFirstName()+" "+user.getLastName()+" er blit satt som ny ansvarsvakt på skiftet den "+shift.getDate()+".";
+        int adminId = userDB.getAdminId();
+        if(adminId == 0) return false;
+        NewsFeedItem newsFeedItem = new NewsFeedItem(-1,timestamp,content, adminId,userId,shiftId, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
+        return newsDB.createNotification(newsFeedItem) != 0;
     }
+
     public static boolean updateNotification(int feedId, boolean shiftAccepted){
         NewsFeedItem newsFeedItem = newsDB.getNewsFeedItem(feedId);
         switch (newsFeedItem.getCategory()) {
@@ -165,6 +159,7 @@ public class ShiftChangeUtil {
                     userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
             newsDB.createNotification(notification2);
+
             return true;
         }
         else {
@@ -173,8 +168,33 @@ public class ShiftChangeUtil {
         }
 
     }
- /*   public static User findResponibleUserForSHift(int shiftId){
-        ArrayList<User> users = userDB.
-    }*/
+    public static User findResponsibleUserForShift(int shiftId){
+        ArrayList<User> users = shiftDB.getUsersFromShift(shiftId);
+        LinkedList<User> sortedUsers = new LinkedList<>();
+
+        for(User user : users){
+            User bestUser = sortedUsers.peekFirst();
+            if(bestUser == null){
+                sortedUsers.addFirst(user);
+            }
+            else if (bestUser.getWorkPercentage() <= user.getWorkPercentage()) {
+                if (Math.abs(bestUser.getWorkPercentage() - user.getWorkPercentage()) < 0.001) {
+                    if (bestUser.getCategory() == User.UserCategory.ASSISTANT) {
+                        sortedUsers.addFirst(user);
+                    } else if (bestUser.getCategory() == User.UserCategory.HEALTH_WORKER && user.getCategory() != User.UserCategory.ASSISTANT) {
+                        sortedUsers.addFirst(user);
+                    } else {
+                        sortedUsers.addLast(user);
+                    }
+                } else {
+                    sortedUsers.addFirst(user);
+                }
+            }
+            else {
+                sortedUsers.addLast(user);
+            }
+        }
+        return sortedUsers.peekFirst();
+    }
 
 }

@@ -3,6 +3,7 @@ package no.ntnu.stud.minvakt.database;
 import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -48,6 +49,8 @@ public class ShiftDBManager extends DBManager {
     private final String sqlWasEmployeeOnShift = "UPDATE employee_shift SET removed = 0 WHERE user_id = ? AND shift_id = ?;";
     private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work" +
             " FROM user WHERE user_id IN(SELECT user_id FROM employee_shift WHERE shift_id = ?);";
+    private final String sqlIsUserResponsible = "SELECT responsibility FROM employee_shift WHERE user_id = ? AND shift_id = ?;";
+    private final String sqlSetUserResponsible = "UPDATE employee_shift SET responsibility = ? WHERE user_id = ? AND shift_id = ?;";
 
     Connection conn;
     PreparedStatement prep;
@@ -230,6 +233,9 @@ public class ShiftDBManager extends DBManager {
                 prep.setInt(1, shiftId);
                 prep.setInt(2, userId);
                 out = prep.executeUpdate() != 0;
+                if(out && isUserResponsible(userId, shiftId)){
+                    setResponsibleUser(shiftId, ShiftChangeUtil.findResponsibleUserForShift(shiftId).getId(), true);
+                }
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to delete shift with shift ID = " + shiftId + " and user ID = " + userId, e);
@@ -250,12 +256,9 @@ public class ShiftDBManager extends DBManager {
      * @param newUserId THe ID of the replacement user
      * @return True if the replacement was successful
      */
-    public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId){
-        ShiftUser shiftUser = new ShiftUser(newUserId, null,null,false,false);
-        if(addEmployeeToShift(shiftUser, shiftId)){
-            return deleteEmployeeFromShift(oldUserId, shiftId);
-        }
-        return false;
+    public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId) {
+        ShiftUser shiftUser = new ShiftUser(newUserId, null, null, false, false);
+        return addEmployeeToShift(shiftUser, shiftId) && deleteEmployeeFromShift(oldUserId, shiftId);
     }
 
     public ArrayList<ShiftUserBasic> getShiftWithUserId(int userId, Date date){
@@ -266,7 +269,7 @@ public class ShiftDBManager extends DBManager {
                 conn = getConnection();
                 prep = conn.prepareStatement(getShiftWithUserId);
                 prep.setInt(1, userId);
-                prep.setDate(2,date);
+                prep.setDate(2, date);
                 res = prep.executeQuery();
                 while(res.next()){
                     out.add(new ShiftUserBasic(
@@ -591,4 +594,49 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
+    private boolean isUserResponsible(int userId, int shiftId){
+        boolean isResponsible = false;
+        if(setUp()){
+            ResultSet res = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlIsUserResponsible);
+                prep.setInt(1,userId);
+                prep.setInt(2,shiftId);
+                res = prep.executeQuery();
+                if(res.next()){
+                    isResponsible = res.getBoolean(1);
+                }
+            }catch (SQLException sqle){
+                log.log(Level.WARNING, "Issue finding if user is responsible for shift_id = "+shiftId+" and userId = "+userId, sqle);
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return isResponsible;
+    }
+    public boolean setResponsibleUser(int shiftId, int userId, boolean isResponsible){
+        boolean out = false;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetUserResponsible);
+                prep.setBoolean(1,isResponsible);
+                prep.setInt(2,userId);
+                prep.setInt(3,shiftId);
+                out = prep.executeUpdate() != 0;
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Issue setting user responsible for shift_id = "+shiftId+" and userId = "+userId, sqle);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        if(out) ShiftChangeUtil.sendNewResponsibleChangeNotification(userId,shiftId);
+        return out;
+    }
+
+
 }
