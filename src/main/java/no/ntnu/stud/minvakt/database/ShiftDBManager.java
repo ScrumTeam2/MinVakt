@@ -25,7 +25,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
     private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence FROM employee_shift " +
             "NATURAL JOIN user WHERE shift_id = ?;";
-    private final String sqlGetShift = "SELECT shift_id, staff_number, date, time, dept_id FROM shift WHERE shift_id = ?;";
+    private final String sqlGetShift = "SELECT * FROM shift WHERE shift_id = ?;";
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?,DEFAULT);";
     private final String deleteEmployeeFromShift = "UPDATE employee_shift SET removed = 1 WHERE shift_id = ? and user_id = ?;";
     private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ? AND removed = 0)" +
@@ -68,10 +68,9 @@ public class ShiftDBManager extends DBManager {
                 prep = conn.prepareStatement(sqlCreateNewShift);
                 prep.setInt(1, shift.getStaffNumb());
                 java.sql.Date sqlDate = new java.sql.Date(shift.getDate().getTime());
-                System.out.println("sqlDate: "+sqlDate);
                 prep.setDate(2, sqlDate);
                 prep.setInt(3, shift.getType().getValue());
-                prep.setBoolean(4, false);
+                prep.setBoolean(4, shift.isApproved());
                 prep.setInt(5, shift.getDeptId());
 
                 if(prep.executeUpdate() != 0){
@@ -94,6 +93,7 @@ public class ShiftDBManager extends DBManager {
                             }
                         }
                         out = shift.getId();
+                        log.log(Level.INFO, "Created new shift with ID " + out);
                     }
 
                 }
@@ -124,7 +124,7 @@ public class ShiftDBManager extends DBManager {
                 prep.setInt(1,shiftId);
                 log.fine(prep.toString());
                 status = prep.executeUpdate();
-                if(status != 0){
+                if(status >= 0){
                     prep = conn.prepareStatement(sqlDeleteShift);
                     prep.setInt(1, shiftId);
                     log.fine(prep.toString());
@@ -172,7 +172,7 @@ public class ShiftDBManager extends DBManager {
                             res.getDate("date"),
                             res.getInt("time"),
                             res.getInt("dept_id"),
-                            shiftUsers);
+                            shiftUsers, res.getBoolean("approved"));
             }
             catch (SQLException e){
                 rollbackStatement();
@@ -590,5 +590,39 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return out;
+    }
+
+    /**
+     * Attempts to mark the provided shifts as approved. (Shift plan approval)
+     * @param shiftIds An array containing the IDs of the shifts to be approved
+     * @return True if all the shifts was approved
+     */
+    public boolean approveShifts(int[] shiftIds) {
+        if(!setUp()) {
+            return false;
+        }
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+            prep = conn.prepareStatement("UPDATE shift SET approved = TRUE WHERE shift_id = ?");
+            for(Integer id : shiftIds) {
+                prep.setInt(1, id);
+                prep.addBatch();
+            }
+            int[] updateCounts = prep.executeBatch();
+
+            // Check result
+            for(int rowsUpdated : updateCounts) {
+                if(rowsUpdated < 0) return false;
+            }
+            return true;
+        } catch (SQLException e){
+            log.log(Level.WARNING, "Issue approving shifts", e);
+        }
+        finally {
+            finallyStatement(prep);
+        }
+        return false;
     }
 }
