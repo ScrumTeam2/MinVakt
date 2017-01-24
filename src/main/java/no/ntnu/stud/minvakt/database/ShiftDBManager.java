@@ -139,11 +139,13 @@ public class ShiftDBManager extends DBManager {
             int[] result = prep.executeBatch();
             ResultSet generatedKeys = prep.getGeneratedKeys();
             int i = 0;
+            
+            prep = conn.prepareStatement(sqlCreateNewShiftStaff);
+
             while (generatedKeys.next()) {
                 Shift shift = shifts.get(i++);
                 shift.setId(generatedKeys.getInt(1));
 
-                prep = conn.prepareStatement(sqlCreateNewShiftStaff);
 
                 ArrayList<ShiftUser> shiftUsers = shift.getShiftUsers();
                 for (ShiftUser shiftUser : shiftUsers) {
