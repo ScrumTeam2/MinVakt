@@ -60,13 +60,23 @@ public class ShiftChangeUtilTest{
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
         newsFeedDB.deleteNotification(feedId);
     }
-    @Ignore
-    public void updateTimeBank(){
+    @Test
+    public void acceptTimeBank(){
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
 
         NewsFeedItem notification = new NewsFeedItem(-1, date,
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.TIMEBANK);
-        overtimeDB.setOvertime(1,1,0,60);
+        overtimeDB.setOvertime(1,4,0,60);
+        int feedId = newsFeedDB.createNotification(notification);
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
+        overtimeDB.deleteOvertime(1,4,0);
+    }
+    @Test
+    public void acceptValidAbsence(){
+        Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
+
+        NewsFeedItem notification = new NewsFeedItem(-1, date,
+                "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
         int feedId = newsFeedDB.createNotification(notification);
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
     }
