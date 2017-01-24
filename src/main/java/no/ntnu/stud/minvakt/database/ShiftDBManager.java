@@ -435,6 +435,7 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
+
     public boolean setStaffNumberOnShift(int shiftId, int staffNumber){
         int status = 0;
         if(setUp()){
@@ -502,8 +503,8 @@ public class ShiftDBManager extends DBManager {
                     shiftList.add(new ShiftAvailable(
                             res.getInt("shift_id"),
                             res.getDate("date"),
-                            Shift.ShiftType.valueOf(res.getInt("time")),
-                            null));
+                            Shift.ShiftType.valueOf(res.getInt("time")),"",
+                            false,false));
                 }
 
             } catch (SQLException sqlE){
