@@ -13,6 +13,7 @@ public class Shift {
     private ShiftType type;
     private ArrayList<ShiftUser> shiftUsers;
     private int deptId;
+    private boolean approved;
 
 
     public enum ShiftType {
@@ -41,17 +42,18 @@ public class Shift {
 
     }
 
-    public Shift(int id, int staffNumb, Date date, ShiftType type, int deptId, ArrayList<ShiftUser> shiftUsers) {
+    public Shift(int id, int staffNumb, Date date, ShiftType type, int deptId, ArrayList<ShiftUser> shiftUsers, boolean approved) {
         this.id = id;
         this.date = date;
         this.staffNumb = staffNumb;
         this.type = type;
         this.shiftUsers = shiftUsers;
         this.deptId = deptId;
+        this.approved = approved;
     }
 
-    public Shift(int id, int staffNumb, Date date, int type, int deptId, ArrayList<ShiftUser> shiftUsers) {
-        this(id, staffNumb, date, ShiftType.valueOf(type), deptId, shiftUsers);
+    public Shift(int id, int staffNumb, Date date, int type, int deptId, ArrayList<ShiftUser> shiftUsers, boolean approved) {
+        this(id, staffNumb, date, ShiftType.valueOf(type), deptId, shiftUsers, approved);
     }
 
     public int getId() {
@@ -102,5 +104,13 @@ public class Shift {
 
     public void setDeptId(int deptId) {
         this.deptId = deptId;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }

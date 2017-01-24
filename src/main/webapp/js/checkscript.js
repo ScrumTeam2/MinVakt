@@ -225,3 +225,23 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+function convertDate(dateInput){
+    var monthNames = [
+        "januar", "februar",
+        "mars", "april", "mai",
+        "juni", "juli", "august",
+        "september", "oktober", "november",
+        "desember"];
+
+    var dayNames = ["Søndag", "Mandag", "Tirsdag",
+        "Onsdag", "Torsdag", "Fredag",
+        "Lørdag"];
+
+    var date = new Date(dateInput);
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var dayIndex = date.getDay();
+
+    return dayNames[dayIndex] + " " + day + ". " + monthNames[monthIndex];
+}
