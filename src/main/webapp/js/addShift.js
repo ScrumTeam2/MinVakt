@@ -98,7 +98,8 @@ $(document).ready(function() {
         })
         .done(function(data) {
             console.log( "success", data );
-            localStorage.setItem("TempShiftPlan", data);
+            localStorage.setItem("TempShiftPlan", JSON.stringify(data));
+            localStorage.setItem("TempShiftCurr", 0);
             window.location = "add-users-to-shift.html";
         })
         .fail(function(error) {
