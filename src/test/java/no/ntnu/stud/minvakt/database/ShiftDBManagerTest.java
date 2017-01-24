@@ -168,19 +168,25 @@ public class ShiftDBManagerTest {
         shifts.get(0).getShiftUsers().add(new ShiftUser(1, "", User.UserCategory.ADMIN, true, false));
         Assert.assertTrue(shiftDB.bulkInsertShifts(shifts));
         try {
-            for(Shift shift : shifts) {
+            for (Shift shift : shifts) {
                 Shift selectedShift = shiftDB.getShift(shift.getId());
-                if(selectedShift.getId() == shifts.get(0).getId()) {
+                if (selectedShift.getId() == shifts.get(0).getId()) {
                     Assert.assertEquals(1, selectedShift.getShiftUsers().size());
                     Assert.assertEquals(1, selectedShift.getShiftUsers().get(0).getUserId());
                 }
                 Assert.assertNotNull(selectedShift);
             }
         } finally {
-            for(Shift shift : shifts) {
+            for (Shift shift : shifts) {
                 shiftDB.deleteShift(shift.getId());
             }
         }
+    }
+
+    @Test
+    public void setResponsibleUser(){
+        assertTrue(shiftDB.setResponsibleUser(1,1,true));
+        assertTrue(shiftDB.setResponsibleUser(1,1,false));
     }
 }
 

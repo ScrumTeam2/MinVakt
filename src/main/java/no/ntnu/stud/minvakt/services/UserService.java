@@ -3,8 +3,11 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 /**
@@ -14,8 +17,11 @@ import java.util.ArrayList;
 /*
  */
 @Path("/user")
-public class UserService {
+public class UserService extends SecureService{
     UserDBManager userDB = new UserDBManager();
+    public UserService(@Context HttpServletRequest request) {
+        super(request);
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -28,6 +34,18 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public User getUserBasics(@PathParam("userId") int userId) {
         return userDB.getUserById(userId);
+    }
+
+    @POST
+    @Path("/changepass")
+    public Response changePassword(@FormParam("oldpass") String oldPass, @FormParam("newpass") String newPass){
+        int status = userDB.changePasswordUserId(Integer.toString(getSession().getUser().getId()), oldPass, newPass);
+        if(status > 0){
+            return Response.ok().entity("Password is changed").build();
+        }
+        else{
+            return Response.notModified().entity("Issue arised, old password may be wrong").build();
+        }
     }
 
 

@@ -140,7 +140,7 @@ public class UserDBManagerTest {
 
     
 
-    @Ignore
+    @Test
     public void changePassword() {
         String userId = "1";
         String prevPassword = "password";
