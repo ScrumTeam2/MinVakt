@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import javax.net.ssl.SSLEngineResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
@@ -117,4 +118,10 @@ public class ShiftServiceTest {
 //        ArrayList<UserBasicWorkHours> candidates = (ArrayList<UserBasicWorkHours>)response.getEntity();
 //        Assert.assertTrue(candidates.size() > 0);
 //    }
+    @Test
+    public void requestValidAbsence(){
+        logInUser();
+        Response response = shiftService.requestValidAbsence(1);
+        assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+    }
 }

@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Opprett skift</title>
+    <title>MinVakt | Opprett turnus</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -23,7 +22,7 @@
         <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
         <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
         <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="new-shift.html">Opprett vakt<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
 <aside class="popup-more hide" id="popup_more">
@@ -37,7 +36,7 @@
         <div class="container-header">
             <div>
                 <i class="material-icons">chevron_left</i>
-                <h2>Ny vakt</h2>
+                <h2>Ny turnus</h2>
             </div>
         </div>
         <form class="register-form" id="shiftForm">
@@ -52,17 +51,10 @@
 
             <input type="date" name="date" placeholder="Dato" />
 
-            <div class="num-employees">
-                <label for="day">Dag</label>
-                <input type="number" name="day" id="day" placeholder="Antall ansatte" />
-                <label for="evening">Kveld</label>
-                <input type="number" name="evening" id="evening" placeholder="Antall ansatte" />
-                <label for="night">Natt</label>
-                <input type="number" name="night" id="night" placeholder="Antall ansatte" />
-            </div>
+            <div id="days-placeholder"></div>
 
             <!-- TODO: Change this button to a link later... -->
-            <button type="submit" id="createShiftBtn">Legg til ansatte</button>
+            <button type="submit" id="createShiftBtn">Generer turnus</button>
 
 
         </form>
