@@ -53,9 +53,7 @@ public class AvailabilityService extends SecureService {
         int id = getSession().getUser().getId();
         UserAvailableShifts us = availabilityDB.getAvailabilityForUser(id);
         System.out.println(us.getShifts());
-        System.out.println("Sending email now---");
-        Mail m = new Mail();
-        m.sendMailConfirm();
+      //  Mail.sendMailConfirm(); //Mailkassen blir ikke initialisert..
         return us;
     }
 

@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.controller.email;
+/*package no.ntnu.stud.minvakt.controller.email;
 
 import java.util.Properties;
 import javax.mail.Message;
@@ -8,17 +8,16 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-/*
-Veldig enkel mailservice
-*/
+
 public class Mail {
-    /**
+    /*
      * Sends an email to a specified recipient, with a specified title & message.
      * @param recipient email of recipient
      * @param title subject of email
      * @param mailMessage email message
      * @return       1 if success
      */
+/*
     public Mail() {
         sendMailConfirm();
     }
@@ -69,3 +68,4 @@ public class Mail {
         sendMail(email, subject, content);
     }
 }
+*/
