@@ -3,7 +3,7 @@
  */
 
 var shiftPlan = JSON.parse(localStorage.getItem("TempShiftPlan"));
-var currentNum = localStorage.getItem("TempShiftCurr");
+var currentNum = parseInt(localStorage.getItem("TempShiftCurr"));
 console.log("shiftPlan", shiftPlan);
 console.log("currentNum", currentNum);
 
@@ -19,8 +19,24 @@ $(document).ready(function() {
         $('.btnPrev').show();
         if (currentNum >= shiftPlan.length) {
             // TODO: Mark all shifts as published with the ids, stored in localStorage
-            localStorage.clear();
-            window.location = "/html/new-shift.html";
+            console.log(JSON.stringify(shiftPlan));
+            $.ajax({
+                url: "/rest/shiftplan/approve",
+                type: 'POST',
+                contentType: "application/json",
+                data: JSON.stringify({
+                    content: shiftPlan
+                }),
+                success: function(data) {
+                    console.log(data);
+                    localStorage.clear();
+                    window.location = "/html/new-shift.html";
+                },
+                error: function(e) {
+                    console.error("Error", e);
+                }
+            });
+
         } else {
             if (currentNum === shiftPlan.length - 1) {
                 $('.btnNext').text("Publiser");
@@ -31,7 +47,7 @@ $(document).ready(function() {
     });
 
     $('.btnPrev').on("click", function(e) {
-        currentNum = Math.max(0, parseInt(currentNum) - 1);
+        currentNum = Math.max(0, currentNum - 1);
         if (currentNum === 0) {
             $('.btnPrev').hide();
         }
@@ -42,7 +58,12 @@ $(document).ready(function() {
         getNewShift();
     });
 
-    $('.btnPrev').hide();
+    if (currentNum === 0) {
+        $('.btnPrev').hide();
+    }
+    if (currentNum === shiftPlan.length - 1) {
+        $('.btnNext').text("Publiser");
+    }
     getNewShift();
 });
 
@@ -62,6 +83,7 @@ function showShiftInfo(data) {
 
     var output = `<div class="container-title">
                 <h3>${convertDate(data.date)} - ${shiftTypes[data.type]}</h3>
+                <p>${currentNum + 1} av ${shiftPlan.length}</p>
             </div>`;
 
     for (var i in data.shiftUsers) {

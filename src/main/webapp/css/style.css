@@ -79,6 +79,10 @@ header h1 {
     margin-left: .5rem;
 }
 
+.container-title p {
+    margin: 0;
+}
+
 .container-header {
   display: -webkit-box;
   display: -ms-flexbox;
