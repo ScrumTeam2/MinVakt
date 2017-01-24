@@ -18,7 +18,6 @@ $(document).ready(function() {
         currentNum = parseInt(currentNum) + 1;
         $('.btnPrev').show();
         if (currentNum >= shiftPlan.length) {
-            // TODO: Mark all shifts as published with the ids, stored in localStorage
             console.log(JSON.stringify(shiftPlan));
             $.ajax({
                 url: "/rest/shiftplan/approve",
@@ -29,6 +28,7 @@ $(document).ready(function() {
                 }),
                 success: function(data) {
                     console.log(data);
+                    //TODO: Make some popup to confirm that the shifts were approved.
                     localStorage.clear();
                     window.location = "/html/new-shift.html";
                 },
