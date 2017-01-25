@@ -161,13 +161,13 @@ select {
   pointer-events: none;
 }
 
-input:focus {
+input:focus, input[required]:valid {
   outline: none;
   border-bottom: 2px solid #034584;
   margin-bottom: 0.4375rem;
 }
 
-input.error {
+input.error, input:not([value=""]):focus:invalid {
   border-bottom: 2px solid #B92D00;
   margin-bottom: 0.4375rem;
 }
@@ -524,6 +524,10 @@ button {
     font-size: .75rem;
     line-height: 1.25rem;
     color: #6e6e6e;
+}
+
+.greyed-out {
+    color: rgba(0,0,0,.5);
 }
 
 .more-info {

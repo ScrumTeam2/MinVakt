@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.controller.email.ForgotPass;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
@@ -29,6 +30,12 @@ public class UserService extends SecureService{
     public ArrayList<UserBasicList> getUserBasics() {
         return userDB.getUserBasics();
     }
+    @Path("/category")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<UserBasic> getUserBasicsWithCategory(@QueryParam("category")User.UserCategory category) {
+        return userDB.getUserBasicsWithCategory(category);
+    }
 
     @GET
     @Path("/{userId}")
@@ -40,12 +47,14 @@ public class UserService extends SecureService{
     @POST
     @Path("/changepass")
     public Response changePassword(@FormParam("oldpass") String oldPass, @FormParam("newpass") String newPass){
+        System.out.println("Oldpass = "+oldPass+" Newpass = "+newPass);
         int status = userDB.changePasswordUserId(Integer.toString(getSession().getUser().getId()), oldPass, newPass);
+        System.out.println(status);
         if(status > 0){
             return Response.ok().entity("Password is changed").build();
         }
         else{
-            return Response.notModified().entity("Issue arised, old password may be wrong").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Issue arised, old password may be wrong").build();
         }
     }
     @POST
@@ -61,8 +70,12 @@ public class UserService extends SecureService{
         else{
             return Response.ok().entity("Mail with new password sent!").build();
         }
-
-
+    }
+    @GET
+    @Path("/profile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUserForProfile(){
+        return getSession().getUser();
     }
 
 
