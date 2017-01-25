@@ -43,7 +43,7 @@ public class UserDBManagerTest {
 
     @Test
     public void createAndDeleteNewUser() {
-        Object[] userInfo = userDB.createNewUser("testFornavn", "testEtternavn", "createAndDeleteNewUser@gmail.com", "10101010", User.UserCategory.ASSISTANT, 1);
+        Object[] userInfo = userDB.createNewUser("testFornavn", "testEtternavn", "system.minvakt@gmail.com", "10101010", User.UserCategory.ASSISTANT, 1);
 
         Assert.assertTrue((int)userInfo[0] > 0);
 
@@ -52,7 +52,7 @@ public class UserDBManagerTest {
 
         Assert.assertEquals("testFornavn", user.getFirstName());
         Assert.assertEquals("testEtternavn", user.getLastName());
-        Assert.assertEquals("createAndDeleteNewUser@gmail.com", user.getEmail());
+        Assert.assertEquals("system.minvakt@gmail.com", user.getEmail());
         Assert.assertEquals("10101010", user.getPhoneNumber());
         Assert.assertEquals(User.UserCategory.ASSISTANT, user.getCategory());
     }
@@ -140,7 +140,7 @@ public class UserDBManagerTest {
 
     
 
-    @Ignore
+    @Test
     public void changePassword() {
         String userId = "1";
         String prevPassword = "password";

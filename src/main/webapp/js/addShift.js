@@ -33,6 +33,10 @@ $(document).ready(function() {
     $('#createShiftBtn').on("click", function(e) {
         e.preventDefault();
 
+        $('#createShiftBtn').html(
+            `<div class="typing_loader"></div>`
+        );
+
         var shiftNames = ["day", "evening", "night"];
         var shiftsEmployeeCount = [ ];
 
@@ -98,11 +102,39 @@ $(document).ready(function() {
         })
         .done(function(data) {
             console.log( "success", data );
-            localStorage.setItem("TempShiftPlan", data);
+            localStorage.setItem("TempShiftPlan", JSON.stringify(data));
+            localStorage.setItem("TempShiftCurr", 0);
             window.location = "add-users-to-shift.html";
         })
-        .fail(function(error) {
-            console.log( "error", error );
-        });
+        .fail(invalidField);
     });
+
+    //close popup when clicking outside of the popup
+    var $popup = $('#userPopup');
+    window.onclick = function(event) {
+        if (event.target != $popup) {
+            $popup.hide();
+        }
+    };
+});
+
+function invalidField(data){
+    $('.title').text("Feil");
+
+    if(data.responseJSON == null) {
+        $('.result').text("En uventet feil oppsto");
+    } else {
+        $('.result').text(data.responseJSON.error);
+    }
+
+    $('#userViewBtn').hide();
+    $('.popup').show();
+
+    // Remove loading animation
+    $('#createShiftBtn').text("Generer turnus");
+}
+
+//close popup
+$('#userCloseBtn').click(function() {
+    $('.popup').hide();
 });
