@@ -169,6 +169,7 @@ public class ShiftDBManager extends DBManager {
             rollbackStatement();
             log.log(Level.WARNING, "Issue with bulk creating new shifts, data rolled back", e);
         } finally {
+            endTransaction();
             finallyStatement(prep);
         }
         return false;
@@ -375,6 +376,7 @@ public class ShiftDBManager extends DBManager {
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId, sqlE);
             } finally{
+                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -684,6 +686,7 @@ public class ShiftDBManager extends DBManager {
             log.log(Level.WARNING, "Issue approving shifts", e);
         }
         finally {
+            endTransaction();
             finallyStatement(prep);
         }
         return false;

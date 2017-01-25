@@ -87,6 +87,9 @@ public class UserDBManager extends DBManager {
             } catch (Exception e) {
                 System.out.println("Error at loginUser");
                 e.printStackTrace();
+            }finally{
+                endTransaction();
+                finallyStatement(prep);
             }
         }
         return null;
@@ -508,15 +511,15 @@ public class UserDBManager extends DBManager {
          }
          return out;
     }
-    public boolean setNewPassword(int userId, String[] hashSalt){
+    public boolean setNewPassword(int userId, String[] saltHash){
         boolean out = false;
 
         if(setUp()){
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlChangePass);
-                prep.setString(1,hashSalt[0]);
-                prep.setString(2,hashSalt[1]);
+                prep.setString(1,saltHash[1]); //hash
+                prep.setString(2,saltHash[0]); //salt
                 prep.setInt(3,userId);
                 out = prep.executeUpdate() != 0;
             }

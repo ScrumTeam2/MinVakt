@@ -2,11 +2,15 @@ package no.ntnu.stud.minvakt.services;
 
 
 import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
@@ -15,9 +19,11 @@ import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -161,6 +167,21 @@ public class AvailabilityService extends SecureService {
             System.out.println(ok);
         }
         return "correct";
+    }
+
+
+    @GET
+    @Path("/shift/{shiftId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category")User.UserCategory category, @QueryParam("limitByCategory") boolean onlyThisCategory){
+        AvailableUsersUtil availUsersU = new AvailableUsersUtil();
+        ShiftDBManager shiftDBM = new ShiftDBManager();
+        Shift shift = shiftDBM.getShift(shiftId);
+        LocalDate date = shift.getDate().toLocalDate();
+        ArrayList<UserBasicWorkHours> userList = availUsersU.sortAvailableEmployeesWithCategory(shiftId, date, category, onlyThisCategory);
+        GenericEntity entity = new GenericEntity<List<UserBasicWorkHours>>(userList){};
+
+        return Response.ok(entity).build();
     }
 
     @DELETE

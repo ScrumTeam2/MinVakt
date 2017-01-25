@@ -14,8 +14,8 @@ public class ForgotPass {
     public static int sendEmailWithNewPass(String email){
         int userId = userDB.getUserIdFromMail(email);
         String newPass = GeneratePassword.generateRandomPass();
-        String[] hashSalt = enc.passEncoding(newPass);
-        if(userDB.setNewPassword(userId, hashSalt)){
+        String[] saltHash = enc.passEncoding(newPass);
+        if(userDB.setNewPassword(userId, saltHash)){
             if(Mail.sendMail(email,"Glemt passord for MinVakt", "Her er ditt nye passord for MinVakt, husk å endre det så for som mulig." +
                     "\n Passord: "+newPass) == 1){
                 return 1;
