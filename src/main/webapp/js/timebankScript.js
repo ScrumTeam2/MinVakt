@@ -22,6 +22,14 @@ $(document).ready(function () {
     });
 
 
+    $.ajax({
+        url: "/rest/shift",
+        type: 'GET',
+        success: displayDate,
+
+    });
+
+
     function displayHours(data) {
         var hours = $("#hours");
         hours.html("");
@@ -31,6 +39,18 @@ $(document).ready(function () {
             hours.append(html);
         });
     }
+
+    function displayDate(data){
+        var date = $(".hours");
+        date.html("");
+        $.each(data, function (index, element) {
+            var html =`<div>${element.date}</div>`;
+            date.append(html);
+        });
+    }
+
+
+
 
 });
 
