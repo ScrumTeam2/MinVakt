@@ -21,21 +21,23 @@ $(document).ready(function () {
         }
     });
 
-
     function displayHours(data) {
         var overtimeHours = $(".overtime-hours");
         var absenceHours = $(".absence-hours");
         overtimeHours.html("");
         absenceHours.html("");
 
-        var minutes = ${element.minutes};
         $.each(data, function (index, element) {
 
-            var html = `<div> ${element.minutes}</div>`;
+            if(result > 0){
+                var html = `<div class="container-title">${element.date}</div>`;
+                html += `<div> ${element.minutes}</div>`;
 
-            if(html > 0){
                 overtimeHours.append(html);
             } else {
+                var html = `<div class="container-title">${element.date}</div>`;
+                html += `<div> ${element.minutes}</div>`;
+
                 absenceHours.append(html);
             }
 
@@ -44,21 +46,4 @@ $(document).ready(function () {
     }
 });
 
-/*
- $.ajax({
- url: "/rest/shift/user",
- type: 'GET',
- success: displayDate,
-
- });
-
- function displayDate(data){
- var date = $(".hours");
- date.html("");
- $.each(data, function (index, element) {
- var html =`<div>${element.date} test</div>`;
- date.append(html);
- });
- }
- */
 
