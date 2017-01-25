@@ -77,11 +77,11 @@ public class UserDBManagerTest {
         Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }
-    
+
     @Test
     public void loginUser() {
         String username = "email1";
-        String password = "XQkL57HYVGXvIEDgiF2otQ==";
+        String password = "password";
         User userObj = userDB.loginUser(username,password);
         boolean successLogin = false;
         if (userObj != null) {
@@ -91,10 +91,10 @@ public class UserDBManagerTest {
         //assertEquals("testUser@gmail.com",emailLogin);
         assertTrue(successLogin);
     }
-    
+
     @Test
     public void loginUserId() {
-        String userId = "2";
+        String userId = "1";
         int status = userDB.checkLoginId(userId, "password");
         boolean successLogin = false;
         if(status>0) {
@@ -102,7 +102,7 @@ public class UserDBManagerTest {
         }
         assertTrue(successLogin);
     }
-    
+
     @Test
     public void getUser() {
         int userId = 1;
@@ -138,11 +138,11 @@ public class UserDBManagerTest {
         assertTrue(users.get(0) instanceof User);
     }
 
-    
+
 
     @Test
     public void changePassword() {
-        String userId = "3";
+        String userId = "1";
         String prevPassword = "password";
         String newPass = "password";
         int status = userDB.changePasswordUserId(userId, prevPassword, newPass);
