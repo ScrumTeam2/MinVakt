@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class UserBasicWorkHours extends UserBasic {
     private int shiftMinutes;
     private int overTime;
-    private int totalWorkHours;
+    private int totalWorkMinutes;
 
     public int getShiftMinutes() {
         return shiftMinutes;
@@ -26,16 +26,16 @@ public class UserBasicWorkHours extends UserBasic {
         this.overTime = overTime;
     }
 
-    public int getTotalWorkHours() {
-        return totalWorkHours;
+    public int getTotalWorkMinutes() {
+        return totalWorkMinutes;
     }
 
-    public void setTotalWorkHours(int workHours) {
-        this.totalWorkHours = workHours;
+    public void setTotalWorkMinutes(int workHours) {
+        this.totalWorkMinutes = workHours;
     }
 
     public void calculateTotalWorkHours() {
-        totalWorkHours = overTime + shiftMinutes;
+        totalWorkMinutes = overTime + shiftMinutes;
     }
 
     public UserBasicWorkHours(int id, String firstName, String lastName, User.UserCategory category, int shiftMinutes, int overTime) {
@@ -49,7 +49,7 @@ public class UserBasicWorkHours extends UserBasic {
 
     public static Comparator<UserBasicWorkHours> workHoursComparator = new Comparator<UserBasicWorkHours>() {
         public int compare(UserBasicWorkHours a, UserBasicWorkHours b) {
-            return a.getTotalWorkHours() - b.getTotalWorkHours();
+            return a.getTotalWorkMinutes() - b.getTotalWorkMinutes();
         }
     };
 
@@ -59,7 +59,7 @@ public class UserBasicWorkHours extends UserBasic {
                 super.toString()+
                 ", shiftMinutes=" + shiftMinutes +
                 ", overTime=" + overTime +
-                ", totalWorkHours=" + totalWorkHours +
+                ", totalWorkMinutes=" + totalWorkMinutes +
                 "}";
     }
 }

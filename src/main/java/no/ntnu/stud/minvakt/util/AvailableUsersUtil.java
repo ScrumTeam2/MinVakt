@@ -49,7 +49,7 @@ public class AvailableUsersUtil {
             user.calculateTotalWorkHours();
             //If the user doesn't have too many work hours they are put in the new list
 
-            if(user.getTotalWorkHours() < MAX_WORK_MINUTES){
+            if(user.getTotalWorkMinutes() < MAX_WORK_MINUTES){
                 userListDelimited.add(user);
             }
 
