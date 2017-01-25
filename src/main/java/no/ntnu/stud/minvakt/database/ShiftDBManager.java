@@ -274,7 +274,6 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
-                e.printStackTrace();
             }
             finally {
                 finallyStatement(prep);
@@ -404,7 +403,7 @@ public class ShiftDBManager extends DBManager {
         return out != 0;
     }
 
-    private final String sqlGetCandidates = 
+    private final String sqlGetCandidates =
             "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
             "LEFT JOIN shift USING(shift_id) " +
             "NATURAL JOIN user " +
@@ -486,7 +485,6 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException sqle){
                 log.log(Level.WARNING, "Error getting shifts with connected to availability and user", sqle);
-                sqle.printStackTrace();
             }
             finally {
                 endTransaction();

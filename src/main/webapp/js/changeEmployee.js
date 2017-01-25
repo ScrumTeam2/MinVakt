@@ -14,6 +14,7 @@ var shiftTypes = {
 };
 
 var users = [];
+var returnToEditPage = getUrlParameter("edit") === "1";
 
 $(document).ready(function() {
     $.ajax({
@@ -133,7 +134,7 @@ function addToShift(id) {
         },
         success: function(data) {
             console.log("Yay!", data);
-            window.location = "add-users-to-shift.html";
+            window.location = returnToEditPage ? "edit-shift.html?id=" + shiftId : "add-users-to-shift.html";
         },
         error: function (data) {
             console.log("Ney!", data);

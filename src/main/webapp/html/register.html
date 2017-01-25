@@ -20,6 +20,7 @@
 <aside class="popup-menu admin hide" id="popup_menu">
     <ul>
         <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="calendar-a.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
         <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
         <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
         <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
@@ -45,13 +46,23 @@
         <label for="admin">Administrasjon</label>
     </div>
     <form class="register-form" method="POST">
-        <input type="text" name="firstname" id="firstname" placeholder="Fornavn"/>
-        <input type="text" name="lastname" id="lastname" placeholder="Etternavn"/>
-        <input type="email" name="email" id="email" placeholder="E-post"/>
-        <input type="tel" name="phone" id="phone" placeholder="Mobilnummer"/>
-        <input type="number" name="percentage" id="percentage" placeholder="Stillingsprosent" min="0" max="100"/>
+        <div>
+            <input type="text" name="firstname" id="firstname" placeholder="Fornavn" required/>
+        </div>
+        <div>
+            <input type="text" name="lastname" id="lastname" placeholder="Etternavn" required/>
+        </div>
+        <div>
+            <input type="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" name="email" id="email" placeholder="E-post" required/>
+        </div>
+        <div>
+            <input type="tel" pattern="^[0-9]{8,8}$" name="phone" id="phone" placeholder="Mobilnummer" required/>
+        </div>
+        <div>
+            <input type="number" name="percentage" id="percentage" placeholder="Stillingsprosent" min="0" max="100" required/>
+        </div>
         <div class="select-container">
-            <select name="category" id="category">
+            <select name="category" id="category" required>
                 <option selected disabled>Velg en kategori</option>
                 <option id="nurse" value=NURSE>Sykepleier</option>
                 <option id="health" value=HEALTH_WORKER>Helsefagarbeider</option>
