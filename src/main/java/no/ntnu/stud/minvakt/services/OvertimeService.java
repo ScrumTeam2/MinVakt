@@ -65,9 +65,9 @@ public class OvertimeService extends SecureService{
     //GET fetch overtime for user (used by employee-user)
     //getOvertimeByUserId(int userId) returns Overtime[]
     @GET
-    @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOvertimeByUserId(@PathParam("userId") int userId) {
+    public Response getOvertimeByUserId() {
+        int userId = getSession().getUser().getId();
 
         Overtime[] overtimeTab = overtimeDBM.getOvertimeByUserId(userId);
         ArrayList<Overtime> overtime = new ArrayList<>();
