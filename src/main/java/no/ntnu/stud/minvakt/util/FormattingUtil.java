@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.util;
 
+import no.ntnu.stud.minvakt.data.shift.Shift;
+
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,6 +14,18 @@ public class FormattingUtil {
     private static HashMap <Integer,String> monthNames;
     private static HashMap<Integer, String> weekNames;
 
+
+    public static String formatShiftType(Shift.ShiftType shiftType){
+        if (shiftType.getValue() == 0){
+            return "dagvakt";
+        }else if(shiftType.getValue() == 1){
+            return "kveldsvakt";
+        }else{
+            return "nattvakt";
+        }
+
+
+    }
     public static String formatDate(Date date){
 
         if(monthNames == null) {
