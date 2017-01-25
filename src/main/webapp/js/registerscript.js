@@ -5,10 +5,6 @@ var createSuccess = false;
 
 $(document).ready(function(){
 
-    sessionStorage.getItem("SessionId");
-    console.log(sessionStorage.getItem("SessionId"));
-    console.log(sessionStorage.getItem("SessionExpires"));
-
     var userValue = $(".user-type:checked").val();
 
     $(".user-type").on('change', function() {
@@ -25,7 +21,7 @@ $(document).ready(function(){
     $('#userBtn').click(function(e){
         e.preventDefault();
 
-        var emptyField = false;
+        var formError = false;
 
         var $first = $('#firstname');
         var $last = $('#lastname');
@@ -34,34 +30,38 @@ $(document).ready(function(){
         var $phone = $('#phone');
         var $category = $('#category');
 
-        if(!$first.val()){
-            $first.addClass('error');
-            emptyField = true;
-        }
+        $first.removeClass('error');
+        $last.removeClass('error');
+        $percent.removeClass('error');
+        $email.removeClass('error');
+        $phone.removeClass('error');
+        $category.removeClass('error');
 
+        if(!$first.val()){
+            $first.addClass('error').attr('data-content', 'test');
+            formError = true;
+        }
         if(!$last.val()){
             $last.addClass('error');
-            emptyField = true;
+            formError = true;
         }
-
-        if(!$email.val()){
+        if(!$email.val() || !(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($email.val()))){
             $email.addClass('error');
-            emptyField = true;
+            formError = true;
         }
-
-        if(!$phone.val()){
+        if(!$phone.val() || !(/^[0-9]{8,8}$/.test($phone.val()))){
             $phone.addClass('error');
-            emptyField = true;
+            formError = true;
         }
 
         var formData;
 
-        console.log(emptyField);
+        console.log(formError);
         console.log(userValue);
 
         if(userValue === "admin"){
-            if(!emptyField){
-                console.log("admin her");
+            if(!formError){
+                console.log("Submitting admin");
                 formData = {
                     "firstName": $first.val(),
                     "lastName": $last.val(),
@@ -70,20 +70,22 @@ $(document).ready(function(){
                     "category": 'ADMIN',
                     "workPercentage": 1
                 };
+                submitUser(formData);
             }
 
         } else{
 
             if(!$category.val()){
                 $category.addClass('error');
-                emptyField = true;
+                formError = true;
             }
-            if(!$percent.val()){
-             $percent.addClass('error');
-             emptyField = true;
+            if(!$percent.val() || isNaN($percent.val()) || $percent.val() < 0 || $percent.val() > 100){
+                $percent.addClass('error');
+                formError = true;
              }
 
-            if(!emptyField){
+            if(!formError){
+                console.log("Submitting employee");
                 formData = {
                     "firstName": $first.val(),
                     "lastName": $last.val(),
@@ -93,20 +95,23 @@ $(document).ready(function(){
                     "workPercentage": parseFloat($percent.val()) / 100
                 };
                 console.log(JSON.stringify(formData));
+                submitUser(formData);
             }
         }
-
-        $.ajax({
-            url: "/rest/admin/createuser",
-            type: 'POST',
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
-            success: addUser,
-            error: invalidField
-        });
     });
 });
+
+function submitUser(formData) {
+    $.ajax({
+        url: "/rest/admin/createuser",
+        type: 'POST',
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: addUser,
+        error: invalidField
+    });
+}
 
 function showAdminInput(){
     var $select = $('.select-container');
@@ -164,7 +169,7 @@ $('#userCloseBtn').click(function() {
 //close popup when clicking outside of the popup
 var $popup = $('#userPopup');
 window.onclick = function(event) {
-    if (event.target == popup) {
+    if (event.target !== $popup) {
         $popup.hide();
         if(createSuccess) {
             $('.register-form')[0].reset();

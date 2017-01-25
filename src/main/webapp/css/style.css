@@ -138,6 +138,13 @@ input, select {
   margin: .5rem 0;
 }
 
+input:after {
+    display: block;
+    content: attr(data-content);
+    color: #E31D1D;
+    font-size: .75rem;
+}
+
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
