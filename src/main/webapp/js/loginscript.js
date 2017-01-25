@@ -12,6 +12,14 @@ $(document).ready(function(){
             window.location = "home-e.html";
             console.log("Already logged in as employee");
         }
+    } else{
+        $.ajax({
+            url: "/rest/session/check",
+            type: 'GET',
+            dataType: 'json',
+            success: login,
+            error: errorHere
+        });
     }
 
     $('#login').click(function(e){
@@ -64,6 +72,10 @@ function login(data){
         console.log("ansatt");
         window.location = "home-e.html";
     }
+}
+
+function errorHere(data){
+    console.log(data);
 }
 
 function invalid(data){

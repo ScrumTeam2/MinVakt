@@ -40,7 +40,6 @@ public class Encryption {
             log.log(Level.SEVERE, "Issue with secret key factory in password decryption.", e);
             return false;
         }
-        System.out.println(hashPass +" "+ hash);
         if (Arrays.equals(hashPass, hash)) return true;
         return false;
 

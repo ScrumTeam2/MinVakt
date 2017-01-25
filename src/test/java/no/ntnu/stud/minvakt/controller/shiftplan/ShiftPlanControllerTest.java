@@ -56,9 +56,9 @@ public class ShiftPlanControllerTest {
 
     private ShiftPlanDay generateTestDay(DayOfWeek dayOfWeek, int departmentId, int employeesDay, int employeesEvening, int employeesNight) {
         ShiftPlanDay day = new ShiftPlanDay(dayOfWeek);
-        day.addShift(new ShiftPlanShift(new Shift(-1, employeesDay, Date.valueOf(LocalDate.now()), Shift.ShiftType.DAY, departmentId, new ArrayList<>())));
-        day.addShift(new ShiftPlanShift(new Shift(-1, employeesEvening, Date.valueOf(LocalDate.now()), Shift.ShiftType.EVENING, departmentId, new ArrayList<>())));
-        day.addShift(new ShiftPlanShift(new Shift(-1, employeesNight, Date.valueOf(LocalDate.now()), Shift.ShiftType.NIGHT, departmentId, new ArrayList<>())));
+        day.addShift(new ShiftPlanShift(new Shift(-1, employeesDay, Date.valueOf(LocalDate.now()), Shift.ShiftType.DAY, departmentId, new ArrayList<>(), false)));
+        day.addShift(new ShiftPlanShift(new Shift(-1, employeesEvening, Date.valueOf(LocalDate.now()), Shift.ShiftType.EVENING, departmentId, new ArrayList<>(), false)));
+        day.addShift(new ShiftPlanShift(new Shift(-1, employeesNight, Date.valueOf(LocalDate.now()), Shift.ShiftType.NIGHT, departmentId, new ArrayList<>(), false)));
         return day;
     }
 

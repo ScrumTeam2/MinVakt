@@ -64,23 +64,6 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void createShift() {
-        logInUser();
-        ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false, 0));
-        Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers);
-        Response response = shiftService.createShift(shift);
-        if (response.getStatus() == 200) {
-            String rawJson = (String) response.getEntity();
-            JSONObject o = new JSONObject(rawJson);
-            Integer shiftId = o.getInt("id");
-            Response delResponse = shiftService.deleteShift(shiftId);
-            assertTrue(delResponse.getStatus() == 200);
-        }
-        assertTrue(response.getStatus() == 200);
-    }
-
-    @Test
     public void getShift() {
         logInUser();
         assertNotNull(shiftService.getShift(1));
