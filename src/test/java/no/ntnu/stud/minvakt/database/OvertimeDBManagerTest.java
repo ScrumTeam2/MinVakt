@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by AnitaKristineAune on 13.01.2017.
@@ -51,9 +53,9 @@ public class OvertimeDBManagerTest {
                 new Overtime(4, 61, 840, -60, false),
                 new Overtime(5, 60, 960, 60, false)
         };
-
-        for(int i = 0; i < res.length; i++){
-            assertTrue(expRes[i].equals(res[i]));
+        ArrayList<Overtime> resArray = new ArrayList<Overtime>(Arrays.asList(res));
+        for(int i = 0; i < expRes.length; i++){
+            assertTrue(resArray.contains(expRes[i]));
         }
     }
 
