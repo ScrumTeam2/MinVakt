@@ -61,8 +61,12 @@ public class UserService extends SecureService{
         else{
             return Response.ok().entity("Mail with new password sent!").build();
         }
-
-
+    }
+    @GET
+    @Path("/profile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public User getUserForProfile(){
+        return getSession().getUser();
     }
 
 
