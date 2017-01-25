@@ -232,7 +232,7 @@ public class ShiftService extends SecureService{
 
         /*Escape all displayed output in client*/
         Shift shift = shiftDB.getShift(shiftId);
-        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt den"+
+        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt "+
                 shift.getDate() + ".";
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
         boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
