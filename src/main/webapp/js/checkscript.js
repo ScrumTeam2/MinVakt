@@ -46,8 +46,6 @@ $(document).ready(function(){
     }
 });
 
-
-
 //Menu button
 $('#menu_icon').on("click", function(e) {
     e.preventDefault();
@@ -141,7 +139,8 @@ var adminlinks = [
     "/html/user-shifts.html",
     "/html/index.html",
     "/html/change-employee.html",
-    "/html/change-password.html"
+    "/html/change-password.html",
+    "/html/edit-shift.html"
 ];
 
 var employeelinks = [

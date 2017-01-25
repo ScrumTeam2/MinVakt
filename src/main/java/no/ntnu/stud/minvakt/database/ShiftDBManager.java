@@ -258,8 +258,8 @@ public class ShiftDBManager extends DBManager {
                 prep = conn.prepareStatement(sqlWasEmployeeOnShift);
                 prep.setInt(1, shiftUser.getUserId());
                 prep.setInt(2, shiftId);
-                out = prep.executeUpdate() != 0;
-                if (!out){
+                boolean alreadyOnShift = prep.executeUpdate() != 0;
+                if (!alreadyOnShift){
                     prep = conn.prepareStatement(addEmployeeToShift);
                     prep.setInt(1, shiftUser.getUserId());
                     prep.setInt(2, shiftId);
@@ -273,7 +273,6 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException e){
                 log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
-                e.printStackTrace();
             }
             finally {
                 finallyStatement(prep);
@@ -484,7 +483,6 @@ public class ShiftDBManager extends DBManager {
             }
             catch (SQLException sqle){
                 log.log(Level.WARNING, "Error getting shifts with connected to availability and user", sqle);
-                sqle.printStackTrace();
             }
             finally {
                 endTransaction();
