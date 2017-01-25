@@ -165,7 +165,7 @@ public class ShiftDBManagerTest {
         shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.NIGHT, 1, new ArrayList<>(), false));
 
         // Add user to a shift
-        shifts.get(0).getShiftUsers().add(new ShiftUser(1, "", User.UserCategory.ADMIN, true, false));
+        shifts.get(0).getShiftUsers().add(new ShiftUser(1, "", User.UserCategory.ADMIN, true, 0));
         Assert.assertTrue(shiftDB.bulkInsertShifts(shifts));
         try {
             for (Shift shift : shifts) {
