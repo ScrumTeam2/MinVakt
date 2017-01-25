@@ -35,11 +35,11 @@ public class OvertimeDBManagerTest {
     @Test
     public void getOvertimeByUserId(){
         int userId = 3;
-        Overtime[] res = overtimeDB.getOvertimeByUserId(userId);
+        ArrayList<Overtime> res = overtimeDB.getOvertimeByUserId(userId);
         Overtime[] expRes = {new Overtime(3, 52, 960, 35, false)};
 
-        for(int i = 0; i < res.length; i++){
-           assertTrue(expRes[i].equals(res[i]));
+        for(int i = 0; i < res.size(); i++){
+           assertTrue(expRes[i].equals(res.get(i)));
         }
     }
 
