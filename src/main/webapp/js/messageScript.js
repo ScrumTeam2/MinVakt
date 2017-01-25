@@ -1,5 +1,5 @@
 /**
- * Created by marith 18.01.2017.
+ * Created by ingvildbroen on 20.01.2017.
  */
 
 $(document).ready(function(){
@@ -28,33 +28,19 @@ var $this, feedId, shiftId, categoryPop;
 
 // display messages sorted by category
 function showMessages(data){
-    var $changes = $('#accept_change');
-    var $absence = $('#accept_absence');
-    var $timebank = $('#accept_timebank');
-    var $notifications = $('#show_notification');
+    var $shifts = $('#requests');
+    var $notifications = $('#notifications');
 
-    $changes.html("");
-    $absence.html("");
-    $timebank.html("");
+    $shifts.html("");
     $notifications.html("");
 
-    var change = 0;
-    var absence = 0;
-    var timebank = 0;
+    var shift = 0;
     var notification = 0;
     for(var i in data){
         switch(data[i].category){
-            case "SHIFT_CHANGE_ADMIN":
-                acceptChangeover(data[i]);
-                change++;
-                break;
-            case "TIMEBANK":
-                acceptTimebank(data[i]);
-                timebank++;
-                break;
-            case "VALID_ABSENCE":
-                acceptAbsence(data[i]);
-                absence++;
+            case "SHIFT_CHANGE_EMPLOYEE":
+                acceptShift(data[i]);
+                shift++;
                 break;
             case "NOTIFICATION":
                 showNotification(data[i]);
@@ -72,14 +58,8 @@ function showMessages(data){
                 </div>
             </div>`;
 
-    if(change === 0){
-        $changes.html(empty);
-    }
-    if(timebank === 0){
-        $timebank.html(empty);
-    }
-    if(absence === 0){
-        $absence.html(empty);
+    if(shift === 0){
+        $shifts.html(empty);
     }
     if(notification === 0){
         $notifications.html(empty);
@@ -98,23 +78,9 @@ function openPopup(e){
     var $showPop = $('#feed-popup');
 
     switch(categoryPop){
-        case "SHIFT_CHANGE_ADMIN":
+        case "SHIFT_CHANGE_EMPLOYEE":
             $popup.html(
-                `<h3>Godkjenne vaktbytte?</h3>
-                <p>${content}</p>`
-            );
-            $showPop.show();
-            break;
-        case "TIMEBANK":
-            $popup.html(
-                `<h3>Godkjenne timebank?</h3>
-                <p>${content}</p>`
-            );
-            $showPop.show();
-            break;
-        case "VALID_ABSENCE":
-            $popup.html(
-                `<h3>Godkjenne fravær?</h3>
+                `<h3>Vil du ta denne vakten?</h3>
                 <p>${content}</p>`
             );
             $showPop.show();
@@ -130,7 +96,7 @@ function openPopup(e){
 
 //no button
 var $deny = $('#denyBtn');
-$deny.on("click", function(e){
+$deny.on("click", function(e, feedId){
     e.preventDefault();
     setUnResolved(feedId);
     closePopup(e, feedId);
@@ -181,9 +147,9 @@ function resolveTask(feedId, resolvedTo){
 }
 
 
-// add changeover messages
-function acceptChangeover(data){
-    var $changes = $('#accept_change');
+// add request for shift messages
+function acceptShift(data){
+    var $requests = $('#requests');
     var content = data.content;
     var html=
         `<a href="#" id="open-popup">
@@ -197,59 +163,15 @@ function acceptChangeover(data){
             </div>
         </a>`;
     var $html = $(html);
-    $changes.append($html);
+    $requests.append($html);
     $html.on("click", function(e){
         openPopup(e);
     });
 }
 
-// add absence messages
-function acceptAbsence(data){
-    var $absence = $('#accept_absence');
-    var content = data.content;
-    var html=
-        `<a href="#" id="open-popup">
-            <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
-                <div class="watch-info">
-                    <p class="lead">${content}</p>
-                </div>
-                <i class="symbol right-arrow">
-                    <i class="material-icons">chevron_right</i>
-                </i>
-            </div>
-        </a>`;
-    var $html = $(html);
-    $absence.append($html);
-    $html.on("click", function(e){
-        openPopup(e);
-    });
-}
-
-// add timebank messages
-function acceptTimebank(data){
-    var $timebank = $('#accept_timebank');
-    var content = data.content;
-    var html=
-        `<a href="#" id="open-popup">
-            <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
-                <div class="watch-info">
-                    <p class="lead">${content}</p>
-                </div>
-                <i class="symbol right-arrow">
-                    <i class="material-icons">chevron_right</i>
-                </i>
-            </div>
-        </a>`;
-    var $html = $(html);
-    $timebank.append($html);
-    $html.on("click", function(e){
-        openPopup(e);
-    });
-}
-
-//add notifications messages
+// add notification messages
 function showNotification(data){
-    var $notifications = $('#show_notification');
+    var $notifications = $('#notifications');
     var content = data.content;
     var html=
         `<a href="#" id="open-popup">
