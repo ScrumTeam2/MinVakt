@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.controller.email.ForgotPass;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
@@ -28,6 +29,12 @@ public class UserService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<UserBasicList> getUserBasics() {
         return userDB.getUserBasics();
+    }
+    @Path("/category")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<UserBasic> getUserBasicsWithCategory(@QueryParam("category")User.UserCategory category) {
+        return userDB.getUserBasicsWithCategory(category);
     }
 
     @GET
