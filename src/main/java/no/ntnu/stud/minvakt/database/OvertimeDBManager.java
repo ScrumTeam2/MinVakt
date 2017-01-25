@@ -112,7 +112,7 @@ public class OvertimeDBManager extends DBManager{
         Overtime overtimeObj;
         ArrayList<Overtime> timeList = new ArrayList<>();
 
-        ResultSet res;
+        ResultSet res = null;
 
         if(setUp()){
             try{
@@ -140,7 +140,7 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING, "Error returning overtime for user with ID = " + userId, sqlE);
             } finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return timeList;
@@ -180,7 +180,7 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING, "Error returning unapproved overtime", sqlE);
             } finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return timeList;
@@ -204,7 +204,7 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING, "Error getting row count", sqlE);
             } finally{
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return count;
@@ -261,7 +261,7 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);
             } finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return minutes;

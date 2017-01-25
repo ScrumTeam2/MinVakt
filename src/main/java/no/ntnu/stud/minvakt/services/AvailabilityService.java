@@ -128,7 +128,7 @@ public class AvailabilityService extends SecureService {
     @GET
     @Path("/shift/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category")User.UserCategory category, @QueryParam("limitByCategory") boolean onlyThisCategory){
+    public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category") User.UserCategory category, @QueryParam("limitByCategory") boolean onlyThisCategory){
         AvailableUsersUtil availUsersU = new AvailableUsersUtil();
         ShiftDBManager shiftDBM = new ShiftDBManager();
         Shift shift = shiftDBM.getShift(shiftId);

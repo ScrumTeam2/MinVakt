@@ -92,7 +92,7 @@ public class UserDBManager extends DBManager {
                 e.printStackTrace();
             }finally{
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return null;
