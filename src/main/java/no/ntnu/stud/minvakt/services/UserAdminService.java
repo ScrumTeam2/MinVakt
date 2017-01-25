@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.controller.email.Mail;
 import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
@@ -52,7 +53,7 @@ public class UserAdminService extends SecureService {
 
         if(user.getId() > 0) {
             String json = "{\"id\": \"" + user.getId() + "\", \"password\":\"" + userInfo[1]+"\"}";
-            System.out.println(json);
+            Mail.sendMail(user.getEmail(), "Du er registrert som bruker hos MinVakt", "Ditt passord er: "+userInfo[1]);
             return Response.ok(json, MediaType.APPLICATION_JSON).build();
         } else {
             log.log(Level.WARNING, "Failed to insert user: " + user);

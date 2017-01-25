@@ -31,6 +31,7 @@ public class UserDBManager extends DBManager {
     //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
     private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? LIMIT 1;";
+    private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ?";
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -498,8 +499,7 @@ public class UserDBManager extends DBManager {
                      out = res.getInt(1);
                  }
              }catch (SQLException sqle){
-                 log.log(Level.WARNING, "Issue with getting an admin ID");
-                 sqle.printStackTrace();
+                 log.log(Level.WARNING, "Issue with getting an admin ID", sqle);
 
              }
              finally {
@@ -508,6 +508,50 @@ public class UserDBManager extends DBManager {
          }
          return out;
     }
+    public boolean setNewPassword(int userId, String[] hashSalt){
+        boolean out = false;
+
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlChangePass);
+                prep.setString(1,hashSalt[0]);
+                prep.setString(2,hashSalt[1]);
+                prep.setInt(3,userId);
+                out = prep.executeUpdate() != 0;
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Issue with change user password", sqle);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return out;
+    }
+    public int getUserIdFromMail(String email){
+        int out = 0;
+        if(setUp()){
+            ResultSet res = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetUserIdByMail);
+                prep.setString(1, email);
+                res = prep.executeQuery();
+                if(res.next()) {
+                    out = res.getInt(1);
+                }
+            }catch (SQLException sqle){
+                log.log(Level.WARNING, "Issue with getting user from mail "+email, sqle);
+
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return out;
+    }
+
     //If string contains @, it's an email
    /* if(username.contains("@")) {
      checkLogin(username, password); //Email
