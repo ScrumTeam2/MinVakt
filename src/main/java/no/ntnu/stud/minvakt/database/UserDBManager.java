@@ -28,6 +28,9 @@ public class UserDBManager extends DBManager {
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
+    private final String sqlGetUserBasicsWithCategory = "SELECT user_id, first_name, last_name, category FROM user WHERE category = ? " +
+            "ORDER BY last_name ASC, first_name ASC;";
+
     //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
     private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? LIMIT 1;";
@@ -512,15 +515,15 @@ public class UserDBManager extends DBManager {
          }
          return out;
     }
-    public boolean setNewPassword(int userId, String[] hashSalt){
+    public boolean setNewPassword(int userId, String[] saltHash){
         boolean out = false;
 
         if(setUp()){
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlChangePass);
-                prep.setString(1,hashSalt[0]);
-                prep.setString(2,hashSalt[1]);
+                prep.setString(1,saltHash[1]); //hash
+                prep.setString(2,saltHash[0]); //salt
                 prep.setInt(3,userId);
                 out = prep.executeUpdate() != 0;
             }
@@ -562,6 +565,33 @@ public class UserDBManager extends DBManager {
      } else {
      checkLogin(username, password); //Phone
      }*/
+   public ArrayList<UserBasic> getUserBasicsWithCategory(User.UserCategory category){
+       ArrayList<UserBasic> out = new ArrayList<>();
+       if(setUp()){
+           ResultSet res = null;
+           try {
+               conn = getConnection();
+               prep = conn.prepareStatement(sqlGetUserBasicsWithCategory);
+               prep.setInt(1,category.getValue());
+               res = prep.executeQuery();
+               while(res.next()){
+                   out.add(new UserBasic(
+                           res.getInt("user_id"),
+                           res.getString("first_name"),
+                           res.getString("last_name"),
+                           User.UserCategory.valueOf(res.getInt("category"))
+                   ));
+               }
+           }
+           catch (SQLException sqle){
+               log.log(Level.WARNING, "Issue getting user basics from category", sqle);
+           }
+           finally {
+               finallyStatement(res, prep);
+           }
+       }
+       return out;
+   }
 
 
 }

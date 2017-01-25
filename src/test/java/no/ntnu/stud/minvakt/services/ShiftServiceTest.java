@@ -8,6 +8,7 @@ import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -51,7 +52,7 @@ public class ShiftServiceTest {
 
         logInAdmin();
 
-        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
         shiftService.addEmployeeToShift(shiftUser, shiftId);
 
         Response response = shiftService.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
@@ -68,7 +69,7 @@ public class ShiftServiceTest {
     public void createShift() {
         logInUser();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false, false));
+        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0));
         Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers, false);
         Response response = shiftService.createShift(shift);
         if (response.getStatus() == 200) {
@@ -90,7 +91,7 @@ public class ShiftServiceTest {
     @Test
     public void addEmployeeToShift() {
         logInUser();
-        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, 0);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 9);
         if (statusOk.getStatus() == 200) {
             statusOk = shiftService.deleteEmployeeFromShift(1, 9,false);
@@ -130,5 +131,14 @@ public class ShiftServiceTest {
     public void getAvailableShiftsTest(){
         ArrayList<ShiftAvailable> statusOk = shiftService.getAvailableShifts();
         assertFalse(statusOk.isEmpty());
+    }
+    @Test
+    public void requestShiftChange() throws Exception {
+        logInUser();
+        int shiftId = 43;
+
+        Response response = shiftService.requestShiftChange(shiftId);
+        int expResp = 200;
+        Assert.assertEquals(expResp, response.getStatus());
     }
 }

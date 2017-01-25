@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.data;
 
+import no.ntnu.stud.minvakt.data.shift.Shift;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -20,18 +22,43 @@ public class Overtime {
     private int minutes;
     @XmlElement
     private boolean approved;
+    @XmlElement
+    private java.sql.Date date;
+    @XmlElement
+    private Shift.ShiftType type;
 
     public Overtime(){}
 
-   public Overtime(int userId, int shiftId, int startTime, int minutes, boolean approved) {
-       this.userId = userId;
-       this.shiftId = shiftId;
-       this.startTime = startTime;
-       this.minutes = minutes;
-       this.approved = approved;
-   }
+    public Overtime(int userId, int shiftId, int startTime, int minutes, boolean approved, java.sql.Date date, int type) {
+        this.userId = userId;
+        this.shiftId = shiftId;
+        this.startTime = startTime;
+        this.minutes = minutes;
+        this.approved = approved;
+        this.date = date;
+        this.type = Shift.ShiftType.valueOf(type);
+    }
 
-   public int getUserId(){
+    public Overtime(int userId, int shiftId, int startTime, int minutes, boolean approved) {
+        this.userId = userId;
+        this.shiftId = shiftId;
+        this.startTime = startTime;
+        this.minutes = minutes;
+        this.approved = approved;
+    }
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public int getUserId(){
        return userId;
     }
 
@@ -45,10 +72,6 @@ public class Overtime {
 
     public int getMinutes(){
         return minutes;
-    }
-
-    public boolean getApproved(){
-        return approved;
     }
 
     public void setUserId(int userId){
@@ -67,6 +90,11 @@ public class Overtime {
         this.minutes = minutes;
     }
 
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+
     @Override
     public String toString() {
         return "Overtime{" +
@@ -76,10 +104,6 @@ public class Overtime {
                 ", minutes=" + minutes +
                 ", approved=" + approved +
                 '}';
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
     }
 
     @Override

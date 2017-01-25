@@ -138,6 +138,15 @@ input, select {
   margin: .5rem 0;
 }
 
+.register-form div:after {
+    display: block;
+    content: attr(data-content);
+    color: #B92D00;
+    font-size: .75rem;
+    margin-top: -.5rem;
+    height: 0;
+}
+
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -148,9 +157,11 @@ select {
   position: relative;
 }
 
-.select-container:after {
+.register-form .select-container:before {
   content: 'expand_more';
   position: absolute;
+    height: auto;
+    margin-top: 0;
   top: 50%;
   right: 0;
   -webkit-transform: translateY(-50%);
@@ -167,7 +178,7 @@ input:focus, input[required]:valid {
   margin-bottom: 0.4375rem;
 }
 
-input.error, input:not([value=""]):focus:invalid {
+input.error, select.error, input:not([value=""]):focus:invalid {
   border-bottom: 2px solid #B92D00;
   margin-bottom: 0.4375rem;
 }
@@ -393,6 +404,10 @@ button {
     margin-left: .5rem;
 }
 
+#userBtn {
+    margin-top: 1.5rem;
+}
+
 .link {
   text-decoration: none;
   color: #9e9e9e;
@@ -458,7 +473,6 @@ button {
   display: block;
   width: 1.5rem;
   height: 1.5rem;
-  cursor: pointer;
   transition: transform .2s;
 }
 
@@ -830,6 +844,7 @@ text-align: center;
     background: #ffffff;
     padding: 1.5rem;
     border-radius: 2px;
+    border: 2px solid;
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.5);
     max-width: 80%;
     display: none;
