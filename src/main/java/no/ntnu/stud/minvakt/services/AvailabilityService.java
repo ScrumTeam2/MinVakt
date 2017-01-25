@@ -143,7 +143,6 @@ public class AvailabilityService extends SecureService {
     @Path("/{shiftId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteAvailability(@QueryParam("brukerId") int brukerId, @PathParam("shiftId") int shiftId) {
-        if (getSession() == null) return null;
         boolean isDeleted = availabilityDB.deleteAvailability(brukerId, shiftId);
         if (!isDeleted) {
             return Response.status(400).entity("Unable to delete availability.").build();
