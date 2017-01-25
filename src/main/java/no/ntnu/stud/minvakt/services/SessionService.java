@@ -55,7 +55,8 @@ public class SessionService {
     @GET
     public Response validateSession(@Context HttpServletRequest request) {
         if (request.getSession().getAttribute("session") != null) {
-            return Response.ok().build();
+            Session session = (Session)request.getSession().getAttribute("session");
+            return Response.ok(session.getUser()).build();
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }

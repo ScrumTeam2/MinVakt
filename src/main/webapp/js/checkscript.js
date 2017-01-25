@@ -15,9 +15,6 @@ $(document).ready(function(){
         }
     }
 
-
-        //.addClass("active");
-
     if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
         var date = new Date();
@@ -33,7 +30,7 @@ $(document).ready(function(){
             employeeAccess();
         } else{
             console.log("category not found", userCategory);
-            redirect();
+            clearLogin();
         }
 
         if(expire <= timeNow){
@@ -41,18 +38,18 @@ $(document).ready(function(){
                 url: "/rest/session/check",
                 type: 'GET',
                 success: renewSession,
-                error: redirect
+                error: clearLogin
             });
         }
     } else{
-        redirect();
+        clearLogin();
     }
 });
 
 
 
 //Menu button
-$('#menu_icon').click(function(e) {
+$('#menu_icon').on("click", function(e) {
     e.preventDefault();
     var $menu = $('#popup_menu');
     $menu.toggle();
@@ -63,7 +60,7 @@ $('#menu_icon').click(function(e) {
 });
 
 //More button
-$('#more_icon').click(function(e) {
+$('#more_icon').on("click", function(e) {
     e.preventDefault();
     var $more = $('#popup_more');
     $more.toggle();
@@ -73,7 +70,7 @@ $('#more_icon').click(function(e) {
     }
 });
 
-$('#logout').click(function(e){
+$('#logout').on("click", function(e){
     e.preventDefault();
     logOut();
 });
@@ -83,7 +80,7 @@ function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
         type: 'GET',
-        success: redirect
+        success: clearLogin
     });
     //console.log("log out function");
 }
@@ -96,7 +93,7 @@ function renewSession(){
     sessionStorage.SessionExpires = date;
 }
 
-function redirect(){
+function clearLogin(){
     //console.log("log out");
     //console.log("login again");
     sessionStorage.clear();
@@ -157,6 +154,7 @@ var employeelinks = [
     "/html/user-shifts.html",
     "/html/resetpassword.html",
     "/html/index.html",
+    "/html/messages-e.html",
     "/html/change-password.html"
 ];
 
