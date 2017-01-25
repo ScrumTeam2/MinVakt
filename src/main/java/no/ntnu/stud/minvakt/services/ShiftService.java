@@ -9,6 +9,8 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
+import no.ntnu.stud.minvakt.util.FormattingUtil;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.management.Notification;
@@ -20,6 +22,7 @@ import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +38,7 @@ public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
     UserDBManager userDB = new UserDBManager();
     NewsFeedDBManager newsDB = new NewsFeedDBManager();
-
+    FormattingUtil format = new FormattingUtil();
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -222,6 +225,30 @@ public class ShiftService extends SecureService{
         }
         else{
             return Response.notModified().entity("Notification not created.").build();
+        }
+    }
+
+    @GET
+    @Path("/user/shift_change/{shiftId}")
+    public Response requestShiftChange(@PathParam("shiftId") int shiftId){
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        User user = getSession().getUser();
+        Shift shift = shiftDB.getShift(shiftId);
+
+        //tries to set shift change
+        if(shiftDB.setShiftChange(shiftId, user.getId())){
+            //sends notifications to users/administrator, depending on the situation
+            AvailableUsersUtil availableUsers = new AvailableUsersUtil();
+            boolean ok = availableUsers.sendNotificationOfShiftChange(shift, user, timestamp);
+
+            if(ok){
+                return Response.ok().entity("Notification(s) sent.").build();
+            }
+            else{
+                return Response.notModified().entity("Notification not created.").build();
+            }
+        }else{
+            return Response.status(400).entity("Could not set shift change.").build();
         }
     }
 }

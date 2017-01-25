@@ -46,11 +46,15 @@ public class OvertimeDBManagerTest {
     public void getUnapprovedOvertimeTest(){
         Overtime[] res = overtimeDB.getUnapprovedOvertime();
         Overtime[] expRes = {
+                new Overtime(1,16,960, 60, false),
+                new Overtime(1,37,960,-80, false),
                 new Overtime(3, 52, 960, 35, false),
                 new Overtime(4, 28, 780, -120, false),
                 new Overtime(4, 61, 840, -60, false),
                 new Overtime(5, 60, 960, 60, false)
         };
+
+
 
         for(int i = 0; i < res.length; i++){
             assertTrue(expRes[i].equals(res[i]));
