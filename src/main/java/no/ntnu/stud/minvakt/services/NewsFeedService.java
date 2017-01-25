@@ -2,17 +2,10 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import no.ntnu.stud.minvakt.data.NewsFeedItem;
-import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -41,8 +34,8 @@ public class NewsFeedService extends SecureService{
 
     @POST
     @Path("/{feedId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true") boolean accepted){
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true") @FormParam("accepted") boolean accepted){
         boolean isUpdated = ShiftChangeUtil.updateNotification(feedId, accepted);
         if(isUpdated){
             return Response.status(Response.Status.OK).build();
