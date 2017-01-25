@@ -22,35 +22,43 @@ $(document).ready(function () {
     });
 
 
-    $.ajax({
-        url: "/rest/shift",
-        type: 'GET',
-        success: displayDate,
-
-    });
-
-
     function displayHours(data) {
-        var hours = $("#hours");
-        hours.html("");
+        var overtimeHours = $(".overtime-hours");
+        var absenceHours = $(".absence-hours");
+        overtimeHours.html("");
+        absenceHours.html("");
 
+        var minutes = ${element.minutes};
         $.each(data, function (index, element) {
-            var html = `<div>${element.minutes}</div>`;
-            hours.append(html);
+
+            var html = `<div> ${element.minutes}</div>`;
+
+            if(html > 0){
+                overtimeHours.append(html);
+            } else {
+                absenceHours.append(html);
+            }
+
+
         });
     }
-
-    function displayDate(data){
-        var date = $(".hours");
-        date.html("");
-        $.each(data, function (index, element) {
-            var html =`<div>${element.date}</div>`;
-            date.append(html);
-        });
-    }
-
-
-
-
 });
+
+/*
+ $.ajax({
+ url: "/rest/shift/user",
+ type: 'GET',
+ success: displayDate,
+
+ });
+
+ function displayDate(data){
+ var date = $(".hours");
+ date.html("");
+ $.each(data, function (index, element) {
+ var html =`<div>${element.date} test</div>`;
+ date.append(html);
+ });
+ }
+ */
 
