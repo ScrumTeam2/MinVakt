@@ -458,7 +458,6 @@ button {
   display: block;
   width: 1.5rem;
   height: 1.5rem;
-  cursor: pointer;
   transition: transform .2s;
 }
 
