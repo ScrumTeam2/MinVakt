@@ -575,8 +575,6 @@ INSERT INTO overtime VALUES(5, 60, 960, 60, false);
 INSERT INTO overtime VALUES(3, 52, 960, 35, false);
 INSERT INTO overtime VALUES(4, 61, 840, -60, false);
 INSERT INTO overtime VALUES(4, 28, 780, -120, false);
-INSERT INTO overtime VALUES(1, 16, 960, 60, false);
-INSERT INTO overtime VALUES(1, 37, 960, -80, false);
 
 -- newsfeed
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36',     'Overtid', false, 3, 26, 52, 3, 960);
