@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 
 import java.sql.Date;
 import java.time.LocalDate;

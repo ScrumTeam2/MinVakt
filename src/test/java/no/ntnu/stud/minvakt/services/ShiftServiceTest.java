@@ -4,6 +4,7 @@ package no.ntnu.stud.minvakt.services;
  * Created by evend on 1/10/2017.
  */
 import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
@@ -123,5 +124,11 @@ public class ShiftServiceTest {
         logInUser();
         Response response = shiftService.requestValidAbsence(1);
         assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void getAvailableShiftsTest(){
+        ArrayList<ShiftAvailable> statusOk = shiftService.getAvailableShifts();
+        assertFalse(statusOk.isEmpty());
     }
 }

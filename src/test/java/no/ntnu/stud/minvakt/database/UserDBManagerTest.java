@@ -81,7 +81,7 @@ public class UserDBManagerTest {
     @Test
     public void loginUser() {
         String username = "email1";
-        String password = "password";
+        String password = "XQkL57HYVGXvIEDgiF2otQ==";
         User userObj = userDB.loginUser(username,password);
         boolean successLogin = false;
         if (userObj != null) {
@@ -94,7 +94,7 @@ public class UserDBManagerTest {
     
     @Test
     public void loginUserId() {
-        String userId = "1";
+        String userId = "2";
         int status = userDB.checkLoginId(userId, "password");
         boolean successLogin = false;
         if(status>0) {
@@ -142,7 +142,7 @@ public class UserDBManagerTest {
 
     @Test
     public void changePassword() {
-        String userId = "1";
+        String userId = "3";
         String prevPassword = "password";
         String newPass = "password";
         int status = userDB.changePasswordUserId(userId, prevPassword, newPass);

@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
@@ -12,6 +13,7 @@ import no.ntnu.stud.minvakt.database.UserDBManager;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.management.Notification;
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -205,6 +207,13 @@ public class ShiftService extends SecureService{
         else{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
+    }
+
+    @GET
+    @Path("/availableShifts")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftAvailable> getAvailableShifts(){
+        return shiftDB.getAvailableShifts();
     }
     @GET
     @Path("/user/valid_absence/{shiftId}")

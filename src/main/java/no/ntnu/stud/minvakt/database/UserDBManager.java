@@ -389,6 +389,7 @@ public class UserDBManager extends DBManager {
      * @param new_password, the new password
      * @return Integer > -1 if success, -1 if fail
      */
+
     public int changePasswordUserId(String user_id, String prev_password, String new_password) {
         int change = -1;
         if (setUp()) {
