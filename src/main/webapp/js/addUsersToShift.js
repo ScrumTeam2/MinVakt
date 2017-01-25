@@ -2,111 +2,100 @@
  * Created by olekristianaune on 17.01.2017.
  */
 
-var dayId = localStorage.getItem("TempDayId");
-var eveningId = localStorage.getItem("TempEveningId");
-var nightId = localStorage.getItem("TempNightId");
+var shiftPlan = JSON.parse(localStorage.getItem("TempShiftPlan"));
+var currentNum = parseInt(localStorage.getItem("TempShiftCurr"));
+console.log("shiftPlan", shiftPlan);
+console.log("currentNum", currentNum);
 
-var shiftTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
+var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
+var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 
 var $list = $('.list');
 
 $(document).ready(function() {
 
-    console.log(dayId, eveningId, nightId);
+    $('.btnNext').on("click", function(e) {
+        currentNum = parseInt(currentNum) + 1;
+        $('.btnPrev').show();
+        if (currentNum >= shiftPlan.length) {
+            console.log(JSON.stringify(shiftPlan));
+            $.ajax({
+                url: "/rest/shiftplan/approve",
+                type: 'POST',
+                contentType: "application/json",
+                data: JSON.stringify({
+                    content: shiftPlan
+                }),
+                success: function(data) {
+                    console.log(data);
+                    //TODO: Make some popup to confirm that the shifts were approved.
+                    localStorage.clear();
+                    window.location = "/html/new-shift.html";
+                },
+                error: function(e) {
+                    console.error("Error", e);
+                }
+            });
 
-    $('button').on("click", function(e) {
-        // TODO: Mark shift as published with the ids, stored in localStorage
-        localStorage.clear();
-        window.location = "/html/new-shift.html";
-    });
-
-    $.ajax({
-        url: "/rest/shift/" + dayId + "/possiblecandidates",
-        type: "GET"
-    })
-    .done(function(data) {
-        console.log( "success", data );
-
-        var output = `<div class="container-title">
-                        <h3>Dag</h3>
-                    </div>`;
-
-
-        for (var i in data) {
-            output += `<div class="watch">
-                            <div class="watch-info">
-                                <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
-                                <p class="sub">${shiftTypes[data[i].category]}</p>
-                            </div>
-                            <a href="" data-id="${data[i].id}" class="link">Endre</a>
-                        </div>`;
+        } else {
+            if (currentNum === shiftPlan.length - 1) {
+                $('.btnNext').text("Publiser");
+            }
+            localStorage.setItem("TempShiftCurr", currentNum);
+            getNewShift();
         }
-
-        $list.append(output);
-        getEvening();
-    })
-    .fail(function(error) {
-        console.log( "error", error );
     });
+
+    $('.btnPrev').on("click", function(e) {
+        currentNum = Math.max(0, currentNum - 1);
+        if (currentNum === 0) {
+            $('.btnPrev').hide();
+        }
+        if (currentNum !== shiftPlan.length - 1) {
+            $('.btnNext').text("Neste");
+        }
+        localStorage.setItem("TempShiftCurr", currentNum);
+        getNewShift();
+    });
+
+    if (currentNum === 0) {
+        $('.btnPrev').hide();
+    }
+    if (currentNum === shiftPlan.length - 1) {
+        $('.btnNext').text("Publiser");
+    }
+    getNewShift();
 });
 
-function getEvening() {
+function getNewShift() {
     $.ajax({
-            url: "/rest/shift/" + eveningId + "/possiblecandidates",
-            type: "GET"
-        })
-        .done(function(data) {
-            console.log( "success", data );
-
-            var output = `<div class="container-title">
-                        <h3>Kveld</h3>
-                    </div>`;
-
-
-            for (var i in data) {
-                output += `<div class="watch">
-                            <div class="watch-info">
-                                <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
-                                <p class="sub">${shiftTypes[data[i].category]}</p>
-                            </div>
-                            <a href="#" data-id="${data[i].id}" class="link">Endre</a>
-                        </div>`;
-            }
-
-            $list.append(output);
-            getNight();
-        })
-        .fail(function(error) {
-            console.log( "error", error );
-        });
+        url: "/rest/shift/" + shiftPlan[currentNum],
+        method: "GET",
+        success: showShiftInfo,
+        error: function(e) {
+            console.error("Error", e);
+        }
+    });
 }
 
-function getNight() {
-    $.ajax({
-            url: "/rest/shift/" + nightId + "/possiblecandidates",
-            type: "GET"
-        })
-        .done(function(data) {
-            console.log( "success", data );
+function showShiftInfo(data) {
+    console.log(data);
 
-            var output = `<div class="container-title">
-                        <h3>Natt</h3>
-                    </div>`;
+    var output = `<div class="container-title">
+                <h3>${convertDate(data.date)} - ${shiftTypes[data.type]}</h3>
+                <p>${currentNum + 1} av ${shiftPlan.length}</p>
+            </div>`;
 
+    for (var i in data.shiftUsers) {
+        var user = data.shiftUsers[i];
+        output += `<div class="watch">
+                    <div class="watch-info">
+                        <p class="lead">${user.userName}</p>
+                        <p class="sub">${userTypes[user.userCategory]}</p>
+                    </div>
+                    <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}" class="link">Endre</a>
+                </div>`;
+    }
 
-            for (var i in data) {
-                output += `<div class="watch">
-                            <div class="watch-info">
-                                <p class="lead">${data[i].firstName} ${data[i].lastName}</p>
-                                <p class="sub">${shiftTypes[data[i].category]}</p>
-                            </div>
-                            <a href="#" data-id="${data[i].id}" class="link">Endre</a>
-                        </div>`;
-            }
-
-            $list.append(output);
-        })
-        .fail(function(error) {
-            console.log( "error", error );
-        });
-};
+    $list.html(output);
+}

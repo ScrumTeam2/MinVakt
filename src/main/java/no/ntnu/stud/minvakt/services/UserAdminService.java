@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.controller.email.Mail;
 import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.user.User;
-import no.ntnu.stud.minvakt.util.ErrorInfo;
+import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 import no.ntnu.stud.minvakt.util.InputUtil;
 

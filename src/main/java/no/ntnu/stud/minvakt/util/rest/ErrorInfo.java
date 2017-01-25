@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.util;
+package no.ntnu.stud.minvakt.util.rest;
 
 /**
  * Created by Audun on 11.01.2017.

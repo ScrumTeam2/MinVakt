@@ -6,7 +6,6 @@ import java.sql.Date;
  * Created by AnitaKristineAune on 13.01.2017.
  */
 public class Overtime {
-
     private int userId;
     private int shiftId;
     private int startTime;
