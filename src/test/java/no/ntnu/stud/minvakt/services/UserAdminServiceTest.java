@@ -9,6 +9,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -16,12 +17,14 @@ import static org.junit.Assert.assertTrue;
  */
 public class UserAdminServiceTest {
     private static UserAdminService userAdminService;
+    private static UserService userService;
     private HttpServletRequest request;
 
     @Before
     public void setUpTest() {
         request = new MockHttpServletRequest();
         userAdminService = new UserAdminService(request);
+        userService = new UserService(request);
     }
 
     private void logInUser() {
@@ -32,7 +35,7 @@ public class UserAdminServiceTest {
     @Test
     public void createUser() {
         logInUser();
-        User user = new User(-1, "Even","Dalen", "hash","salt","even@mail.com","20012111", User.UserCategory.HEALTH_WORKER, 1);
+        User user = new User(-1, "Even","Dalen", "hash","salt","system.minvakt@gmail.com","20012111", User.UserCategory.HEALTH_WORKER, 1);
         Response response = userAdminService.addUser(user);
         if (response.getStatus() == 200) {
             String rawJson = (String) response.getEntity();
@@ -44,5 +47,13 @@ public class UserAdminServiceTest {
 
         }
         assertTrue(response.getStatus() == 200);
+    }
+    @Test
+    public void changePassword(){
+        logInUser();
+        Response response = userService.changePassword("password", "password");
+        assertTrue(response.getStatus() == 200);
+        response = userService.changePassword("passwor", "password");
+        assertTrue(response.getStatus() == 304);
     }
 }

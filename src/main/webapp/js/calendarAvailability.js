@@ -154,7 +154,7 @@ function clickHandler() {
     console.log(dateString);
     if (this.textContent > 0) {
         $.ajax({
-            url: "/rest/shift?date="+dateString,
+            url: "/rest/availability/date?date="+dateString,
             type: 'GET',
             //datatype: 'json',
            /* data: {
@@ -236,8 +236,8 @@ function displayAvailabilityHtml(data) {
               "<div class='watch'>" +
                   "<div class='watch-info'>" +
                       "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
-                      "<p class='sub'>"+shiftTimes[element.shiftType]+"<br>"+element.hasUser+"</p>" +
-                      <!-- "<p class='sub'>"+element.deptName+"</p>" +-->
+                      "<p class='sub'>"+shiftTimes[element.shiftType]+"<br></p>" +
+                      "<p class='sub'>"+element.deptName+"</p>" +
                   "</div>";
                   if(element.hasUser) {
                     html+="<p>Min vakt</p>";

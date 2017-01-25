@@ -6,6 +6,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class ShiftDBManagerTest {
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,false));
-        Shift shift = new Shift(-1,1, java.sql.Date.valueOf("1995-01-01"), 1,1, shiftUsers);
+        Shift shift = new Shift(-1,1, java.sql.Date.valueOf("1995-01-01"), 1,1, shiftUsers, false);
         int shiftId = shiftDB.createNewShift(shift);
         if(shiftId != 0){
             boolean ok = shiftDB.deleteShift(shiftId);
@@ -135,6 +136,57 @@ public class ShiftDBManagerTest {
     @Test
     public void getUsersFromShift(){
         assertFalse(shiftDB.getUsersFromShift(1).isEmpty());
+    }
+
+    @Test
+    public void approveShifts() throws Exception {
+        int shiftId = shiftDB.createNewShift(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.DAY, 1, new ArrayList<>(), false));
+        Assert.assertTrue(shiftId > 0);
+        try {
+            Shift shift = shiftDB.getShift(shiftId);
+            Assert.assertNotNull(shift.isApproved());
+            Assert.assertFalse(shift.isApproved());
+
+            Assert.assertTrue(shiftDB.approveShifts(new int[]{shiftId}));
+            shift = shiftDB.getShift(shiftId);
+            Assert.assertTrue(shift.isApproved());
+        } finally {
+            shiftDB.deleteShift(shiftId);
+        }
+    }
+
+    @Test
+    public void bulkInsertShifts() throws Exception {
+        ArrayList<Shift> shifts = new ArrayList<>();
+
+        // Create shifts
+        shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.DAY, 1, new ArrayList<>(), false));
+        shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.EVENING, 1, new ArrayList<>(), false));
+        shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.NIGHT, 1, new ArrayList<>(), false));
+
+        // Add user to a shift
+        shifts.get(0).getShiftUsers().add(new ShiftUser(1, "", User.UserCategory.ADMIN, true, false));
+        Assert.assertTrue(shiftDB.bulkInsertShifts(shifts));
+        try {
+            for (Shift shift : shifts) {
+                Shift selectedShift = shiftDB.getShift(shift.getId());
+                if (selectedShift.getId() == shifts.get(0).getId()) {
+                    Assert.assertEquals(1, selectedShift.getShiftUsers().size());
+                    Assert.assertEquals(1, selectedShift.getShiftUsers().get(0).getUserId());
+                }
+                Assert.assertNotNull(selectedShift);
+            }
+        } finally {
+            for (Shift shift : shifts) {
+                shiftDB.deleteShift(shift.getId());
+            }
+        }
+    }
+
+    @Test
+    public void setResponsibleUser(){
+        assertTrue(shiftDB.setResponsibleUser(1,1,true));
+        assertTrue(shiftDB.setResponsibleUser(1,1,false));
     }
 }
 

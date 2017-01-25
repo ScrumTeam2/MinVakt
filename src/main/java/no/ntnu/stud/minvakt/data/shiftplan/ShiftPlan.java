@@ -2,10 +2,6 @@ package no.ntnu.stud.minvakt.data.shiftplan;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import no.ntnu.stud.minvakt.util.LocalDateDeserializer;
-import no.ntnu.stud.minvakt.util.LocalDateSerializer;
 
 import java.time.LocalDate;
 
