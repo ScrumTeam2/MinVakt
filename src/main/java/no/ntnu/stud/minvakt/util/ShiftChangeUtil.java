@@ -64,7 +64,7 @@ public class ShiftChangeUtil {
                 Timestamp timestamp = Timestamp.from(Instant.now());
                 Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
                 if(!overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())) return false;
-                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten den "+
+                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten "+
                         FormattingUtil.formatDate(shift.getDate())+ " er blitt godkjent av" +
                         " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                         newsFeedItem.getShiftId(), TIMEBANK);
@@ -76,9 +76,9 @@ public class ShiftChangeUtil {
         else {
             Timestamp timestamp = Timestamp.from(Instant.now());
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
-            NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten den " +
+            NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten " +
                     FormattingUtil.formatDate(shift.getDate()) + " er ikke blitt godkjent av" +
-                    " administrasjonen!", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                    " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                     newsFeedItem.getShiftId(), TIMEBANK);
             overtimeDB.deleteOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
             newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -131,6 +131,10 @@ public class ShiftChangeUtil {
             int status =  newsDB.createNotification(notification);
             if(status == 0) return false;
         }
+        //If the employee do not want the shift, check if there are any other users pending confirmation
+        else{
+
+        }
         //Remove current newsFeedItem
         return newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
     }
@@ -157,7 +161,7 @@ public class ShiftChangeUtil {
 
             //Creates update notification for user who accepted the shift change
             NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    "Ditt vaktbytte den " + FormattingUtil.formatDate(shift.getDate()) + " er godkjent av administrator!",
+                    "Ditt vaktbytte den " + FormattingUtil.formatDate(shift.getDate()) + " er godkjent av administrasjonen.",
                     userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
             newsDB.createNotification(notification2);
