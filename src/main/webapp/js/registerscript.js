@@ -30,27 +30,37 @@ $(document).ready(function(){
         var $phone = $('#phone');
         var $category = $('#category');
 
-        $first.removeClass('error');
-        $last.removeClass('error');
-        $percent.removeClass('error');
-        $email.removeClass('error');
-        $phone.removeClass('error');
-        $category.removeClass('error');
+        $first.removeClass('error').parent().attr('data-content', '');
+        $last.removeClass('error').parent().attr('data-content', '');
+        $percent.removeClass('error').parent().attr('data-content', '');
+        $email.removeClass('error').parent().attr('data-content', '');
+        $phone.removeClass('error').parent().attr('data-content', '');
+        $category.removeClass('error').parent().attr('data-content', '');
 
         if(!$first.val()){
-            $first.addClass('error').attr('data-content', 'test');
+            $first.addClass('error').parent().attr('data-content', 'Du må fylle inn fornavn.');
             formError = true;
         }
         if(!$last.val()){
-            $last.addClass('error');
+            $last.addClass('error').parent().attr('data-content', 'Du må fylle inn etternavn.');
             formError = true;
         }
         if(!$email.val() || !(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($email.val()))){
             $email.addClass('error');
+            if(!$email.val()) {
+                $email.parent().attr('data-content', 'Du må fylle inn e-post.');
+            } else {
+                $email.parent().attr('data-content', 'E-posten du skrev inn er ikke gyldig.');
+            }
             formError = true;
         }
         if(!$phone.val() || !(/^[0-9]{8,8}$/.test($phone.val()))){
             $phone.addClass('error');
+            if(!$phone.val()) {
+                $phone.parent().attr('data-content', 'Du må fylle inn mobilnummer.');
+            } else {
+                $phone.parent().attr('data-content', 'Mobilnummeret du skrev inn er ikke gyldig.');
+            }
             formError = true;
         }
 
@@ -76,11 +86,20 @@ $(document).ready(function(){
         } else{
 
             if(!$category.val()){
-                $category.addClass('error');
+                $category.addClass('error').parent().attr('data-content', 'Du må velge en kategori.');
                 formError = true;
             }
             if(!$percent.val() || isNaN($percent.val()) || $percent.val() < 0 || $percent.val() > 100){
                 $percent.addClass('error');
+                if(!$percent.val()) {
+                    $percent.parent().attr('data-content', 'Du må fylle inn stillingsprosent.');
+                } else if (isNaN($percent.val())) {
+                    $percent.parent().attr('data-content', 'Stillingsprosenten må være et tall.');
+                } else if ($percent.val() < 0) {
+                    $percent.parent().attr('data-content', 'Stillingsprosenten kan ikke være negativ.');
+                } else if ($percent.val() > 100) {
+                    $percent.parent().attr('data-content', 'Stillingsprosenten kan ikke være over 100.');
+                }
                 formError = true;
              }
 

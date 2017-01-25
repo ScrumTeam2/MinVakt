@@ -138,11 +138,13 @@ input, select {
   margin: .5rem 0;
 }
 
-input:after {
+.register-form div:after {
     display: block;
     content: attr(data-content);
-    color: #E31D1D;
+    color: #B92D00;
     font-size: .75rem;
+    margin-top: -.5rem;
+    height: 0;
 }
 
 select {
@@ -155,9 +157,11 @@ select {
   position: relative;
 }
 
-.select-container:after {
+.register-form .select-container:before {
   content: 'expand_more';
   position: absolute;
+    height: auto;
+    margin-top: 0;
   top: 50%;
   right: 0;
   -webkit-transform: translateY(-50%);
@@ -168,13 +172,13 @@ select {
   pointer-events: none;
 }
 
-input:focus, input[required]:valid {
+input:focus, input[required]:valid, select:not(:disabled) {
   outline: none;
   border-bottom: 2px solid #034584;
   margin-bottom: 0.4375rem;
 }
 
-input.error, input:not([value=""]):focus:invalid {
+input.error, select.error, input:not([value=""]):focus:invalid {
   border-bottom: 2px solid #B92D00;
   margin-bottom: 0.4375rem;
 }
@@ -398,6 +402,10 @@ button {
 
 .button-group button:last-child {
     margin-left: .5rem;
+}
+
+#userBtn {
+    margin-top: 1.5rem;
 }
 
 .link {
