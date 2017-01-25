@@ -591,7 +591,7 @@ INSERT INTO overtime VALUES(5, 60, 960,  60, FALSE);
 -- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'content', false, 1,    26,    --,    --,   -1);
 -- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'content', false, 1,    26,    --,    --,   -1);
 -- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'content', false, 1,    26,    --,    --,   -1);
--- "...  ønsker å ta vakten til ...  på dato ..."
+-- "... ønsker å ta vakten til ...  på dato ..."
 -- "... ønsker å bytte vakt "dato" (dag/kveld/natt)"
 
 
@@ -605,9 +605,9 @@ INSERT INTO overtime VALUES(5, 60, 960,  60, FALSE);
 
 -- (3) TIMEBANK
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Ditt timeavvik på vakten lørdag 28. februar er blitt godkjent av administrasjonen.', false,  3,  26,    16,    1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Ditt timeavvik på vakten torsdag 09. februar er blitt godkjent av administrasjonen.', false,  3,  26,   52,    3,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Ditt timeavvik på vakten onsdag 01. februar er blitt godkjent av administrasjonen.', false,  3,  26,    28,    4,   780);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Ditt timeavvik på vakten lørdag 28. februar er blitt godkjent av administrasjonen.', false,  3,  1,    16,    1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Ditt timeavvik på vakten torsdag 09. februar er blitt godkjent av administrasjonen.', false,  3,  3,   52,    3,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Ditt timeavvik på vakten onsdag 01. februar er blitt godkjent av administrasjonen.', false,  3,  4,    28,    4,   780);
 -- "Ditt timeavvik på vakten ... er blitt godkjent av administrasjonen."
 
 
