@@ -2,18 +2,20 @@
  * Created by evend on 1/12/2017.
  */
 $(document).ready(function () {
-    createPeopleListeners();
+    createAjaxForAllShifts();
     createCalendarListener();
+
 });
-createAjaxForOwnShifts();
-function createAjaxForOwnShifts() {
+function createAjaxForAllShifts() {
     $.ajax({
         //     url: "rest/shift/user/"+userId,
-        url: "../rest/shift/user",
+        url: "../rest/shift",
+        data: {daysForward : 300}, //TODO: edit to 7?
         type: 'GET',
         dataType: 'json',
-        success: createUserShiftHtml,
+        success: createAllShiftsHtml,
         error: function (data) {
+            //console.log("Error, no data found");
             var calendarList = $(".list");
             calendarList.append("<p>" + data + "</p>");
         }
@@ -135,7 +137,7 @@ function successRegisterSykdom(data) {
     console.log(data.responseText);
     //Popup
 }
-
+/*
 function createUserShiftHtml(data) {
     var html = "";
     var calendarList = $(".list");
@@ -166,8 +168,9 @@ function createUserShiftHtml(data) {
     });
     createInfoListeners();
 }
+*/
 function createInfoListeners() {
-    $('.info-button').click(function (e) {
+    $('.clickable').click(function (e) {
         var clickedElement = $(this);
         var moreInfoElement = clickedElement.next();
         //console.log(moreInfoElement);
@@ -197,7 +200,7 @@ function createInfoListeners() {
         }
     });
 }
-
+/*
 function createPeopleListeners() {
     $('.person').click(function (e) {
         var title;
@@ -211,19 +214,7 @@ function createPeopleListeners() {
             title.removeClass("my-shifts");
             title.addClass("all-shifts");
             title.text("Alle vakter");
-            $.ajax({
-                //     url: "rest/shift/user/"+userId,
-                url: "../rest/shift",
-                data: {daysForward : 300}, //TODO: edit to 7?
-                type: 'GET',
-                dataType: 'json',
-                success: createAllShiftsHtml,
-                error: function (data) {
-                    //console.log("Error, no data found");
-                    var calendarList = $(".list");
-                    calendarList.append("<p>" + data + "</p>");
-                }
-            });
+
         }
         else {
             icon.text("person");
@@ -236,7 +227,7 @@ function createPeopleListeners() {
             createAjaxForOwnShifts();
         }
     })
-}
+}*/
 function createAllShiftsHtml(data) {
 
     var calendarList = $(".list");
@@ -255,7 +246,7 @@ function createAllShiftsHtml(data) {
                 "<h3>" + convertDate(element.date) + "</h3>" +
                 "</div>";
         }
-        html += "<div class='watch'>" +
+        html += "<div class='clickable cursor-point' data-id='" + element.shiftId + "'><div class='watch'>" +
             "<div class='watch-info'>" +
             "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
             "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
@@ -273,8 +264,8 @@ function createAllShiftsHtml(data) {
                 "</div>";
         }
         html +=
-            "<i class='symbol info-button' data-id='" + element.shiftId + "'><i class='material-icons'>info_outlines</i></i>" +
-            "<div class='more-info'></div></div>";
+            "<i class='symbol info-button' ><i class='material-icons'>info_outlines</i></i>" +
+            "</div></div><div class='more-info'></div>";
         calendarList.append(html);
         html = ""
     });
