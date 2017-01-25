@@ -88,6 +88,7 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public Shift getShift(@PathParam("shiftId") int shiftId) {
         if (getSession() == null) return null;
+        System.out.println("GetShift");
 
         return shiftDB.getShift(shiftId);
     }
@@ -206,14 +207,23 @@ public class ShiftService extends SecureService{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
+    //Registrates absence
     @GET
     @Path("/user/valid_absence/{shiftId}")
     public Response requestValidAbsence(@PathParam("shiftId") int shiftId){
         Timestamp timestamp = Timestamp.from(Instant.now());
         User user = getSession().getUser();
+        /*VULNERABILITY*/
+        //Her MÅ det verifiseres om at brukeren virkelig er koblet til dette shiftet. ELlers er det mulighet å forandre
+        //shiftid på kleint.
+        /*VULNERABILITY*/
+
+        /*Escape all displayed output in client*/
         Shift shift = shiftDB.getShift(shiftId);
         String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt den"+
                 shift.getDate() + ".";
+        //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
+        boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
         int adminId = userDB.getAdminId();
         NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), shiftId,
                 NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
