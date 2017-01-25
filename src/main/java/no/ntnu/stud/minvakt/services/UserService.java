@@ -1,4 +1,5 @@
 package no.ntnu.stud.minvakt.services;
+import no.ntnu.stud.minvakt.controller.email.ForgotPass;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
@@ -46,6 +47,22 @@ public class UserService extends SecureService{
         else{
             return Response.notModified().entity("Issue arised, old password may be wrong").build();
         }
+    }
+    @POST
+    @Path("/forgottenpass")
+    public Response sendNewPassword(@FormParam("email") String email){
+        int status = ForgotPass.sendEmailWithNewPass(email);
+        if(status < 0){
+            return Response.status(Response.Status.BAD_REQUEST).entity("Issue with request, mail may be wrong").build();
+        }
+        else if (status == 0){
+            return Response.status(Response.Status.EXPECTATION_FAILED).entity("Error sending mail, password is changed, but mail not sent").build();
+        }
+        else{
+            return Response.ok().entity("Mail with new password sent!").build();
+        }
+
+
     }
 
 
