@@ -172,7 +172,7 @@ select {
   pointer-events: none;
 }
 
-input:focus, input[required]:valid, select:not(:disabled) {
+input:focus, input[required]:valid {
   outline: none;
   border-bottom: 2px solid #034584;
   margin-bottom: 0.4375rem;

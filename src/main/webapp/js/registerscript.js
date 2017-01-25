@@ -10,6 +10,20 @@ $(document).ready(function(){
     $(".user-type").on('change', function() {
         userValue = $(".user-type:checked").val();
 
+        var $first = $('#firstname');
+        var $last = $('#lastname');
+        var $percent = $('#percentage');
+        var $email = $('#email');
+        var $phone = $('#phone');
+        var $category = $('#category');
+
+        $first.removeClass('error').parent().attr('data-content', '');
+        $last.removeClass('error').parent().attr('data-content', '');
+        $percent.removeClass('error').parent().attr('data-content', '');
+        $email.removeClass('error').parent().attr('data-content', '');
+        $phone.removeClass('error').parent().attr('data-content', '');
+        $category.removeClass('error').parent().attr('data-content', '');
+
         if(userValue === "admin"){
             showAdminInput();
         } else{
