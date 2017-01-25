@@ -11,10 +11,12 @@ import org.json.JSONObject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marit on 20.01.2017.
@@ -63,35 +65,18 @@ public class OvertimeService extends SecureService{
     //GET fetch overtime for user (used by employee-user)
     //getOvertimeByUserId(int userId) returns Overtime[]
     @GET
-    @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOvertimeByUserId(@PathParam("userId") int userId) {
-
-        JSONArray overtimeOut = new JSONArray();
-
-        Overtime[] overtime = overtimeDBM.getOvertimeByUserId(userId);
-        for (Overtime ot : overtime){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("userId", ot.getUserId());
-            jsonObject.put("shiftId", ot.getShiftId());
-            jsonObject.put("startTimeId", ot.getStartTime());
-            jsonObject.put("minutes", ot.getMinutes());
-            jsonObject.put("approved", ot.getApproved());
-            overtimeOut.put(jsonObject);
-        }
-        return Response.status(200).entity(overtimeOut.toString()).build();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Overtime> getOvertime() {
+    public Response getOvertimeByUserId() {
         int userId = getSession().getUser().getId();
+
         Overtime[] overtimeTab = overtimeDBM.getOvertimeByUserId(userId);
         ArrayList<Overtime> overtime = new ArrayList<>();
+
         for (Overtime ot : overtimeTab){
             overtime.add(ot);
         }
-        return overtime;
+        GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
+        return Response.ok(entity).build();
     }
 
     @DELETE

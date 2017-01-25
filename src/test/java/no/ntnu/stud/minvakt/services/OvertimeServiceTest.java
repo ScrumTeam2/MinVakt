@@ -44,8 +44,7 @@ public class OvertimeServiceTest {
 
     @Ignore
     public void getOvertimeTest() throws Exception {
-        int userId = 4;
-        Response response = overtimeService.getOvertimeByUserId(userId);
+        Response response = overtimeService.getOvertimeByUserId();
         Overtime[] expRes = new Overtime[2];
 
         expRes[0] = new Overtime(4,28,780,-120,false);
