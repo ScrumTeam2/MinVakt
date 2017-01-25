@@ -51,7 +51,7 @@ public class ShiftPlanShift {
     }
 
     public void addShiftUser(ShiftPlanUser user) {
-        shift.getShiftUsers().add(new ShiftUser(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getCategory(), needResponsibilityUser, false));
+        shift.getShiftUsers().add(new ShiftUser(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getCategory(), needResponsibilityUser, 0));
         updateCounters(user);
         user.incrementShiftAmount();
 
