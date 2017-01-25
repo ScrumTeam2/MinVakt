@@ -10,16 +10,19 @@ public class ShiftUser {
     private int userId;
     private String userName;
     private boolean responsibility;
-    private boolean valid_absence;
+    private int valid_absence;
     private User.UserCategory userCategory;
     User user = null;
+    private int valid_absence2;
 
-    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, boolean valid_absence){
+    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence){
         this.userCategory = userCategory;
         this.userName = userName;
         this.userId = userId;
         this.responsibility = responsibility;
+        System.out.println("Valid absence: "+valid_absence);
         this.valid_absence = valid_absence;
+        this.valid_absence2 = valid_absence;
     }
 
     @SuppressWarnings("unused")
@@ -31,7 +34,7 @@ public class ShiftUser {
         this.userId = user.getId();
         this.userName = user.getFirstName() + " " + user.getLastName();
         this.responsibility = false;
-        this.valid_absence = false;
+        this.valid_absence = 0;
         this.userCategory = user.getCategory();
     }
 
@@ -56,10 +59,28 @@ public class ShiftUser {
     }
 
     public boolean isValid_absence() {
+        if(valid_absence>0) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getValid_absence2() {
+        return valid_absence2;
+    }
+
+    public void setValid_absence2(int valid_absence2) {
+        this.valid_absence2 = valid_absence2;
+    }
+
+    public int getValidAbsence() {
+        return valid_absence;
+    }
+    public int getValid_absence() {
         return valid_absence;
     }
 
-    public void setValid_absence(boolean valid_absence) {
+    public void setValid_absence(int valid_absence) {
         this.valid_absence = valid_absence;
     }
 
