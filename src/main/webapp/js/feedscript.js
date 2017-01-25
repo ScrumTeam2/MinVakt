@@ -130,7 +130,7 @@ function openPopup(e){
 
 //no button
 var $deny = $('#denyBtn');
-$deny.on("click", function(e, feedId){
+$deny.on("click", function(e){
     e.preventDefault();
     setUnResolved(feedId);
     closePopup(e, feedId);
