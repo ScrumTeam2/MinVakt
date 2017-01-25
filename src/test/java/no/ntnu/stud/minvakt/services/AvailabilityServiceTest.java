@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,12 +15,14 @@ import javax.ws.rs.core.Response;
 public class AvailabilityServiceTest {
     private static ShiftService shiftService;
     private static HttpServletRequest request;
+    private static AvailabilityDBManager availDB;
 
     private static AvailabilityService availabilityService;
 
     @BeforeClass
     public static void objectSetUp() {
         request = new MockHttpServletRequest();
+        availDB = new AvailabilityDBManager();
         availabilityService = new AvailabilityService(request);
     }
 
@@ -38,6 +41,7 @@ public class AvailabilityServiceTest {
 
     @Test
     public void deleteAvailability(){
+        availDB.setAvailability(3,19);
         Response response = availabilityService.deleteAvailability(3,19);
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
