@@ -87,6 +87,9 @@ public class UserDBManager extends DBManager {
             } catch (Exception e) {
                 System.out.println("Error at loginUser");
                 e.printStackTrace();
+            }finally{
+                endTransaction();
+                finallyStatement(prep);
             }
         }
         return null;
