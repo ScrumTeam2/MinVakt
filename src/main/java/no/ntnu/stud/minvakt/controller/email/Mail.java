@@ -55,7 +55,6 @@ public class Mail {
             error++;
         } catch (MessagingException e) {
             error--;
-            throw new RuntimeException(e);
         }
         return error;
     }
