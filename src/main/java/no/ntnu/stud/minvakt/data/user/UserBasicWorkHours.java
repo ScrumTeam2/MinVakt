@@ -55,9 +55,9 @@ public class UserBasicWorkHours extends UserBasic {
 
     @Override
     public String toString() {
-        return "\nUserId: " + super.getId() +
-                ", UserBasicWorkHours{" +
-                "shiftMinutes=" + shiftMinutes +
+        return "\nUserBasicWorkHours{" +
+                super.toString()+
+                ", shiftMinutes=" + shiftMinutes +
                 ", overTime=" + overTime +
                 ", totalWorkHours=" + totalWorkHours +
                 "}";
