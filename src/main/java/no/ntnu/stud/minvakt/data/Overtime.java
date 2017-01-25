@@ -1,19 +1,29 @@
 package no.ntnu.stud.minvakt.data;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.sql.Date;
 
 /**
  * Created by AnitaKristineAune on 13.01.2017.
  */
+@XmlRootElement
 public class Overtime {
-
+    @XmlElement
     private int userId;
+    @XmlElement
     private int shiftId;
+    @XmlElement
     private int startTime;
+    @XmlElement
     private int minutes;
+    @XmlElement
     private boolean approved;
 
-   public Overtime(int userId, int shiftId, int startTime, int minutes, boolean approved){
+    public Overtime(){}
+
+   public Overtime(int userId, int shiftId, int startTime, int minutes, boolean approved) {
        this.userId = userId;
        this.shiftId = shiftId;
        this.startTime = startTime;
@@ -55,6 +65,17 @@ public class Overtime {
 
     public void setMinutes(int minutes) {
         this.minutes = minutes;
+    }
+
+    @Override
+    public String toString() {
+        return "Overtime{" +
+                "userId=" + userId +
+                ", shiftId=" + shiftId +
+                ", startTime=" + startTime +
+                ", minutes=" + minutes +
+                ", approved=" + approved +
+                '}';
     }
 
     public void setApproved(boolean approved) {

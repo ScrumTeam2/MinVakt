@@ -6,17 +6,14 @@ $(document).ready(function(){
 
     var currPage = window.location.pathname.replace("/html/", "");
     var $menu = $('#popup_menu');
-    var test = $menu.find($("a"));
+    var anchors = $menu.find($("a"));
 
-    for (var i in test) {
-        var $link = $(test[i]);
+    for (var i = 0; i < anchors.length; i++) {
+        var $link = $(anchors[i]);
         if($link.attr("href") === currPage) {
             $link.addClass("active");
         }
     }
-
-
-        //.addClass("active");
 
     if(sessionStorage.getItem("SessionId")){
         var expire = sessionStorage.getItem("SessionExpires");
@@ -33,7 +30,7 @@ $(document).ready(function(){
             employeeAccess();
         } else{
             console.log("category not found", userCategory);
-            redirect();
+            clearLogin();
         }
 
         if(expire <= timeNow){
@@ -41,18 +38,18 @@ $(document).ready(function(){
                 url: "/rest/session/check",
                 type: 'GET',
                 success: renewSession,
-                error: redirect
+                error: clearLogin
             });
         }
     } else{
-        redirect();
+        clearLogin();
     }
 });
 
 
 
 //Menu button
-$('#menu_icon').click(function(e) {
+$('#menu_icon').on("click", function(e) {
     e.preventDefault();
     var $menu = $('#popup_menu');
     $menu.toggle();
@@ -63,7 +60,7 @@ $('#menu_icon').click(function(e) {
 });
 
 //More button
-$('#more_icon').click(function(e) {
+$('#more_icon').on("click", function(e) {
     e.preventDefault();
     var $more = $('#popup_more');
     $more.toggle();
@@ -73,7 +70,7 @@ $('#more_icon').click(function(e) {
     }
 });
 
-$('#logout').click(function(e){
+$('#logout').on("click", function(e){
     e.preventDefault();
     logOut();
 });
@@ -83,7 +80,7 @@ function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
         type: 'GET',
-        success: redirect
+        success: clearLogin
     });
     //console.log("log out function");
 }
@@ -96,7 +93,7 @@ function renewSession(){
     sessionStorage.SessionExpires = date;
 }
 
-function redirect(){
+function clearLogin(){
     //console.log("log out");
     //console.log("login again");
     sessionStorage.clear();
@@ -143,7 +140,8 @@ var adminlinks = [
     "/html/calendar-a.html",
     "/html/user-shifts.html",
     "/html/index.html",
-    "/html/change-employee.html"
+    "/html/change-employee.html",
+    "/html/change-password.html"
 ];
 
 var employeelinks = [
@@ -155,7 +153,9 @@ var employeelinks = [
     "/html/login.html",
     "/html/user-shifts.html",
     "/html/resetpassword.html",
-    "/html/index.html"
+    "/html/index.html",
+    "/html/messages-e.html",
+    "/html/change-password.html"
 ];
 
 function adminAccess(){
@@ -225,3 +225,23 @@ var getUrlParameter = function getUrlParameter(sParam) {
         }
     }
 };
+
+function convertDate(dateInput){
+    var monthNames = [
+        "januar", "februar",
+        "mars", "april", "mai",
+        "juni", "juli", "august",
+        "september", "oktober", "november",
+        "desember"];
+
+    var dayNames = ["Søndag", "Mandag", "Tirsdag",
+        "Onsdag", "Torsdag", "Fredag",
+        "Lørdag"];
+
+    var date = new Date(dateInput);
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var dayIndex = date.getDay();
+
+    return dayNames[dayIndex] + " " + day + ". " + monthNames[monthIndex];
+}
