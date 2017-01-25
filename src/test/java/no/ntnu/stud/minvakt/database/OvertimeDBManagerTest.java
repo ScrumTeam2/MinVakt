@@ -8,6 +8,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by AnitaKristineAune on 13.01.2017.
@@ -33,11 +35,11 @@ public class OvertimeDBManagerTest {
     @Test
     public void getOvertimeByUserId(){
         int userId = 3;
-        Overtime[] res = overtimeDB.getOvertimeByUserId(userId);
+        ArrayList<Overtime> res = overtimeDB.getOvertimeByUserId(userId);
         Overtime[] expRes = {new Overtime(3, 52, 960, 35, false)};
 
-        for(int i = 0; i < res.length; i++){
-           assertTrue(expRes[i].equals(res[i]));
+        for(int i = 0; i < res.size(); i++){
+           assertTrue(expRes[i].equals(res.get(i)));
         }
     }
 
@@ -46,14 +48,16 @@ public class OvertimeDBManagerTest {
     public void getUnapprovedOvertimeTest(){
         Overtime[] res = overtimeDB.getUnapprovedOvertime();
         Overtime[] expRes = {
+                new Overtime(1,16,960, 60, false),
+                new Overtime(1,37,960,-80, false),
                 new Overtime(3, 52, 960, 35, false),
                 new Overtime(4, 28, 780, -120, false),
                 new Overtime(4, 61, 840, -60, false),
                 new Overtime(5, 60, 960, 60, false)
         };
-
-        for(int i = 0; i < res.length; i++){
-            assertTrue(expRes[i].equals(res[i]));
+        ArrayList<Overtime> resArray = new ArrayList<Overtime>(Arrays.asList(res));
+        for(int i = 0; i < expRes.length; i++){
+            assertTrue(resArray.contains(expRes[i]));
         }
     }
 

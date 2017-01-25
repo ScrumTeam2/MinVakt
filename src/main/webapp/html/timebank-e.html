@@ -2,20 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Endre passord</title>
+    <title>MinVakt | Timebank</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
     <a href="#" class="white" id="menu_icon">
         <i class="material-icons">menu</i>
-        Meny
     </a>
     <h1>MinVakt</h1>
     <a href="#" class="white" id="more_icon">
-        [username]
         <i class="material-icons">more_vert</i>
     </a>
 </header>
@@ -38,25 +40,41 @@
 
 <div class="container">
     <div class="container-header">
-        <h2 class="my-shifts">Endre passord</h2>
+
+            <!--<i class="material-icons">chevron_left</i>-->
+            <h2>Timebank</h2>
     </div>
-    <form class="login-form">
-        <input type="password" id="oldPass" placeholder="Gammelt passord"/>
-        <input type="password" id="newPass" placeholder="Nytt passord"/>
-        <input type="password" id="reNewPass" placeholder="Gjenta nytt passord"/>
-        <button type="submit" id="resetpass">Endre passord</button>
-    </form>
-    <div class="popup" style="display: none">
-        <h3 id="popup-title">Tittel</h3>
-        <p id="popup-message"></p>
+
+    <div class="button-group">
+        <button type="submit" id="overtimeBtn">Registrer timer</button>
+    </div>
+
+
+
+    <h2>Registrert overtid</h2>
+
+    <div class="container overtime-hours">
+        <ul class="hours-l"></ul>
+    </div>
+
+    <h2>Registrert fravær</h2>
+
+    <div class="container absence-hours">
+        <ul class="hours-l"></ul>
+    </div>
+
+
+    <div id="userPopup" class="popup">
+        <h3 class="title">Tittel</h3>
+        <p class="result"></p>
         <div class="links">
-            <a id="popup-btn1" href="#">Ja</a>
-            <a id="popup-btn2" href="#">Nei</a>
+            <a href="#" id="userCloseBtn">Lukk</a>
+            <a href="#" id="userViewBtn">Se bruker</a>
         </div>
     </div>
-    <p class="feedback-login"></p>
 </div>
-<script src="../js/changePassword.js"></script>
-<script src="../js/checkscript.js"></script>
+
+<script src="../js/timebankScript.js"></script>
+
 </body>
 </html>

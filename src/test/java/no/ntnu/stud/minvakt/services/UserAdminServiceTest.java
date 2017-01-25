@@ -54,6 +54,6 @@ public class UserAdminServiceTest {
         Response response = userService.changePassword("password", "password");
         assertTrue(response.getStatus() == 200);
         response = userService.changePassword("passwor", "password");
-        assertTrue(response.getStatus() == 304);
+        assertTrue(response.getStatus() != 200);
     }
 }

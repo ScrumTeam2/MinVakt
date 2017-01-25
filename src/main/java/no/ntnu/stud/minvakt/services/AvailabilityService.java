@@ -2,11 +2,15 @@ package no.ntnu.stud.minvakt.services;
 
 
 import no.ntnu.stud.minvakt.data.*;
+import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
@@ -15,9 +19,11 @@ import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,9 +66,7 @@ public class AvailabilityService extends SecureService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String save(String list) {
-        if(getSession() == null) {
-            return null;
-        }
+        if(getSession() == null) return null;
         JSONArray arr = new JSONArray(list);
         List<Integer> list1 = new ArrayList<Integer>();
         for(int i = 0; i < arr.length(); i++){
@@ -76,52 +80,10 @@ public class AvailabilityService extends SecureService {
         }
         return "correct";
     }
-    //public Response checkLogin(@Context HttpServletRequest request, @FormParam("identificator") int[] identificator, @FormParam("password") String password) {
 
-    /*
-        Klient:
-        1) Når dato er trykket på, få shiftID's for valgt dato
-        2) Klient interpret time og shiftId
-        3)
-        Grønn dato i kalender -> Shift i denne datoen trenger folk(har mangel)
-        REST:
-        1) Når dato er trykket på, få dato og send tilbake shifts for dato
-
-        1) Legge til tilgjengelihghet   -> Få liste av shiftIDS fra klient, og valget om de er satt til tilgjengelig eller ikke
-        2) Endre/Slette tilgjengelighet -> Hente tilgjengelighet
-        3)
-    */
     //Metode som kjører hver gang noen setter seg tilgjengelig
     //Og hver gang noen setter som syk eller bytte shift
 
-    /*
-    @Path("/date")
-    @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getShiftForRequestedDate(@Context HttpServletRequest request, @FormParam("dateSelection") String dateString ) {
-        // Return if already logged in
-        if (request.getSession() == null) return Response.status(Response.Status.UNAUTHORIZED).build();
-        //ArrayList<ShiftAvailable> out = availabilityDB.getAvailabilityForDate(dateString);
-        //return out;
-    }
-    */
-    /*
-    @GET
-    @Path("/{shiftId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAvailability(@PathParam("shiftId") int shiftId){
-        ArrayList<Integer> out = availabilityDB.getAvailability(shiftId);
-        if(out.isEmpty()){
-            return Response.status(400).entity("Unable to find available employees.").build();
-        }else {
-            String json = "{\"id\": \"" + out + "\"}";
-            //return Response.status(200).entity(json).build();
-            return Response.ok(json, MediaType.APPLICATION_JSON).build();
-
-        }
-    }
-    */
     //Gets available shifts for specific date
     @Deprecated
     @GET
@@ -137,6 +99,7 @@ public class AvailabilityService extends SecureService {
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftAvailable> getShifts(@QueryParam("daysForward") int daysForward,
                                                       @QueryParam("date") Date date){
+        if (getSession() == null) return null;
         if(date == null) date = new Date(System.currentTimeMillis());
         return availabilityDB.getShiftsForDate(daysForward, getSession().getUser().getId(), date);
     }
@@ -146,9 +109,7 @@ public class AvailabilityService extends SecureService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public String delAvailability(String list) {
-        if(getSession() == null) {
-            return null;
-        }
+        if (getSession() == null) return null;
         JSONArray arr = new JSONArray(list);
         List<Integer> list1 = new ArrayList<Integer>();
         for(int i = 0; i < arr.length(); i++){
@@ -161,6 +122,21 @@ public class AvailabilityService extends SecureService {
             System.out.println(ok);
         }
         return "correct";
+    }
+
+
+    @GET
+    @Path("/shift/{shiftId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category")User.UserCategory category, @QueryParam("limitByCategory") boolean onlyThisCategory){
+        AvailableUsersUtil availUsersU = new AvailableUsersUtil();
+        ShiftDBManager shiftDBM = new ShiftDBManager();
+        Shift shift = shiftDBM.getShift(shiftId);
+        LocalDate date = shift.getDate().toLocalDate();
+        ArrayList<UserBasicWorkHours> userList = availUsersU.sortAvailableEmployeesWithCategory(shiftId, date, category, onlyThisCategory);
+        GenericEntity entity = new GenericEntity<List<UserBasicWorkHours>>(userList){};
+
+        return Response.ok(entity).build();
     }
 
     @DELETE

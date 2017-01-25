@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
@@ -9,9 +10,12 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
+import no.ntnu.stud.minvakt.util.FormattingUtil;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.management.Notification;
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -20,6 +24,7 @@ import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -35,7 +40,7 @@ public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
     UserDBManager userDB = new UserDBManager();
     NewsFeedDBManager newsDB = new NewsFeedDBManager();
-
+    FormattingUtil format = new FormattingUtil();
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -88,6 +93,7 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public Shift getShift(@PathParam("shiftId") int shiftId) {
         if (getSession() == null) return null;
+        System.out.println("GetShift");
 
         return shiftDB.getShift(shiftId);
     }
@@ -206,14 +212,30 @@ public class ShiftService extends SecureService{
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
+
+    @GET
+    @Path("/availableShifts")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftAvailable> getAvailableShifts(){
+        return shiftDB.getAvailableShifts();
+    }
+    //Registrates absence
     @GET
     @Path("/user/valid_absence/{shiftId}")
     public Response requestValidAbsence(@PathParam("shiftId") int shiftId){
         Timestamp timestamp = Timestamp.from(Instant.now());
         User user = getSession().getUser();
+        /*VULNERABILITY*/
+        //Her MÅ det verifiseres om at brukeren virkelig er koblet til dette shiftet. ELlers er det mulighet å forandre
+        //shiftid på kleint.
+        /*VULNERABILITY*/
+
+        /*Escape all displayed output in client*/
         Shift shift = shiftDB.getShift(shiftId);
         String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt den"+
                 shift.getDate() + ".";
+        //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
+        boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
         int adminId = userDB.getAdminId();
         NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), shiftId,
                 NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
@@ -222,6 +244,30 @@ public class ShiftService extends SecureService{
         }
         else{
             return Response.notModified().entity("Notification not created.").build();
+        }
+    }
+
+    @GET
+    @Path("/user/shift_change/{shiftId}")
+    public Response requestShiftChange(@PathParam("shiftId") int shiftId){
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        User user = getSession().getUser();
+        Shift shift = shiftDB.getShift(shiftId);
+
+        //tries to set shift change
+        if(shiftDB.setShiftChange(shiftId, user.getId())){
+            //sends notifications to users/administrator, depending on the situation
+            AvailableUsersUtil availableUsers = new AvailableUsersUtil();
+            boolean ok = availableUsers.sendNotificationOfShiftChange(shift, user, timestamp);
+
+            if(ok){
+                return Response.ok().entity("Notification(s) sent.").build();
+            }
+            else{
+                return Response.notModified().entity("Notification not created.").build();
+            }
+        }else{
+            return Response.status(400).entity("Could not set shift change.").build();
         }
     }
 }

@@ -6,10 +6,10 @@ $(document).ready(function(){
 
     var currPage = window.location.pathname.replace("/html/", "");
     var $menu = $('#popup_menu');
-    var test = $menu.find($("a"));
+    var anchors = $menu.find($("a"));
 
-    for (var i in test) {
-        var $link = $(test[i]);
+    for (var i = 0; i < anchors.length; i++) {
+        var $link = $(anchors[i]);
         if($link.attr("href") === currPage) {
             $link.addClass("active");
         }
@@ -45,8 +45,6 @@ $(document).ready(function(){
         clearLogin();
     }
 });
-
-
 
 //Menu button
 $('#menu_icon').on("click", function(e) {
@@ -141,7 +139,8 @@ var adminlinks = [
     "/html/user-shifts.html",
     "/html/index.html",
     "/html/change-employee.html",
-    "/html/change-password.html"
+    "/html/change-password.html",
+    "/html/edit-shift.html"
 ];
 
 var employeelinks = [

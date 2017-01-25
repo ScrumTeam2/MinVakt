@@ -20,6 +20,7 @@
 <aside class="popup-menu admin hide" id="popup_menu">
     <ul>
         <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="calendar-a.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
         <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
         <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
         <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
@@ -57,6 +58,15 @@
 
 
         </form>
+
+        <div id="userPopup" class="popup">
+            <h3 class="title">Tittel</h3>
+            <p class="result"></p>
+            <div class="links">
+                <a href="#" id="userCloseBtn">Lukk</a>
+                <a href="#" id="userViewBtn">Se bruker</a>
+            </div>
+        </div>
     </div>
     <script src="../js/checkscript.js"></script>
     <script src="../js/addShift.js"></script>

@@ -4,7 +4,9 @@ package no.ntnu.stud.minvakt.services;
  * Created by Marit on 23.01.2017.
  */
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.ntnu.stud.minvakt.data.Overtime;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.*;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -12,6 +14,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
@@ -42,23 +45,19 @@ public class OvertimeServiceTest {
         overtimeService.deleteOvertime(userId, shiftId, startTime);
     }
 
-    @Ignore
+    @Test
     public void getOvertimeTest() throws Exception {
-        int userId = 4;
-        Response response = overtimeService.getOvertimeByUserId(userId);
-        Overtime[] expRes = new Overtime[2];
+        logInUser();
 
-        expRes[0] = new Overtime(4,28,780,-120,false);
-        expRes[1] = new Overtime(4, 61, 840, -60, false);
+        Response response = overtimeService.getOvertimeByUserId();
+        ArrayList<Overtime> actual = (ArrayList<Overtime>) response.getEntity();
 
-        //Assert.assertEquals(expRes[0], overtime[0]);
-        //Assert.assertEquals(expRes[1], overtime[1]);
+        ArrayList<Overtime> expRes = new ArrayList<>();
+        expRes.add(new Overtime(1,16,960, 60, false));
+        expRes.add(new Overtime(1,37,960,-80, false));
 
-        /*
-         user_id, shift_id, start_time, minutes, approved
-	     	4 	    28  	    780 	-120 	    0
-	    	4 	    61 	        840 	 -60 	    0
-         */
+        Assert.assertEquals(expRes.get(0), actual.get(0));
+        Assert.assertEquals(expRes.get(1), actual.get(1));
 
     }
 
