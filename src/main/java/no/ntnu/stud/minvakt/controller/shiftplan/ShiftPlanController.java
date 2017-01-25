@@ -58,7 +58,7 @@ public class ShiftPlanController {
                 for (int k = 0; k < 3; k++) {
                     ShiftPlanShift templateShift = templateWeek.getDays()[j].getShifts()[k];
                     ShiftPlanShift shift = new ShiftPlanShift();
-                    Shift generatedShift = new Shift(-1, templateShift.getShift().getStaffNumb(), calculateDate(i, j), k, templateShift.getShift().getDeptId(), new ArrayList<>());
+                    Shift generatedShift = new Shift(-1, templateShift.getShift().getStaffNumb(), calculateDate(i, j), k, templateShift.getShift().getDeptId(), new ArrayList<>(), false);
                     shift.setShift(generatedShift);
                     day.getShifts()[k] = shift;
                 }
@@ -98,13 +98,37 @@ public class ShiftPlanController {
      * Adds all the generated shifts into the database, and updates their IDs
      */
     public void insertShiftsIntoDatabase() {
-       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
-           for(ShiftPlanDay day : week.getDays()) {
-               for(ShiftPlanShift shift : day.getShifts()) {
-                   int shiftId = shiftDBManager.createNewShift(shift.getShift());
-                   shift.getShift().setId(shiftId);
-               }
-           }
-       }
+//       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+//           for(ShiftPlanDay day : week.getDays()) {
+//               for(ShiftPlanShift shift : day.getShifts()) {
+//                   int shiftId = shiftDBManager.createNewShift(shift.getShift());
+//                   shift.getShift().setId(shiftId);
+//               }
+//           }
+//       }
+        ArrayList<Shift> shifts = new ArrayList<>();
+        for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+            for(ShiftPlanDay day : week.getDays()) {
+                for(ShiftPlanShift shift : day.getShifts()) {
+                    shifts.add(shift.getShift());
+                }
+            }
+        }
+        shiftDBManager.bulkInsertShifts(shifts);
+    }
+
+    public ArrayList<Integer> getShiftIds() {
+       ArrayList<Integer> ids = new ArrayList<>();
+
+        int i = 0;
+        for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
+            for(ShiftPlanDay day : week.getDays()) {
+                for(ShiftPlanShift shift : day.getShifts()) {
+                    ids.add(shift.getShift().getId());
+                }
+            }
+        }
+
+        return ids;
     }
 }

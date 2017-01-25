@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.util.ErrorInfo;
+import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -55,7 +55,8 @@ public class SessionService {
     @GET
     public Response validateSession(@Context HttpServletRequest request) {
         if (request.getSession().getAttribute("session") != null) {
-            return Response.ok().build();
+            Session session = (Session)request.getSession().getAttribute("session");
+            return Response.ok(session.getUser()).build();
         }
         return Response.status(Response.Status.UNAUTHORIZED).build();
     }
