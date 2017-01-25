@@ -5,11 +5,11 @@
 /*
 not finished
  */
-
+/*
 $(document).ready(function () {
 
 
-/*
+
     function isChecked(e) {
         var overtimeValue = $(".overtime-type:checked").val();
 
@@ -19,9 +19,9 @@ $(document).ready(function () {
             $("#absence-h").hide();
         }
     }
-*/
-}
 
+}
+*/
 
 
 /*

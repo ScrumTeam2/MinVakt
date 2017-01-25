@@ -569,6 +569,8 @@ INSERT INTO availability VALUES(13, 43);
 -- shift: 43, date: 2017-02-06, users: 2, 3, 4, 5, 7, 11, 13
 
 -- OVERTIME
+INSERT INTO overtime VALUES(1, 16, 960, 60, false);
+INSERT INTO overtime VALUES(1, 37, 960, -80, false);
 INSERT INTO overtime VALUES(5, 60, 960, 60, false);
 INSERT INTO overtime VALUES(3, 52, 960, 35, false);
 INSERT INTO overtime VALUES(4, 61, 840, -60, false);
