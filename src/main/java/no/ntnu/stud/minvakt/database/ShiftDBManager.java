@@ -169,7 +169,6 @@ public class ShiftDBManager extends DBManager {
             rollbackStatement();
             log.log(Level.WARNING, "Issue with bulk creating new shifts, data rolled back", e);
         } finally {
-            endTransaction();
             finallyStatement(prep);
         }
         return false;
@@ -223,7 +222,7 @@ public class ShiftDBManager extends DBManager {
                             res.getString("first_name") +" "+ res.getString("last_name"),
                             User.UserCategory.valueOf(res.getInt("category")),
                             res.getBoolean("responsibility"),
-                            res.getBoolean("valid_absence")));
+                            res.getInt("valid_absence")));
                 }
                 prep = conn.prepareStatement(sqlGetShift);
                 prep.setInt(1, shiftId);
@@ -306,7 +305,7 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
-    private static final String sqlReplaceUser = "UPDATE employee_shift SET user_id = ?, valid_absence = FALSE, responsibility = FALSE WHERE user_id = ? AND shift_id = ?";
+    private static final String sqlReplaceUser = "UPDATE employee_shift SET user_id = ?, valid_absence = 0, responsibility = FALSE WHERE user_id = ? AND shift_id = ?";
 
     /**
      * Replaces an user with another on a shift. Responsibility will not be transferred.
@@ -315,8 +314,9 @@ public class ShiftDBManager extends DBManager {
      * @param newUserId THe ID of the replacement user
      * @return True if the replacement was successful
      */
+
     public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId) {
-        ShiftUser shiftUser = new ShiftUser(newUserId, null, null, false, false);
+        ShiftUser shiftUser = new ShiftUser(newUserId, null, null, false, 0);
         return addEmployeeToShift(shiftUser, shiftId) && deleteEmployeeFromShift(oldUserId, shiftId);
     }
 
@@ -376,7 +376,6 @@ public class ShiftDBManager extends DBManager {
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId, sqlE);
             } finally{
-                endTransaction();
                 finallyStatement(prep);
             }
         }
@@ -591,7 +590,7 @@ public class ShiftDBManager extends DBManager {
                     User user = userDb.getUserById(userId);
                     shiftUser = new ShiftUser(userId, user.getFirstName()+ " " +user.getLastName(),
                            user.getCategory(), res.getBoolean("responsibility"),
-                            res.getBoolean("valid_absence"));
+                            res.getInt("valid_absence"));
                 }
             }
             catch (SQLException sqle){
@@ -602,6 +601,27 @@ public class ShiftDBManager extends DBManager {
             }
         }
         return shiftUser;
+    }
+
+    public boolean setValidAbsenceInt(int userId, int shiftId, int valid_absence){
+        int result = 0;
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlSetValidAbsence);
+                prep.setInt(1,valid_absence);
+                prep.setInt(2,userId);
+                prep.setInt(3,shiftId);
+                result = prep.executeUpdate();
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Issue updating valid absence for user_id = "+userId, sqle);
+            }
+            finally {
+                finallyStatement(prep);
+            }
+        }
+        return result != 0;
     }
 
     public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
@@ -686,7 +706,6 @@ public class ShiftDBManager extends DBManager {
             log.log(Level.WARNING, "Issue approving shifts", e);
         }
         finally {
-            endTransaction();
             finallyStatement(prep);
         }
         return false;
