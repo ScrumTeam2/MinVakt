@@ -64,6 +64,12 @@ function showMessages(data){
                 console.log("Category not known", data[i].category);
         }
     }
+    var $remove = $('.remove-message');
+    $remove.on("click", function(e){
+        e.preventDefault();
+        var element = $(e.currentTarget).parent();
+        removeMessage(element);
+    });
 
     //display category as empty if no messages
     var empty = `<div class="watch">
@@ -86,6 +92,19 @@ function showMessages(data){
     }
 }
 
+function showPopup(e){
+    e.preventDefault();
+    var $popup = $('.popup');
+    $popup.show();
+}
+
+function hidePopup(e){
+    e.preventDefault();
+    var $popup = $('.popup');
+    $popup.hide();
+
+}
+
 //open popup
 function openPopup(e){
     e.preventDefault();
@@ -95,7 +114,7 @@ function openPopup(e){
     categoryPop = $this.children().first().data("cat");
     var content = $this.children().first().children().first().children().first().html();
     var $popup = $('#content');
-    var $showPop = $('#feed-popup');
+    var $showPop = $('.popup');
 
     switch(categoryPop){
         case "SHIFT_CHANGE_ADMIN":
@@ -119,13 +138,15 @@ function openPopup(e){
             );
             $showPop.show();
             break;
-        case "NOTIFICATION":
-            // removes directly
-            setResolved(feedId);
-            break;
         default:
             console.log("Category not known", categoryPop);
     }
+}
+
+// remove notification
+function removeMessage(element){
+    feedId = element.data("feed");
+    setResolved(feedId);
 }
 
 //no button
@@ -185,20 +206,25 @@ function resolveTask(feedId, resolvedTo){
 function acceptChangeover(data){
     var $changes = $('#accept_change');
     var content = data.content;
+    var subContent = "mer info";
     var html=
-        `<a href="#" id="open-popup">
+        `<a href="#" id="open-popup" class="open-pop">
             <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
+                    <p class="sub">${subContent}</p>
                 </div>
-                <i class="symbol right-arrow">
+                <a></a>
+                <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
         </a>`;
     var $html = $(html);
     $changes.append($html);
+
     $html.on("click", function(e){
+        e.preventDefault();
         openPopup(e);
     });
 }
@@ -208,12 +234,12 @@ function acceptAbsence(data){
     var $absence = $('#accept_absence');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
+        `<a href="#" id="open-popup" class="open-pop">
             <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="symbol right-arrow">
+                <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
@@ -221,6 +247,7 @@ function acceptAbsence(data){
     var $html = $(html);
     $absence.append($html);
     $html.on("click", function(e){
+        e.preventDefault();
         openPopup(e);
     });
 }
@@ -230,12 +257,12 @@ function acceptTimebank(data){
     var $timebank = $('#accept_timebank');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
+        `<a href="#" id="open-popup" class="open-pop">
             <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="symbol right-arrow">
+                <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
@@ -243,6 +270,7 @@ function acceptTimebank(data){
     var $html = $(html);
     $timebank.append($html);
     $html.on("click", function(e){
+        e.preventDefault();
         openPopup(e);
     });
 }
@@ -252,17 +280,14 @@ function showNotification(data){
     var $notifications = $('#show_notification');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
-            <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
+        `<div class="watch" data-feed="${data.feedId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="material-icons">close</i>
-            </div>
-        </a>`;
+                <a href="#" class="remove-message" id="remove">
+                    <i class="material-icons">close</i>
+                </a>
+        </div>`;
     var $html = $(html);
     $notifications.append($html);
-    $html.on("click", function(e){
-        openPopup(e);
-    });
 }

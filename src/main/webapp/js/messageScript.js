@@ -51,6 +51,13 @@ function showMessages(data){
         }
     }
 
+    var $remove = $('.remove-message');
+    $remove.on("click", function(e){
+        e.preventDefault();
+        var element = $(e.currentTarget).parent();
+        removeMessage(element);
+    });
+
     //display category as empty if no messages
     var empty = `<div class="watch">
                 <div class="watch-info">
@@ -85,13 +92,15 @@ function openPopup(e){
             );
             $showPop.show();
             break;
-        case "NOTIFICATION":
-            // removes directly
-            setResolved(feedId);
-            break;
         default:
             console.log("Category not known", categoryPop);
     }
+}
+
+// remove notification
+function removeMessage(element){
+    feedId = element.data("feed");
+    setResolved(feedId);
 }
 
 //no button
@@ -169,22 +178,19 @@ function acceptShift(data){
     });
 }
 
-// add notification messages
+//add notifications messages
 function showNotification(data){
     var $notifications = $('#notifications');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
-            <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
+        `<div class="watch" data-feed="${data.feedId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="material-icons">close</i>
-            </div>
-        </a>`;
+                <a href="#" class="remove-message">
+                    <i class="material-icons">close</i>
+                </a>
+        </div>`;
     var $html = $(html);
     $notifications.append($html);
-    $html.on("click", function(e){
-        openPopup(e);
-    });
 }
