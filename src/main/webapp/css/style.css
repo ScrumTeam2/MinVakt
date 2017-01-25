@@ -473,7 +473,6 @@ button {
   display: block;
   width: 1.5rem;
   height: 1.5rem;
-  cursor: pointer;
   transition: transform .2s;
 }
 
@@ -845,6 +844,7 @@ text-align: center;
     background: #ffffff;
     padding: 1.5rem;
     border-radius: 2px;
+    border: 2px solid;
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.5);
     max-width: 80%;
     display: none;

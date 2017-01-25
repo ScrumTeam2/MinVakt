@@ -158,6 +158,11 @@ public class UserDBManagerTest {
         assertFalse(userDB.getUserBasics().isEmpty());
     }
     @Test
+    public void getUserBasicsFromCategory(){
+        assertFalse(userDB.getUserBasicsWithCategory(User.UserCategory.ASSISTANT).isEmpty());
+    }
+
+    @Test
     public void getAdminId(){
         assertTrue(userDB.getAdminId() != 0);
     }
