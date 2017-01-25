@@ -259,8 +259,8 @@ public class ShiftDBManager extends DBManager {
                 prep = conn.prepareStatement(sqlWasEmployeeOnShift);
                 prep.setInt(1, shiftUser.getUserId());
                 prep.setInt(2, shiftId);
-                boolean alreadyOnShift = prep.executeUpdate() != 0;
-                if (!alreadyOnShift){
+                out = prep.executeUpdate() != 0;
+                if (!out){
                     prep = conn.prepareStatement(addEmployeeToShift);
                     prep.setInt(1, shiftUser.getUserId());
                     prep.setInt(2, shiftId);
@@ -403,7 +403,7 @@ public class ShiftDBManager extends DBManager {
         return out != 0;
     }
 
-    private final String sqlGetCandidates = 
+    private final String sqlGetCandidates =
             "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
             "LEFT JOIN shift USING(shift_id) " +
             "NATURAL JOIN user " +
