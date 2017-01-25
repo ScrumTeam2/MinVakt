@@ -7,6 +7,7 @@ import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -123,5 +124,14 @@ public class ShiftServiceTest {
         logInUser();
         Response response = shiftService.requestValidAbsence(1);
         assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+    }
+    @Test
+    public void requestShiftChange() throws Exception {
+        logInUser();
+        int shiftId = 43;
+
+        Response response = shiftService.requestShiftChange(shiftId);
+        int expResp = 200;
+        Assert.assertEquals(expResp, response.getStatus());
     }
 }
