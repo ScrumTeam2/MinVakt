@@ -5,13 +5,18 @@ import no.ntnu.stud.minvakt.data.Overtime;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Marit on 20.01.2017.
@@ -60,11 +65,18 @@ public class OvertimeService extends SecureService{
     //GET fetch overtime for user (used by employee-user)
     //getOvertimeByUserId(int userId) returns Overtime[]
     @GET
-    @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Overtime[] getOvertime(@PathParam("userId") int userId) {
-        Overtime[] overtime = overtimeDBM.getOvertimeByUserId(userId);
-        return overtime;
+    public Response getOvertimeByUserId() {
+        int userId = getSession().getUser().getId();
+
+        Overtime[] overtimeTab = overtimeDBM.getOvertimeByUserId(userId);
+        ArrayList<Overtime> overtime = new ArrayList<>();
+
+        for (Overtime ot : overtimeTab){
+            overtime.add(ot);
+        }
+        GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
+        return Response.ok(entity).build();
     }
 
     @DELETE

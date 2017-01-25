@@ -10,40 +10,42 @@
 <body>
     <header>
         <a href="#" class="white" id="menu_icon">
-            <i class="material-icons">menu</i>
+            <i class="material-icons" aria-label="Hovedmeny">menu</i>
         </a>
         <h1>MinVakt</h1>
         <a href="#" class="white" id="more_icon">
-            <i class="material-icons">more_vert</i>
+            <i class="material-icons" aria-label="Brukermeny">more_vert</i>
         </a>
     </header>
     <aside class="popup-menu admin hide" id="popup_menu">
         <ul>
-            <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
-            <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
-            <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
-            <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="home-a.html">Godkjenninger<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
+            <li><a href="user-a.html">Ansatte<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
+            <li><a href="register.html">Registrer bruker<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
+            <li><a href="new-shift.html">Opprett turnus<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
         </ul>
     </aside>
     <aside class="popup-more hide" id="popup_more">
         <ul>
-            <li><a href="#">Endre passord<i class="material-icons">chevron_right</i></a></li>
-            <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="#">Endre passord<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
+            <li><a href="#" id="logout">Logg ut<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
         </ul>
     </aside>
 
     <div class="container">
         <div class="container-header">
             <div>
-                <i class="material-icons">chevron_left</i>
                 <h2>Ansatte</h2>
             </div>
         </div>
         <section class="list">
 
         </section>
+        <div class="button-group">
+            <button class="btnPrev">Forrige</button>
+            <button class="btnNext">Neste</button>
+        </div>
 
-        <button>Publiser</button>
     </div>
 
     <script src="../js/checkscript.js"></script>

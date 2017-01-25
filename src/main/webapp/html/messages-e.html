@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Hjem</title>
+    <title>MinVakt | Meldinger</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link rel="stylesheet" href="../css/style.css"/>
@@ -18,26 +18,27 @@
         <i class="material-icons">more_vert</i>
     </a>
 </header>
-<aside class="popup-menu admin hide" id="popup_menu">
+<aside class="popup-menu employee hide" id="popup_menu">
     <ul>
-        <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="home-e.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="messages-e.html">Meldinger<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="availability.html">Tilgjengelighet<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="user-e.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="timebank.html">Timebank<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
-<aside class="popup-more hide" id="popup_more">
+<aside class="popup-more employee hide" id="popup_more">
     <ul>
-        <li><a href="#">Endre passord<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="myProfile.html">Min profil<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="editPassword.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
-
 <div class="container">
     <div class="container-header">
         <div>
             <!--<i class="material-icons">chevron_left</i>-->
-            <h2>Godkjenninger</h2>
+            <h2>Meldinger</h2>
         </div>
     </div>
     <div class="list menuItem">
@@ -47,36 +48,10 @@
                     <i class="material-icons">panorama_fish_eye</i>
                     <i class="material-icons">chevron_right</i>
                 </i>
-                <h3>Vaktbytte</h3>
+                <h3>Forespørsel om ny vakt</h3>
             </div>
         </div>
-        <div class="feed-messages" id="accept_change"></div>
-    </div>
-
-    <div class="list menuItem">
-        <div class="container-title cursor-point">
-            <div>
-                <i class="symbol right-arrow-circle rotate90">
-                    <i class="material-icons">panorama_fish_eye</i>
-                    <i class="material-icons">chevron_right</i>
-                </i>
-                <h3>Fravær</h3>
-            </div>
-        </div>
-        <div class="feed-messages" id="accept_absence"></div>
-    </div>
-
-    <div class="list menuItem">
-        <div class="container-title cursor-point">
-            <div>
-                <i class="symbol right-arrow-circle rotate90">
-                    <i class="material-icons">panorama_fish_eye</i>
-                    <i class="material-icons">chevron_right</i>
-                </i>
-                <h3>Timebank</h3>
-            </div>
-        </div>
-        <div class="feed-messages" id="accept_timebank"></div>
+        <div class="feed-messages" id="requests"></div>
     </div>
 
     <div class="list menuItem">
@@ -89,7 +64,7 @@
                 <h3>Notifikasjoner</h3>
             </div>
         </div>
-        <div class="feed-messages" id="show_notification"></div>
+        <div class="feed-messages" id="notifications"></div>
     </div>
 
     <div id="feed-popup" class="popup">
@@ -102,6 +77,6 @@
 </div>
 
 <script src="../js/checkscript.js"></script>
-<script src="../js/feedscript.js"></script>
+<script src="../js/messageScript.js"></script>
 </body>
 </html>

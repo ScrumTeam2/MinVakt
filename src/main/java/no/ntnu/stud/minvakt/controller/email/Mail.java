@@ -1,4 +1,4 @@
-/*package no.ntnu.stud.minvakt.controller.email;
+package no.ntnu.stud.minvakt.controller.email;
 
 import java.util.Properties;
 import javax.mail.Message;
@@ -17,7 +17,7 @@ public class Mail {
      * @param mailMessage email message
      * @return       1 if success
      */
-/*
+
     public Mail() {
         sendMailConfirm();
     }
@@ -55,7 +55,6 @@ public class Mail {
             error++;
         } catch (MessagingException e) {
             error--;
-            throw new RuntimeException(e);
         }
         return error;
     }
@@ -68,4 +67,3 @@ public class Mail {
         sendMail(email, subject, content);
     }
 }
-*/
