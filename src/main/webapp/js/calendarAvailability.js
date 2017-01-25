@@ -136,7 +136,6 @@ C.prototype.switchDate = function(postfix) {
     this.month++;
   }
   document.getElementById('calendar').innerHTML = C(this.month,this.year);
-
 }
 /*
 <div style="background-color:red;border-radius: 50%;width: 10px;height: 10px;margin: 0 auto;">
@@ -252,8 +251,8 @@ function displayAvailabilityHtml(data) {
               "<div class='watch'>" +
                   "<div class='watch-info'>" +
                       "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
-                      "<p class='sub'>"+shiftTimes[element.shiftType]+"<br>"+element.hasUser+"</p>" +
-                      <!-- "<p class='sub'>"+element.deptName+"</p>" +-->
+                      "<p class='sub'>"+shiftTimes[element.shiftType]+"<br></p>" +
+                      "<p class='sub'>"+element.deptName+"</p>"+
                   "</div>";
                   if(element.hasUser) {
                     html+="<p>Min vakt</p>";

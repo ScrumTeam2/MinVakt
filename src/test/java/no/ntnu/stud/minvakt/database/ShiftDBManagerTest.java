@@ -28,7 +28,7 @@ public class ShiftDBManagerTest {
     @Test
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,false));
+        shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,0));
         Shift shift = new Shift(-1,1, java.sql.Date.valueOf("1995-01-01"), 1,1, shiftUsers);
         int shiftId = shiftDB.createNewShift(shift);
         if(shiftId != 0){
@@ -40,7 +40,7 @@ public class ShiftDBManagerTest {
 
     @Test
     public void addEmployeeToShift(){
-        ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 9);
         if(statusOk){
             shiftDB.deleteEmployeeFromShift(1, 9);
@@ -54,7 +54,7 @@ public class ShiftDBManagerTest {
         final int oldUserId = 1;
         final int newUserId = 15;
 
-        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, false);
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
         ShiftUser newUser = null;
 
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
