@@ -145,6 +145,9 @@ $(document).ready(function () {
 });
 
 function submitUser(formData) {
+    // Loading animation
+    $('#userBtn').html(`<div class="typing_loader"></div>`);
+
     $.ajax({
         url: "/rest/admin/createuser",
         type: 'POST',
@@ -182,6 +185,9 @@ function addUser(data) {
     $('#userViewBtn').attr("href", "user-a.html?search=" + $first.val() + " " + $last.val());
 
     $('.popup').show();
+
+    // Reset loading animation
+    $('#userBtn').text("Registrer bruker");
 }
 
 function invalidField(data) {
@@ -195,6 +201,9 @@ function invalidField(data) {
 
     $('#userViewBtn').hide();
     $('.popup').show();
+
+    // Reset loading animation
+    $('#userBtn').text("Registrer bruker");
 }
 
 //close popup
