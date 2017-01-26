@@ -3,11 +3,9 @@ package no.ntnu.stud.minvakt.services;
 /**
  * Created by evend on 1/10/2017.
  */
-import no.ntnu.stud.minvakt.data.shift.Shift;
-import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
-import no.ntnu.stud.minvakt.data.shift.ShiftUser;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasic;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -117,6 +115,7 @@ public class ShiftServiceTest extends ServiceTest{
         ArrayList<ShiftAvailable> statusOk = shiftService.getAvailableShifts();
         assertFalse(statusOk.isEmpty());
     }
+
     @Test
     public void requestShiftChange() throws Exception {
         logInUser();
@@ -125,5 +124,21 @@ public class ShiftServiceTest extends ServiceTest{
         Response response = shiftService.requestShiftChange(shiftId);
         int expResp = 200;
         Assert.assertEquals(expResp, response.getStatus());
+    }
+
+    @Test
+    public void getUserBasicFromId() throws Exception {
+        int userId = 1;
+        ArrayList<ShiftUserBasic> shiftUserRes = shiftService.getUserBasicFromId(userId);
+        //System.out.println(shiftUserRes.get(0).getShiftId());
+
+        Assert.assertTrue(shiftUserRes.get(0) instanceof ShiftUserBasic);
+    }
+
+    @Test
+    public void getUserBasicFromSession() throws Exception{
+        logInUser();
+        ArrayList<ShiftUserBasic> shiftUsers = shiftService.getUserBasicFromSession(Date.valueOf("2017-02-01"));
+        Assert.assertTrue(shiftUsers.get(0) instanceof ShiftUserBasic);
     }
 }
