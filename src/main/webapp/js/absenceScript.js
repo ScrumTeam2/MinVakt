@@ -1,6 +1,11 @@
 /**
- * Created by AnitaKristineAune on 24.01.2017.
+ * Created by AnitaKristineAune on 26.01.2017.
  */
+
+/* Admin can register absence for given user
+Not finished
+ */
+
 var shiftId = getUrlParameter("shiftId");
 var date = getUrlParameter("date");
 var type = getUrlParameter("type");
@@ -17,31 +22,6 @@ $(document).ready(function () {
     checkInput();
 });
 
-function reformatData(){
-    var formattedType;
-    var typeTime;
-    switch (type){
-        case "DAY":
-            formattedType = "dagvakt";
-            typeTime = "07:00-15:00";
-            break;
-        case "EVENING":
-            formattedType = "kveldsvakt";
-            typeTime = "15:00-23:00";
-            break;
-        case "NIGHT":
-            formattedType = "nattevakt";
-            typeTime = "23:00-07:00";
-            break;
-        default:
-            console.log("type not known", type);
-    }
-
-
-
-    //var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
-    //var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
-}
 
 function checkInput(){
     $('#timebankBtn').click(function(e){
@@ -78,26 +58,25 @@ function checkInput(){
 }
 
 function calcMinutes(hoursVal, minutesVal){
-    var parsedH = parseInt(hoursVal);
-    var parsedM = parseInt(minutesVal);
-    var minutes = (parsedH * 60) + parsedM;
-    registerOvertime(minutes);
+    var minutes = -((hoursVal * 60) + minutesVal);
+    registerAbsence(minutes);
 }
 
 function sendTimebank(formData){
     $.ajax({
         url: "/rest/overtime",
         type: 'POST',
+        dataType: 'json',
         contentType: "application/json",
         data: JSON.stringify(formData),
-        success: popupContent,
-        error: errorMessage
+        success: function(){
+            console.log("ok post");
+            popupContent();
+        },
+        error: function(){
+            console.log("ikke ok post");
+        }
     });
-}
-
-function errorMessage(e){
-    console.log("ikke ok post", e);
-    console.error("error", e);
 }
 
 function getShift(){
@@ -111,61 +90,53 @@ function getShift(){
 
 }
 
-function registerOvertime(minutes){
+function registerAbsence(minutes){
     var startTime;
-    var type = "DAY";
+
     switch (type){
-        case "DAY":
-            startTime = 900;
-            break;
-        case "EVENING":
-            startTime = 1380;
-            break;
-        case "NIGHT":
-            startTime = 420;
-            break;
-        default:
-            console.log("type not known", type);
-    }
+     case "DAY":
+     startTime = 420;
+     break;
+     case "EVENING":
+     startTime = 900;
+     break;
+     case "NIGHT":
+     startTime = 1380;
+     break;
+     default:
+     console.log("type not known", type);
+     }
     var formData;
     formData = {
-        //"userId": 1,
-        "shiftId": 43,
-        "startTime": startTime,
+        "userId": -1,
+        "shiftId": 2,
+        "startTime": 900,
         "minutes": minutes,
         "approved": false,
-        "date": "2017-02-06",
-        "type": type
+        "date": "2017-01-23",
+        "type": "DAY"
     };
     sendTimebank(formData);
 }
 
 function popupContent(){
-    var $popupCont = $('#content');
-
+    var $popup = $('.popup');
 
     var message1 = "Mandag 19. januar 2017";
-    var message2 = "dagvakt";
-    var hours = parseInt($('#hours').val());
-    var minutes = parseInt($('#minutes').val());
+    var message2 = "Dagvakt 07:00-15:00";
+    var hours = $('#hours').val();
+    var minutes = $('#minutes').val();
 
     if(hours === 0){
-        $popupCont.html(
+        $popup.html(
             `<h3>Overtid sendt til godkjenning</h3>
-                <p>${message1}, ${message2}</p>
+                <p>Vakt: ${message1} - ${message2}</p>
                 <p>Overtid: ${minutes} minutter</p>`
         );
-    } else if(hours === 1){
-        $popupCont.html(
+    } else{
+        $popup.html(
             `<h3>Overtid sendt til godkjenning</h3>
-                <p>${message1}, ${message2}</p>
-                <p>Overtid: ${hours} time og ${minutes} minutter</p>`
-        );
-    }
-    else{
-        $popupCont.html(
-            `<h3>Overtid sendt til godkjenning</h3>
-                <p>${message1}, ${message2}</p>
+                <p>Vakt: ${message1} - ${message2}</p>
                 <p>Overtid: ${hours} timer og ${minutes} minutter</p>`
         );
     }
@@ -174,17 +145,11 @@ function popupContent(){
 
 function showPopup(){
     var $popup = $('.popup');
-    console.log("ok post");
     $popup.show();
+
 }
 
-$('#closeBtn').click(function(e) {
-    e.preventDefault();
-    redirectToHome();
-});
-
-function redirectToHome(){
+function hidePopup() {
     var $popup = $('.popup');
     $popup.hide();
-    window.location = "home-e.html";
 }
