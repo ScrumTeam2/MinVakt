@@ -13,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
@@ -35,6 +36,14 @@ public class ShiftPlanService extends SecureService {
     public Response getGeneratedShiftPlan(@PathParam("startDate") Date startDate, ShiftPlan plan) {
         plan.setStartDate(startDate.toLocalDate());
         ShiftPlanController controller = new ShiftPlanController(plan);
+
+        // Need to be a monday
+        if(!plan.getStartDate().getDayOfWeek().equals(DayOfWeek.MONDAY)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ErrorInfo("Du må velge en mandag som startdato"))
+                    .build();
+        }
+
         if (!controller.verifyValidity()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new ErrorInfo("Det finnes allerede en eller flere vakter i perioden " + startDate + " til " + startDate.toLocalDate().plusWeeks(6)))
@@ -42,7 +51,9 @@ public class ShiftPlanService extends SecureService {
         }
 
         controller.calculateShifPlan();
-        controller.insertShiftsIntoDatabase();
+        if(!controller.insertShiftsIntoDatabase()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         // Stupid code to return JSON array
         JSONArray array = new JSONArray();

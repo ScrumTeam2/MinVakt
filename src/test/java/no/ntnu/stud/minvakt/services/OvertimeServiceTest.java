@@ -31,11 +31,11 @@ public class OvertimeServiceTest extends ServiceTest {
     @Test
     public void setOvertimeTest() throws Exception {
         logInUser();
-        int userId = 10;
-        int shiftId = 13;
+        int userId =1;
+        int shiftId = 22;
         int startTime = 900;
         int minutes = 15;
-        Overtime overtime = new Overtime(userId, shiftId, startTime, minutes, false);
+        Overtime overtime = new Overtime(0, shiftId, startTime, minutes, false);
         Response response = overtimeService.setOvertime(overtime);
         Assert.assertEquals(200, response.getStatus());
         overtimeService.deleteOvertime(userId, shiftId, startTime);
@@ -60,8 +60,8 @@ public class OvertimeServiceTest extends ServiceTest {
     @Test
     public void deleteOvertimeTest() throws Exception{
         logInUser();
-        int userId = 10;
-        int shiftId = 13;
+        int userId = 1;
+        int shiftId = 8;
         int startTime = 900;
         int minutes = 15;
         Overtime overtime = new Overtime(userId, shiftId, startTime, minutes, false);
