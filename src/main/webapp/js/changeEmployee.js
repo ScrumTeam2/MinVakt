@@ -6,24 +6,36 @@
  * Created by evend on 1/13/2017.
  */
 
-var shiftTypes = {
+var userTypes = {
     "ADMIN" : "Administrasjon",
     "ASSISTANT" : "Assistent",
     "HEALTH_WORKER" : "Helsefagarbeider",
     "NURSE" : "Sykepleier"
 };
 
+var userTypesPlural = {
+    "ADMIN" : "administratorer",
+    "ASSISTANT" : "assistenter",
+    "HEALTH_WORKER" : "helsefagarbeidere",
+    "NURSE" : "sykepleiere"
+};
+
+var suggestedAllUsers = [];
+var suggestedCategoryUsers = [];
 var allUsers = [];
 var categoryUsers = [];
+var headers = [];
 var returnToEditPage = getUrlParameter("edit") === "1";
 var user = getUrlParameter("user");
 var shift = getUrlParameter("shift");
+var $sameCategory;
 var category;
 var same = true;
+var test = false;
 
 
 $(document).ready(function() {
-    var $sameCategory = $('#sameCategory');
+    $sameCategory = $('#sameCategory');
     var $name = $('#name');
     var $cat = $('#category');
 
@@ -31,16 +43,15 @@ $(document).ready(function() {
         url: "/rest/user/" + user,
         type: "GET",
         success: function(data) {
+            //console.log("USER DATA", data);
             category = data.category;
             $name.text(data.firstName + " " + data.lastName);
             $cat.text(category);
-            if ($sameCategory[0].checked) {
-                loadSuggestedCategory(category);
-                loadCategory(category);
-            } else {
-                loadSuggestedAll(category);
-                loadAll();
-            }
+            headers = [ "Tilgjengelige " + userTypesPlural[category] + " for dette skiftet",
+                        "Tilgjengelige ansatte for dette skiftet",
+                        "Søker etter " + userTypesPlural[category] + " med navn ",
+                        "Søker etter ansatte med navn "];
+            loadAll(category);
         },
         error: function(e) {
             console.error( "Ingen bruker med id " + user, e );
@@ -50,85 +61,85 @@ $(document).ready(function() {
     $sameCategory.on('change', function() {
         if ($sameCategory[0].checked) {
             same = true;
-            //if (categoryUsers.length === 0) {
-                loadSuggestedCategory(category);
-                loadCategory(category);
-            //}
+            showCategory();
         } else {
             same = false;
-            //if (allUsers.length === 0) {
-                loadSuggestedAll();
-                loadAll();
-            //}
+            showAll();
         }
     });
 
     var $search = $('#search');
     $search.on('input keypress', function() {
-        search($search.val());
         setUrlParameter("search", $search.val());
+        if (same) {
+            showCategory();
+        } else {
+            showAll()
+        }
     });
 
 
 });
 
-function loadSuggestedCategory(catName) {
-    console.log(catName);
+// Load all data
+function loadAll(catName) {
+    // LOAD SUGGESTED USERS BY CATEGORY
     $.ajax({
         url: "/rest/availability/shift/" + shift + "?category=" + catName + "&limitByCategory=true",
         type: "GET",
         success: function(data) {
-            console.log("Data by category", data);
-            displayUsers(data);
+            //console.log("LOAD SUGGESTED USERS BY CATEGORY", data);
+            suggestedCategoryUsers = data;
+
+            if ($sameCategory[0].checked) {
+                showCategory();
+            }
         },
         error: function(e) {
             console.error("Couldn't get data from category " + catName, e);
         }
     });
-}
 
-function loadCategory(catName) {
-    console.log(catName);
+    // LOAD SUGGESTED USERS WITHOUT CATEGORY
+    $.ajax({
+        url: "/rest/availability/shift/" + shift + "?category=" + catName + "&limitByCategory=false",
+        type: "GET",
+        success: function(data) {
+            //console.log("LOAD SUGGESTED USERS WITHOUT CATEGORY", data);
+            suggestedAllUsers = data;
+
+            if (!$sameCategory[0].checked) {
+                showAll();
+            }
+        },
+        error: function(e) {
+            console.error("Couldn't get data from category " + catName, e);
+        }
+    });
+
+    // LOAD ALL USERS FROM A CATEGORY
     $.ajax({
         url: "/rest/user/category?category=" + catName,
         type: 'GET',
         success: function(data) {
-            console.log("All in category",data);
-            for (var i = 0; i < data.length; i++) {
-                categoryUsers.push(data[i]);
-            }
+            //console.log("LOAD ALL USERS FROM A CATEGORY", data);
+            categoryUsers = data;
         },
         error: function (e) {
             console.error("loadCategory", e);
         }
     });
-}
 
-function loadSuggestedAll(catName) {
-    $.ajax({
-        url: "/rest/availability/shift/" + shift + "?category=" + catName + "&limitByCategory=false",
-        type: "GET",
-        success: function(data) {
-            console.log("Data by category", data);
-            displayUsers(data);
-        },
-        error: function(e) {
-            console.error("Couldn't get data from category " + catName, e);
-        }
-    });
-}
-
-function loadAll() {
+    // LOAD ALL USERS
     $.ajax({
         url: "/rest/user/",
         type: 'GET',
         dataType: 'json',
         success: function(data) {
+            //console.log("LOAD ALL USERS", data);
             for (var i = 0; i < data.length; i++) {
                 var letterArray = data[i].userBasics;
-                for (var j = 0; j < letterArray.length; j++) {
-                    allUsers.push(letterArray[j]);
-                }
+                allUsers.push.apply(allUsers, letterArray);
             }
         },
         error: function (e) {
@@ -137,14 +148,30 @@ function loadAll() {
     });
 }
 
-function displayUsers(data) {
+function showCategory() {
+    if (getUrlParameter("search") === "") {
+        displayUsers(headers[0], suggestedCategoryUsers);
+    } else {
+        search(headers[2], getUrlParameter("search"));
+    }
+}
+
+function showAll() {
+    if (getUrlParameter("search") === "") {
+        displayUsers(headers[1], suggestedAllUsers);
+    } else {
+        search(headers[3], getUrlParameter("search"));
+    }
+}
+
+function displayUsers(header, data) {
     var userListElement = $(".list");
     var html, name, i, j, user;
 
     userListElement.html("");
     html =`
                 <div class='container-title'>
-                    <h3>Ansatte - anbefalt bytte</h3>
+                    <h3>${header}</h3>
                 </div>`;
     userListElement.append(html);
 
@@ -158,7 +185,7 @@ function displayUsers(data) {
                     <div class='watch' data-id="${user.id}">
                         <div class='watch-info'>
                             <p class='lead'>${name}</p>
-                            <p class='sub'>${shiftTypes[user.category]}</p>
+                            <p class='sub'>${userTypes[user.category]}</p>
                         </div>
                         <a href="#" class="link changeEmployee">Endre</a>
                     </div>`;
@@ -175,51 +202,7 @@ function displayUsers(data) {
     });
 }
 
-// TODO: Fix data retrievel so it returns the same way as the other data
-/*
-function getUsersForSearch(data){
-    var userListElement = $(".list");
-    var html, name, i, j, user;
-
-    userListElement.html = "";
-    html =`
-                <div class='container-title'>
-                    <h3>Ansatte</h3>
-                </div>`;
-    userListElement.append(html);
-
-    for(i = 0; i<data.length;i++){
-        for(j = 0; j < data[i].userBasics.length; j++){
-
-            users.push(data[i].userBasics[j]);
-            user = data[i].userBasics[j];
-
-            name = user.firstName + " " + user.lastName;
-
-            html = `
-                        <div class='watch' data-id="${user.id}">
-                            <div class='watch-info'>
-                                <p class='lead'>${name}</p>
-                                <p class='sub'>${shiftTypes[user.category]}</p>
-                            </div>
-                            <a href="#" class="link changeEmployee">Endre</a>
-                        </div>`;
-
-            userListElement.append(html);
-
-        }
-
-    }
-
-    $(".changeEmployee").click(function(e) {
-        e.preventDefault();
-        var changeId = $(e.currentTarget).parent().data("id");
-        addToShift(changeId);
-    });
-}
-*/
-
-function search(searchStr) {
+function search(header, searchStr) {
     var userListElement = $('.list');
     var output = [];
     var users;
@@ -244,7 +227,7 @@ function search(searchStr) {
     userListElement.html("");
     html =`
                 <div class='container-title'>
-                    <h3>Ansatte</h3>
+                    <h3>${header + '"' + searchStr + '"'}</h3>
                 </div>`;
     userListElement.append(html);
 
@@ -257,7 +240,7 @@ function search(searchStr) {
                 <div class='watch' data-id='${user.id}'>
                     <div class='watch-info'>
                         <p class='lead'>${name}</p>
-                        <p class='sub'>${shiftTypes[user.category]}</p>
+                        <p class='sub'>${userTypes[user.category]}</p>
                     </div>
                     <a href="#" class="link changeEmployee">Endre</a>
                 </div>`;
