@@ -1,6 +1,5 @@
 $(document).ready(function() {
     loadCalendar();
-    createCalendarListener();
     loadAvailableShiftsChosen();
 });
 var shiftsChosen = [];
@@ -14,7 +13,7 @@ function loadCalendar() {
         cells[i].addEventListener('click', clickHandler);
     }
 }
-
+var dateClicked = new Date();
 function loadAvailableShiftsChosen() {
      $.ajax({
         url: "/rest/availability/user",
@@ -22,15 +21,12 @@ function loadAvailableShiftsChosen() {
         dataType: 'json',
         success: getAvailabilityForUser,
         error: function (data) {
-            console.log(data);
             console.log('Error when loading available shifts chosen');
         }
     });
 }
 
 function getAvailabilityForUser(data) {
-  console.log('got availability for user');
-  console.log(data.shifts);
   shiftsChosen = data.shifts;
 }
 var C = function Calendar(month, year) {
@@ -88,7 +84,20 @@ var C = function Calendar(month, year) {
     for (var j = 1; j <= 7; j++) {
       if (day <= monthEndDay && (i > 0 || j >= dayStartWeek)) {
         // current month
-        html += '<td class="day">';
+        if(dateClicked && dateClicked.getDate() === day && dateClicked.getMonth() === nowMonth
+                    && dateClicked.getFullYear() === this.year)
+                    if(now.getDate() == day && now.getMonth() == nowMonth
+                        && now.getFullYear() == this.year) {
+                        html += '<td class="day current-day calendar-clicked">';
+                    }
+                    else    html += '<td class="day calendar-clicked">';
+                else{
+                    if (now.getDate() == day && now.getMonth() == nowMonth
+                        && now.getFullYear() == this.year) {
+                        html += '<td class="day current-day">';
+                    }
+                    else html += '<td class="day">';
+                }
         html += day;
         html += '</td>';
         day++;
@@ -141,16 +150,14 @@ C.prototype.switchDate = function(postfix) {
 <div style="background-color:red;border-radius: 50%;width: 10px;height: 10px;margin: 0 auto;">
   </div>
   */
+  var dateString = "";
 function clickHandler() {
-    console.log(this.textContent);
-    console.log(month);
-    /*$('.day').css("background-color", "");
-    $(this).css("background-color", "#89e087");
-    */
-    $('.day').removeClass("daySelected");
-    $(this).addClass("daySelected");
-    var dateString = year+'-'+month+'-'+this.textContent;
-    console.log(dateString);
+    if ($(this).hasClass('disabled-month')) {
+      return;
+    }
+    /*$('.day').removeClass("daySelected");
+    $(this).addClass("daySelected");*/
+    dateString = year+'-'+month+'-'+this.textContent;
     if (this.textContent > 0) {
         $.ajax({
             url: "/rest/availability/date?date="+dateString,
@@ -162,6 +169,12 @@ function clickHandler() {
             success: success,
             error: invalid
         });
+        $(".calendar-clicked").removeClass("calendar-clicked");
+        $(this).addClass("calendar-clicked");
+        dateClicked = new Date();
+        dateClicked.setFullYear(year);
+        dateClicked.setDate(this.textContent);
+        dateClicked.setMonth(month-1);
     }
 }
 
@@ -180,25 +193,26 @@ function convertDate(dateInput){
     var day = date.getDate();
     var monthIndex = date.getMonth();
     var dayIndex = date.getDay();
-
-      console.log('date input: ' + dateInput);
-      console.log(day);
-      console.log('day above');
     return dayNames[dayIndex] + " " + day + ". " + monthNames[monthIndex];
 }
 
 function success(data) {
- // console.log(data);
   if(data.length <1) {
-    $("#error").html( "<p>Ingen vakter på denne datoen. Du har enten valgt dato bak i tid, eller for langt fram i tid. Sistnevtne krever at admin registrerer ny turnus.</p>").fadeIn(400);
-    setTimeout(function(){  $("#error").fadeOut(400);}, 300);
     var calendarList = $(".list");
     calendarList.html("");
+              html =
+                  "<div class='container-title'>" +
+                  "<h3>"+convertDate(dateString)+"</h3>" +
+                  "</div>";
+               html +=
+              "<div class='watch'>" +
+                      "<p class='lead'>Det finnes ingen vakter på denne datoen</p>" +
+                  "</div>";
+                  calendarList.append(html);
+                  html ="";
   } else {
     displayAvailabilityHtml(data);
   }
-  console.log('success send data');
-
 }
 function invalid(data) {
 
@@ -213,16 +227,11 @@ function displayAvailabilityHtml(data) {
   var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"}; 
   var shiftsAlreadyAvailable = [];
   for(var i=0; i<data.length; i++) {
-    console.log('------shiftsChosen-----');
-    console.log(shiftsChosen);
-    console.log('------shiftsChosen-----');
     if(shiftsChosen.indexOf(data[i].shiftId)>-1) {
-      console.log('already exists for : ' + data[i].shiftId);
       shiftsAlreadyAvailable.push(data[i].shiftId);
     } 
   }
   $.each(data, function (index, element) {
-          console.log(shiftTypes[element.shiftType]);
           if(element.date !== currentDate){
               currentDate = element.date;
               html =
@@ -246,7 +255,6 @@ function displayAvailabilityHtml(data) {
                   }
               html+="</div>";
         } else {
-          console.log('shift exists. Display different html');
           html +=
               "<div class='watch'>" +
                   "<div class='watch-info'>" +
@@ -276,25 +284,55 @@ var values = (function() {
                 return a;
             })()
 */
-
+var tempSelection = [];
+var tempUnSelection = [];
 $('#submitAvailability').click(function() {
   var selected = [];
   var unSelected = [];
   //Sett som ledig
   $('.checkBox:checkbox:checked').each(function() {
-      console.log('checked from the otehr');
-      var push = {id: $(this).attr('id')};
+    var id = $(this).attr('id');
+      var push = {id: id};
       selected.push(push);
-      shiftsChosen.push(parseInt($(this).attr('id')));
+      shiftsChosen.push(parseInt(id));
+      $("label[for='"+id+"']").text("Du er satt som ledig");
+      tempSelection.push(id);
+  });
+
+  $('.checkBox:checkbox:not(:checked)').each(function() {
+    var id = $(this).attr('id');
+    if(tempSelection.indexOf(id)>-1){
+      var push = {id: id};
+      unSelected.push(push);
+      var index = shiftsChosen.indexOf(parseInt(id));
+      shiftsChosen.splice(index,1);
+      $("label[for='"+$(this).attr("id")+"']").text("Ledig");
+      var index2 = tempSelection.indexOf(parseInt(id));
+      tempSelection.splice(index2,1);
+    }
   });
   //Sett som ikke ledig
   $('.checkBox2:checkbox:not(:checked)').each(function() {
-      var push = {id: $(this).attr('id')};
-      console.log($(this).attr('id'));
+      var id = $(this).attr('id');
+      var push = {id: id};
       unSelected.push(push);
-      var index = shiftsChosen.indexOf(parseInt($(this).attr('id')));
+      var index = shiftsChosen.indexOf(parseInt(id));
       shiftsChosen.splice(index,1);
+      $("label[for='"+$(this).attr("id")+"']").text("Ledig");
+      tempUnSelection.push(id);
   });
+
+    $('.checkBox2:checkbox:checked').each(function() {
+        var id = $(this).attr('id');
+      if(tempUnSelection.indexOf(id)>-1) {
+        var push = {id: id};
+        selected.push(push);
+        shiftsChosen.push(parseInt(id));
+        $("label[for='"+$(this).attr("id")+"']").text("Du er satt som ledig");
+        var index2 = tempUnSelection.indexOf(parseInt(id));
+        tempUnSelection.splice(index2,1);
+      }
+    });
 
   $.ajax({
       url: "/rest/availability/setAvailable",
@@ -316,7 +354,7 @@ $('#submitAvailability').click(function() {
   });
 
   var calendarList = $(".list");
-  calendarList.slideUp();
+  //calendarList.slideUp();
 });
 
 function sentList(data) {
@@ -345,11 +383,4 @@ function switchDate(postfix) {
   }
   document.getElementById('calendar').innerHTML = C(this.month,this.year);
   loadCalendar();
-}
-function createCalendarListener(){
-    var calendarIcon = $("#today");
-    calendarIcon.click(function () {
-        var calendar = $("#calendar");
-        calendar.slideToggle();
-    });
 }

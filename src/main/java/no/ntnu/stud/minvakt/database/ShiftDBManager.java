@@ -29,7 +29,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
-    private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence, dept_id FROM employee_shift " +
+    private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence, dept_id, shift_change, removed FROM employee_shift " +
     "NATURAL JOIN user WHERE shift_id = ? AND removed = 0;";
     private final String sqlGetShift = "SELECT * FROM shift WHERE shift_id = ?;";
 
@@ -229,7 +229,12 @@ public class ShiftDBManager extends DBManager {
                             res.getString("first_name") +" "+ res.getString("last_name"),
                             User.UserCategory.valueOf(res.getInt("category")),
                             res.getBoolean("responsibility"),
-                            res.getInt("valid_absence"), res.getInt("dept_id")));
+                            res.getInt("valid_absence"),
+                            res.getBoolean("shift_change"),
+                            res.getBoolean("removed"),
+                            res.getInt("valid_absence"), 
+                            res.getInt("dept_id")));
+                            ));
                 }
                 prep = conn.prepareStatement(sqlGetShift);
                 prep.setInt(1, shiftId);
