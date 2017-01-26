@@ -21,112 +21,40 @@ var userTypesPlural = {
 };
 
 var suggestedAllUsers = [];
-var suggestedCategoryUsers = [];
 var allUsers = [];
-var categoryUsers = [];
 var headers = [];
-var returnToEditPage = getUrlParameter("edit") === "1";
-var user = getUrlParameter("user");
 var shift = getUrlParameter("shift");
-var $sameCategory;
-var category;
-var same = true;
-var test = false;
 
 
 $(document).ready(function() {
-    $sameCategory = $('#sameCategory');
-    var $name = $('#name');
-    var $cat = $('#category');
 
-    $.ajax({
-        url: "/rest/user/" + user,
-        type: "GET",
-        success: function(data) {
-            //console.log("USER DATA", data);
-            category = data.category;
-            $name.text(data.firstName + " " + data.lastName);
-            $cat.text(userTypes[category]);
-            headers = [ "Tilgjengelige " + userTypesPlural[category] + " for dette skiftet",
-                        "Tilgjengelige ansatte for dette skiftet",
-                        "Søker etter " + userTypesPlural[category] + " med navn ",
-                        "Søker etter ansatte med navn "];
-            loadAll(category);
-        },
-        error: function(e) {
-            console.error( "Ingen bruker med id " + user, e );
-        }
-    });
-
-    $sameCategory.on('change', function() {
-        if ($sameCategory[0].checked) {
-            same = true;
-            showCategory();
-        } else {
-            same = false;
-            showAll();
-        }
-    });
+    headers = [ "Tilgjengelige ansatte for dette skiftet",
+                "Søker etter ansatte med navn "];
+    loadAll();
 
     var $search = $('#search');
     $search.on('input keypress', function() {
         setUrlParameter("search", $search.val());
-        if (same) {
-            showCategory();
-        } else {
-            showAll()
-        }
+        showAll()
     });
 
 
 });
 
 // Load all data
-function loadAll(catName) {
-    // LOAD SUGGESTED USERS BY CATEGORY
-    $.ajax({
-        url: "/rest/availability/shift/" + shift + "?category=" + catName + "&limitByCategory=true",
-        type: "GET",
-        success: function(data) {
-            //console.log("LOAD SUGGESTED USERS BY CATEGORY", data);
-            suggestedCategoryUsers = data;
-
-            if ($sameCategory[0].checked) {
-                showCategory();
-            }
-        },
-        error: function(e) {
-            console.error("Couldn't get data from category " + catName, e);
-        }
-    });
+function loadAll() {
 
     // LOAD SUGGESTED USERS WITHOUT CATEGORY
     $.ajax({
-        url: "/rest/availability/shift/" + shift + "?category=" + catName + "&limitByCategory=false",
+        url: "/rest/availability/shift/" + shift + "?category=ASSISTANT&limitByCategory=false",
         type: "GET",
         success: function(data) {
             //console.log("LOAD SUGGESTED USERS WITHOUT CATEGORY", data);
             suggestedAllUsers = data;
-
-            if (!$sameCategory[0].checked) {
-                showAll();
-            }
+            showAll();
         },
         error: function(e) {
             console.error("Couldn't get data from category " + catName, e);
-        }
-    });
-
-    // LOAD ALL USERS FROM A CATEGORY
-    $.ajax({
-        url: "/rest/user/category?category=" + catName,
-        type: 'GET',
-        success: function(data) {
-            //console.log("LOAD ALL USERS FROM A CATEGORY", data);
-            categoryUsers = data;
-        },
-        error: function (e) {
-            console.error("loadCategory", e);
         }
     });
 
@@ -148,19 +76,11 @@ function loadAll(catName) {
     });
 }
 
-function showCategory() {
-    if (!getUrlParameter("search")) {
-        displayUsers(headers[0], suggestedCategoryUsers);
-    } else {
-        search(headers[2], getUrlParameter("search"));
-    }
-}
-
 function showAll() {
     if (!getUrlParameter("search")) {
-        displayUsers(headers[1], suggestedAllUsers);
+        displayUsers(headers[0], suggestedAllUsers);
     } else {
-        search(headers[3], getUrlParameter("search"));
+        search(headers[1], getUrlParameter("search"));
     }
 }
 
@@ -187,7 +107,7 @@ function displayUsers(header, data) {
                             <p class='lead'>${name}</p>
                             <p class='sub'>${userTypes[user.category]}</p>
                         </div>
-                        <a href="#" class="link changeEmployee">Legg til</a>
+                        <a href="#" class="link addEmployee">Legg til</a>
                     </div>`;
 
         userListElement.append(html);
@@ -195,7 +115,7 @@ function displayUsers(header, data) {
 
     }
 
-    $(".changeEmployee").click(function(e) {
+    $(".addEmployee").click(function(e) {
         e.preventDefault();
         var changeId = $(e.currentTarget).parent().data("id");
         addToShift(changeId);
@@ -205,12 +125,7 @@ function displayUsers(header, data) {
 function search(header, searchStr) {
     var userListElement = $('.list');
     var output = [];
-    var users;
-    if (same) {
-        users = categoryUsers;
-    } else {
-        users = allUsers;
-    }
+    var users = allUsers;
     for (var i = 0; i < users.length; i++) {
         var str = users[i].firstName;
         str += " ";
@@ -242,13 +157,13 @@ function search(header, searchStr) {
                         <p class='lead'>${name}</p>
                         <p class='sub'>${userTypes[user.category]}</p>
                     </div>
-                    <a href="#" class="link changeEmployee">Legg til</a>
+                    <a href="#" class="link addEmployee">Legg til</a>
                 </div>`;
         userListElement.append(html);
 
     }
 
-    $(".changeEmployee").click(function(e) {
+    $(".addEmployee").click(function(e) {
         e.preventDefault();
         var changeId = $(e.currentTarget).parent().data("id");
         addToShift(changeId);
@@ -257,19 +172,15 @@ function search(header, searchStr) {
 
 function addToShift(id) {
     var shiftId = getUrlParameter("shift");
-    var oldUserId = getUrlParameter("user");
+
     $.ajax({
-        url: "/rest/shift/" + shiftId + "/replaceuser/",
+        url: "/rest/shift/" + shiftId + "/user/" + id,
         type: 'POST',
-        data: {
-            oldUserId: oldUserId,
-            newUserId: id
-        },
         success: function() {
-            window.location = returnToEditPage ? "edit-shift.html?id=" + shiftId : "add-users-to-shift.html";
+            window.location = "edit-shift.html?id=" + shiftId;
         },
         error: function (e) {
-            console.error("addToShift", e);
+            console.log("addToShift", e);
         }
     });
 }

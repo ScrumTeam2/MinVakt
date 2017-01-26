@@ -60,6 +60,8 @@ function createAjaxForAllShifts() {
 }
 //});
 var absenceIds = [];
+var shiftChangeIds = [];
+var shiftRemovedIds = [];
 function addShiftInfoHtml (element, shiftId, data) {
 
     employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsemedarbeider', 'NURSE': 'Sykepleier'};
@@ -68,6 +70,8 @@ function addShiftInfoHtml (element, shiftId, data) {
     var html = "";
     var iAmOnShift = false;
     var absence = 0;
+    var shiftChange = false;
+    var removed = false;
     //Could be made more efficient
     var baseUrl = "../html/user-e.html?search=";
     console.log(data);
@@ -76,6 +80,7 @@ function addShiftInfoHtml (element, shiftId, data) {
         //console.log(categoriesForLoop[i]);
         //console.log(html);
         var absence = 0;
+        var shiftChange = false;
         $.each(shiftUsers, function (index, user) {
             if (user.userCategory == categoriesForLoop[i]) {
                 if (!hasPerson) {
@@ -96,11 +101,23 @@ function addShiftInfoHtml (element, shiftId, data) {
             }
             switch (user.valid_absence2) {
                 case 1:
-                absence = 1;
-                break;
+                    absence = 1;
+                    break;
                 case 2:
-                absence = 2;
-                break;
+                    absence = 2;
+                    break;
+            }
+            switch (user.shift_change) {
+                case true:
+                    shiftChange = true;
+                    console.log(shiftId);
+                    console.log('set to true');
+                    break;
+            }
+            switch (user.removed) {
+                case true:
+                    removed = true;
+                    break;
             }
         });
     }
@@ -124,17 +141,19 @@ function addShiftInfoHtml (element, shiftId, data) {
                 '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
                 '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Registrer sykdom</button>' +
                 '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
-
         }
     }
 
     element.append(html);
 }
-var shiftSykdom = 0;
+var shiftIllness = 0;
 var prevDiv;
-function regSykdom(that) {
+
+var reqChangeShiftId = 0;
+var reqPrevDiv;
+function registerIllness(that) {
     var shiftId = $(that).attr('data-id');
-    shiftSykdom = shiftId;
+    shiftIllness = shiftId;
     prevDiv = that;
     var date = $(that).attr('data-date');
     var staff = $(that).attr('data-staff');
@@ -146,8 +165,8 @@ function regSykdom(that) {
     }   
     displayPopup(shiftId,date,staff);
     function displayPopup(shiftId,date,staff) {
-        $(".popup p").replaceWith("Er du sikker på at du vil registrere fravær for vakt den " + date + "? Det er meldt " + staff + " ansatte til denne vakten");
-        $(".popup").show();
+        $("#registerIllnessPopup p").replaceWith("Er du sikker på at du vil registrere fravær for vakt den " + date + "? Det er meldt " + staff + " ansatte til denne vakten");
+        $("#registerIllnessPopup").show();
     }
     //moreInfoElement.slideToggle();
 }
@@ -159,31 +178,70 @@ function regOvertime(that) {
     window.location = url;
 }
 function poopStatus(status, that) {
-    var shiftId = shiftSykdom;
+    var shiftId = shiftIllness;
     if (status) {
         $.ajax({
             url: "../rest/shift/user/valid_absence/" + shiftId,
             type: 'GET',
             dataType: 'json',
-            success: successRegisterSykdom,
+            success: successRegisterIllness,
             error: function(data) {
                 console.log(data)
             }
         });
-        $(".popup").fadeOut();
+        $("#registerIllnessPopup").fadeOut();
         absenceIds.push(shiftId);
-        $(prevDiv).replaceWith('<div class="dialogboks"><h3>Du har registrert sykdom</h3></div>');
+        $(prevDiv).parent().replaceWith('<div class="dialogboks"><h3>Du har registrert sykdom</h3></div>');
     } else {
-        $(".popup").fadeOut();
+        $("#registerIllnessPopup").fadeOut();
     }
 }
 
-function successRegisterSykdom(data) {
-    console.log('succes');
-    //console.log(data);
-    console.log('succ responseTextBelow');
+function successRegisterIllness(data) {
+    console.log('success register illness');
     console.log(data.responseText);
     //Popup
+}
+
+function reqChangeShift(that) {
+    var shiftId = $(that).attr('data-id');
+    reqChangeShiftId = shiftId;
+    reqPrevDiv = that;
+    var date = $(that).attr('data-date');
+    var staff = $(that).attr('data-staff');
+    console.log(date);
+    console.log(staff);
+    console.log(shiftChangeIds);
+    if(shiftChangeIds.indexOf(shiftId)>-1) {
+        return $(that).html('<div class="dialogboks"><h3>Du har allerede registrert vaktbytte for denne vakten</h3></div>');
+    }   
+    displayShiftPopup(shiftId,date,staff);
+    function displayShiftPopup(shiftId,date,staff) {
+        $("#changeShiftPopup p").replaceWith("Er du sikker på at du vil registrere vaktbytte for vakt den " + date + "? Det er meldt " + staff + " ansatte til denne vakten");
+        $("#changeShiftPopup").show();
+    }
+    //moreInfoElement.slideToggle();
+}
+
+function changeShiftStatus(status, that) {
+    var shiftId = reqChangeShiftId;
+    if (status) {
+        $.ajax({
+            url: "../rest/shift/user/shift_change/" + shiftId,
+            type: 'GET',
+            dataType: 'json',
+            success: function success(data) {
+            },
+            error: function(data) {
+                console.log(data)
+            }
+        });
+        $("#changeShiftPopup").fadeOut();
+        shiftChangeIds.push(shiftId);
+        $(reqPrevDiv).parent().replaceWith('<div class="dialogboks"><h3>Du har registrert vaktbytte</h3></div>');
+    } else {
+        $("#changeShiftPopup").fadeOut();
+    }
 }
 /*
 function createUserShiftHtml(data) {
