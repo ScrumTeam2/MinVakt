@@ -87,6 +87,8 @@ public class ShiftPlanShift {
 
         while (shift.getShiftUsers().size() < shift.getStaffNumb() && !userQueue.isEmpty()) {
             ShiftPlanUser user = userQueue.poll();
+            if(usersWorking.containsKey(user.getId())) continue;
+
             addShiftUser(user);
             usersWorking.put(user.getId(), user);
             setUpQueue(userList); // Heavy..

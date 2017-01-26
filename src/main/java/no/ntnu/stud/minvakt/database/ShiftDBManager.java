@@ -521,15 +521,16 @@ public class ShiftDBManager extends DBManager {
         return status != 0;
     }
 
-    private static final String sqlAnyShiftsInPeriod = "SELECT 1 FROM shift WHERE date BETWEEN ? AND ?";
+    private static final String sqlAnyShiftsInPeriod = "SELECT 1 FROM shift WHERE dept_id = ? AND date BETWEEN ? AND ?";
 
     /**
-     * Checks if there are any shifts registered in the given period
+     * Checks if there are any shifts registered on a department in the given period
      * @param startDate The start of the period
      * @param endDate The end of the period
+     * @param departmentId The ID of the department
      * @return True if there is any shifts in the period
      */
-    public boolean hasAnyShiftsInPeriod(LocalDate startDate, LocalDate endDate) {
+    public boolean hasAnyShiftsInPeriod(LocalDate startDate, LocalDate endDate, int departmentId) {
         if (!setUp()) {
             log.log(Level.WARNING, "Failed to set up db connection");
             return true;
@@ -539,8 +540,9 @@ public class ShiftDBManager extends DBManager {
 
         try {
             prep = getConnection().prepareStatement(sqlAnyShiftsInPeriod);
-            prep.setDate(1, Date.valueOf(startDate));
-            prep.setDate(2, Date.valueOf(endDate));
+            prep.setInt(1, departmentId);
+            prep.setDate(2, Date.valueOf(startDate));
+            prep.setDate(3, Date.valueOf(endDate));
             result = prep.executeQuery();
             return result.next();
         } catch (SQLException e) {

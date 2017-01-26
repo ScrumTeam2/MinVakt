@@ -101,4 +101,15 @@ public class ShiftUser {
     public void setDepartmentId(int departmentId) {
         this.departmentId = departmentId;
     }
+
+    @Override
+    public String toString() {
+        return "ShiftUser{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", departmentId=" + departmentId +
+                ", userCategory=" + userCategory +
+                ", responsibility=" + responsibility +
+                '}';
+    }
 }

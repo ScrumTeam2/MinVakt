@@ -42,7 +42,9 @@ public class ShiftPlanService extends SecureService {
         }
 
         controller.calculateShifPlan();
-        controller.insertShiftsIntoDatabase();
+        if(!controller.insertShiftsIntoDatabase()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         // Stupid code to return JSON array
         JSONArray array = new JSONArray();
