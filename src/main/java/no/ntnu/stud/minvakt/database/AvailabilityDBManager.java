@@ -244,6 +244,7 @@ public class AvailabilityDBManager extends DBManager{
             finally {
                 endTransaction();
                 finallyStatement(res, prep);
+                finallyStatement(res2, prep);
             }
         }
         return out;
