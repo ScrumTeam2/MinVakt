@@ -34,7 +34,7 @@ public class ShiftServiceTest extends ServiceTest{
 
         logInAdmin();
 
-        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0, -1);
         shiftService.addEmployeeToShift(shiftUser, shiftId);
 
         Response response = shiftService.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
@@ -51,7 +51,7 @@ public class ShiftServiceTest extends ServiceTest{
     public void createShift() {
         logInUser();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0));
+        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0, -1));
         Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers, false);
         Response response = shiftService.createShift(shift);
         if (response.getStatus() == 200) {
@@ -73,7 +73,7 @@ public class ShiftServiceTest extends ServiceTest{
     @Test
     public void addEmployeeToShift() {
         logInUser();
-        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, 0);
+        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, 0, -1);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 9);
         if (statusOk.getStatus() == 200) {
             statusOk = shiftService.deleteEmployeeFromShift(1, 9,false);
