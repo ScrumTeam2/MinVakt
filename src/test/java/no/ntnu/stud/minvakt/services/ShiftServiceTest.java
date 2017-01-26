@@ -4,18 +4,14 @@ package no.ntnu.stud.minvakt.services;
  * Created by evend on 1/10/2017.
  */
 import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.user.User;
-import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.json.JSONObject;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.net.ssl.SSLEngineResult;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -23,24 +19,13 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 
-public class ShiftServiceTest {
-    private static ShiftService shiftService;
-    private HttpServletRequest request;
+public class ShiftServiceTest extends ServiceTest{
+    private ShiftService shiftService;
 
-    @Before
-    public void setUpTest() {
-        request = new MockHttpServletRequest();
+    @Override
+    public void setUp() {
+        super.setUp();
         shiftService = new ShiftService(request);
-    }
-
-    private void logInUser() {
-        SessionService sessionService = new SessionService();
-        sessionService.checkLogin(request, "email1", "password");
-    }
-
-    private void logInAdmin() {
-        SessionService sessionService = new SessionService();
-        sessionService.checkLogin(request, "admin", "password");
     }
 
     @Test
@@ -106,10 +91,11 @@ public class ShiftServiceTest {
     }
 
     @Test
-    public void setStaffNumberOnShift(){
-        Response response = shiftService.setStaffNumberOnShift(-1,5);
+    public void setStaffCount(){
+        logInAdmin();
+        Response response = shiftService.setStaffCount(-1,5);
         assertTrue(response.getStatus() == Response.Status.BAD_REQUEST.getStatusCode());
-        response = shiftService.setStaffNumberOnShift(1,4);
+        response = shiftService.setStaffCount(1,4);
         assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
     }
 //    @Test
@@ -124,6 +110,12 @@ public class ShiftServiceTest {
         logInUser();
         Response response = shiftService.requestValidAbsence(1);
         assertTrue(response.getStatus() == Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void getAvailableShiftsTest(){
+        ArrayList<ShiftAvailable> statusOk = shiftService.getAvailableShifts();
+        assertFalse(statusOk.isEmpty());
     }
     @Test
     public void requestShiftChange() throws Exception {

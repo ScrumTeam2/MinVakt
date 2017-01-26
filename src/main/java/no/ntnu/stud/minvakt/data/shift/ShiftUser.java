@@ -20,7 +20,7 @@ public class ShiftUser {
         this.userName = userName;
         this.userId = userId;
         this.responsibility = responsibility;
-        System.out.println("Valid absence: "+valid_absence);
+        //System.out.println("Valid absence: "+valid_absence);
         this.valid_absence = valid_absence;
         this.valid_absence2 = valid_absence;
     }

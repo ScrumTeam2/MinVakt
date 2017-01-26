@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MinVakt | Timebank</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <a href="#" class="white" id="menu_icon">
+            <i class="material-icons">menu</i>
+        </a>
+        <h1>MinVakt</h1>
+        <a href="#" class="white" id="more_icon">
+            <i class="material-icons">more_vert</i>
+        </a>
+    </header>
+    <aside class="popup-menu employee hide" id="popup_menu">
+        <ul>
+            <li><a href="home-e.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="#">Vaktbytte<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="user-e.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="#">Fravær<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="#">Timebank<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="availability.html">Tilgjengelighet<i class="material-icons">chevron_right</i></a></li>
+        </ul>
+    </aside>
+    <aside class="popup-more employee hide" id="popup_more">
+        <ul>
+            <li><a href="#">Endre passord<i class="material-icons">chevron_right</i></a></li>
+            <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
+        </ul>
+    </aside>
+
+    <div class="container">
+        <div class="container-header">
+            <div>
+                <!--<i class="material-icons">chevron_left</i>-->
+                <h2>Registrer timer</h2>
+            </div>
+        </div>
+
+        <div class="radio-group">
+            <input type="radio" name="overtime-type" id="overtime-type" value="overtime" checked>
+            <label for="overtime-type">Overtid</label>
+            <input type="radio" name="overtime-type" id="absence-type" value="absence">
+            <label for="absence-type">Fravær</label>
+        </div>
+        <form class="register-form" method="POST">
+
+            <input type="number" min="0" max="23" name="hours" id="hours" placeholder="Timer"/>
+            <input name="number" id="minutes" min="0" max="50" step="10" placeholder="Minutter"/>
+            <button type="submit" id="timebankBtn">Registrer timeavvik for vakt</button>
+        </form>
+
+        <div id="timebankPopup" class="popup">
+            <div class="popup-content"></div>
+            <div class="links">
+                <a href="#" id="closeBtn">Gå tilbake</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/overtimeScript.js"></script>
+
+</body>
+</html>

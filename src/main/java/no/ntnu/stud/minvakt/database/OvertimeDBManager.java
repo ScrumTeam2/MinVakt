@@ -3,6 +3,7 @@ import com.mysql.cj.api.mysqla.result.Resultset;
 import no.ntnu.stud.minvakt.data.Overtime;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
@@ -18,7 +19,7 @@ public class OvertimeDBManager extends DBManager{
     private final String sqlGetUnapprovedOvertime = "SELECT * FROM overtime WHERE approved = 0";
     private final String sqlCountUnapproved = "SELECT COUNT(*) FROM overtime WHERE approved = 0";
 
-    private final String getSqlGetOvertimeByUserId = "SELECT * FROM overtime WHERE user_id =?";
+    private final String getSqlGetOvertimeByUserId = "SELECT overtime.*, shift.date, shift.time FROM overtime NATURAL JOIN employee_shift JOIN shift ON (shift.shift_id = employee_shift.shift_id) WHERE overtime.user_id =?;";
     private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
     private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
 
@@ -107,10 +108,9 @@ public class OvertimeDBManager extends DBManager{
     }
 
     // returns array with overtime for given user
-    public Overtime[] getOvertimeByUserId(int userId){
-        Overtime overtimeObj = null;
-        int rowCount = getRowCountUser(userId);
-        Overtime[] timeList = new Overtime[rowCount];
+    public ArrayList<Overtime> getOvertimeByUserId(int userId){
+        Overtime overtimeObj;
+        ArrayList<Overtime> timeList = new ArrayList<>();
 
         ResultSet res = null;
 
@@ -123,7 +123,6 @@ public class OvertimeDBManager extends DBManager{
 
                 res = prep.executeQuery();
 
-                int index = 0;
                 while(res.next()){
 
                     overtimeObj = new Overtime(
@@ -131,17 +130,17 @@ public class OvertimeDBManager extends DBManager{
                             res.getInt("shift_id"),
                             res.getInt("start_time"),
                             res.getInt("minutes"),
-                            res.getBoolean("approved"));
-                    timeList[index] = overtimeObj;
-
-                    index++;
+                            res.getBoolean("approved"),
+                            res.getDate("date"),
+                            res.getInt("time"));
+                    timeList.add(overtimeObj);
                 }
 
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error returning overtime for user with ID = " + userId, sqlE);
             } finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return timeList;
@@ -181,7 +180,7 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING, "Error returning unapproved overtime", sqlE);
             } finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return timeList;
@@ -205,11 +204,13 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING, "Error getting row count", sqlE);
             } finally{
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return count;
     }
+
+    /*
     private int getRowCountUser(int userId) {
         int count = 0;
         ResultSet res = null;
@@ -235,6 +236,7 @@ public class OvertimeDBManager extends DBManager{
         }
         return count;
     }
+    */
 
     public int getMinutes(int userId, Date fromDate, Date toDate){
         int minutes = 0;
@@ -259,10 +261,9 @@ public class OvertimeDBManager extends DBManager{
                 log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);
             } finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
-
         return minutes;
     }
 }

@@ -12,17 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Created by evend on 1/25/2017.
  */
-public class UserServiceTest {
-    private HttpServletRequest request;
-    private static UserService userService;
+public class UserServiceTest extends ServiceTest {
+    private UserService userService;
 
-
+    @Override
     @Before
-    public void setUpTest() {
-        request = new MockHttpServletRequest();
+    public void setUp() {
+        super.setUp();
         userService = new UserService(request);
-
     }
+
     @Test
     public void getUserBasicsCategory(){
         assertFalse(userService.getUserBasicsWithCategory(User.UserCategory.ASSISTANT).isEmpty());

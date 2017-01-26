@@ -1,7 +1,6 @@
 $(document).ready(function() {
     loadCalendar();
 });
-
 function loadCalendar() {
     //Hente dato trykket på
     var tableId = $('#calendar-availability tr');
@@ -11,7 +10,7 @@ function loadCalendar() {
         cells[i].addEventListener('click', clickHandler);
     }
 }
-
+var dateClicked = new Date();
 var C = function Calendar(month, year) {
     var now = new Date();
 
@@ -67,7 +66,20 @@ var C = function Calendar(month, year) {
         for (var j = 1; j <= 7; j++) {
             if (day <= monthEndDay && (i > 0 || j >= dayStartWeek)) {
                 // current month
-                html += '<td class="day">';
+                if(dateClicked && dateClicked.getDate() === day && dateClicked.getMonth() === nowMonth
+                    && dateClicked.getFullYear() === this.year)
+                    if(now.getDate() == day && now.getMonth() == nowMonth
+                        && now.getFullYear() == this.year) {
+                        html += '<td class="day current-day calendar-clicked">';
+                    }
+                    else    html += '<td class="day calendar-clicked">';
+                else{
+                    if (now.getDate() == day && now.getMonth() == nowMonth
+                        && now.getFullYear() == this.year) {
+                        html += '<td class="day current-day">';
+                    }
+                    else html += '<td class="day">';
+                }
                 html += day;
                 html += '</td>';
                 day++;
@@ -119,37 +131,34 @@ C.prototype.switchDate = function(postfix) {
 }
 
 function clickHandler() {
-    var url;
+    if($(this).hasClass("disabled-month")){
+        return;
+    }
+    var url, data, dateString;
     console.log(this.textContent);
     console.log(month);
-    var dateString = year + '-' + month + '-' + this.textContent;
+    dateString = year + '-' + month + '-' + this.textContent;
     console.log(dateString);
     if (this.textContent > 0) {
-        if ($(".person").length > 0)
-            url = "/rest/shift/user";
-        else {
-            url = "/rest/shift";
-        }
+        data = {date:dateString, daysForward : 7};
         $.ajax({
-            url: url,
+            url: "/rest/shift",
             type: 'GET',
             datatype: 'json',
-            data: {date: dateString},
-            success: createUserShiftHtml,
+            data: data,
+            success: createAllShiftsHtml,
             error: invalid
         });
+        $(".calendar-clicked").removeClass("calendar-clicked");
+        $(this).addClass("calendar-clicked");
+        dateClicked = new Date();
+        dateClicked.setFullYear(year);
+        dateClicked.setDate(this.textContent);
+        dateClicked.setMonth(month-1);
+
     }
 }
 
-function success(data) {
-    console.log(data);
-    if(data.length <1) {
-        $("#error").html( "<p>Ingen ledige vakter på denne datoen</p>").fadeIn(1500);
-        setTimeout(function(){  $("#error").fadeOut(1000);}, 1000);
-    }
-    console.log('success send data');
-
-}
 function invalid(data) {
 
 }

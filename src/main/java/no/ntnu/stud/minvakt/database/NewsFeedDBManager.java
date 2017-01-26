@@ -22,7 +22,7 @@ public class NewsFeedDBManager extends DBManager{
     private final String sqlSetNewsFeedItemResolved = "UPDATE newsfeed SET resolved = ? WHERE feed_id = ?;";
 
     private final String sqlGetNewsFeedIdFromOvertime = "SELECT feed_id FROM overtime JOIN newsfeed ON overtime.shift_id = newsfeed.shift_id AND overtime.user_id = newsfeed.shift_user_id AND overtime.start_time = newsfeed.start_time WHERE overtime.user_id = ? AND overtime.shift_id = ? AND overtime.start_time = ?;";
-
+    private final String sqlGetShiftChangePendingCount = "SELECT COUNT(*) as pending FROM newsfeed WHERE category = 0 AND shift_id = ? AND shift_user_id = ? AND resolved = 0;";
 
     Connection conn;
     PreparedStatement prep;
@@ -59,7 +59,7 @@ public class NewsFeedDBManager extends DBManager{
                 log.log(Level.WARNING, "Not able to add notification to news feed");
                 sqle.printStackTrace();
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return id;
@@ -107,7 +107,7 @@ public class NewsFeedDBManager extends DBManager{
                 log.log(Level.WARNING, "Not able to delete notification from news feed");
                 sqle.printStackTrace();
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return out;
@@ -136,7 +136,7 @@ public class NewsFeedDBManager extends DBManager{
                 log.log(Level.WARNING, "Not able to get notification from news feed");
                 sqle.printStackTrace();
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return notification;
@@ -193,6 +193,7 @@ public class NewsFeedDBManager extends DBManager{
     }
     public int getNewsFeedIdThroughOvertime(int userId, int shiftId, int startTime){
         int feedId = 0;
+        ResultSet res = null;
 
         if(setUp()){
             try{
@@ -201,17 +202,41 @@ public class NewsFeedDBManager extends DBManager{
                 prep.setInt(1, userId);
                 prep.setInt(2, shiftId);
                 prep.setInt(3, startTime);
-                ResultSet res = prep.executeQuery();
+                res = prep.executeQuery();
                 res.next();
                 feedId = res.getInt("feed_id");
             } catch (SQLException sqle) {
                 log.log(Level.WARNING, "Not able to find feedId for userID: "+userId+", shiftID: " +shiftId+ ", startTime: "+startTime);
                 sqle.printStackTrace();
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return feedId;
+    }
+
+    public int getShiftChangeCountPending(int shiftId, int shiftUserId){
+        int resolvedCount = 0;
+        ResultSet res=null;
+        //category = ? AND shift_id = ? AND shift_user_id = ? AND resolved = 0;";
+
+        if(setUp()){
+            try{
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetShiftChangePendingCount);
+                prep.setInt(1, shiftId);
+                prep.setInt(2, shiftUserId);
+                res = prep.executeQuery();
+                res.next();
+                resolvedCount = res.getInt("pending");
+            } catch (SQLException sqle) {
+                log.log(Level.WARNING, "Not able to find unresolved user count for shiftID: " +shiftId+ " and shift_user: "+shiftUserId);
+                sqle.printStackTrace();
+            } finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return resolvedCount;
     }
 }
 
