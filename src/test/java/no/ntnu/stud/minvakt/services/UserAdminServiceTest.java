@@ -29,7 +29,7 @@ public class UserAdminServiceTest extends ServiceTest {
 
     @Test
     public void createUser() {
-        logInUser();
+        logInAdmin();
         User user = new User(-1, "Even","Dalen", "hash","salt","system.minvakt@gmail.com","20012111", User.UserCategory.HEALTH_WORKER, 1,1);
         Response response = userAdminService.addUser(user);
         if (response.getStatus() == 200) {

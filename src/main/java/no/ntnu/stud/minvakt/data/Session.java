@@ -12,7 +12,7 @@ public class Session implements Serializable {
     private User user;
 
     public boolean isAdmin() {
-        return true; // TODO
+        return (user.getCategory().equals(User.UserCategory.ADMIN));
     }
 
     public User getUser() {

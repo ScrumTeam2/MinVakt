@@ -80,20 +80,36 @@ function showShiftInfo(data) {
                         <p class="lead">${user.userName}</p>
                         <p class="sub">${userTypes[user.userCategory]}</p>
                     </div>
-                    <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}&edit=1" class="link">Endre</a>
+                    <div>
+                    <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}&edit=1" class="link">Bytt</a>
+                    <a href="#" data-userId="${user.userId}" class="link btnRemove">Fjern</a>
+                    </div>
+
                 </div>`;
         } else {
             output += `<div class="watch">
                     <div class="watch-info">
                         <p>Ledig</p>
                     </div>
-                    <a href="#" class="link">Legg til</a>
+                    <a href="/html/add-employee.html?shift=${data.id}" class="link">Legg til</a>
                 </div>`;
         }
         counter++;
     }
 
     $list.html(output);
+
+    $('.btnRemove').on('click', function(e) {
+        var userId = $(e.currentTarget).attr("data-userId");
+        $.ajax({
+            url: "/rest/shift/" + getUrlParameter("id") + "/user/" + userId + "?findNewEmployee=false",
+            type: "DELETE",
+            success: getNewShift,
+            error: function(e) {
+                console.error("Problem deleting user", e);
+            }
+        });
+    });
 }
 
 function initPopup() {
