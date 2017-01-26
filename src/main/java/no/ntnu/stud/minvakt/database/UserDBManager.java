@@ -256,6 +256,7 @@ public class UserDBManager extends DBManager {
                     user.setPhoneNumber(res.getString("phonenumber"));
                     user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
                     user.setWorkPercentage(res.getFloat("percentage_work"));
+                    user.setDeptId(res.getInt("dept_id"));
                     users.add(user);
                 }
             } catch (Exception e) {
@@ -267,6 +268,38 @@ public class UserDBManager extends DBManager {
         }
         return users;
     }
+
+    // Currently not used
+    public ArrayList<User> getUsersInDepartment(int departmentId, boolean includeAdmins){
+        ArrayList<User> users = new ArrayList<User>();
+        if(setUp()){
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(includeAdmins ? "SELECT * FROM user WHERE dept_id = ?" : "SELECT * FROM user WHERE dept_id = ? AND category != 0");
+                prep.setInt(1, departmentId);
+                res = prep.executeQuery();
+                while (res.next()){
+                    User user = new User();
+                    user.setId(res.getInt("user_id"));
+                    user.setFirstName(res.getString("first_name"));
+                    user.setLastName(res.getString("last_name"));
+                    user.setEmail(res.getString("email"));
+                    user.setPhoneNumber(res.getString("phonenumber"));
+                    user.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    user.setWorkPercentage(res.getFloat("percentage_work"));
+                    user.setDeptId(res.getInt("dept_id"));
+                    users.add(user);
+                }
+            } catch (Exception e) {
+                log.log(Level.WARNING, "Failed to select users", e);
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return users;
+    }
+
     public User getUserById(int userId) {
         User user = null;
         if(setUp()){

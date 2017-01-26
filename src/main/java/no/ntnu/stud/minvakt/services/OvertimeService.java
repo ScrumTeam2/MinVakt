@@ -41,8 +41,9 @@ public class OvertimeService extends SecureService{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setOvertime(Overtime overtime) {
-        boolean isRegistered = overtimeDBM.setOvertime(overtime.getUserId(), overtime.getShiftId(), overtime.getStartTime(), overtime.getMinutes());
         User user = getSession().getUser();
+        System.out.println("user: "+user.getId()+" shift: "+overtime.getShiftId());
+        boolean isRegistered = overtimeDBM.setOvertime(user.getId(), overtime.getShiftId(), overtime.getStartTime(), overtime.getMinutes());
         ShiftDBManager shiftDBM = new ShiftDBManager();
         Shift shift = shiftDBM.getShift(overtime.getShiftId());
 
@@ -54,7 +55,7 @@ public class OvertimeService extends SecureService{
             if(adminId==0){
                 return Response.status(400).entity("Overtime registered, but could not find admin user").build();
             }else {
-                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, overtime.getUserId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
+                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
                 int newsfeedId = newsfeedDBM.createNotification(notification);
 
                 if (newsfeedId == 0){

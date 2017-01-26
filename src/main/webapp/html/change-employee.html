@@ -15,6 +15,7 @@
 <header>
     <a href="#" class="white" id="menu_icon">
         <i class="material-icons">menu</i>
+        Meny
     </a>
     <h1>MinVakt</h1>
     <a href="#" class="white" id="more_icon">
@@ -31,7 +32,7 @@
 </aside>
 <aside class="popup-more employee hide" id="popup_more">
     <ul>
-        <li><a href="#">Endre passord<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="change-password.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
@@ -42,18 +43,18 @@
         </div>
     </div>
     <div class="watch-info">
-        <p class="lead">Siri Andresen</p>
-        <p class="sub">Assistent</p>
+        <p class="lead" id="name">Siri Andresen</p>
+        <p class="sub" id="#category">Assistent</p>
     </div>
 
     <form class="search-check" action="">
         <div class="search-wrapper">
-            <input type="search" id="search" placeholder="Søk etter ansatt" />
+            <input type="search" id="search" placeholder="Søk i alle ansatte"/>
             <label for="search"><i class="material-icons">search</i></label>
         </div>
         <div>
-            <input type="checkbox" name="check" id="check1" value="employee" checked>
-            <label for="check1">Samme kategori</label>
+            <input type="checkbox" name="check" id="sameCategory" value="sameCategory" checked>
+            <label for="sameCategory">Samme kategori</label>
         </div>
     </form>
 
