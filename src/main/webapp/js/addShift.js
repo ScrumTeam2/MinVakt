@@ -2,8 +2,10 @@
  * Created by olekristianaune on 16.01.2017.
  */
 
+var $departmentSelect;
 
 $(document).ready(function() {
+    loadDepartments();
     var dayCodes = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY"];
     var shiftTypeCodes = ["DAY", "EVENING", "NIGHT"];
     generateDaysHTML();
@@ -86,6 +88,7 @@ $(document).ready(function() {
 
 
         var shiftPlan = {
+            departmentId: deptId,
             templateWeek: {
                 days: days
             }
@@ -117,6 +120,20 @@ $(document).ready(function() {
         }
     };
 });
+
+function loadDepartments() {
+    $departmentSelect = $("#department");
+
+    $.get("/rest/department/")
+        .done(function (data) {
+            data.forEach(function (department) {
+                $departmentSelect.append(`<option value="${department.id}">${department.name}</option>`);
+            })
+        })
+        .fail(function (data) {
+            console.log("fail", data);
+        });
+}
 
 function invalidField(data){
     $('.title').text("Feil");

@@ -3,11 +3,9 @@ package no.ntnu.stud.minvakt.services;
 /**
  * Created by evend on 1/10/2017.
  */
-import no.ntnu.stud.minvakt.data.shift.Shift;
-import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
-import no.ntnu.stud.minvakt.data.shift.ShiftUser;
-import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.data.user.UserBasic;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
@@ -36,7 +34,7 @@ public class ShiftServiceTest extends ServiceTest{
 
         logInAdmin();
 
-        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0, -1);
         shiftService.addEmployeeToShift(shiftUser, shiftId);
 
         Response response = shiftService.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
@@ -53,7 +51,7 @@ public class ShiftServiceTest extends ServiceTest{
     public void createShift() {
         logInUser();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0));
+        shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0, -1));
         Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers, false);
         Response response = shiftService.createShift(shift);
         if (response.getStatus() == 200) {
@@ -75,7 +73,7 @@ public class ShiftServiceTest extends ServiceTest{
     @Test
     public void addEmployeeToShift() {
         logInUser();
-        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, 0);
+        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, 0, -1);
         Response statusOk = shiftService.addEmployeeToShift(shiftUser, 9);
         if (statusOk.getStatus() == 200) {
             statusOk = shiftService.deleteEmployeeFromShift(1, 9,false);
@@ -117,6 +115,7 @@ public class ShiftServiceTest extends ServiceTest{
         ArrayList<ShiftAvailable> statusOk = shiftService.getAvailableShifts();
         assertFalse(statusOk.isEmpty());
     }
+
     @Test
     public void requestShiftChange() throws Exception {
         logInUser();
@@ -125,5 +124,21 @@ public class ShiftServiceTest extends ServiceTest{
         Response response = shiftService.requestShiftChange(shiftId);
         int expResp = 200;
         Assert.assertEquals(expResp, response.getStatus());
+    }
+
+    @Test
+    public void getUserBasicFromId() throws Exception {
+        int userId = 1;
+        ArrayList<ShiftUserBasic> shiftUserRes = shiftService.getUserBasicFromId(userId);
+        //System.out.println(shiftUserRes.get(0).getShiftId());
+
+        Assert.assertTrue(shiftUserRes.get(0) instanceof ShiftUserBasic);
+    }
+
+    @Test
+    public void getUserBasicFromSession() throws Exception{
+        logInUser();
+        ArrayList<ShiftUserBasic> shiftUsers = shiftService.getUserBasicFromSession(Date.valueOf("2017-02-01"));
+        Assert.assertTrue(shiftUsers.get(0) instanceof ShiftUserBasic);
     }
 }
