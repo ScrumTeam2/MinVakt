@@ -142,7 +142,32 @@ $(document).ready(function () {
             }
         }
     });
+    initPopup();
 });
+
+function initPopup() {
+    //close popup
+    $('#userCloseBtn').click(function () {
+        $('.popup').hide();
+
+        if (createSuccess) {
+            $('.register-form')[0].reset();
+        }
+        createSuccess = false;
+    });
+
+    //close popup when clicking outside of the popup
+    var $popup = $('#userPopup');
+    window.onclick = function (e) {
+        if (!$popup.is(e.target) && $popup.has(e.target).length === 0) {
+            $popup.hide();
+            if (createSuccess) {
+                $('.register-form')[0].reset();
+            }
+            createSuccess = false;
+        }
+    };
+}
 
 function submitUser(formData) {
     // Loading animation
@@ -205,28 +230,6 @@ function invalidField(data) {
     // Reset loading animation
     $('#userBtn').text("Registrer bruker");
 }
-
-//close popup
-$('#userCloseBtn').click(function () {
-    $('.popup').hide();
-
-    if (createSuccess) {
-        $('.register-form')[0].reset();
-    }
-    createSuccess = false;
-});
-
-//close popup when clicking outside of the popup
-var $popup = $('#userPopup');
-window.onclick = function (event) {
-    if (event.target != $popup) {
-        $popup.hide();
-        if (createSuccess) {
-            $('.register-form')[0].reset();
-        }
-        createSuccess = false;
-    }
-};
 
 function loadDepartments() {
     $department = $('#department');
