@@ -64,9 +64,9 @@ public class NewsFeedDBManagerTest {
         deleteTestData(id);
     }
 
-    @Ignore
+    @Test
     public void getShiftChangeCountPending() throws Exception {
-        int countUnRes = newsFeedDB.getShiftChangeCountPending(43, 1);
-        Assert.assertEquals(3, countUnRes);
+        int countUnRes = newsFeedDB.getShiftChangeCountPending(22, 1);
+        Assert.assertEquals(0, countUnRes);
     }
 }
