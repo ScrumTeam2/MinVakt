@@ -141,15 +141,22 @@ C.prototype.switchDate = function(postfix) {
 <div style="background-color:red;border-radius: 50%;width: 10px;height: 10px;margin: 0 auto;">
   </div>
   */
+  var dateString = "";
 function clickHandler() {
     console.log(this.textContent);
     console.log(month);
     /*$('.day').css("background-color", "");
     $(this).css("background-color", "#89e087");
     */
+    console.log(this);
+    if ($(this).hasClass('disabled-month')) {
+      return;
+    }
+
+    console.log('thissssssssssssssss'); 
     $('.day').removeClass("daySelected");
     $(this).addClass("daySelected");
-    var dateString = year+'-'+month+'-'+this.textContent;
+    dateString = year+'-'+month+'-'+this.textContent;
     console.log(dateString);
     if (this.textContent > 0) {
         $.ajax({
@@ -190,10 +197,20 @@ function convertDate(dateInput){
 function success(data) {
  // console.log(data);
   if(data.length <1) {
-    $("#error").html( "<p>Ingen vakter på denne datoen. Du har enten valgt dato bak i tid, eller for langt fram i tid. Sistnevtne krever at admin registrerer ny turnus.</p>").fadeIn(400);
-    setTimeout(function(){  $("#error").fadeOut(400);}, 300);
+   // $("#error").html( "<p>Ingen vakter på denne datoen. Du har enten valgt dato bak i tid, eller for langt fram i tid. Sistnevtne krever at admin registrerer ny turnus.</p>").fadeIn(400);
+    //setTimeout(function(){  $("#error").fadeOut(400);}, 300);
     var calendarList = $(".list");
     calendarList.html("");
+              html =
+                  "<div class='container-title'>" +
+                  "<h3>"+convertDate(dateString)+"</h3>" +
+                  "</div>";
+               html +=
+              "<div class='watch'>" +
+                      "<p class='lead'>Det finnes ingen vakter på denne datoen</p>" +
+                  "</div>";
+                  calendarList.append(html);
+                  html ="";
   } else {
     displayAvailabilityHtml(data);
   }
