@@ -33,9 +33,8 @@ public class ShiftServiceTest extends ServiceTest{
         final int newUserId = 15;
 
         logInAdmin();
-
-        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0, -1);
-        shiftService.addEmployeeToShift(shiftUser, shiftId);
+        
+        shiftService.addEmployeeToShift(oldUserId, shiftId);
 
         Response response = shiftService.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
         if(response.getStatus() == Response.Status.OK.getStatusCode()) {
@@ -49,7 +48,7 @@ public class ShiftServiceTest extends ServiceTest{
 
     @Test
     public void createShift() {
-        logInUser();
+        logInAdmin();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0, -1));
         Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers, false);
@@ -73,8 +72,9 @@ public class ShiftServiceTest extends ServiceTest{
     @Test
     public void addEmployeeToShift() {
         logInUser();
-        ShiftUser shiftUser = new ShiftUser(1, "ole",User.UserCategory.HEALTH_WORKER, true, 0, -1);
-        Response statusOk = shiftService.addEmployeeToShift(shiftUser, 9);
+
+        Response statusOk = shiftService.addEmployeeToShift(1, 9);
+
         if (statusOk.getStatus() == 200) {
             statusOk = shiftService.deleteEmployeeFromShift(1, 9,false);
         }

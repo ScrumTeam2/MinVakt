@@ -41,8 +41,14 @@ public class OvertimeService extends SecureService{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setOvertime(Overtime overtime) {
-        User user = getSession().getUser();
-        System.out.println("user: "+user.getId()+" shift: "+overtime.getShiftId());
+        User user;
+
+        if(getSession().isAdmin()){
+            user = userDBM.getUserById(overtime.getUserId());
+        }else{
+            user = getSession().getUser();
+        }
+
         boolean isRegistered = overtimeDBM.setOvertime(user.getId(), overtime.getShiftId(), overtime.getStartTime(), overtime.getMinutes());
         ShiftDBManager shiftDBM = new ShiftDBManager();
         Shift shift = shiftDBM.getShift(overtime.getShiftId());
@@ -75,7 +81,6 @@ public class OvertimeService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOvertimeByUserId() {
         int userId = getSession().getUser().getId();
-
 
         ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByUserId(userId);
         GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};

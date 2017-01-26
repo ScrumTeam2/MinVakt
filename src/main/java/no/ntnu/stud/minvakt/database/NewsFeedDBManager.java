@@ -229,6 +229,7 @@ public class NewsFeedDBManager extends DBManager{
                 res = prep.executeQuery();
                 res.next();
                 resolvedCount = res.getInt("pending");
+                System.out.println(prep.toString());
             } catch (SQLException sqle) {
                 log.log(Level.WARNING, "Not able to find unresolved user count for shiftID: " +shiftId+ " and shift_user: "+shiftUserId);
                 sqle.printStackTrace();
