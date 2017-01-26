@@ -42,65 +42,82 @@ var C = function Calendar(month, year) {
     var monthEndDay = new Date(this.year, this.month, 0).getDate(),
         prevMonthEndDay = new Date(this.year, nowMonth, 0).getDate();
 
-    //Set header
-    var html = '<div class="calendar-header"> <a href="#" class="prev"> <i onclick="switchDate(0);" class="material-icons">chevron_left</i> </a>';
-    html += '<h3>' + monthInYear[nowMonth] + ' ' + this.year + '</h3>';
-    html += '<a href="#" class="next"> <i onclick="switchDate(1);"class="material-icons">chevron_right</i> </a> </div>';
-    //Populate fields
-    html += '<table class="calendar-table">';
+    var dateStartString = this.year + "-" + this.month + "-01";
+    //Get calendar data
+    $.ajax({
+        url: "../rest/shift",
+        data: {daysForward : 31, date : dateStartString},
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            console.log(data);
+            //Set header
+            var html = '<div class="calendar-header"> <a href="#" class="prev"> <i onclick="switchDate(0);" class="material-icons">chevron_left</i> </a>';
+            html += '<h3>' + monthInYear[nowMonth] + ' ' + this.year + '</h3>';
+            html += '<a href="#" class="next"> <i onclick="switchDate(1);"class="material-icons">chevron_right</i> </a> </div>';
+            //Populate fields
+            html += '<table class="calendar-table">';
 
-    html += '<thead>';
-    html += '<tr class="weekdays">';
-    for (i = 0; i <= 6; i++) {
-        html += '<th class="day">';
-        html += dayInWeek[i];
-        html += '</th>';
-    }
-    html += '</tr>';
-    html += '</thead>';
+            html += '<thead>';
+            html += '<tr class="weekdays">';
+            for (i = 0; i <= 6; i++) {
+                html += '<th class="day">';
+                html += dayInWeek[i];
+                html += '</th>';
+            }
+            html += '</tr>';
+            html += '</thead>';
 
-    html += '<tbody>';
-    html += '<tr class="week">';
-    // weeks loop (rows)
-    for (i = 0; i < 9; i++) {
-        // weekdays loop (cells)
-        for (var j = 1; j <= 7; j++) {
-            if (day <= monthEndDay && (i > 0 || j >= dayStartWeek)) {
-                // current month
-                html += '<td class="day">';
-                html += day;
-                html += '</td>';
-                day++;
-            } else {
-                if (day <= monthEndDay) {
-                    // previous month
-                    html += '<td class="day disabled-month">';
-                    html += prevMonthEndDay - dayStartWeek + prev + 1;
-                    html += '</td>';
-                    prev++;
+            html += '<tbody>';
+            html += '<tr class="week">';
+            // weeks loop (rows)
+            for (i = 0; i < 9; i++) {
+                // weekdays loop (cells)
+                for (var j = 1; j <= 7; j++) {
+                    if (day <= monthEndDay && (i > 0 || j >= dayStartWeek)) {
+                        // current month
+                        html += '<td class="day">';
+                        html += day;
+                        html += '</td>';
+                        day++;
+                    } else {
+                        if (day <= monthEndDay) {
+                            // previous month
+                            html += '<td class="day disabled-month">';
+                            html += prevMonthEndDay - dayStartWeek + prev + 1;
+                            html += '</td>';
+                            prev++;
+                        } else {
+                            // next month
+                            html += '<td class="day disabled-month">';
+                            html += next;
+                            html += '</td>';
+                            next++;
+                        }
+                    }
+                }
+
+                // stop making rows if it's the end of month
+                if (day > monthEndDay) {
+                    html += '</tr>';
+                    break;
                 } else {
-                    // next month
-                    html += '<td class="day disabled-month">';
-                    html += next;
-                    html += '</td>';
-                    next++;
+                    html += '</tr><tr class="week">';
                 }
             }
-        }
+            html += '</tbody>';
+            html += '</table>';
 
-        // stop making rows if it's the end of month
-        if (day > monthEndDay) {
-            html += '</tr>';
-            break;
-        } else {
-            html += '</tr><tr class="week">';
+            return html;
+        },
+        error: function (data) {
+            //console.log("Error, no data found");
+            var calendarList = $(".list");
+            calendarList.append("<p>" + data + "</p>");
         }
-    }
-    html += '</tbody>';
-    html += '</table>';
+    });
 
-    return html;
-}
+};
 
 // document.getElementById('calendar').innerHTML = Calendar(12, 2015); 
 document.getElementById('calendar').innerHTML = C();

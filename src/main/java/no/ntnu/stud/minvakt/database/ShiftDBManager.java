@@ -573,7 +573,7 @@ public class ShiftDBManager extends DBManager {
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting shifts that need more employees", sqlE);
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return shiftList;
@@ -759,5 +759,6 @@ public class ShiftDBManager extends DBManager {
         if(out) ShiftChangeUtil.sendNewResponsibleChangeNotification(userId,shiftId);
         return out;
     }
+
 
 }
