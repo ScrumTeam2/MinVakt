@@ -18,19 +18,14 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
-public class OvertimeServiceTest {
-    private static OvertimeService overtimeService;
-    private HttpServletRequest request;
+public class OvertimeServiceTest extends ServiceTest {
+    private OvertimeService overtimeService;
 
+    @Override
     @Before
-    public void setUpTest() {
-        request = new MockHttpServletRequest();
+    public void setUp() {
+        super.setUp();
         overtimeService = new OvertimeService(request);
-    }
-
-    private void logInUser() {
-        SessionService sessionService = new SessionService();
-        sessionService.checkLogin(request, "email1", "password");
     }
 
     @Test

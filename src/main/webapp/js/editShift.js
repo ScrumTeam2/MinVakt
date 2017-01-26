@@ -2,6 +2,11 @@
  * Created by Audun on 25.01.2017.
  */
 
+var $staffNumInput;
+var $staffForm;
+var $saveButton;
+var $popup;
+
 var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
 var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 
@@ -10,6 +15,11 @@ var $list = $('.list');
 var shiftId = getUrlParameter("id");
 
 $(document).ready(function() {
+    $staffNumInput = $('#staffNum');
+    $staffForm = $("#staffForm");
+    $saveButton = $("#saveBtn");
+
+    initPopup();
     getNewShift();
 });
 
@@ -24,6 +34,30 @@ function getNewShift() {
     });
 }
 
+function performSave(e) {
+    e.preventDefault();
+    var newStaffCount = $staffNumInput.val();
+
+    // Set load animation
+    $saveButton.html(`<div class="typing_loader"></div>`);
+
+    $.ajax({
+        url: "/rest/shift/" + shiftId + "/set_staff",
+        method: "POST",
+        data: {
+            staffCount: newStaffCount
+        }
+    }).success(function (data) {
+        console.log(data);
+        $saveButton.text("Lagre");
+        getNewShift();
+    }).error(function (data) {
+        console.log(data);
+        $popup.show();
+        $saveButton.text("Lagre");
+    });
+}
+
 function showShiftInfo(data) {
     console.log(data);
 
@@ -31,16 +65,49 @@ function showShiftInfo(data) {
                 <h3>${convertDate(data.date)} - ${shiftTypes[data.type]}</h3>
             </div>`;
 
-    for (var i in data.shiftUsers) {
-        var user = data.shiftUsers[i];
-        output += `<div class="watch">
+
+    $saveButton.click(performSave);
+
+    $staffNumInput.val(data.staffNumb);
+    $staffForm.show();
+
+    var counter = 0;
+    while(counter < data.staffNumb) {
+        if (counter < data.shiftUsers.length) {
+            var user = data.shiftUsers[counter];
+            output += `<div class="watch">
                     <div class="watch-info">
                         <p class="lead">${user.userName}</p>
                         <p class="sub">${userTypes[user.userCategory]}</p>
                     </div>
                     <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}&edit=1" class="link">Endre</a>
                 </div>`;
+        } else {
+            output += `<div class="watch">
+                    <div class="watch-info">
+                        <p>Ledig</p>
+                    </div>
+                    <a href="#" class="link">Legg til</a>
+                </div>`;
+        }
+        counter++;
     }
 
     $list.html(output);
+}
+
+function initPopup() {
+    $popup = $("#userPopup");
+
+    //close popup when clicking outside of the popup
+    window.onclick = function(event) {
+        if (event.target != $popup) {
+            $popup.hide();
+        }
+    };
+
+    //close popup
+    $('#userCloseBtn').click(function() {
+        $popup.hide();
+    });
 }

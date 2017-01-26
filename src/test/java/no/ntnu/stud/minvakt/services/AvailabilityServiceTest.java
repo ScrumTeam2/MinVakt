@@ -2,26 +2,24 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 
 /**
  * Created by Marit on 12.01.2017.
  */
-public class AvailabilityServiceTest {
-    private static ShiftService shiftService;
-    private static HttpServletRequest request;
-    private static AvailabilityDBManager availDB;
+public class AvailabilityServiceTest extends ServiceTest {
+    private ShiftService shiftService;
+    private AvailabilityDBManager availDB;
 
     private static AvailabilityService availabilityService;
 
-    @BeforeClass
-    public static void objectSetUp() {
-        request = new MockHttpServletRequest();
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
         availDB = new AvailabilityDBManager();
         availabilityService = new AvailabilityService(request);
     }

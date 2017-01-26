@@ -956,3 +956,8 @@ text-align: center;
     }
 
 }
+
+#staffForm {
+    margin-bottom: 2.5rem;
+    display: none;
+}
