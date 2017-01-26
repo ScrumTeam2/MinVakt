@@ -48,7 +48,7 @@ public class ShiftServiceTest extends ServiceTest{
 
     @Test
     public void createShift() {
-        logInUser();
+        logInAdmin();
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
         shiftUsers.add(new ShiftUser(1, "Ole", User.UserCategory.HEALTH_WORKER, false,0, -1));
         Shift shift = new Shift(-1, 1, Date.valueOf("1995-10-23"), 1, 1, shiftUsers, false);
