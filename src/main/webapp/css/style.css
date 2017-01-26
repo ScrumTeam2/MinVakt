@@ -817,11 +817,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9dd53a', end
 .weekdays {
     color: #000000;
 }
-  
+ /*
 .day {
-height: 40px;
+//height: 40px;
 text-align: center;
-}
+}*/
 
 .error2 {
   border: 1px solid transparent;
@@ -829,7 +829,6 @@ text-align: center;
   color: #a94442;
   background-color: #f2dede;
   /*border-color: #f79dac;*/
-  border-style: solid;
   width: 50%;
   text-align: center;
   margin: 0 auto;
@@ -846,6 +845,23 @@ text-align: center;
 .calendar-clicked{
     background: #034584;
     color: #ffffff;
+    cursor: default !important;
+}
+.circle{
+    display: inline-block;
+    height: 0.6rem;
+    width: 0.6rem;
+    margin: 0.1rem;
+    border-radius: 50%;
+}
+.green{
+    background: #80d575;
+}
+.blue{
+    background: #78b1e0;
+}
+.circle-wrap{
+    height: 0;
 }
 
 .popup {
@@ -861,6 +877,7 @@ text-align: center;
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.5);
     max-width: 80%;
     display: none;
+    z-index:1;
 }
 
 .popup h3 {

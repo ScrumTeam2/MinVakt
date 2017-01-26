@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    loadCalendar();
 });
 function loadCalendar() {
     //Hente dato trykket på
@@ -11,7 +10,11 @@ function loadCalendar() {
     }
 }
 var dateClicked = new Date();
-var C = function Calendar(month, year) {
+var C = function Calendar(month, year, data) {
+
+    if(!this.data){
+        this.data = {};
+    }
     var now = new Date();
 
     // labels for week days and months
@@ -61,6 +64,12 @@ var C = function Calendar(month, year) {
     html += '<tbody>';
     html += '<tr class="week">';
     // weeks loop (rows)
+    var shiftDate;
+    var hasUser = false;
+    var isAvailable = false;
+    var count = 0;
+    var currentDate;
+    console.log(data);
     for (i = 0; i < 9; i++) {
         // weekdays loop (cells)
         for (var j = 1; j <= 7; j++) {
@@ -80,9 +89,35 @@ var C = function Calendar(month, year) {
                     }
                     else html += '<td class="day">';
                 }
+                //Add dots if person is on shift
+                if(data[count]){
+                    currentDate = new Date(data[count].date);
+                    while(data[count] && currentDate.getDate() == day && currentDate.getMonth() == nowMonth){
+                        if(data[count].available){
+                            isAvailable = true;
+                        }
+                        if(data[count].hasUser){
+                            hasUser = true;
+                        }
+                        count++;
+                        if(data[count]) {
+                            currentDate = new Date(data[count].date);
+                        }
+
+                    }
+                }
                 html += day;
-                html += '</td>';
+                html += "<div class='circle-wrap'>";
+                if(hasUser){
+                    html += "<span class='circle blue'></span>";
+                }
+                if(isAvailable){
+                    html += "<span class='circle green'></span>";
+                }
+                html += '</div></td>';
                 day++;
+                isAvailable = false;
+                hasUser = false;
             } else {
                 if (day <= monthEndDay) {
                     // previous month
@@ -112,10 +147,10 @@ var C = function Calendar(month, year) {
     html += '</table>';
 
     return html;
-}
+};
 
-// document.getElementById('calendar').innerHTML = Calendar(12, 2015); 
-document.getElementById('calendar').innerHTML = C();
+// document.getElementById('calendar').innerHTML = Calendar(12, 2015);
+createCalendatWithData();
 
 C.prototype.switchDate = function(postfix) {
     var curMonth = this.month;
@@ -128,9 +163,10 @@ C.prototype.switchDate = function(postfix) {
     }
     document.getElementById('calendar').innerHTML = C(this.month,this.year);
 
-}
+};
 
 function clickHandler() {
+    console.log("clickhandler");
     if($(this).hasClass("disabled-month")){
         return;
     }
@@ -183,6 +219,37 @@ function switchDate(postfix) {
             this.month++;
         }
     }
-    document.getElementById('calendar').innerHTML = C(this.month,this.year);
-    loadCalendar();
+    createCalendatWithData(this.month,this.year);
+}
+function createCalendatWithData(month,year) {
+    //Check if date (month) is correct
+    var now = new Date();
+    if(isNaN(month) || month == null) {
+        this.month = now.getMonth() + 1;
+    } else {
+        this.month = month;
+    }
+    //Check if date (year) is correct
+    if(isNaN(year) || year == null) {
+        this.year = now.getFullYear();
+    } else {
+        this.year = year;
+    }
+    var dateString = this.year + "-" + this.month + "-01";
+    var thisMonth = this.month;
+    var thisYear = this.year;
+    $.ajax({
+        url: "../rest/shift/",
+        type: 'GET',
+        dataType: 'json',
+        data: {daysForward:31, date:dateString},
+        success: function (data) {
+            document.getElementById('calendar').innerHTML = C(thisMonth, thisYear, data);
+            loadCalendar();
+
+        },
+        error: function (data) {
+            console.log(data)
+        }
+    });
 }

@@ -59,6 +59,7 @@ function login(data){
 
     sessionStorage.SessionId = data.id;
     sessionStorage.SessionIdCat = data.category;
+    sessionStorage.SessionIdDept = data.deptId;
     sessionStorage.firstName = data.firstName;
     sessionStorage.lastName = data.lastName;
 

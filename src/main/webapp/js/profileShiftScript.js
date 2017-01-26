@@ -4,8 +4,45 @@
 $(document).ready(function () {
     createAjaxForAllShifts();
     createCalendarListener();
+    setDeptOptions();
 
 });
+function setDeptOptions() {
+    var html;
+    $.ajax({
+        //     url: "rest/shift/user/"+userId,
+        url: "../rest/department",
+        type: 'GET',
+        dataType: 'json',
+        data: {"withData": true},
+        success: function (data) {
+            var $dropdown = $("#dept-options");
+            $.each(data, function (index, dept) {
+                if(dept.deptId == sessionStorage.getItem("SessionIdDept")) {
+                    $dropdown.append("<option selected name='category' id = '"+dept.deptId+"' value='" + dept.deptId + "'>" + dept.name +
+                        "</option>");
+                }
+                else{
+                    $dropdown.append("<option name='category' id = '"+dept.deptId+"' value='" + dept.deptId + "'>" + dept.name +
+                        "</option>");
+                }
+                if(dept.hasAvailable){
+                    $dropdown.children("#"+dept.deptId).append("<span class='circle green'></span>'")
+                }
+                if(dept.hasUser){
+                    $dropdown.children("#"+dept.deptId).append("<span class='circle blue'></span>")
+                }
+            })
+        },
+        error: function (data) {
+            //console.log("Error, no data found");
+            var calendarList = $(".list");
+            calendarList.append("<p>" + data + "</p>");
+        }
+    });
+
+
+}
 function createAjaxForAllShifts() {
     $.ajax({
         //     url: "rest/shift/user/"+userId,
@@ -37,7 +74,7 @@ function addShiftInfoHtml (element, shiftId, data) {
     var removed = false;
     //Could be made more efficient
     var baseUrl = "../html/user-e.html?search=";
-    console.log('aboveeee-aa-');
+    console.log(data);
     for (var i = 0; i < categoriesForLoop.length; i++) {
         var hasPerson = false;
         //console.log(categoriesForLoop[i]);
@@ -88,39 +125,22 @@ function addShiftInfoHtml (element, shiftId, data) {
 
     // Add shift change button + illness button
     if(iAmOnShift) {
-        if(removed) {
-            html +='<div class="button-group"><p>Denne vakten er ikke lenger din</div>';
-        } else {
-            if(absence == 1 || absenceIds.indexOf(shiftId)>-1) {
-                if(shiftChange == true) {
-                    console.log(shiftId);
-                    console.log('----SHIFT CHANGE IS ALSO TRUE1----');
-                    html+='<div class="button-group"><div class="dialogboks"><h3>Du har registrert vaktbytte</h3></div></div>';
-                } else {
-                html +=
-                    /*'<div class="button-group"><button type="submit" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-id="'+shiftId+'" onclick="registerIllness(this);" id="registerIllness">Du har registrert sykdom</button></div>';
-                    */
-                    '<div class="button-group"><div class="dialogboks"><h3>Du har registrert sykdom</h3></div></div>';
-                }
-            } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
-                if(shiftChange == true) {
-                    console.log('----SHIFT CHANGE IS ALSO TRUE2----');
-                    console.log(shiftId);
-                    html+='<div class="button-group"><div class="dialogboks"><h3>Du har registrert vaktbytte</h3></div></div>';
-                } else {
-                html +=
-                    '<div class="button-group"><div class="dialogboks"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
-                }
-            }else {
-                if(shiftChange == true) {
-                    console.log(shiftId);
-                    console.log('----SHIFT CHANGE IS ALSO TRUE3----');
-                    html+='<div class="button-group"><div class="dialogboks"><h3>Du har registrert vaktbytte</h3></div></div>';
-                } else {
-                html +=
-                    '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="reqChangeShift">Bytt vakt</button><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="registerIllness(this);" id="registerIllness">Registrer Sykdom</button></div>';
-                }
-            }
+        if(absence == 1 || absenceIds.indexOf(shiftId)>-1) {
+            html +=
+                /*'<div class="button-group"><button type="submit" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Du har registrert sykdom</button></div>';
+                */
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
+                '<div class="dialogboks"><h3>Du har registrert sykdom</h3></div></div>';
+                
+        } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
+            html +=
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
+                '<div class="dialogboks"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
+        }else {
+            html +=
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
+                '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Registrer sykdom</button>' +
+                '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
         }
     }
 
@@ -150,7 +170,13 @@ function registerIllness(that) {
     }
     //moreInfoElement.slideToggle();
 }
-
+function regOvertime(that) {
+    var shiftId = $(that).attr("data-id");
+    var date = $(that).attr("data-date");
+    var type = $(that).attr("data-time");
+    url = "register-overtime.html?shiftId="+shiftId+"&date="+date+"&type="+type;
+    window.location = url;
+}
 function poopStatus(status, that) {
     var shiftId = shiftIllness;
     if (status) {
@@ -334,13 +360,13 @@ function createAllShiftsHtml(data) {
         if (element.hasUser) {
             html +=
                 "<div class='watch-info'>" +
-                "<p class='sub'>Din vakt</p>" +
+                "<p class='sub'><span class='circle blue'></span>Din vakt</p>" +
                 "</div>";
         }
         else if (element.available) {
             html +=
                 "<div class='watch-info'>" +
-                "<p class='sub'>Ledig vakt</p>" +
+                "<p class='sub'><span class='circle green'></span>Ledig vakt</p>" +
                 "</div>";
         }
         html +=
