@@ -2,6 +2,9 @@
  * Created by marith 18.01.2017.
  */
 
+var $this, feedId, shiftId, categoryPop;
+var popVisible = false;
+
 $(document).ready(function(){
     loadMessages();
 });
@@ -19,12 +22,12 @@ function loadMessages(){
 
 // Toggle messages
 $('.container-title').click(function() {
-    var $this = $(this);
-    $this.siblings('.feed-messages').toggle('1000');
-    $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
+    if (!popVisible) {
+        var $this = $(this);
+        $this.siblings('.feed-messages').toggle('1000');
+        $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
+    }
 });
-
-var $this, feedId, shiftId, categoryPop;
 
 // display messages sorted by category
 function showMessages(data){
@@ -66,9 +69,11 @@ function showMessages(data){
     }
     var $remove = $('.remove-message');
     $remove.on("click", function(e){
-        e.preventDefault();
-        var element = $(e.currentTarget).parent();
-        removeMessage(element);
+        if (!popVisible) {
+            e.preventDefault();
+            var element = $(e.currentTarget).parent();
+            removeMessage(element);
+        }
     });
 
     //display category as empty if no messages
@@ -92,14 +97,74 @@ function showMessages(data){
     }
 }
 
+
+function checkPopup(e){
+    var $popup = $('.popup');
+    if($popup.is(":visible")){
+        if(event.target !== $popup){
+            //hidePopup(e);
+        }
+    } else{
+        console.log($popup.is(":visible"));
+        console.log("not visible");
+    }
+}
+
 function showPopup(e){
     e.preventDefault();
+    popVisible = true;
     var $popup = $('.popup');
     $popup.show();
+
+
+    /*
+    $('.popup').click(function(e){
+        console.log("klikkkk");
+        //e.stopPropagation();
+    });*/
+
+    //no button
+    var $deny = $('#denyBtn');
+    $deny.on("click", function(e){
+        e.preventDefault();
+        setUnResolved(feedId);
+        closePopup(e, feedId);
+    });
+
+//yes button
+    var $accept = $('#acceptBtn');
+    $accept.on("click", function(e){
+        e.preventDefault();
+        setResolved(feedId);
+        closePopup(e, feedId);
+    });
+
+    /*console.log(e.target);
+    if($popup.is(":visible")){
+        console.log(e.target);
+        console.log("visible");
+        if(e.target !== $popup){
+            console.log("show still");
+        } else{
+            hidePopup(e);
+            console.log("hide");
+        }
+    } else{
+        console.log($popup.is(":visible"));
+        console.log("not visible");
+    }*/
 }
+
+/*var $popup = $('#feed-popup');
+window.onclick = function(event) {
+    if (event.target !== $popup) {
+        $popup.hide();
+    }
+};*/
 
 function hidePopup(e){
     e.preventDefault();
+    popVisible = false;
     var $popup = $('.popup');
     $popup.hide();
 
@@ -122,21 +187,21 @@ function openPopup(e){
                 `<h3>Godkjenne vaktbytte?</h3>
                 <p>${content}</p>`
             );
-            $showPop.show();
+            showPopup(e);
             break;
         case "TIMEBANK":
             $popup.html(
-                `<h3>Godkjenne timebank?</h3>
+                `<h3>Godkjenne timeavvik?</h3>
                 <p>${content}</p>`
             );
-            $showPop.show();
+            showPopup(e);
             break;
         case "VALID_ABSENCE":
             $popup.html(
                 `<h3>Godkjenne fravær?</h3>
                 <p>${content}</p>`
             );
-            $showPop.show();
+            showPopup(e);
             break;
         default:
             console.log("Category not known", categoryPop);
@@ -149,25 +214,12 @@ function removeMessage(element){
     setResolved(feedId);
 }
 
-//no button
-var $deny = $('#denyBtn');
-$deny.on("click", function(e){
-    e.preventDefault();
-    setUnResolved(feedId);
-    closePopup(e, feedId);
-});
 
-//yes button
-var $accept = $('#acceptBtn');
-$accept.on("click", function(e){
-    e.preventDefault();
-    setResolved(feedId);
-    closePopup(e, feedId);
-});
 
 //closes popup after pressing yes or no
 function closePopup(e, feedId){
     e.preventDefault();
+    popVisible = false;
     $('#feed-popup').hide();
 }
 
@@ -214,7 +266,6 @@ function acceptChangeover(data){
                     <p class="lead">${content}</p>
                     <p class="sub">${subContent}</p>
                 </div>
-                <a></a>
                 <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
@@ -224,8 +275,10 @@ function acceptChangeover(data){
     $changes.append($html);
 
     $html.on("click", function(e){
-        e.preventDefault();
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+        }
     });
 }
 
@@ -247,8 +300,10 @@ function acceptAbsence(data){
     var $html = $(html);
     $absence.append($html);
     $html.on("click", function(e){
-        e.preventDefault();
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+        }
     });
 }
 
@@ -270,8 +325,10 @@ function acceptTimebank(data){
     var $html = $(html);
     $timebank.append($html);
     $html.on("click", function(e){
-        e.preventDefault();
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+        }
     });
 }
 
@@ -291,3 +348,13 @@ function showNotification(data){
     var $html = $(html);
     $notifications.append($html);
 }
+
+//close popup when clicking outside of the popup
+/*var $popup = $('#feed-popup');
+window.onclick = function(event) {
+    if ( nmpopVisible) {
+        if (event.target !== $popup) {
+            hidePopup(event);
+        }
+    }
+};*/
