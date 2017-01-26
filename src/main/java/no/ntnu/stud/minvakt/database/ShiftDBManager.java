@@ -5,7 +5,6 @@ import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserAvailability;
 import no.ntnu.stud.minvakt.data.shift.ShiftUserBasic;
-import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
@@ -30,7 +29,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
-    private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence FROM employee_shift " +
+    private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence, dept_id FROM employee_shift " +
     "NATURAL JOIN user WHERE shift_id = ? AND removed = 0;";
     private final String sqlGetShift = "SELECT * FROM shift WHERE shift_id = ?;";
 
@@ -47,7 +46,7 @@ public class ShiftDBManager extends DBManager {
             "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ? AND removed = 0";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
-    private final String sqlGetUserFromShift = "SELECT * FROM employee_shift WHERE shift_id = ? AND user_id = ?";
+    private final String sqlGetUserFromShift = "SELECT * FROM employee_shift NATURAL JOIN user WHERE shift_id = ? AND user_id = ?";
 
     private final String sqlSetValidAbsence = "UPDATE employee_shift SET valid_absence = ? WHERE user_id = ? AND shift_id = ?;";
 
@@ -230,7 +229,7 @@ public class ShiftDBManager extends DBManager {
                             res.getString("first_name") +" "+ res.getString("last_name"),
                             User.UserCategory.valueOf(res.getInt("category")),
                             res.getBoolean("responsibility"),
-                            res.getInt("valid_absence")));
+                            res.getInt("valid_absence"), res.getInt("dept_id")));
                 }
                 prep = conn.prepareStatement(sqlGetShift);
                 prep.setInt(1, shiftId);
@@ -322,7 +321,7 @@ public class ShiftDBManager extends DBManager {
      * @return True if the replacement was successful
      */
     public boolean replaceEmployeeOnShift(int shiftId, int oldUserId, int newUserId) {
-        ShiftUser shiftUser = new ShiftUser(newUserId, null, null, false, 0);
+        ShiftUser shiftUser = new ShiftUser(newUserId, null, null, false, 0, 0);
         return addEmployeeToShift(shiftUser, shiftId) && deleteEmployeeFromShift(oldUserId, shiftId);
     }
 
@@ -597,7 +596,7 @@ public class ShiftDBManager extends DBManager {
                     User user = userDb.getUserById(userId);
                     shiftUser = new ShiftUser(userId, user.getFirstName()+ " " +user.getLastName(),
                            user.getCategory(), res.getBoolean("responsibility"),
-                            res.getInt("valid_absence"));
+                            res.getInt("valid_absence"), res.getInt("dept_id"));
                 }
             }
             catch (SQLException sqle){

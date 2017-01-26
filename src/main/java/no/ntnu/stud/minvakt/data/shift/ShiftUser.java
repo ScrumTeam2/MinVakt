@@ -14,8 +14,9 @@ public class ShiftUser {
     private User.UserCategory userCategory;
     User user = null;
     private int valid_absence2;
+    private int departmentId;
 
-    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence){
+    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, int departmentId){
         this.userCategory = userCategory;
         this.userName = userName;
         this.userId = userId;
@@ -23,6 +24,7 @@ public class ShiftUser {
         //System.out.println("Valid absence: "+valid_absence);
         this.valid_absence = valid_absence;
         this.valid_absence2 = valid_absence;
+        this.departmentId = departmentId;
     }
 
     @SuppressWarnings("unused")
@@ -90,5 +92,13 @@ public class ShiftUser {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
     }
 }

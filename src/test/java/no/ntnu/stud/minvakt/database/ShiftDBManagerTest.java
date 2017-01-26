@@ -30,7 +30,7 @@ public class ShiftDBManagerTest {
     @Test
     public void createShift(){
         ArrayList<ShiftUser> shiftUsers = new ArrayList<>();
-        shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,0));
+        shiftUsers.add(new ShiftUser(1,"ole", User.UserCategory.HEALTH_WORKER,false,0, -1));
         Shift shift = new Shift(-1,1, java.sql.Date.valueOf("1995-01-01"), 1,1, shiftUsers, false);
         int shiftId = shiftDB.createNewShift(shift);
         if(shiftId != 0){
@@ -42,7 +42,7 @@ public class ShiftDBManagerTest {
 
     @Test
     public void addEmployeeToShift(){
-        ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
+        ShiftUser shiftUser = new ShiftUser(1, "ole", User.UserCategory.HEALTH_WORKER, true, 0, -1);
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, 9);
         if(statusOk){
             shiftDB.deleteEmployeeFromShift(1, 9);
@@ -56,7 +56,7 @@ public class ShiftDBManagerTest {
         final int oldUserId = 1;
         final int newUserId = 15;
 
-        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0);
+        ShiftUser shiftUser = new ShiftUser(oldUserId, "ole", User.UserCategory.HEALTH_WORKER, true, 0, -1);
         ShiftUser newUser = null;
 
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
@@ -166,7 +166,7 @@ public class ShiftDBManagerTest {
         shifts.add(new Shift(-1, 0, Date.valueOf("2010-01-01"), Shift.ShiftType.NIGHT, 1, new ArrayList<>(), false));
 
         // Add user to a shift
-        shifts.get(0).getShiftUsers().add(new ShiftUser(1, "", User.UserCategory.ADMIN, true, 0));
+        shifts.get(0).getShiftUsers().add(new ShiftUser(1, "", User.UserCategory.ADMIN, true, 0, -1));
         Assert.assertTrue(shiftDB.bulkInsertShifts(shifts));
         try {
             for (Shift shift : shifts) {

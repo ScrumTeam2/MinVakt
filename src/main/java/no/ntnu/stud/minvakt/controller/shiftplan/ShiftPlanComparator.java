@@ -10,6 +10,8 @@ import java.util.Comparator;
  * Created by Audun on 20.01.2017.
  */
 public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
+    private static final int DEPARTMENT_WEIGHT = 5;
+
     private ShiftPlanShift shift;
 
     public ShiftPlanShift getShift() {
@@ -50,8 +52,29 @@ public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
         return compareShiftUsers(user1, user2); // Prioritize user with least shifts
     }
 
+    /**
+     * Compares two users. Correct department + least shifts will be prioritized
+     * @param user1 The first user
+     * @param user2 The second user
+     * @return Negative if the best user is best, 0 if they are equal, positive if the last user is best
+     */
     private int compareShiftUsers(ShiftPlanUser user1, ShiftPlanUser user2) {
+        int departmentWeight = getDepartmentWeight(user1, user2);
+
         int workPercentageWeight = user2.getShiftsNeeded() - user1.getShiftsNeeded();
-        return user1.getShiftAmount() - user2.getShiftAmount() + workPercentageWeight;
+        return user1.getShiftAmount() - user2.getShiftAmount() + workPercentageWeight + departmentWeight;
+    }
+
+    private int getDepartmentWeight(ShiftPlanUser user1, ShiftPlanUser user2) {
+        int departmentWeight = 0;
+
+        // Do not prioritize employees from other departments
+        if(user1.getDeptId() == shift.getShift().getDeptId()) {
+            departmentWeight -= DEPARTMENT_WEIGHT;
+        }
+        if(user2.getDeptId() == shift.getShift().getDeptId()) {
+            departmentWeight += DEPARTMENT_WEIGHT;
+        }
+        return departmentWeight;
     }
 }
