@@ -10,7 +10,7 @@ function createAjaxForAllShifts() {
     $.ajax({
         //     url: "rest/shift/user/"+userId,
         url: "../rest/shift",
-        data: {daysForward : 300}, //TODO: edit to 7?
+        data: {daysForward : 7}, //TODO: edit to 7?
         type: 'GET',
         dataType: 'json',
         success: createAllShiftsHtml,
@@ -47,7 +47,7 @@ function addShiftInfoHtml (element, shiftId, data) {
                 }
                 if (user.responsibility) {
                     html += "<a href='"+baseUrl+user.userName +
-                        "' class='link'>" + user.userName + " (Vaktansvarlig)<i class='material-icons'>chevron_right</i></a>"
+                        "' class='link'>" + user.userName + " (Ansvarsvakt)<i class='material-icons'>chevron_right</i></a>"
                 }
                 else {
                     html += "<a href='"+baseUrl+user.userName+"' class='link'>" + user.userName + "<i class='material-icons'>chevron_right</i></a>"
@@ -82,7 +82,7 @@ function addShiftInfoHtml (element, shiftId, data) {
                 '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><div class="dialogboks"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
         }else {
             html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Sykdom</button></div>';
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Registrer sykdom</button></div>';
         }
     }
 
