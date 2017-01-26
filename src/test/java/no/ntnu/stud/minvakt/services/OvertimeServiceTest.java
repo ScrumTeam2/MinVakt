@@ -4,19 +4,10 @@ package no.ntnu.stud.minvakt.services;
  * Created by Marit on 23.01.2017.
  */
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.ntnu.stud.minvakt.data.Overtime;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.*;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-import java.sql.Date;
 import java.util.ArrayList;
-
-import static org.junit.Assert.assertTrue;
 
 public class OvertimeServiceTest extends ServiceTest {
     private OvertimeService overtimeService;
@@ -29,20 +20,32 @@ public class OvertimeServiceTest extends ServiceTest {
     }
 
     @Test
-    public void setOvertimeTest() throws Exception {
+    public void setOvertimeUser() throws Exception {
         logInUser();
         int userId =1;
         int shiftId = 22;
         int startTime = 900;
         int minutes = 15;
-        Overtime overtime = new Overtime(0, shiftId, startTime, minutes, false);
+        Overtime overtime = new Overtime(1, shiftId, startTime, minutes, false);
+        Response response = overtimeService.setOvertime(overtime);
+        Assert.assertEquals(200, response.getStatus());
+        overtimeService.deleteOvertime(userId, shiftId, startTime);
+    }
+    @Test
+    public void setOvertimeAdmin() throws Exception {
+        logInAdmin();
+        int userId =1;
+        int shiftId = 22;
+        int startTime = 900;
+        int minutes = 15;
+        Overtime overtime = new Overtime(userId, shiftId, startTime, minutes, false);
         Response response = overtimeService.setOvertime(overtime);
         Assert.assertEquals(200, response.getStatus());
         overtimeService.deleteOvertime(userId, shiftId, startTime);
     }
 
     @Test
-    public void getOvertimeTest() throws Exception {
+    public void getOvertime() throws Exception {
         logInUser();
 
         Response response = overtimeService.getOvertimeByUserId();
@@ -54,11 +57,10 @@ public class OvertimeServiceTest extends ServiceTest {
 
         Assert.assertEquals(expRes.get(0), actual.get(0));
         Assert.assertEquals(expRes.get(1), actual.get(1));
-
     }
 
     @Test
-    public void deleteOvertimeTest() throws Exception{
+    public void deleteOvertime() throws Exception{
         logInUser();
         int userId = 1;
         int shiftId = 8;
