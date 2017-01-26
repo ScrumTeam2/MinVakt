@@ -2,9 +2,13 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.Overtime;
+import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
+import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.FormattingUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,14 +39,16 @@ public class OvertimeService extends SecureService{
     //POST register overtime (used by employee-user)
     //setOvertime(int userId, int shiftId, int startTime, int minutes) returnes true/false
     @POST
-    @Path("/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setOvertime(Overtime overtime) {
         boolean isRegistered = overtimeDBM.setOvertime(overtime.getUserId(), overtime.getShiftId(), overtime.getStartTime(), overtime.getMinutes());
+        User user = getSession().getUser();
+        ShiftDBManager shiftDBM = new ShiftDBManager();
+        Shift shift = shiftDBM.getShift(overtime.getShiftId());
 
         if(isRegistered) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            String content = "Tekst";
+            String content = user.getFirstName()+" "+user.getLastName()+" har registert timeavvik på "+overtime.getMinutes()+" minutter "+ FormattingUtil.formatDate(shift.getDate())+".";
             int adminId = userDBM.getAdminId();
 
             if(adminId==0){
