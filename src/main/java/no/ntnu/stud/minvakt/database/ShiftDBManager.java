@@ -29,7 +29,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlDeleteShift = "DELETE FROM shift WHERE shift_id=?;";
     private final String sqlDeleteShiftStaff = "DELETE FROM employee_shift WHERE shift_id=?;";
-    private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence, dept_id FROM employee_shift " +
+    private final String sqlGetShiftUser = "SELECT user_id, first_name, last_name, category, responsibility, valid_absence, dept_id, shift_change, removed FROM employee_shift " +
     "NATURAL JOIN user WHERE shift_id = ? AND removed = 0;";
     private final String sqlGetShift = "SELECT * FROM shift WHERE shift_id = ?;";
 
@@ -149,7 +149,7 @@ public class ShiftDBManager extends DBManager {
             int[] result = prep.executeBatch();
             generatedKeys = prep.getGeneratedKeys();
             int i = 0;
-            
+
             prep = conn.prepareStatement(sqlCreateNewShiftStaff);
 
             while (generatedKeys.next()) {
@@ -229,7 +229,11 @@ public class ShiftDBManager extends DBManager {
                             res.getString("first_name") +" "+ res.getString("last_name"),
                             User.UserCategory.valueOf(res.getInt("category")),
                             res.getBoolean("responsibility"),
-                            res.getInt("valid_absence"), res.getInt("dept_id")));
+                            res.getInt("valid_absence"),
+                            res.getBoolean("shift_change"),
+                            res.getBoolean("removed"),
+                            res.getInt("dept_id")
+                    ));
                 }
                 prep = conn.prepareStatement(sqlGetShift);
                 prep.setInt(1, shiftId);
@@ -337,9 +341,9 @@ public class ShiftDBManager extends DBManager {
                 res = prep.executeQuery();
                 while(res.next()){
                     out.add(new ShiftUserBasic(
-                                    res.getInt("shift_id"),
-                                    res.getDate("date"),
-                                    Shift.ShiftType.valueOf(res.getInt("time"))
+                            res.getInt("shift_id"),
+                            res.getDate("date"),
+                            Shift.ShiftType.valueOf(res.getInt("time"))
                     ));
 
                 }
@@ -411,18 +415,18 @@ public class ShiftDBManager extends DBManager {
 
     private final String sqlGetCandidates =
             "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
-            "LEFT JOIN shift USING(shift_id) " +
-            "NATURAL JOIN user " +
-            "WHERE shift.date IS NULL OR shift.date BETWEEN ? AND ? " +
-            "AND user.category != 0 " +
-            "AND shift.approved = TRUE " +
-            "GROUP BY user_id " +
-            "UNION " +
-            "SELECT *, 0 AS shifts_worked FROM user " +
-            "WHERE category != 0 " +
-            "AND shift.approved = TRUE " +
-            "ORDER BY shifts_worked DESC " +
-            "LIMIT ?";
+                    "LEFT JOIN shift USING(shift_id) " +
+                    "NATURAL JOIN user " +
+                    "WHERE shift.date IS NULL OR shift.date BETWEEN ? AND ? " +
+                    "AND user.category != 0 " +
+                    "AND shift.approved = TRUE " +
+                    "GROUP BY user_id " +
+                    "UNION " +
+                    "SELECT *, 0 AS shifts_worked FROM user " +
+                    "WHERE category != 0 " +
+                    "AND shift.approved = TRUE " +
+                    "ORDER BY shifts_worked DESC " +
+                    "LIMIT ?";
 
     public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end, int limit) {
         ArrayList<UserBasicWorkHours> users = new ArrayList<>();
@@ -597,8 +601,8 @@ public class ShiftDBManager extends DBManager {
                     UserDBManager userDb = new UserDBManager();
                     User user = userDb.getUserById(userId);
                     shiftUser = new ShiftUser(userId, user.getFirstName()+ " " +user.getLastName(),
-                           user.getCategory(), res.getBoolean("responsibility"),
-                            res.getInt("valid_absence"), res.getInt("dept_id"));
+                    user.getCategory(), res.getBoolean("responsibility"),
+                    res.getInt("valid_absence"), res.getInt("dept_id"));
                 }
             }
             catch (SQLException sqle){

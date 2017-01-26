@@ -14,6 +14,8 @@ public class ShiftUser {
     private User.UserCategory userCategory;
     User user = null;
     private int valid_absence2;
+    private boolean shift_change;
+    private boolean removed;
     private int departmentId;
 
     public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, int departmentId){
@@ -21,12 +23,24 @@ public class ShiftUser {
         this.userName = userName;
         this.userId = userId;
         this.responsibility = responsibility;
-        //System.out.println("Valid absence: "+valid_absence);
         this.valid_absence = valid_absence;
         this.valid_absence2 = valid_absence;
+        this.shift_change = false;
+        this.removed = false;
         this.departmentId = departmentId;
     }
 
+    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, boolean shift_change, boolean removed,int departmentId){
+        this.userCategory = userCategory;
+        this.userName = userName;
+        this.userId = userId;
+        this.responsibility = responsibility;
+        this.valid_absence = valid_absence;
+        this.valid_absence2 = valid_absence;
+        this.shift_change = shift_change;
+        this.removed = removed;
+        this.departmentId = departmentId;
+    }
     @SuppressWarnings("unused")
     public ShiftUser() {
 
@@ -94,6 +108,21 @@ public class ShiftUser {
         this.userId = userId;
     }
 
+    public boolean isShift_change() {
+        return shift_change;
+    }
+
+    public void setShift_change(boolean shift_change) {
+        this.shift_change = shift_change;
+    }
+
+    public boolean isRemoved() {
+        return removed;
+    }
+
+    public void setRemoved(boolean removed) {
+        this.removed = removed;
+    }
     public int getDepartmentId() {
         return departmentId;
     }
