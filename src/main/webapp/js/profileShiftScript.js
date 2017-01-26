@@ -130,7 +130,7 @@ function addShiftInfoHtml (element, shiftId, data) {
                 /*'<div class="button-group"><button type="submit" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Du har registrert sykdom</button></div>';
                 */
                 '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
-                '<div class="dialogboks"><h3>Du har registrert sykdom</h3></div></div>';
+                '<button class="btn-secondary" disabled>Du har registrert sykdom</button>';
                 
         } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
             html +=

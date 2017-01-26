@@ -379,6 +379,11 @@ button {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: default;
 }
 
 .btn-secondary {
@@ -566,9 +571,10 @@ button {
 }
 
 .more-info[loaded="true"] {
-    box-shadow: 0 -.5px 0 0 #000000;
-    padding: 1px;
+    //box-shadow: 0 -.5px 0 0 #000000;
+    padding: 0 1rem .5rem;
     opacity: 1;
+    background: #f2f2f2;
 }
 
 .more-info__text {
@@ -592,24 +598,30 @@ button {
 
 .more-info h4 {
     margin: 0;
+    margin-top: .5rem;
     font-weight: normal;
     font-size: .875rem;
+    text-decoration: underline;
 }
 
 .more-info .link {
     margin: 0;
     font-weight: normal;
     font-size: .875rem;
- /*   display: -webkit-inline-box;*/
+    display: -webkit-inline-box;
     display: -ms-inline-flexbox;
     display: inline-flex;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
+    line-height: 1;
+    color: #000000;
+    transition: transform .2s;
 }
 
 .more-info .link:hover {
     text-decoration: none;
+    transform: translateX(5px);
 }
 
 .calendar {
@@ -873,6 +885,10 @@ text-align: center;
     left: 50%;
     -webkit-transform: translate(-50%, 4px);
     transform: translate(-50%, 4px);
+}
+
+.sub .circle {
+    margin-right: .375rem;
 }
 
 .popup {
