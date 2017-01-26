@@ -114,8 +114,8 @@ $(document).ready(function() {
 
     //close popup when clicking outside of the popup
     var $popup = $('#userPopup');
-    window.onclick = function(event) {
-        if (event.target != $popup) {
+    window.onclick = function(e) {
+        if (!$popup.is(e.target) && $popup.has(e.target).length === 0) {
             $popup.hide();
         }
     };
