@@ -68,6 +68,7 @@ var C = function Calendar(month, year, data) {
     var hasUser = false;
     var isAvailable = false;
     var count = 0;
+    var timeOfDay;
     var currentDate;
     console.log(data);
     for (i = 0; i < 9; i++) {
@@ -93,7 +94,7 @@ var C = function Calendar(month, year, data) {
                 if(data[count]){
                     currentDate = new Date(data[count].date);
                     while(data[count] && currentDate.getDate() == day && currentDate.getMonth() == nowMonth){
-                        if(data[count].available){
+                        if(data[count].available && !data[count].hasUser){
                             isAvailable = true;
                         }
                         if(data[count].hasUser){
@@ -103,7 +104,6 @@ var C = function Calendar(month, year, data) {
                         if(data[count]) {
                             currentDate = new Date(data[count].date);
                         }
-
                     }
                 }
                 html += day;
