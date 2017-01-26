@@ -28,11 +28,11 @@ public class ShiftPlanUser extends User {
         return (int)(getWorkPercentage() * SHIFT_AMOUNT_100_PERCENT);
     }
 
-    public ShiftPlanUser(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, float percentageWork) {
-        super(id, firstName, lastName, hash, salt, email, phoneNumber, userCategory, percentageWork);
+    public ShiftPlanUser(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, float percentageWork, int deptId) {
+        super(id, firstName, lastName, hash, salt, email, phoneNumber, userCategory, percentageWork, deptId);
     }
 
     public ShiftPlanUser(User user) {
-        this(user.getId(), user.getFirstName(), user.getLastName(), user.getHash(), user.getSalt(), user.getEmail(), user.getPhoneNumber(), user.getCategory(), user.getWorkPercentage());
+        this(user.getId(), user.getFirstName(), user.getLastName(), user.getHash(), user.getSalt(), user.getEmail(), user.getPhoneNumber(), user.getCategory(), user.getWorkPercentage(),user.getDeptId());
     }
 }
