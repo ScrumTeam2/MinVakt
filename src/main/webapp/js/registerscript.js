@@ -108,7 +108,7 @@ $(document).ready(function () {
             }
 
             if (!$department.val()) {
-                $category.addClass('error').parent().attr('data-content', 'Du må velge en avdeling.');
+                $department.addClass('error').parent().attr('data-content', 'Du må velge en avdeling.');
                 formError = true;
             }
 
@@ -179,11 +179,7 @@ function addUser(data) {
     console.log("Adduser");
     $('.title').text("Vellykket!");
     $('.result').text("Bruker ble laget med passord: " + data.password);
-
-    //go to submitted users profile
-    $('#userViewBtn').click(function () {
-        window.location = "user-a.html";
-    });
+    $('#userViewBtn').attr("href", "user-a.html?search=" + $first.val() + " " + $last.val());
 
     $('.popup').show();
 }
@@ -214,7 +210,7 @@ $('#userCloseBtn').click(function () {
 //close popup when clicking outside of the popup
 var $popup = $('#userPopup');
 window.onclick = function (event) {
-    if (event.target !== $popup) {
+    if (event.target != $popup) {
         $popup.hide();
         if (createSuccess) {
             $('.register-form')[0].reset();
