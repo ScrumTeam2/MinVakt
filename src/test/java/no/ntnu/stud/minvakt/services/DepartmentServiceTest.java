@@ -1,6 +1,5 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Department;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

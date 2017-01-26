@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.data.department;
 
 import no.ntnu.stud.minvakt.services.SecureService;
 
