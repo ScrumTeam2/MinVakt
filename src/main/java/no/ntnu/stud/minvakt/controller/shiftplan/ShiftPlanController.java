@@ -34,7 +34,7 @@ public class ShiftPlanController {
     }
 
     public boolean verifyValidity() {
-        return !shiftDBManager.hasAnyShiftsInPeriod(shiftPlan.getStartDate(), shiftPlan.getStartDate().plusWeeks(6));
+        return !shiftDBManager.hasAnyShiftsInPeriod(shiftPlan.getStartDate(), shiftPlan.getStartDate().plusWeeks(6), shiftPlan.getDepartmentId());
     }
 
     private void loadUsers() {
@@ -97,7 +97,7 @@ public class ShiftPlanController {
     /**
      * Adds all the generated shifts into the database, and updates their IDs
      */
-    public void insertShiftsIntoDatabase() {
+    public boolean insertShiftsIntoDatabase() {
 //       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
 //           for(ShiftPlanDay day : week.getDays()) {
 //               for(ShiftPlanShift shift : day.getShifts()) {
@@ -114,7 +114,7 @@ public class ShiftPlanController {
                 }
             }
         }
-        shiftDBManager.bulkInsertShifts(shifts);
+        return shiftDBManager.bulkInsertShifts(shifts);
     }
 
     public ArrayList<Integer> getShiftIds() {

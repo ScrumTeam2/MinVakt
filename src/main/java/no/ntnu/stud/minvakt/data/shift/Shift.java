@@ -112,4 +112,17 @@ public class Shift {
     public void setApproved(boolean approved) {
         this.approved = approved;
     }
+
+    @Override
+    public String toString() {
+        return "Shift{" +
+                "id=" + id +
+                ", staffNumb=" + staffNumb +
+                ", date=" + date +
+                ", type=" + type +
+                ", shiftUsers=" + shiftUsers +
+                ", deptId=" + deptId +
+                ", approved=" + approved +
+                '}';
+    }
 }

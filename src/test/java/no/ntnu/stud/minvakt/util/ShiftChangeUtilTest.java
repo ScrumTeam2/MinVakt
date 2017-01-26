@@ -72,13 +72,14 @@ public class ShiftChangeUtilTest{
         int feedId = newsFeedDB.createNotification(notification);
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
         overtimeDB.deleteOvertime(1,4,0);
+        newsFeedDB.deleteNotification(feedId);
     }
     @Test
     public void acceptValidAbsence(){
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
 
         NewsFeedItem notification = new NewsFeedItem(-1, date,
-                "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
+                "Test valid absence", 26,1,4, NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
         int feedId = newsFeedDB.createNotification(notification);
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
     }

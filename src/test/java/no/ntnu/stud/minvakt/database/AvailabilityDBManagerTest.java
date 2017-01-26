@@ -22,8 +22,8 @@ public class AvailabilityDBManagerTest {
         ArrayList<Integer> userList = new ArrayList<>();
         ArrayList<Integer> userListTest;
 
-        userList.add(0, 10);
-        userList.add(1, 15);
+        userList.add(0, 1);
+        userList.add(1, 2);
 
         int res1 = 0;
         int res2 = 0;
