@@ -812,11 +812,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#9dd53a', end
 .weekdays {
     color: #000000;
 }
-  
+ /*
 .day {
-height: 40px;
+//height: 40px;
 text-align: center;
-}
+}*/
 
 .error2 {
   border: 1px solid transparent;
@@ -824,7 +824,6 @@ text-align: center;
   color: #a94442;
   background-color: #f2dede;
   /*border-color: #f79dac;*/
-  border-style: solid;
   width: 50%;
   text-align: center;
   margin: 0 auto;
@@ -832,7 +831,32 @@ text-align: center;
 
 .disabled-month {
     background: #f2f2f2;
+    cursor: default !important;
     //opacity: 0.5;
+}
+.current-day {
+    font-weight: bold;
+}
+.calendar-clicked{
+    background: #034584;
+    color: #ffffff;
+    cursor: default !important;
+}
+.circle{
+    display: inline-block;
+    height: 0.6rem;
+    width: 0.6rem;
+    margin: 0.1rem;
+    border-radius: 50%;
+}
+.green{
+    background: #80d575;
+}
+.blue{
+    background: #78b1e0;
+}
+.circle-wrap{
+    height: 0;
 }
 
 .popup {
@@ -947,4 +971,9 @@ text-align: center;
         box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,1);
     }
 
+}
+
+#staffForm {
+    margin-bottom: 2.5rem;
+    display: none;
 }

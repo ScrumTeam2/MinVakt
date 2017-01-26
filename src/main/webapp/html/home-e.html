@@ -38,14 +38,13 @@
     <div class="container">
         <div class="container-header">
             <div class="person cursor-point">
-                <i class="symbol x2">
-                    <i class="material-icons">person</i>
-                </i>
-                <h2 class="my-shifts">Mine vakter</h2>
+                <h2 class="my-shifts">Vaktliste</h2>
             </div>
-            <i class="symbol x2">
-                <i class="material-icons hidden" id="today">today</i>
-            </i>
+            <div class="select-container">
+                <select name="category" id="dept-options">
+                    <option selected disabled></option>
+                </select>
+            </div>
         </div>
         <div class="popup" style="z-index:1;">
           <h3>Fraværsregistrering</h3>
@@ -55,7 +54,7 @@
             <a href="#" onclick="poopStatus(false,this);">Nei</a>
           </div>
         </div>
-        <div class="calendar" id="calendar" style="display: none;">
+        <div class="calendar" id="calendar">
             <div class="calendar-header">
                 <a href="#" class="prev">
                     <i class="material-icons">chevron_left</i>

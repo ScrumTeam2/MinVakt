@@ -24,7 +24,7 @@ public class UserDBManager extends DBManager {
     private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
     private final String sqlGetUsers = "SELECT * FROM user;";
     private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
-    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?);";
+    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
@@ -79,7 +79,8 @@ public class UserDBManager extends DBManager {
                         //New user
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
                                 res.getString("last_name"), null,null,res.getString("email"), res.getString("phonenumber"),
-                                User.UserCategory.valueOf(res.getInt("category")), res.getFloat("percentage_work"));
+                                User.UserCategory.valueOf(res.getInt("category")), res.getFloat("percentage_work"),
+                                res.getInt("dept_id"));
                         return user;
                     }
                     else{
@@ -92,7 +93,7 @@ public class UserDBManager extends DBManager {
                 e.printStackTrace();
             }finally{
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return null;
@@ -297,7 +298,8 @@ public class UserDBManager extends DBManager {
      * Creates a new user in the database
      * @return An object containing the user's ID (index 0), and the user's password (index 1)
      */
-    public Object[] createNewUser(String firstName, String lastName, String email, String phone, User.UserCategory category, float workPercentage) {
+    public Object[] createNewUser(String firstName, String lastName, String email, String phone,
+                                  User.UserCategory category, float workPercentage, int deptId) {
         Object[] obj = new Object[2];
         obj[0] = -1;
         String randomPass = GeneratePassword.generateRandomPass();
@@ -316,6 +318,7 @@ public class UserDBManager extends DBManager {
                 prep.setString(6, phone);
                 prep.setInt(7, category.getValue());
                 prep.setFloat(8, workPercentage);
+                prep.setInt(9,deptId);
                 int creation = prep.executeUpdate();
                 if (creation != 0) {
                     obj[0] = QueryUtil.getGeneratedKeys(prep);

@@ -88,7 +88,7 @@ public class AvailableUsersUtil {
         //If user list is not empty, send notifications to employees on list
         if(!userList.isEmpty()){
             for(UserBasicWorkHours userTo : userList){
-                String content = "Skiftet du har satt deg tilgjengelig på "+format.formatDate(shift.getDate())+" ("+format.formatShiftType(shift.getType())+") er ledig. Vil du jobbe?";
+                String content = "Vakten du har satt deg tilgjengelig på "+format.formatDate(shift.getDate())+" ("+format.formatShiftType(shift.getType())+") er ledig. Vennligs godta eller avslå vakt.";
 
                 NewsFeedItem notification = new NewsFeedItem(-1, dateTime, content, userTo.getId(), userFrom.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);

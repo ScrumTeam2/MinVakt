@@ -36,7 +36,6 @@ public class Shift {
             String constName = super.toString();
             return constName.substring(0, 1) + constName.substring(1).toLowerCase();
         }
-
     }
     public Shift(){
 
