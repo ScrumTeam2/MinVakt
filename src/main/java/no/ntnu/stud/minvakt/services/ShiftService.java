@@ -105,8 +105,11 @@ public class ShiftService extends SecureService{
     @POST
     @Path("/{shiftId}/user/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addEmployeeToShift(ShiftUser shiftUser, @PathParam("shiftId") int shiftId) {
+    public Response addEmployeeToShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId) {
         if(getSession() == null) return null;
+
+        User userData = userDB.getUserById(userId);
+        ShiftUser shiftUser = new ShiftUser(userId, userData.getFirstName() + " " + userData.getLastName(), userData.getCategory(), false, 0);
 
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
         if (statusOk) {

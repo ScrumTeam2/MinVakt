@@ -138,6 +138,7 @@ var adminlinks = [
     "/html/calendar-a.html",
     "/html/user-shifts.html",
     "/html/index.html",
+    "/html/add-employee.html",
     "/html/change-employee.html",
     "/html/change-password.html",
     "/html/edit-shift.html"
