@@ -557,6 +557,7 @@ button {
     -ms-flex-flow: column nowrap;
     flex-flow: column nowrap;
     tarnsition: all .2s ease-in-out;
+    background-color: #f0ffee;
 }
 
 .more-info[loaded="true"] {
