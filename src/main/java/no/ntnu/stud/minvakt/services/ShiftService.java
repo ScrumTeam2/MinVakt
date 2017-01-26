@@ -152,6 +152,23 @@ public class ShiftService extends SecureService{
         }
     }
 
+    @POST
+    @Path("/{shiftId}/set_staff")
+    public Response setStaffCount(@PathParam("shiftId") int shiftId, @FormParam("staffCount") int newStaffCount) {
+        if(getSession() == null || !getSession().isAdmin()) return null;
+
+        // Do not accept staff count below some number
+        if(newStaffCount < 1) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        if(shiftDB.setStaffNumberOnShift(shiftId, newStaffCount)) {
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
     @GET
     @Path("/user/")
     @Produces(MediaType.APPLICATION_JSON)
@@ -200,18 +217,6 @@ public class ShiftService extends SecureService{
         return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
-    @POST
-    @Path("/{shiftId}")
-    public Response setStaffNumberOnShift(@PathParam("shiftId") int shiftId,
-                                          @QueryParam("staffNumber") int staffNumber){
-        boolean isOk = shiftDB.setStaffNumberOnShift(shiftId,staffNumber);
-        if(isOk){
-            return Response.ok().entity("Staff number on shift "+shiftId+ " was edited to "+staffNumber).build();
-        }
-        else{
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
-    }
 
     @GET
     @Path("/availableShifts")
@@ -219,6 +224,7 @@ public class ShiftService extends SecureService{
     public ArrayList<ShiftAvailable> getAvailableShifts(){
         return shiftDB.getAvailableShifts();
     }
+
     //Registrates absence
     @GET
     @Path("/user/valid_absence/{shiftId}")
