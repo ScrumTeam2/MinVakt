@@ -17,6 +17,31 @@ $(document).ready(function () {
     checkInput();
 });
 
+function reformatData(){
+    var formattedType;
+    var typeTime;
+    switch (type){
+        case "DAY":
+            formattedType = "dagvakt";
+            typeTime = "07:00-15:00";
+            break;
+        case "EVENING":
+            formattedType = "kveldsvakt";
+            typeTime = "15:00-23:00";
+            break;
+        case "NIGHT":
+            formattedType = "nattevakt";
+            typeTime = "23:00-07:00";
+            break;
+        default:
+            console.log("type not known", type);
+    }
+
+
+
+    //var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
+    //var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
+}
 
 function checkInput(){
     $('#timebankBtn').click(function(e){
@@ -104,7 +129,7 @@ function registerOvertime(minutes){
     }
     var formData;
     formData = {
-        "userId": 1,
+        //"userId": 1,
         "shiftId": 43,
         "startTime": startTime,
         "minutes": minutes,
@@ -117,6 +142,7 @@ function registerOvertime(minutes){
 
 function popupContent(){
     var $popupCont = $('#content');
+
 
     var message1 = "Mandag 19. januar 2017";
     var message2 = "dagvakt";
