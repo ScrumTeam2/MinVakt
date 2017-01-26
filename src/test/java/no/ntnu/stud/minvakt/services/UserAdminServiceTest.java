@@ -15,21 +15,16 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by evend on 1/18/2017.
  */
-public class UserAdminServiceTest {
-    private static UserAdminService userAdminService;
-    private static UserService userService;
-    private HttpServletRequest request;
+public class UserAdminServiceTest extends ServiceTest {
+    private UserAdminService userAdminService;
+    private UserService userService;
 
+    @Override
     @Before
-    public void setUpTest() {
-        request = new MockHttpServletRequest();
+    public void setUp() {
+        super.setUp();
         userAdminService = new UserAdminService(request);
         userService = new UserService(request);
-    }
-
-    private void logInUser() {
-        SessionService sessionService = new SessionService();
-        sessionService.checkLogin(request, "email1", "password");
     }
 
     @Test
