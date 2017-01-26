@@ -84,6 +84,7 @@ public class AvailabilityService extends SecureService {
     //Metode som kjører hver gang noen setter seg tilgjengelig
     //Og hver gang noen setter som syk eller bytte shift
 
+    /*TODO delete if not used
     //Gets available shifts for specific date
     @Deprecated
     @GET
@@ -93,6 +94,7 @@ public class AvailabilityService extends SecureService {
         ArrayList<ShiftAvailable> out = availabilityDB.getAvailabilityForDate(dateString);
         return out;
     }
+    */
 
     @GET
     @Path("/date")

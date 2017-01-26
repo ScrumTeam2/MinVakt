@@ -111,18 +111,14 @@ public class ShiftChangeUtil {
 
     }
     private static boolean approveShiftChangeEmployee(NewsFeedItem newsFeedItem, boolean shiftAccepted){
-        Shift shift = null;
-        User userAccepted = null;
-        User userInvolving = null;
+        //Get data needed to create notification
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
+        User userAccepted = userDB.getUserById(newsFeedItem.getUserIdTo());
+        User userInvolving = userDB.getUserById(newsFeedItem.getUserIdInvolving());
+        boolean statusNewsfeed;
 
         if(shiftAccepted){
-
-            //Get data needed to create notification
-            userAccepted = userDB.getUserById(newsFeedItem.getUserIdTo());
-            userInvolving = userDB.getUserById(newsFeedItem.getUserIdInvolving());
-            shift = shiftDB.getShift(newsFeedItem.getShiftId());
-            Timestamp timestamp = Timestamp.from(Instant.now());
-
             //Get an admin ID to attach to the notification
             int adminId = userDB.getAdminId();
             if(adminId == 0) return false;
@@ -134,13 +130,15 @@ public class ShiftChangeUtil {
                     newsFeedItem.getShiftId(), SHIFT_CHANGE_ADMIN);
             int status =  newsDB.createNotification(notification);
             if(status == 0) return false;
+            statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
+
         }
         //If the employee do not want the shift, check if there are any other users pending confirmation
         else{
+            statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             if(newsDB.getShiftChangeCountPending(shift.getId(), userInvolving.getId())==0){
-                String content = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt "+FormattingUtil.formatDate(shift.getDate())+" ("+FormattingUtil.formatShiftType(shift.getType())+").";
+              String content = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt "+FormattingUtil.formatDate(shift.getDate())+" ("+FormattingUtil.formatShiftType(shift.getType())+").";
                 int adminId = userDB.getAdminId();
-                Timestamp timestamp = Timestamp.from(Instant.now());
                 if(adminId == 0) {
                     System.out.println("Could not find admin user");
                     return false;
@@ -156,7 +154,7 @@ public class ShiftChangeUtil {
             }
         }
         //Remove current newsFeedItem
-        return newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
+        return statusNewsfeed;
     }
     private static boolean approveShiftChangeAdmin(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted) {
