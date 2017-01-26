@@ -17,6 +17,7 @@ public class AvailabilityDBManagerTest {
         availabilityDB = new AvailabilityDBManager();
     }
 
+    /*
     @Test
     public void getAvailabilityTest() {
         ArrayList<Integer> userList = new ArrayList<>();
@@ -37,8 +38,9 @@ public class AvailabilityDBManagerTest {
         }
         assertEquals(res1, res2);
     }
+    */
 
-//    @Ignore
+
     @Test
     public void setAvailabilityTest() {
         boolean res = availabilityDB.setAvailability(2, 22);
