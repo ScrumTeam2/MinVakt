@@ -2,20 +2,27 @@
  * Created by ingvildbroen on 11.01.2017.
  */
 var createSuccess = false;
+var $first;
+var $last;
+var $percent;
+var $email;
+var $phone;
+var $category;
+var $department;
 
-$(document).ready(function(){
+$(document).ready(function () {
+    $first = $('#firstname');
+    $last = $('#lastname');
+    $percent = $('#percentage');
+    $email = $('#email');
+    $phone = $('#phone');
+    $category = $('#category');
+    loadDepartments();
 
     var userValue = $(".user-type:checked").val();
 
-    $(".user-type").on('change', function() {
+    $(".user-type").on('change', function () {
         userValue = $(".user-type:checked").val();
-
-        var $first = $('#firstname');
-        var $last = $('#lastname');
-        var $percent = $('#percentage');
-        var $email = $('#email');
-        var $phone = $('#phone');
-        var $category = $('#category');
 
         $first.removeClass('error').parent().attr('data-content', '');
         $last.removeClass('error').parent().attr('data-content', '');
@@ -23,26 +30,20 @@ $(document).ready(function(){
         $email.removeClass('error').parent().attr('data-content', '');
         $phone.removeClass('error').parent().attr('data-content', '');
         $category.removeClass('error').parent().attr('data-content', '');
+        $department.removeClass('error').parent().attr('data-content', '');
 
-        if(userValue === "admin"){
+        if (userValue === "admin") {
             showAdminInput();
-        } else{
+        } else {
             showEmployeeInput();
         }
     });
 
 
-    $('#userBtn').click(function(e){
+    $('#userBtn').click(function (e) {
         e.preventDefault();
 
         var formError = false;
-
-        var $first = $('#firstname');
-        var $last = $('#lastname');
-        var $percent = $('#percentage');
-        var $email = $('#email');
-        var $phone = $('#phone');
-        var $category = $('#category');
 
         $first.removeClass('error').parent().attr('data-content', '');
         $last.removeClass('error').parent().attr('data-content', '');
@@ -50,27 +51,28 @@ $(document).ready(function(){
         $email.removeClass('error').parent().attr('data-content', '');
         $phone.removeClass('error').parent().attr('data-content', '');
         $category.removeClass('error').parent().attr('data-content', '');
+        $department.removeClass('error').parent().attr('data-content', '');
 
-        if(!$first.val()){
+        if (!$first.val()) {
             $first.addClass('error').parent().attr('data-content', 'Du må fylle inn fornavn.');
             formError = true;
         }
-        if(!$last.val()){
+        if (!$last.val()) {
             $last.addClass('error').parent().attr('data-content', 'Du må fylle inn etternavn.');
             formError = true;
         }
-        if(!$email.val() || !(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($email.val()))){
+        if (!$email.val() || !(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test($email.val()))) {
             $email.addClass('error');
-            if(!$email.val()) {
+            if (!$email.val()) {
                 $email.parent().attr('data-content', 'Du må fylle inn e-post.');
             } else {
                 $email.parent().attr('data-content', 'E-posten du skrev inn er ikke gyldig.');
             }
             formError = true;
         }
-        if(!$phone.val() || !(/^[0-9]{8,8}$/.test($phone.val()))){
+        if (!$phone.val() || !(/^[0-9]{8,8}$/.test($phone.val()))) {
             $phone.addClass('error');
-            if(!$phone.val()) {
+            if (!$phone.val()) {
                 $phone.parent().attr('data-content', 'Du må fylle inn mobilnummer.');
             } else {
                 $phone.parent().attr('data-content', 'Mobilnummeret du skrev inn er ikke gyldig.');
@@ -83,8 +85,8 @@ $(document).ready(function(){
         console.log(formError);
         console.log(userValue);
 
-        if(userValue === "admin"){
-            if(!formError){
+        if (userValue === "admin") {
+            if (!formError) {
                 console.log("Submitting admin");
                 formData = {
                     "firstName": $first.val(),
@@ -92,20 +94,27 @@ $(document).ready(function(){
                     "email": $email.val(),
                     "phoneNumber": $phone.val(),
                     "category": 'ADMIN',
-                    "workPercentage": 1
+                    "workPercentage": 1,
+                    "deptId": 1
                 };
                 submitUser(formData);
             }
 
-        } else{
+        } else {
 
-            if(!$category.val()){
+            if (!$category.val()) {
                 $category.addClass('error').parent().attr('data-content', 'Du må velge en kategori.');
                 formError = true;
             }
-            if(!$percent.val() || isNaN($percent.val()) || $percent.val() < 0 || $percent.val() > 100){
+
+            if (!$department.val()) {
+                $category.addClass('error').parent().attr('data-content', 'Du må velge en avdeling.');
+                formError = true;
+            }
+
+            if (!$percent.val() || isNaN($percent.val()) || $percent.val() < 0 || $percent.val() > 100) {
                 $percent.addClass('error');
-                if(!$percent.val()) {
+                if (!$percent.val()) {
                     $percent.parent().attr('data-content', 'Du må fylle inn stillingsprosent.');
                 } else if (isNaN($percent.val())) {
                     $percent.parent().attr('data-content', 'Stillingsprosenten må være et tall.');
@@ -115,9 +124,9 @@ $(document).ready(function(){
                     $percent.parent().attr('data-content', 'Stillingsprosenten kan ikke være over 100.');
                 }
                 formError = true;
-             }
+            }
 
-            if(!formError){
+            if (!formError) {
                 console.log("Submitting employee");
                 formData = {
                     "firstName": $first.val(),
@@ -125,7 +134,8 @@ $(document).ready(function(){
                     "email": $email.val(),
                     "phoneNumber": $phone.val(),
                     "category": $category.val(),
-                    "workPercentage": parseFloat($percent.val()) / 100
+                    "workPercentage": parseFloat($percent.val()) / 100,
+                    "deptId": $department.val()
                 };
                 console.log(JSON.stringify(formData));
                 submitUser(formData);
@@ -146,22 +156,24 @@ function submitUser(formData) {
     });
 }
 
-function showAdminInput(){
+function showAdminInput() {
     var $select = $('.select-container');
     var $percent = $('#percentage');
     $select.addClass("hide");
     $percent.addClass("hide");
+    $department.addClass("hide");
 }
 
 
-function showEmployeeInput(){
+function showEmployeeInput() {
     var $select = $('.select-container');
     var $percent = $('#percentage');
     $select.removeClass("hide");
     $percent.removeClass("hide");
+    $department.removeClass("hide");
 }
 
-function addUser(data){
+function addUser(data) {
     createSuccess = true;
     console.log("OK", data);
     console.log("Adduser");
@@ -169,17 +181,17 @@ function addUser(data){
     $('.result').text("Bruker ble laget med passord: " + data.password);
 
     //go to submitted users profile
-    $('#userViewBtn').click(function() {
-        window.location="user-a.html";
+    $('#userViewBtn').click(function () {
+        window.location = "user-a.html";
     });
 
     $('.popup').show();
 }
 
-function invalidField(data){
+function invalidField(data) {
     $('.title').text("Feil");
 
-    if(data.responseJSON == null) {
+    if (data.responseJSON == null) {
         $('.result').text("En uventet feil oppsto");
     } else {
         $('.result').text(data.responseJSON.error);
@@ -190,10 +202,10 @@ function invalidField(data){
 }
 
 //close popup
-$('#userCloseBtn').click(function() {
+$('#userCloseBtn').click(function () {
     $('.popup').hide();
 
-    if(createSuccess) {
+    if (createSuccess) {
         $('.register-form')[0].reset();
     }
     createSuccess = false;
@@ -201,12 +213,26 @@ $('#userCloseBtn').click(function() {
 
 //close popup when clicking outside of the popup
 var $popup = $('#userPopup');
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target !== $popup) {
         $popup.hide();
-        if(createSuccess) {
+        if (createSuccess) {
             $('.register-form')[0].reset();
         }
         createSuccess = false;
     }
 };
+
+function loadDepartments() {
+    $department = $('#department');
+
+    $.get("/rest/department/")
+        .done(function (data) {
+            data.forEach(function (department) {
+                $department.append(`<option value="${department.id}">${department.name}</option>`);
+            })
+        })
+        .fail(function (data) {
+            console.log("fail", data);
+        });
+}
