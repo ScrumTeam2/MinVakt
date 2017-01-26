@@ -13,6 +13,7 @@
 <header>
     <a href="#" class="white" id="menu_icon">
         <i class="material-icons">menu</i>
+        Meny
     </a>
     <h1>MinVakt</h1>
     <a href="#" class="white" id="more_icon">
@@ -22,64 +23,63 @@
 <aside class="popup-menu employee hide" id="popup_menu">
     <ul>
         <li><a href="home-e.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="#">Vaktbytte<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="messages-e.html">Meldinger<i class="material-icons">chevron_right</i></a></li>
         <li><a href="user-e.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="#">Fravær<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#">Timebank<i class="material-icons">chevron_right</i></a></li>
         <li><a href="availability.html">Tilgjengelighet<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
 <aside class="popup-more employee hide" id="popup_more">
     <ul>
-        <li><a href="#">Endre passord<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="change-password.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
-    <div class="container">
-        <div class="container-header">
-            <div class="person cursor-point">
-                <i class="symbol x2">
-                    <i class="material-icons">person</i>
-                </i>
-                <h2 class="my-shifts">Vaktliste</h2>
-            </div>
+<div class="container">
+    <div class="container-header">
+        <div class="person cursor-point">
             <i class="symbol x2">
-                <i class="material-icons hidden" id="today">today</i>
+                <i class="material-icons">person</i>
             </i>
+            <h2 class="my-shifts">Vaktliste</h2>
         </div>
-        <div class="popup" style="z-index:1;">
-          <h3>Fraværsregistrering</h3>
-          <p>Er du sikker på at du vil registrere fravær for vakt ?</p>
-          <div class="links">
+        <i class="symbol x2">
+            <i class="material-icons hidden" id="today">today</i>
+        </i>
+    </div>
+    <div class="popup" style="z-index:1;">
+        <h3>Fraværsregistrering</h3>
+        <p>Er du sikker på at du vil registrere fravær for vakt ?</p>
+        <div class="links">
             <a href="#" onclick="poopStatus(true,this);">Ja</a>
             <a href="#" onclick="poopStatus(false,this);">Nei</a>
-          </div>
         </div>
-        <div class="calendar" id="calendar">
-            <div class="calendar-header">
-                <a href="#" class="prev">
-                    <i class="material-icons">chevron_left</i>
-                </a>
-                <h3>Januar 2014</h3>
-                <a href="#" class="next">
-                    <i class="material-icons">chevron_right</i>
-                </a>
-            </div>
-            <table id="calendar-availability" class="calendar">
-                <thead>
-                <tr>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <section class="list">
-
-        </section>
     </div>
-    <script src="../js/checkscript.js"></script>
-    <script src="../js/calendarShift.js"></script>
+    <div class="calendar" id="calendar">
+        <div class="calendar-header">
+            <a href="#" class="prev">
+                <i class="material-icons">chevron_left</i>
+            </a>
+            <h3>Januar 2014</h3>
+            <a href="#" class="next">
+                <i class="material-icons">chevron_right</i>
+            </a>
+        </div>
+        <table id="calendar-availability" class="calendar">
+            <thead>
+            <tr>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <section class="list">
+
+    </section>
+</div>
+<script src="../js/checkscript.js"></script>
+<script src="../js/calendarShift.js"></script>
 
 </body>
 </html>

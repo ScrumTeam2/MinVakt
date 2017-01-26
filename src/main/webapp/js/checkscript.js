@@ -3,7 +3,7 @@
  */
 
 $(document).ready(function(){
-
+    addNameToTop();
     var currPage = window.location.pathname.replace("/html/", "");
     var $menu = $('#popup_menu');
     var anchors = $menu.find($("a"));
@@ -243,4 +243,8 @@ function convertDate(dateInput){
     var dayIndex = date.getDay();
 
     return dayNames[dayIndex] + " " + day + ". " + monthNames[monthIndex];
+}
+
+function addNameToTop() {
+    $("#more_icon").prepend(sessionStorage.firstName + " " + sessionStorage.lastName);
 }
