@@ -11,15 +11,15 @@ function setDeptOptions() {
     var html;
     $.ajax({
         //     url: "rest/shift/user/"+userId,
-        url: "../rest/department",
+        url: "../rest/department/withData",
         type: 'GET',
         dataType: 'json',
-        data: {"withData": true},
         success: function (data) {
             var $dropdown = $("#dept-options");
             $.each(data, function (index, dept) {
+                console.log(dept);
                 if(dept.deptId == sessionStorage.getItem("SessionIdDept")) {
-                    $dropdown.append("<option selected name='category' id = '"+dept.deptId+"' value='" + dept.deptId + "'>" + dept.name +
+                    $dropdown.append("<option selected name='category' class='dept-category' id = '"+dept.deptId+"' value='" + dept.deptId + "'>" + dept.name +
                         "</option>");
                 }
                 else{
@@ -32,6 +32,10 @@ function setDeptOptions() {
                 if(dept.hasUser){
                     $dropdown.children("#"+dept.deptId).append("<span class='circle blue'></span>")
                 }
+            });
+            $(".dept-category").click(function (e) {
+                e.preventDefault();
+                createAjaxForAllShifts($(this).attr("value"))
             })
         },
         error: function (data) {
@@ -43,11 +47,20 @@ function setDeptOptions() {
 
 
 }
-function createAjaxForAllShifts() {
+function createAjaxForAllShifts(deptId) {
+    var data;
+    console.log(deptId);
+    if(!deptId || deptId < 1){
+        data = {daysForward: 7}
+    }
+    else {
+        data = {daysForward: 7, "deptId" : deptId}
+    }
+    console.log(data);
     $.ajax({
         //     url: "rest/shift/user/"+userId,
         url: "../rest/shift",
-        data: {daysForward : 7}, //TODO: edit to 7?
+        data: data, //TODO: edit to 7?
         type: 'GET',
         dataType: 'json',
         success: createAllShiftsHtml,
@@ -57,6 +70,7 @@ function createAjaxForAllShifts() {
             calendarList.append("<p>" + data + "</p>");
         }
     });
+
 }
 //});
 var absenceIds = [];
@@ -74,7 +88,6 @@ function addShiftInfoHtml (element, shiftId, data) {
     var removed = false;
     //Could be made more efficient
     var baseUrl = "../html/user-e.html?search=";
-    console.log(data);
     for (var i = 0; i < categoriesForLoop.length; i++) {
         var hasPerson = false;
         //console.log(categoriesForLoop[i]);
