@@ -18,23 +18,19 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
 
-public class OvertimeServiceTest {
-    private static OvertimeService overtimeService;
-    private HttpServletRequest request;
+public class OvertimeServiceTest extends ServiceTest {
+    private OvertimeService overtimeService;
 
+    @Override
     @Before
-    public void setUpTest() {
-        request = new MockHttpServletRequest();
+    public void setUp() {
+        super.setUp();
         overtimeService = new OvertimeService(request);
-    }
-
-    private void logInUser() {
-        SessionService sessionService = new SessionService();
-        sessionService.checkLogin(request, "email1", "password");
     }
 
     @Test
     public void setOvertimeTest() throws Exception {
+        logInUser();
         int userId = 10;
         int shiftId = 13;
         int startTime = 900;
@@ -53,7 +49,7 @@ public class OvertimeServiceTest {
         ArrayList<Overtime> actual = (ArrayList<Overtime>) response.getEntity();
 
         ArrayList<Overtime> expRes = new ArrayList<>();
-        expRes.add(new Overtime(1,16,960, 60, false));
+        expRes.add(new Overtime(1,16,960, 60, true));
         expRes.add(new Overtime(1,37,960,-80, false));
 
         Assert.assertEquals(expRes.get(0), actual.get(0));
@@ -63,6 +59,7 @@ public class OvertimeServiceTest {
 
     @Test
     public void deleteOvertimeTest() throws Exception{
+        logInUser();
         int userId = 10;
         int shiftId = 13;
         int startTime = 900;

@@ -54,7 +54,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
             "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
     private final String sqlWasEmployeeOnShift = "UPDATE employee_shift SET removed = 0 WHERE user_id = ? AND shift_id = ?;";
-    private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work" +
+    private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work,dept_id" +
             " FROM user WHERE user_id IN(SELECT user_id FROM employee_shift WHERE shift_id = ?);";
     private final String sqlIsUserResponsible = "SELECT responsibility FROM employee_shift WHERE user_id = ? AND shift_id = ?;";
     private final String sqlSetUserResponsible = "UPDATE employee_shift SET responsibility = ? WHERE user_id = ? AND shift_id = ?;";
@@ -71,6 +71,7 @@ public class ShiftDBManager extends DBManager {
      */
     public int createNewShift(Shift shift) {
         int out = -1;
+        ResultSet res = null;
         if (setUp()) {
             try {
                 startTransaction();
@@ -85,7 +86,7 @@ public class ShiftDBManager extends DBManager {
 
                 if(prep.executeUpdate() != 0){
                     prep = conn.prepareStatement(sqlGetLastID);
-                    ResultSet res = prep.executeQuery();
+                    res = prep.executeQuery();
                     if(res.next()) {
                         //Last auto incremented value
                         shift.setId(res.getInt(1));
@@ -117,7 +118,7 @@ public class ShiftDBManager extends DBManager {
             }
             finally {
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return out;
@@ -132,6 +133,7 @@ public class ShiftDBManager extends DBManager {
         if (!setUp()) {
             return false;
         }
+        ResultSet generatedKeys = null;
         try {
             startTransaction();
             conn = getConnection();
@@ -146,7 +148,7 @@ public class ShiftDBManager extends DBManager {
                 prep.addBatch();
             }
             int[] result = prep.executeBatch();
-            ResultSet generatedKeys = prep.getGeneratedKeys();
+            generatedKeys = prep.getGeneratedKeys();
             int i = 0;
             
             prep = conn.prepareStatement(sqlCreateNewShiftStaff);
@@ -175,7 +177,7 @@ public class ShiftDBManager extends DBManager {
             log.log(Level.WARNING, "Issue with bulk creating new shifts, data rolled back", e);
         } finally {
             endTransaction();
-            finallyStatement(prep);
+            finallyStatement(generatedKeys, prep);
         }
         return false;
     }
@@ -381,7 +383,7 @@ public class ShiftDBManager extends DBManager {
                 log.log(Level.WARNING, "Error getting total number of hours for user with ID = " + userId, sqlE);
             } finally{
                 endTransaction();
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return out;
@@ -425,7 +427,7 @@ public class ShiftDBManager extends DBManager {
 
     public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end, int limit) {
         ArrayList<UserBasicWorkHours> users = new ArrayList<>();
-        ResultSet res;
+        ResultSet res=null;
         if(setUp()){
             try {
                 conn = getConnection();
@@ -447,7 +449,7 @@ public class ShiftDBManager extends DBManager {
             } catch (Exception e) {
                 log.log(Level.WARNING, "Could not get work hour list", e);
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return users;
@@ -494,6 +496,7 @@ public class ShiftDBManager extends DBManager {
             finally {
                 endTransaction();
                 finallyStatement(res, prep);
+                finallyStatement(res2, prep);
             }
         }
         return out;
@@ -573,7 +576,7 @@ public class ShiftDBManager extends DBManager {
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error getting shifts that need more employees", sqlE);
             } finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return shiftList;
@@ -666,7 +669,8 @@ public class ShiftDBManager extends DBManager {
                             res.getString("email"),
                             res.getString("phonenumber"),
                             User.UserCategory.valueOf(res.getInt("category")),
-                            res.getFloat("percentage_work")
+                            res.getFloat("percentage_work"),
+                            res.getInt("dept_id")
                     ));
                 }
             }
@@ -674,7 +678,7 @@ public class ShiftDBManager extends DBManager {
                 log.log(Level.WARNING, "Issue getting users from shift with id = "+shiftId,sqle);
             }
             finally {
-                finallyStatement(prep);
+                finallyStatement(res, prep);
             }
         }
         return out;

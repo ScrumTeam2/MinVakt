@@ -54,19 +54,15 @@
         </div>
         <form class="register-form" method="POST">
 
-
-            <input type="date" name="date" id="date" placeholder="Dato" />
-            <input type="time" name="time" id="time" placeholder="Tid"/>
-            <input name="minutes" id="minutes" placeholder="Minutter"/>
-            <button type="submit" id="userBtn">Send inn</button>
+            <input type="number" min="0" max="23" name="hours" id="hours" placeholder="Timer"/>
+            <input name="number" id="minutes" min="0" max="50" step="10" placeholder="Minutter"/>
+            <button type="submit" id="timebankBtn">Registrer timeavvik for vakt</button>
         </form>
 
-        <div id="userPopup" class="popup">
-            <h3 class="title">Tittel</h3>
-            <p class="result"></p>
+        <div id="timebankPopup" class="popup">
+            <div class="popup-content"></div>
             <div class="links">
-                <a href="#" id="userCloseBtn">Lukk</a>
-                <a href="#" id="userViewBtn">Se bruker</a>
+                <a href="#" id="closeBtn">Gå tilbake</a>
             </div>
         </div>
     </div>

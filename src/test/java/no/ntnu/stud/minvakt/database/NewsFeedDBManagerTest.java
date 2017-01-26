@@ -1,7 +1,9 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
+import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.Date;
@@ -60,5 +62,11 @@ public class NewsFeedDBManagerTest {
         ArrayList<NewsFeedItem> items = newsFeedDB.getNewsFeedAdmin();
         assertFalse(items.isEmpty());
         //deleteTestData(id);
+    }
+
+    @Ignore
+    public void getShiftChangeCountPending() throws Exception {
+        int countUnRes = newsFeedDB.getShiftChangeCountPending(43, 1);
+        Assert.assertEquals(3, countUnRes);
     }
 }
