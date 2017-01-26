@@ -47,12 +47,20 @@
                 <i class="material-icons hidden" id="today">today</i>
             </i>
         </div>
-        <div class="popup" style="z-index:1;">
+        <div class="popup" id="registerIllnessPopup" style="z-index:1;">
           <h3>Fraværsregistrering</h3>
-          <p>Er du sikker på at du vil registrere fravær for vakt ?</p>
+          <p></p>
           <div class="links">
             <a href="#" onclick="poopStatus(true,this);">Ja</a>
             <a href="#" onclick="poopStatus(false,this);">Nei</a>
+          </div>
+        </div>
+        <div class="popup" id="changeShiftPopup" style="z-index:1;">
+          <h3>Bytte vakt</h3>
+          <p></p>
+          <div class="links">
+            <a href="#" onclick="changeShiftStatus(true,this);">Ja</a>
+            <a href="#" onclick="changeShiftStatus(false,this);">Nei</a>
           </div>
         </div>
         <div class="calendar" id="calendar">
