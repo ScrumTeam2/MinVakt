@@ -59,6 +59,8 @@ function login(data){
 
     sessionStorage.SessionId = data.id;
     sessionStorage.SessionIdCat = data.category;
+    sessionStorage.firstName = data.firstName;
+    sessionStorage.lastName = data.lastName;
 
     var date = new Date();
     date.setTime(date.getTime() + (1000 * 60 * 60 * 2));
