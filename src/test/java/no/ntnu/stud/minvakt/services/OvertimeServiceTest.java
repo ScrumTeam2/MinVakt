@@ -30,6 +30,7 @@ public class OvertimeServiceTest extends ServiceTest {
 
     @Test
     public void setOvertimeTest() throws Exception {
+        logInUser();
         int userId = 10;
         int shiftId = 13;
         int startTime = 900;
@@ -58,6 +59,7 @@ public class OvertimeServiceTest extends ServiceTest {
 
     @Test
     public void deleteOvertimeTest() throws Exception{
+        logInUser();
         int userId = 10;
         int shiftId = 13;
         int startTime = 900;
