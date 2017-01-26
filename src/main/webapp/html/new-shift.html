@@ -11,6 +11,7 @@
 <header>
     <a href="#" class="white" id="menu_icon">
         <i class="material-icons">menu</i>
+        Meny
     </a>
     <h1>MinVakt</h1>
     <a href="#" class="white" id="more_icon">
@@ -28,44 +29,44 @@
 </aside>
 <aside class="popup-more hide" id="popup_more">
     <ul>
-        <li><a href="#">Endre passord<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="change-password.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
 
-    <div class="container">
-        <div class="container-header">
-            <div>
-                <h2>Opprett turnus</h2>
-            </div>
-        </div>
-        <form class="register-form" id="shiftForm">
-            <div class="select-container">
-                <select name="department" id="department">
-                    <option selected disabled>Avdeling</option>
-                </select>
-            </div>
-
-            <input type="date" name="date" placeholder="Dato" />
-
-            <div id="days-placeholder"></div>
-
-            <!-- TODO: Change this button to a link later... -->
-            <button type="submit" id="createShiftBtn">Generer turnus</button>
-
-
-        </form>
-
-        <div id="userPopup" class="popup">
-            <h3 class="title">Tittel</h3>
-            <p class="result"></p>
-            <div class="links">
-                <a href="#" id="userCloseBtn">Lukk</a>
-                <a href="#" id="userViewBtn">Se bruker</a>
-            </div>
+<div class="container">
+    <div class="container-header">
+        <div>
+            <h2>Opprett turnus</h2>
         </div>
     </div>
-    <script src="../js/checkscript.js"></script>
-    <script src="../js/addShift.js"></script>
+    <form class="register-form" id="shiftForm">
+        <div class="select-container">
+            <select name="department" id="department">
+                <option selected disabled>Avdeling</option>
+            </select>
+        </div>
+
+        <input type="date" name="date" placeholder="Dato"/>
+
+        <div id="days-placeholder"></div>
+
+        <!-- TODO: Change this button to a link later... -->
+        <button type="submit" id="createShiftBtn">Generer turnus</button>
+
+
+    </form>
+
+    <div id="userPopup" class="popup">
+        <h3 class="title">Tittel</h3>
+        <p class="result"></p>
+        <div class="links">
+            <a href="#" id="userCloseBtn">Lukk</a>
+            <a href="#" id="userViewBtn">Se bruker</a>
+        </div>
+    </div>
+</div>
+<script src="../js/checkscript.js"></script>
+<script src="../js/addShift.js"></script>
 </body>
 </html>
