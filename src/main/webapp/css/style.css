@@ -832,7 +832,15 @@ text-align: center;
 
 .disabled-month {
     background: #f2f2f2;
+    cursor: default !important;
     //opacity: 0.5;
+}
+.current-day {
+    font-weight: bold;
+}
+.calendar-clicked{
+    background: #034584;
+    color: #ffffff;
 }
 
 .popup {

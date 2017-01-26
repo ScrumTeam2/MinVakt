@@ -69,12 +69,8 @@ public class OvertimeService extends SecureService{
     public Response getOvertimeByUserId() {
         int userId = getSession().getUser().getId();
 
-        Overtime[] overtimeTab = overtimeDBM.getOvertimeByUserId(userId);
-        ArrayList<Overtime> overtime = new ArrayList<>();
 
-        for (Overtime ot : overtimeTab){
-            overtime.add(ot);
-        }
+        ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByUserId(userId);
         GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
         return Response.ok(entity).build();
     }

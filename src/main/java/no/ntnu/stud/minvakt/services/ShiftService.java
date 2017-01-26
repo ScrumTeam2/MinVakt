@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
@@ -14,6 +15,7 @@ import no.ntnu.stud.minvakt.util.FormattingUtil;
 import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
 import javax.management.Notification;
+import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -215,7 +217,14 @@ public class ShiftService extends SecureService{
         return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
         //}
     }
-  
+
+    @GET
+    @Path("/availableShifts")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftAvailable> getAvailableShifts(){
+        return shiftDB.getAvailableShifts();
+    }
+
     //Registrates absence
     @GET
     @Path("/user/valid_absence/{shiftId}")
@@ -229,7 +238,7 @@ public class ShiftService extends SecureService{
 
         /*Escape all displayed output in client*/
         Shift shift = shiftDB.getShift(shiftId);
-        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt den"+
+        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt "+
                 shift.getDate() + ".";
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
         boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);

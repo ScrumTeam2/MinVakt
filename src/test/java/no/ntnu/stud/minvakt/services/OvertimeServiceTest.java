@@ -48,7 +48,7 @@ public class OvertimeServiceTest extends ServiceTest {
         ArrayList<Overtime> actual = (ArrayList<Overtime>) response.getEntity();
 
         ArrayList<Overtime> expRes = new ArrayList<>();
-        expRes.add(new Overtime(1,16,960, 60, false));
+        expRes.add(new Overtime(1,16,960, 60, true));
         expRes.add(new Overtime(1,37,960,-80, false));
 
         Assert.assertEquals(expRes.get(0), actual.get(0));
