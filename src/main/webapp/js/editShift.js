@@ -116,8 +116,8 @@ function initPopup() {
     $popup = $("#userPopup");
 
     //close popup when clicking outside of the popup
-    window.onclick = function(event) {
-        if (event.target != $popup) {
+    window.onclick = function(e) {
+        if (!$popup.is(e.target) && $popup.has(e.target).length === 0) {
             $popup.hide();
         }
     };
