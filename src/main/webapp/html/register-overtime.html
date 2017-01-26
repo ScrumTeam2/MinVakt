@@ -42,20 +42,19 @@
         <div class="container-header">
             <div>
                 <!--<i class="material-icons">chevron_left</i>-->
-                <h2>Registrer timer</h2>
+                <h2>Registrer overtid på vakt</h2>
             </div>
         </div>
 
-        <div class="radio-group">
-            <input type="radio" name="overtime-type" id="overtime-type" value="overtime" checked>
-            <label for="overtime-type">Overtid</label>
-            <input type="radio" name="overtime-type" id="absence-type" value="absence">
-            <label for="absence-type">Fravær</label>
-        </div>
-        <form class="register-form" method="POST">
+        <div class="shift-info"></div>
 
-            <input type="number" min="0" max="23" name="hours" id="hours" placeholder="Timer"/>
-            <input name="number" id="minutes" min="0" max="50" step="10" placeholder="Minutter"/>
+        <form class="register-form" method="POST">
+            <div>
+                <input type="number" id="hours" min="0" max="23" placeholder="Timer" required/>
+            </div>
+            <div>
+                <input type="number" id="minutes" min="0" max="50" step="5" placeholder="Minutter" required/>
+            </div>
             <button type="submit" id="timebankBtn">Registrer timeavvik for vakt</button>
         </form>
 
@@ -67,6 +66,7 @@
         </div>
     </div>
 
+    <script src="../js/checkscript.js"></script>
     <script src="../js/overtimeScript.js"></script>
 
 </body>
