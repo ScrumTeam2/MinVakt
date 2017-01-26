@@ -7,12 +7,16 @@ $(document).ready(function () {
         var emptyField = false;
         var $username = $("#username");
 
+        $('#resetpass').html(`<div class="typing_loader"></div>`);
+
         if(!$username.val()) {
             $username.addClass("error");
             emptyField = true;
+            $('#resetpass').resetLoader("Få nytt passord");
         }
 
         if(!emptyField){
+
             var data = {"email" : $username.val()};
             $.ajax({
                 url: "../rest/user/forgottenpass",
@@ -22,9 +26,19 @@ $(document).ready(function () {
                 error: passwordResetFailure,
             });
         }
-    })
+    });
 });
+
+//function to reset the loading button animation
+$.fn.resetLoader = function(buttonText){
+    $('.typing_loader').remove();
+    $(this).html(`<div class="submit"></div>`);
+    $(this).text(buttonText);
+}
+
 function passwordResetSuccess(data) {
+    $('#resetpass').resetLoader("Få nytt passord");
+
     $("#popup-title").text("Suksess");
     $("#popup-message").text("Nytt passord er blitt sent til din mail. Trykk for å gå til login.");
     var $btn1 = $("#popup-btn1");
@@ -39,7 +53,10 @@ function passwordResetSuccess(data) {
         window.location = "login.html";
     });
 }
+
 function passwordResetFailure(data) {
+    $('#resetpass').resetLoader("Få nytt passord");
+
     //417 = Expectation failed
     if(data.status == 417) {
         $("#popup-title").text("En feil har oppstått");
