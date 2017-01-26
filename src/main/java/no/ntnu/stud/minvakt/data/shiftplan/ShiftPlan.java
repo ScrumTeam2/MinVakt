@@ -10,7 +10,7 @@ import java.time.LocalDate;
  */
 public class ShiftPlan {
     private LocalDate startDate;
-
+    private int departmentId;
     /**
      * The week used as a template for all 6 weeks.
      * Retrieved as a parameter from REST
@@ -27,6 +27,14 @@ public class ShiftPlan {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
     }
 
     public ShiftPlanWeek getTemplateWeek() {
@@ -53,8 +61,9 @@ public class ShiftPlan {
     public ShiftPlan() {
     }
 
-    public ShiftPlan(ShiftPlanWeek templateWeek, LocalDate startDate) {
+    public ShiftPlan(ShiftPlanWeek templateWeek, LocalDate startDate, int departmentId) {
         this.templateWeek = templateWeek;
         this.startDate = startDate;
+        this.departmentId = departmentId;
     }
 }

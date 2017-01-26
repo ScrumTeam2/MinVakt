@@ -33,7 +33,7 @@ public class ShiftPlanControllerTest {
         templateWeek.addDay(generateTestDay(DayOfWeek.SATURDAY, departmentId, 10, 10, 10));
         templateWeek.addDay(generateTestDay(DayOfWeek.SUNDAY, departmentId, 5, 5, 5));
 
-        ShiftPlanController controller = new ShiftPlanController(new ShiftPlan(templateWeek, LocalDate.now()));
+        ShiftPlanController controller = new ShiftPlanController(new ShiftPlan(templateWeek, LocalDate.now(), departmentId));
         controller.calculateShifPlan();
 
         ShiftPlan plan = controller.getShiftPlan();

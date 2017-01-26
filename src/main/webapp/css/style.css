@@ -872,6 +872,7 @@ text-align: center;
     box-shadow: 0 19px 38px rgba(0, 0, 0, 0.5);
     max-width: 80%;
     display: none;
+    z-index:1;
 }
 
 .popup h3 {
