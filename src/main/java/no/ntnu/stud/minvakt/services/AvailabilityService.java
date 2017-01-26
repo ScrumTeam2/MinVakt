@@ -128,12 +128,14 @@ public class AvailabilityService extends SecureService {
     @GET
     @Path("/shift/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category") User.UserCategory category, @QueryParam("limitByCategory") boolean onlyThisCategory){
+    public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category") String categoryString, @QueryParam("limitByCategory") boolean onlyThisCategory){
         AvailableUsersUtil availUsersU = new AvailableUsersUtil();
         ShiftDBManager shiftDBM = new ShiftDBManager();
         Shift shift = shiftDBM.getShift(shiftId);
+        User.UserCategory category = User.UserCategory.valueOf(categoryString);
         LocalDate date = shift.getDate().toLocalDate();
         ArrayList<UserBasicWorkHours> userList = availUsersU.sortAvailableEmployeesWithCategory(shiftId, date, category, onlyThisCategory);
+        //System.out.println("Category: "+category.toString());
         GenericEntity entity = new GenericEntity<List<UserBasicWorkHours>>(userList){};
 
         return Response.ok(entity).build();

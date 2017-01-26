@@ -16,28 +16,30 @@ public class ShiftUser {
     private int valid_absence2;
     private boolean shift_change;
     private boolean removed;
+    private int departmentId;
 
-    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence){
+    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, int departmentId){
         this.userCategory = userCategory;
         this.userName = userName;
         this.userId = userId;
         this.responsibility = responsibility;
-        //System.out.println("Valid absence: "+valid_absence);
         this.valid_absence = valid_absence;
         this.valid_absence2 = valid_absence;
         this.shift_change = false;
+        this.removed = false;
+        this.departmentId = departmentId;
     }
 
-    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, boolean shift_change, boolean removed){
+    public ShiftUser(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, boolean shift_change, boolean removed,int departmentId){
         this.userCategory = userCategory;
         this.userName = userName;
         this.userId = userId;
         this.responsibility = responsibility;
-        //System.out.println("Valid absence: "+valid_absence);
         this.valid_absence = valid_absence;
         this.valid_absence2 = valid_absence;
         this.shift_change = shift_change;
         this.removed = removed;
+        this.departmentId = departmentId;
     }
     @SuppressWarnings("unused")
     public ShiftUser() {
@@ -120,5 +122,23 @@ public class ShiftUser {
 
     public void setRemoved(boolean removed) {
         this.removed = removed;
+    }
+  public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(int departmentId) {
+        this.departmentId = departmentId;
+    }
+
+    @Override
+    public String toString() {
+        return "ShiftUser{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", departmentId=" + departmentId +
+                ", userCategory=" + userCategory +
+                ", responsibility=" + responsibility +
+                '}';
     }
 }

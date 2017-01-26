@@ -51,7 +51,7 @@ public class ShiftPlanShift {
     }
 
     public void addShiftUser(ShiftPlanUser user) {
-        shift.getShiftUsers().add(new ShiftUser(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getCategory(), needResponsibilityUser, 0));
+        shift.getShiftUsers().add(new ShiftUser(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getCategory(), needResponsibilityUser, 0, user.getDeptId()));
         updateCounters(user);
         user.incrementShiftAmount();
 
@@ -87,8 +87,11 @@ public class ShiftPlanShift {
 
         while (shift.getShiftUsers().size() < shift.getStaffNumb() && !userQueue.isEmpty()) {
             ShiftPlanUser user = userQueue.poll();
+            if(usersWorking.containsKey(user.getId())) continue;
+
             addShiftUser(user);
             usersWorking.put(user.getId(), user);
+            setUpQueue(userList); // Heavy..
         }
 
         return usersWorking;
