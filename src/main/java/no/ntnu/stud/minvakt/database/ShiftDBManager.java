@@ -54,7 +54,7 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
             "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
     private final String sqlWasEmployeeOnShift = "UPDATE employee_shift SET removed = 0 WHERE user_id = ? AND shift_id = ?;";
-    private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work" +
+    private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work,dept_id" +
             " FROM user WHERE user_id IN(SELECT user_id FROM employee_shift WHERE shift_id = ?);";
     private final String sqlIsUserResponsible = "SELECT responsibility FROM employee_shift WHERE user_id = ? AND shift_id = ?;";
     private final String sqlSetUserResponsible = "UPDATE employee_shift SET responsibility = ? WHERE user_id = ? AND shift_id = ?;";
@@ -669,7 +669,8 @@ public class ShiftDBManager extends DBManager {
                             res.getString("email"),
                             res.getString("phonenumber"),
                             User.UserCategory.valueOf(res.getInt("category")),
-                            res.getFloat("percentage_work")
+                            res.getFloat("percentage_work"),
+                            res.getInt("dept_id")
                     ));
                 }
             }

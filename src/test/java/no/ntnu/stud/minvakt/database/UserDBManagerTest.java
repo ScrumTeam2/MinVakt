@@ -43,7 +43,7 @@ public class UserDBManagerTest {
 
     @Test
     public void createAndDeleteNewUser() {
-        Object[] userInfo = userDB.createNewUser("testFornavn", "testEtternavn", "system.minvakt@gmail.com", "10101010", User.UserCategory.ASSISTANT, 1);
+        Object[] userInfo = userDB.createNewUser("testFornavn", "testEtternavn", "system.minvakt@gmail.com", "10101010", User.UserCategory.ASSISTANT, 1,1);
 
         Assert.assertTrue((int)userInfo[0] > 0);
 
@@ -59,21 +59,21 @@ public class UserDBManagerTest {
 
     @Test
     public void createNewUserDuplicateMail() {
-        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "01010101", User.UserCategory.ASSISTANT, 1);
+        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "01010101", User.UserCategory.ASSISTANT, 1,1);
 
         Assert.assertTrue((int)userInfo1[0] > 0);
 
-        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "11111111", User.UserCategory.ASSISTANT, 1);
+        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "11111111", User.UserCategory.ASSISTANT, 1,1);
         Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }
 
     @Test
     public void createNewUserDuplicatePhone() {
-        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1);
+        Object[] userInfo1 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1,1);
 
         Assert.assertTrue((int)userInfo1[0] > 0);
-        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone2@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1);
+        Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone2@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1,1);
         Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }

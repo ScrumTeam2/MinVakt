@@ -57,7 +57,7 @@ public class AvailableUsersUtilTest {
         Shift shift =shiftDBM.getShift(shiftId);
         ShiftUser shiftUser = shift.getShiftUsers().get(0);
         User user = new User(shiftUser.getUserId(), "Test", "Bruker", "hash", "salt", "email",
-                "12345678", User.UserCategory.ASSISTANT,100);
+                "12345678", User.UserCategory.ASSISTANT,100,1);
         boolean res = aUU.sendNotificationOfShiftChange(shift, user, timestamp);
         boolean expRes = true;
         Assert.assertEquals(expRes, res);
@@ -72,7 +72,7 @@ public class AvailableUsersUtilTest {
         Shift shift =shiftDBM.getShift(shiftId);
         ShiftUser shiftUser = shift.getShiftUsers().get(0);
         User user = new User(shiftUser.getUserId(), "Stine", "Pettersen", "hash", "salt", "email",
-                "12345678", User.UserCategory.ASSISTANT,100);
+                "12345678", User.UserCategory.ASSISTANT,100,1);
         boolean res = aUU.sendNotificationOfShiftChange(shift, user, timestamp);
         boolean expRes = true;
         Assert.assertEquals(expRes, res);

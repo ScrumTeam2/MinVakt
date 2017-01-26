@@ -52,6 +52,7 @@ public class User {
     private String phoneNumber;
     private UserCategory category;
     private float workPercentage;
+    private int deptId;
 
     @JsonIgnore
     private String hash;
@@ -61,6 +62,14 @@ public class User {
 
     public User() {
 
+    }
+
+    public int getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(int deptId) {
+        this.deptId = deptId;
     }
 
     public int getId() {
@@ -136,7 +145,8 @@ public class User {
         this.workPercentage = workPercentage;
     }
 
-    public User(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, float workPercentage) {
+    public User(int id, String firstName, String lastName, String hash, String salt, String email, String phoneNumber, UserCategory userCategory, float workPercentage,
+                int deptId) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -146,6 +156,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.category = userCategory;
         this.workPercentage = workPercentage;
+        this.deptId = deptId;
     }
 
     @Override
