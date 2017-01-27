@@ -10,6 +10,6 @@ public class SanitizeUtil {
     private static final PolicyFactory policy = new HtmlPolicyBuilder().allowElements("").toFactory();
 
     public static String filterInput(String input) {
-        return policy.sanitize(input);
+        return policy.sanitize(input).replace("&#64;", "@"); // Hack for allowing @
     }
 }
