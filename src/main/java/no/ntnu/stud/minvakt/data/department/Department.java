@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.data.department;
 
 import no.ntnu.stud.minvakt.services.SecureService;
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
  * Created by evend on 1/10/2017.
@@ -28,6 +29,6 @@ public class Department {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = SanitizeUtil.filterInput(name);
     }
 }

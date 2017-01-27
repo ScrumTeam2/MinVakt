@@ -546,17 +546,16 @@ INSERT INTO employee_shift VALUES(21, 60, true, false, false,false);
 -- WEEK 3 : DAY 7
 INSERT INTO employee_shift VALUES(4, 61, false, false, false,false);
 INSERT INTO employee_shift VALUES(11, 61, false, false, false,false);
-INSERT INTO employee_shift VALUES(12, 61, false, false, false,false);
+INSERT INTO employee_shift VALUES(12, 61, false, TRUE, false,false);
 INSERT INTO employee_shift VALUES(23, 61, true, false, false,false);
 -- evening
-INSERT INTO employee_shift VALUES(5, 62, false, false, false,false);
-INSERT INTO employee_shift VALUES(8, 62, false, false, false,false);
+INSERT INTO employee_shift VALUES(5, 62, false, false, false, false);
+INSERT INTO employee_shift VALUES(8, 62, false, TRUE, false,false);
 INSERT INTO employee_shift VALUES(17, 62, true, false, false,false);
 -- night
-INSERT INTO employee_shift VALUES(3, 63, false, false, TRUE,false);
+INSERT INTO employee_shift VALUES(3, 63, false, false, TRUE, false);
 INSERT INTO employee_shift VALUES(14, 63, false, false, false,false);
 INSERT INTO employee_shift VALUES(24, 63, true, false, false,false);
-
 
 -- AVAILABILITY
 -- (user_id, shift_id)
@@ -588,50 +587,44 @@ INSERT INTO overtime VALUES(5, 60, 960,  60, FALSE);
 
 -- (0) SHIFT_CHANGE_EMPLOYEE
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Vakten du har satt deg tilgjengelig på søndag 05. februar (kveldsvakt) er tilgjengelig. Vennligst godta eller avslå vakt.', false, 0,    1,    41,    1,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Vakten du har satt deg tilgjengelig på søndag 05. februar (kveldsvakt) er tilgjengelig. Vennligst godta eller avslå vakt.', false, 0,    1,    41,    2,   -1);
--- "Vakten du har satt deg tilgjengelig på "dato" (dag/kveld/natt) er ledig. Vennligs godta eller avslå vakt.";
-
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36','Ledig kveldsvakt', false, 0,    1,    41,    1,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Ledig kveldsvakt', false, 0,    1,    41,    2,   -1);
+-- "Ledig (dag/natt/kvelds)vakt"
 
 -- (1) SHIFT_CHANGE_ADMIN
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen ønsker å bytte vakt mandag 30. februar (dagvakt)', false, 1,  26,  44,  1,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Mari Nilsen ønsker å bytte vakt mandag 30. februar (kveldsvakt)', false, 1,  26,  22, 10,   -1);
--- "... ønsker å bytte vakt "dato" (dag/kveld/natt)"
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen ønsker å bytte vakt', false, 1,  26,  44,  1,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Mari Nilsen ønsker å bytte vakt', false, 1,  26,  22, 10,   -1);
+-- "... ønsker å bytte vakt"
 
 
 -- (2) VALID_ABSENCE
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
--- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'content', false, 2,    26,    --,    --,   -1);
--- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'content', false, 2,    26,    --,    --,   -1);
--- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'content', false, 2,    26,    --,    --,   -1);
--- "... ønsker å søke fravær på skiftet sitt den..."
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Gunnar Persen har meldt fravær', false, 2,    26,    61,    12,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Finn Fransen har meldt fravær', false, 2,    26,    61,    8,   -1);
+-- "... har meldt fravær"
 
 
 -- (3) TIMEBANK
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Ditt timeavvik på vakten lørdag 28. februar er blitt godkjent av administrasjonen.', false,  4,  1,    16,    1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Ditt timeavvik på vakten torsdag 09. februar er blitt godkjent av administrasjonen.', false,  4,  3,   52,    3,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Ditt timeavvik på vakten onsdag 01. februar er blitt godkjent av administrasjonen.', false,  4,  4,    28,    4,   780);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert timeavvik på -80 minutter lørdag 04. februar', false,  3,  26,    37,    1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert timeavvik på -60 minutter lørdag 04. februar', false,  3,  26,    61,    4,   840);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert timeavvik på 60 minutter lørdag 04. februar', false,  3,  26,    60,    5,   960);
--- "Ditt timeavvik på vakten ... er blitt godkjent av administrasjonen."
--- ""Brukernavn" har registert timeavvik på "minutter" minutter "dato".";
-
-
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert timeavvik', false,  3,  26,    37,    1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert timeavvik', false,  3,  26,    61,    4,   840);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert timeavvik', false,  3,  26,    60,    5,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Overtid registrert: (1t 0min)', false,  4,  1,    16,    1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Overtid registrert: (35 min)',  false,  4,  3,    52,    3,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fravær registrert: (2t 0min)', false,  4,  4,    28,    4,   780);
+-- "Overtid/fravær registrert (xxt, xxmin)"
+-- "... har registert timeavvik (xxt, xxmin)"
 
 -- (4) NOTIFICATION
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
--- "Ditt vaktbytte den ... er godkjent av administrator!",
--- "Din vakt den ... er byttet bort til ..."
--- "Du har fått godkjent fravær på vakten din den ...",
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
+
 
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;

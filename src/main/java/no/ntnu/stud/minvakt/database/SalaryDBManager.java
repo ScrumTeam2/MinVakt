@@ -32,11 +32,12 @@ public class SalaryDBManager extends DBManager {
         }
 
         PreparedStatement statement = null;
+        ResultSet result = null;
         try {
             statement = getConnection().prepareStatement(sqlGetAllWorkHours);
             statement.setDate(1, Date.valueOf(LocalDate.now().with(TemporalAdjusters.firstDayOfMonth())));
             statement.setDate(2, Date.valueOf(LocalDate.now().with(TemporalAdjusters.lastDayOfMonth())));
-            ResultSet result = statement.executeQuery();
+            result = statement.executeQuery();
 
             while (result.next()) {
                 int userId = result.getInt("user_id");
@@ -51,7 +52,7 @@ public class SalaryDBManager extends DBManager {
             log.log(Level.SEVERE, "Failed to get work hours", e);
             return null;
         } finally {
-            finallyStatement(statement);
+            finallyStatement(result, statement);
         }
         return workHours;
     }

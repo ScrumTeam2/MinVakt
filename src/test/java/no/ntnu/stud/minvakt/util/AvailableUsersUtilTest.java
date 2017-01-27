@@ -34,8 +34,7 @@ public class AvailableUsersUtilTest {
         LocalDate localDate = LocalDate.parse("2017-02-06", formatter);
         ArrayList<UserBasicWorkHours> sortedUsers = aUU.sortAvailableEmployeesWithCategory(43, localDate, User.UserCategory.ASSISTANT, true);
         ArrayList<UserBasicWorkHours> sortedUsers2 = aUU.sortAvailableEmployeesWithCategory(43, localDate, User.UserCategory.HEALTH_WORKER, true);
-        //System.out.println(sortedUsers.toString());
-        //System.out.println(sortedUsers2.toString());
+
         int expResFirst = 4;
         Assert.assertEquals(expResFirst, sortedUsers.get(0).getId());
     }
@@ -44,7 +43,7 @@ public class AvailableUsersUtilTest {
     public void sortAvailableEmployees() throws Exception {
         LocalDate localDate = LocalDate.parse("2017-02-06", formatter);
         ArrayList<UserBasicWorkHours> sortedUsers = aUU.sortAvailableEmployees(43, localDate);
-        //System.out.println(sortedUsers.toString());
+
         int expResFirst = 7;
         Assert.assertEquals(expResFirst, sortedUsers.get(0).getId());
     }
