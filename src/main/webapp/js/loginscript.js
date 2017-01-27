@@ -53,7 +53,6 @@ $(document).ready(function(){
                 error: invalid
             });
         }
-        setTimeout(function() {$('#login').resetLoader("Logg inn");}, 500);
     });
 });
 
@@ -86,6 +85,7 @@ function errorHere(data){
 }
 
 function invalid(data){
+    setTimeout(function() {$('#login').resetLoader("Logg inn");}, 500);
     $('.feedback').show();
     console.log("Invalid", data);
 }
