@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.data;
 
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.logging.Level;
@@ -109,7 +111,7 @@ public class NewsFeedItem {
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.content = SanitizeUtil.filterInput(content);
     }
 
     public int getUserIdTo() {

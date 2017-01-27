@@ -122,7 +122,6 @@ public class Mail {
     }
 
     public static void sendMailConfirm() {
-        System.out.println("SENDING EMAIL");
         String email = "system.minvakt@gmail.com";
         String subject = "Subject MinVakt";
         String content = "TestEmail";

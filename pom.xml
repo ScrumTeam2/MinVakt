@@ -114,6 +114,16 @@
             <artifactId>slf4j-jdk14</artifactId>
             <version>1.7.22</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>8.5.9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.owasp-java-html-sanitizer</groupId>
+            <artifactId>owasp-java-html-sanitizer</artifactId>
+            <version>20160628.1</version>
+        </dependency>
     </dependencies>
 
     <build>

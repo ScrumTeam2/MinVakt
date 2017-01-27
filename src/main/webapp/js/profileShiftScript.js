@@ -47,8 +47,6 @@ function setDeptOptions() {
             calendarList.append("<p>" + data + "</p>");
         }
     });
-
-
 }
 function createAjaxForAllShifts(deptId) {
     var data;

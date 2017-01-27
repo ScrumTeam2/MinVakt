@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.util;
 
+import no.ntnu.stud.minvakt.data.Content;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.user.User;
@@ -21,10 +22,11 @@ public class AvailableUsersUtil {
     FormattingUtil format = new FormattingUtil();
     NewsFeedDBManager newsFeedDMB = new NewsFeedDBManager();
     UserDBManager userDBM = new UserDBManager();
+    Content content = new Content();
 
 
-
-    //Sorts available employees on a shift and returns a sortet list excluding employees with too many hours to work a new 8 hour shift
+    //Sorts available employees on a shift and returns a sortet list
+    // excluding employees with too many hours to work a new 8 hour shift
     public static ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, LocalDate date){
         AvailabilityDBManager availDBManager = new AvailabilityDBManager();
         OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
@@ -44,7 +46,7 @@ public class AvailableUsersUtil {
 
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {
-            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setOvertime(overtimeDBManager.getMinutesByDate(user.getId(), sqlFirstDay, sqlLastDay));
             user.setShiftMinutes(SHIFT_LENGTH_MINUTES * shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
             //If the user doesn't have too many work hours they are put in the new list
@@ -82,19 +84,18 @@ public class AvailableUsersUtil {
     //Finds available users for a shift and sends a notification to the qualified users
     public boolean sendNotificationOfShiftChange(Shift shift, User userFrom, Timestamp dateTime){
         User.UserCategory category = userFrom.getCategory();
-        ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(shift.getId(), shift.getDate().toLocalDate(), category, true);
+        ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(shift.getId(),
+                shift.getDate().toLocalDate(), category, true);
         boolean ok;
 
         //If user list is not empty, send notifications to employees on list
         if(!userList.isEmpty()){
             for(UserBasicWorkHours userTo : userList){
-                String content = "Vakten du har satt deg tilgjengelig på "+format.formatDate(shift.getDate())+" ("+format.formatShiftType(shift.getType())+") er ledig. Vennligs godta eller avslå vakt.";
 
-                NewsFeedItem notification = new NewsFeedItem(-1, dateTime, content, userTo.getId(), userFrom.getId(),
+                NewsFeedItem notification = new NewsFeedItem(-1, dateTime,
+                        content.employeeShiftChange(shift), userTo.getId(), userFrom.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
                 int status =  newsFeedDMB.createNotification(notification);
-
-                //System.out.println("Notification sent to user");
 
                 if (status ==0){
                     System.out.println("could not make notification for user "+userTo.getId());
@@ -104,17 +105,15 @@ public class AvailableUsersUtil {
         }
         //if user list is empty, send notification to administrator
         else{
-            String content = userFrom.getFirstName()+" "+userFrom.getLastName()+" ønsker å bytte vakt "+format.formatDate(shift.getDate())+" ("+format.formatShiftType(shift.getType())+").";
             int adminId = userDBM.getAdminId();
             if(adminId == 0) {
                 System.out.println("Could not find admin user");
                 return false;
             }
-            NewsFeedItem notification = new NewsFeedItem(-1, dateTime, content, adminId,userFrom.getId(),
+            NewsFeedItem notification = new NewsFeedItem(-1, dateTime,
+                    content.shiftChangeAdmin(userFrom), adminId,userFrom.getId(),
                     shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
             int status =  newsFeedDMB.createNotification(notification);
-
-            //System.out.println("Notification sent to admin");
 
             if (status ==0){
                 System.out.println("Could not make notification to administrator");
@@ -140,7 +139,7 @@ public class AvailableUsersUtil {
 //
 //        for (UserBasicWorkHours user : userList) {
 //
-//            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+//            user.setOvertime(overtimeDBManager.getMinutesByDate(user.getId(), sqlFirstDay, sqlLastDay));
 //            user.setShiftMinutes(SHIFT_LENGTH_MINUTES*shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
 //            user.calculateTotalWorkHours();
 //        }

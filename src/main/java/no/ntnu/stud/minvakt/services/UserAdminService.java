@@ -29,8 +29,7 @@ public class UserAdminService extends SecureService {
     @Path("/createuser")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user) {
-        Session session = getSession();
-        if(!session.isAdmin()) {
+        if(!getSession().isAdmin()) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
 
@@ -104,8 +103,7 @@ public class UserAdminService extends SecureService {
     @Path("/deleteuser/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Boolean deleteUser(@PathParam("userId") int userId) {
-        Session session = getSession();
-        if(!session.isAdmin()) {
+        if(!getSession().isAdmin()) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
 
