@@ -12,7 +12,7 @@ $(document).ready(function () {
         if(!$username.val()) {
             $username.addClass("error");
             emptyField = true;
-            $('#resetpass').resetLoader("Få nytt passord");
+            $('#resetpass').text("Få nytt passord");
         }
 
         if(!emptyField){
@@ -29,15 +29,8 @@ $(document).ready(function () {
     });
 });
 
-//function to reset the loading button animation
-$.fn.resetLoader = function(buttonText){
-    $('.typing_loader').remove();
-    $(this).html(`<div class="submit"></div>`);
-    $(this).text(buttonText);
-}
-
 function passwordResetSuccess(data) {
-    $('#resetpass').resetLoader("Få nytt passord");
+    $('#resetpass').text("Få nytt passord");
 
     $("#popup-title").text("Suksess");
     $("#popup-message").text("Nytt passord er blitt sent til din mail. Trykk for å gå til login.");
@@ -55,7 +48,8 @@ function passwordResetSuccess(data) {
 }
 
 function passwordResetFailure(data) {
-    $('#resetpass').resetLoader("Få nytt passord");
+    // Reset loading animation
+    $('#resetpass').text("Få nytt passord");
 
     //417 = Expectation failed
     if(data.status == 417) {

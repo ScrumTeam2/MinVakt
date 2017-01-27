@@ -15,7 +15,11 @@
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
+    <listener>
+        <listener-class>
+            no.ntnu.stud.minvakt.controller.salary.SalaryServletContextListener
+        </listener-class>
+    </listener>
     <servlet-mapping>
         <servlet-name>jersey-serlvet</servlet-name>
         <url-pattern>/rest/*</url-pattern>
