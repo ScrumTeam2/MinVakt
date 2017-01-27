@@ -25,7 +25,9 @@ public class UserDBManager extends DBManager {
     private final String sqlGetUsers = "SELECT * FROM user;";
     private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
     private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?);";
-    private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
+    private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =?, category=?, percentage_work=?, dept_id=? WHERE user_id =?;";
+    private final String sqlChangeUserInfoSimple = "UPDATE user SET email =?, phonenumber =? WHERE user_id =?;";
+
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
     private final String sqlGetUserBasicsWithCategory = "SELECT user_id, first_name, last_name, category FROM user WHERE category = ? " +
@@ -479,7 +481,9 @@ public class UserDBManager extends DBManager {
                 prep.setString(2, user.getLastName());
                 prep.setString(3, user.getEmail());
                 prep.setString(4, user.getPhoneNumber());
-                // prep.setInt(5, user.getCategory());
+                prep.setInt(5, user.getCategory().getValue());
+                prep.setFloat(6, user.getWorkPercentage());
+                prep.setInt(7, user.getDeptId());
                 change = prep.executeUpdate();
             } catch (Exception e) {
                 System.out.println("Error at changeUserInfo()");
@@ -492,6 +496,29 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
+    public int changeUserInfoSimple(String email, String phone, int userId) {
+        int change = -1;
+        if(setUp()) {
+            try {
+                startTransaction();
+                conn = getConnection();
+                //conn.setAutoCommit(false);
+                prep = conn.prepareStatement(sqlChangeUserInfoSimple);
+                prep.setString(1, email);
+                prep.setString(2, phone);
+                prep.setInt(3, userId);
+
+                change = prep.executeUpdate();
+            } catch (Exception e) {
+                System.out.println("Error at changeUserInfoSimple()");
+                e.printStackTrace();
+            } finally {
+                endTransaction();
+                finallyStatement(res,prep);
+            }
+        }
+        return change;
+    }
 
     public ArrayList<UserBasicList> getUserBasics() {
         ArrayList<UserBasicList> userBasics = new ArrayList<>();

@@ -1,9 +1,11 @@
 package no.ntnu.stud.minvakt.services;
 import no.ntnu.stud.minvakt.controller.email.ForgotPass;
+import no.ntnu.stud.minvakt.data.Session;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -11,6 +13,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 /**
  * Created by evend on 1/10/2017.
@@ -69,6 +72,35 @@ public class UserService extends SecureService{
         }
         else{
             return Response.ok().entity("Mail with new password sent!").build();
+        }
+    }
+
+    @POST
+    @Path("/edituser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editUser(@QueryParam("email") String email, @QueryParam("phone") String phoneNumber) {
+        Session session = getSession();
+        if(getSession() == null) return null;
+
+        // Verify user data
+        // Check that identifiers doesn't already exist
+        if(userDB.isPhoneNumberTaken(phoneNumber)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorInfo("Telefonnummeret er allerede i bruk")).build();
+        }
+
+        if(userDB.isEmailTaken(email)) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorInfo("E-posten er allerede i bruk")).build();
+        }
+
+        // Insert into database
+        int userInfo = userDB.changeUserInfoSimple(email,phoneNumber,getSession().getUser().getId());
+        if(userInfo>-1) {
+            //String json = "{\"Success. id\": \"" + email +  "\"}";
+            String json = "{\"Success change. \": \"" + email + "\", \"phone\":\"" + phoneNumber+"\"}";
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
+        } else {
+            log.log(Level.WARNING, "Failed to edit user: " + getSession().getUser().getId());
+            return Response.serverError().build();
         }
     }
     @GET
