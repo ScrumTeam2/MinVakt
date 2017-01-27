@@ -25,6 +25,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
@@ -241,6 +243,12 @@ public class ShiftService extends SecureService{
 
         /*Escape all displayed output in client*/
         Shift shift = shiftDB.getShift(shiftId);
+
+        // Check if shift starts within 2 hours
+        if(LocalDateTime.now().until(shift.getStartTime(), ChronoUnit.HOURS) < 2) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Fristen for å melde sykdom har gått ut.").build();
+        }
+
         String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt "+
                 shift.getDate() + ".";
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
