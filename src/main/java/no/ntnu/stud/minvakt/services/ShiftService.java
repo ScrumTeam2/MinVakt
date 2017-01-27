@@ -25,6 +25,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 /**
@@ -249,6 +251,11 @@ public class ShiftService extends SecureService{
         User user = getSession().getUser();
         Shift shift = shiftDB.getShift(shiftId);
 
+        // Check if shift starts within 2 hours
+        if(LocalDateTime.now().until(shift.getStartTime(), ChronoUnit.HOURS) < 2) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Fristen for å melde sykdom har gått ut.").build();
+        }
+      
         // Check if the user actually is on this shift
         if(!shift.getShiftUsers().stream().anyMatch(u -> u.getUserId() == user.getId())) {
             throw new BadRequestException("Invalid shift ID");

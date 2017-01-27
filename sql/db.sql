@@ -610,9 +610,9 @@ INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Mari Nilsen ønske
 
 -- (3) TIMEBANK
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Ditt timeavvik på vakten lørdag 28. februar er blitt godkjent av administrasjonen.', false,  3,  1,    16,    1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Ditt timeavvik på vakten torsdag 09. februar er blitt godkjent av administrasjonen.', false,  3,  3,   52,    3,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Ditt timeavvik på vakten onsdag 01. februar er blitt godkjent av administrasjonen.', false,  3,  4,    28,    4,   780);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Ditt timeavvik på vakten lørdag 28. februar er blitt godkjent av administrasjonen.', false,  4,  1,    16,    1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Ditt timeavvik på vakten torsdag 09. februar er blitt godkjent av administrasjonen.', false,  4,  3,   52,    3,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Ditt timeavvik på vakten onsdag 01. februar er blitt godkjent av administrasjonen.', false,  4,  4,    28,    4,   780);
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert timeavvik på -80 minutter lørdag 04. februar', false,  3,  26,    37,    1,   960);
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert timeavvik på -60 minutter lørdag 04. februar', false,  3,  26,    61,    4,   840);
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert timeavvik på 60 minutter lørdag 04. februar', false,  3,  26,    60,    5,   960);

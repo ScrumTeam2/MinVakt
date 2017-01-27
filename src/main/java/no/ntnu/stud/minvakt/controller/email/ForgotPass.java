@@ -22,7 +22,7 @@ public class ForgotPass {
         String[] saltHash = enc.passEncoding(newPass);
         if(userDB.setNewPassword(userId, saltHash)){
             if(Mail.sendMail(email,"Glemt passord for MinVakt", "Her er ditt nye passord for MinVakt, husk å endre det så for som mulig." +
-                    "\n Passord: "+newPass) == 1){
+                    "\n Passord: "+newPass)){
                 return 1;
             }
             else return 0;

@@ -312,7 +312,10 @@ public class UserDBManager extends DBManager {
                     u.setEmail(res.getString("email"));
                     u.setPhoneNumber(res.getString("phonenumber"));
                     u.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    u.setWorkPercentage(res.getFloat("percentage_work"));
+                    u.setDeptId(res.getInt("dept_id"));
                     user = u;
+                    System.out.println(user);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
