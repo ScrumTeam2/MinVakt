@@ -33,7 +33,7 @@ public class OvertimeDBManagerTest {
     @Test
     public void getOvertimeByUserId(){
         int userId = 3;
-        ArrayList<Overtime> res = overtimeDB.getOvertimeByUserId(userId);
+        ArrayList<Overtime> res = overtimeDB.getOvertimeListByUserId(userId);
         Overtime[] expRes = {new Overtime(3, 52, 960, 35, true)};
 
         for(int i = 0; i < res.size(); i++){

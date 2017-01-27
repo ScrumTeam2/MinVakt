@@ -9,9 +9,6 @@ import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.util.FormattingUtil;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
@@ -52,8 +49,6 @@ public class OvertimeService extends SecureService{
         }
 
         boolean isRegistered = overtimeDBM.setOvertime(user.getId(), overtime.getShiftId(), overtime.getStartTime(), overtime.getMinutes());
-        ShiftDBManager shiftDBM = new ShiftDBManager();
-        Shift shift = shiftDBM.getShift(overtime.getShiftId());
 
         if(isRegistered) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -78,16 +73,27 @@ public class OvertimeService extends SecureService{
     }
 
     //GET fetch overtime for user (used by employee-user)
-    //getOvertimeByUserId(int userId) returns Overtime[]
+    //getOvertimeListByUserId(int userId) returns Overtime[]
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOvertimeByUserId() {
         int userId = getSession().getUser().getId();
 
-        ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByUserId(userId);
+        ArrayList<Overtime> overtime = overtimeDBM.getOvertimeListByUserId(userId);
         GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
         return Response.ok(entity).build();
     }
+
+    @GET
+    @Path("/shiftId/{shiftId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getOvertimeByShiftId(@PathParam("shiftId") int shiftId, @QueryParam("userId") int userId) {
+        ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByShift(userId, shiftId);
+
+        GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
+        return Response.ok(entity).build();
+    }
+
 
     @DELETE
     @Path("/{userId}")
