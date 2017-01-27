@@ -59,7 +59,7 @@ function performSave(e) {
 }
 
 function showShiftInfo(data) {
-    console.log(data);
+    var employeesPerCategory = { "ADMIN": 0, "ASSISTANT": 0, "HEALTH_WORKER": 0, "NURSE": 0 };
 
     var output = `<div class="container-title">
                 <h3>${convertDate(data.date)} - ${shiftTypes[data.type]}</h3>
@@ -75,6 +75,7 @@ function showShiftInfo(data) {
     while(counter < data.staffNumb) {
         if (counter < data.shiftUsers.length) {
             var user = data.shiftUsers[counter];
+            employeesPerCategory[user.userCategory] += 1;
             output += `<div class="watch">
                     <div class="watch-info">
                         <p class="lead">${user.userName}</p>
@@ -96,6 +97,7 @@ function showShiftInfo(data) {
         }
         counter++;
     }
+    console.log(employeesPerCategory);
 
     $list.html(output);
 
@@ -110,6 +112,7 @@ function showShiftInfo(data) {
             }
         });
     });
+    setCategoryPercentageText(data.shiftUsers, employeesPerCategory);
 }
 
 function initPopup() {
@@ -126,4 +129,12 @@ function initPopup() {
     $('#userCloseBtn').click(function() {
         $popup.hide();
     });
+}
+
+function setCategoryPercentageText(shiftUsers, employeesPerCategory) {
+    var percentNurses = parseFloat(employeesPerCategory["NURSE"]) / shiftUsers.length * 100;
+    var percentHealthWorkers = parseFloat(employeesPerCategory["HEALTH_WORKER"]) / shiftUsers.length * 100;
+    var percentAssistants = parseFloat(employeesPerCategory["ASSISTANT"]) / shiftUsers.length * 100;
+    $("#percentageText").text(`
+    Det er ${percentNurses.toFixed()}% sykepleiere, ${percentHealthWorkers.toFixed()}% helsefagarbeidere og ${percentAssistants.toFixed()}% assistenter på denne vakten.`);
 }
