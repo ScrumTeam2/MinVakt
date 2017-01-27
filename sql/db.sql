@@ -588,8 +588,8 @@ INSERT INTO overtime VALUES(5, 60, 960,  60, FALSE);
 
 -- (0) SHIFT_CHANGE_EMPLOYEE
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Vakten du har satt deg tilgjengelig på søndag 05. februar (kveldsvakt) er tilgjengelig. Vennligst godta eller avslå vakt.', false, 0,    1,    41,    1,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Vakten du har satt deg tilgjengelig på søndag 05. februar (kveldsvakt) er tilgjengelig. Vennligst godta eller avslå vakt.', false, 0,    1,    41,    2,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36','Ledig kveldsvakt', false, 0,    1,    41,    1,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Ledig kveldsvakt', false, 0,    1,    41,    2,   -1);
 -- "Vakten du har satt deg tilgjengelig på "dato" (dag/kveld/natt) er ledig. Vennligs godta eller avslå vakt.";
 
 
