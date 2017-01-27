@@ -113,7 +113,7 @@ function addShiftInfoHtml (element, shiftId, data) {
             if(user.userId == sessionStorage.SessionId) {
                 iAmOnShift = true;
             }
-            switch (user.valid_absence2) {
+            switch (user.valid_absence) {
                 case 1:
                     absence = 1;
                     break;
@@ -140,21 +140,28 @@ function addShiftInfoHtml (element, shiftId, data) {
     // Add shift change button + illness button
     if(iAmOnShift) {
         if(absence == 1 || absenceIds.indexOf(shiftId)>-1) {
-            html +=
-                /*'<div class="button-group"><button type="submit" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Du har registrert sykdom</button></div>';
-                */
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
-                '<button class="btn-secondary" disabled>Du har registrert sykdom</button>';
-                
+            if(shiftChange == true) {            
+                html+='<div class="button-group"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></div>';
+
+            } else {
+                html+='<div class="button-group"><div class="dialogboks" id="absence-sick"><h3>Du har registrert sykdom</h3></div></div>';
+
+            }
         } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
-            html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
-                '<div class="dialogboks"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
+            if(shiftChange == true) {  
+                html+='<div class="button-group"><div class="dialogboks" id="absence-sick"><h3>Du har registrert sykdom</h3></div></div>';
+            } else {
+                html+='<div class="dialogboks" id="absence"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
+            }
         }else {
-            html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
-                '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
-                '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
+            if(shiftChange == true) {  
+                html+='<div class="button-group"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></div>';
+          } else {
+                html +=
+                    '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
+                    '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
+                    '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
+            }
         }
     }
 
@@ -201,23 +208,28 @@ function poopStatus(status, that) {
             url: "../rest/shift/user/valid_absence/" + shiftId,
             type: 'GET',
             dataType: 'json',
-            success: successRegisterIllness,
+            success: function(data) {
+                absenceIds.push(shiftId);
+                $(prevDiv).parent().replaceWith('<div class="dialogboks" id="absence-sick"><h3>Du har registrert sykdom</h3></div>');
+            },
             error: function(data) {
-                console.log(data)
+                if(data.responseText == "Fristen for å melde sykdom har gått ut.") {
+                    $('.dialogboks').html("<h3>Fristen for å registrere sykdom for denne datoen er gått ut</h3>");
+                    $("#popup").show();
+                } else {
+                     absenceIds.push(shiftId);
+                     $(prevDiv).parent().replaceWith('<div class="dialogboks" id="absence-sick"><h3>Du har registrert sykdom</h3></div>');
+                }
             }
         });
         $("#registerIllnessPopup").fadeOut();
-        absenceIds.push(shiftId);
-        $(prevDiv).parent().replaceWith('<div class="dialogboks"><h3>Du har registrert sykdom</h3></div>');
     } else {
         $("#registerIllnessPopup").fadeOut();
     }
 }
 
-function successRegisterIllness(data) {
-    console.log('success register illness');
-    console.log(data.responseText);
-    //Popup
+function closePopup() {
+    $("#popup").fadeOut();
 }
 
 function reqChangeShift(that) {

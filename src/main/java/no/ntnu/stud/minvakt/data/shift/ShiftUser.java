@@ -79,9 +79,6 @@ public class ShiftUser {
         return false;
     }
 
-    public int getValidAbsence() {
-        return valid_absence;
-    }
     public int getValid_absence() {
         return valid_absence;
     }
