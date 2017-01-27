@@ -231,5 +231,30 @@ public class NewsFeedDBManager extends DBManager{
         }
         return resolvedCount;
     }
+
+    private static final String sqlUserHasFeed = "SELECT 1 FROM newsfeed WHERE user_id = ? AND feed_id = ?";
+
+    /**
+     * Checks if an user has access to a specified feed item
+     * @param userId The ID of the user
+     * @param feedId The ID of the feed item
+     * @return True if the user has access
+     */
+    public boolean userHasFeed(int userId, int feedId) {
+        if(!setUp()) {
+            return false;
+        }
+
+        try {
+            conn = getConnection();
+            prep = conn.prepareStatement(sqlUserHasFeed);
+            prep.setInt(1, userId);
+            prep.setInt(2, feedId);
+            return prep.executeQuery().next();
+        } catch (SQLException e) {
+            log.log(Level.WARNING, "Unable to check if user " + userId + " has feed " + feedId, e);
+        }
+        return false;
+    }
 }
 

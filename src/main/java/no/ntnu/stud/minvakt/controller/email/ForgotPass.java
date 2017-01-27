@@ -11,6 +11,11 @@ import no.ntnu.stud.minvakt.database.UserDBManager;
 public class ForgotPass {
     private static Encryption enc = new Encryption();
     private static UserDBManager userDB = new UserDBManager();
+
+    /**
+     * @param email
+     * @return 1 = Everything succeeded, 0 = mail failed, -1 = nothing succeeded
+     */
     public static int sendEmailWithNewPass(String email){
         int userId = userDB.getUserIdFromMail(email);
         String newPass = GeneratePassword.generateRandomPass();
