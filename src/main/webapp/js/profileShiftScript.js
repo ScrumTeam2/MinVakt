@@ -145,18 +145,18 @@ function addShiftInfoHtml (element, shiftId, data) {
             html +=
                 /*'<div class="button-group"><button type="submit" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Du har registrert sykdom</button></div>';
                 */
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift();" id="regByttVakt">Bytt vakt</button>' +
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
                 '<button class="btn-secondary" disabled>Du har registrert sykdom</button>';
                 
         } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
             html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift();" id="regByttVakt">Bytt vakt</button>' +
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
                 '<div class="dialogboks"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
         }else {
             html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift();" id="regByttVakt">Bytt vakt</button>' +
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
                 '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
-                '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime();" id="regOvertime">Registrer overtid</button></div>';
+                '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
         }
     }
 
@@ -170,6 +170,7 @@ var reqPrevDiv;
 function registerIllness(that) {
     var shiftId = $(that).attr('data-id');
     shiftIllness = shiftId;
+    console.log('register illness');
     prevDiv = that;
     var date = $(that).attr('data-date');
     var staff = $(that).attr('data-staff');
@@ -190,6 +191,8 @@ function regOvertime(that) {
     var shiftId = $(that).attr("data-id");
     var date = $(that).attr("data-date");
     var type = $(that).attr("data-time");
+    console.log(that);
+    console.log($(that).attr("data-time"));
     url = "register-overtime.html?shiftId="+shiftId+"&date="+date+"&type="+type;
     window.location = url;
 }

@@ -44,6 +44,9 @@ public class ShiftDBManager extends DBManager {
     private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
             "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 AND dept_id = ? GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
+    private final String sqlGetShiftsNoDept = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
+            "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
+            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ? AND removed = 0";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
     private final String sqlGetUserFromShift = "SELECT * FROM employee_shift NATURAL JOIN user WHERE shift_id = ? AND user_id = ?";
@@ -469,6 +472,54 @@ public class ShiftDBManager extends DBManager {
                 prep.setDate(2, date);
                 prep.setInt(3, daysForward);
                 prep.setInt(4,deptId);
+                startTransaction();
+                res = prep.executeQuery();
+                boolean isInShift = false;
+                while(res.next()){
+                    isInShift = false;
+                    int shiftId = res.getInt("shift_id");
+                    prep = conn.prepareStatement(sqlGetShiftsIsUser);
+                    prep.setInt(1,userId);
+                    prep.setInt(2, shiftId);
+                    res2 = prep.executeQuery();
+                    if(res2.next()){
+                        isInShift = true;
+                    }
+                    boolean isAvailable = res.getInt("staff_number") != res.getInt("current_staff_numb");
+
+                    ShiftUserAvailability obj = new ShiftUserAvailability(
+                            shiftId, res.getDate("date"),
+                            Shift.ShiftType.valueOf(res.getInt("time")), isAvailable,
+                            isInShift
+                    );
+                    out.add(obj);
+
+                }
+
+            }
+            catch (SQLException sqle){
+                log.log(Level.WARNING, "Error getting shifts with connected to availability and user", sqle);
+            }
+            finally {
+                endTransaction();
+                finallyStatement(res, prep);
+                finallyStatement(res2, prep);
+            }
+        }
+        return out;
+    }
+
+    public ArrayList<ShiftUserAvailability> getShiftsNoDept(int daysForward, int userId, Date date){
+        ArrayList<ShiftUserAvailability> out = new ArrayList<>();
+        if (setUp()){
+            ResultSet res = null;
+            ResultSet res2 = null;
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetShiftsNoDept);
+                prep.setDate(1, date);
+                prep.setDate(2, date);
+                prep.setInt(3, daysForward);
                 startTransaction();
                 res = prep.executeQuery();
                 boolean isInShift = false;
