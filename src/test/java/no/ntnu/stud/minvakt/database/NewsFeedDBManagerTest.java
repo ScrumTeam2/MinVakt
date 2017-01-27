@@ -69,4 +69,14 @@ public class NewsFeedDBManagerTest {
         int countUnRes = newsFeedDB.getShiftChangeCountPending(22, 1);
         Assert.assertEquals(0, countUnRes);
     }
+
+    @Test
+    public void userHasFeed() throws Exception {
+        final int userId = 1;
+        final int validFeedId = 1;
+        final int invalidFeedId = 0;
+
+        Assert.assertTrue(newsFeedDB.userHasFeed(userId, validFeedId));
+        Assert.assertFalse(newsFeedDB.userHasFeed(userId, invalidFeedId));
+    }
 }

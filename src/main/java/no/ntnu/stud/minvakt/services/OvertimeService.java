@@ -87,10 +87,11 @@ public class OvertimeService extends SecureService{
         return Response.ok(entity).build();
     }
 
-    @DELETE
-    @Path("/{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteOvertime(@PathParam("userId") int userId, @QueryParam("shiftId") int shiftId, @QueryParam("startTime") int startTime) {
+    // Not actually used by client (only tests), disable annotations
+    //@DELETE
+    //@Path("/{userId}")
+    //@Produces(MediaType.APPLICATION_JSON)
+    public Response deleteOvertime(/*@PathParam("userId")*/ int userId, /*@QueryParam("shiftId")*/ int shiftId, /*@QueryParam("startTime")*/ int startTime) {
 
         int feedId = newsfeedDBM.getNewsFeedIdThroughOvertime(userId, shiftId, startTime);
         if(feedId<1){
