@@ -247,5 +247,5 @@ function convertDate(dateInput){
 }
 
 function addNameToTop() {
-    $("#more_icon").prepend(sessionStorage.firstName + " " + sessionStorage.lastName);
+    $("#more_icon").prepend("<span>" + sessionStorage.firstName + " " + sessionStorage.lastName + "</span>");
 }

@@ -36,7 +36,6 @@ header h1 {
   font-weight: normal;
   font-size: 1.25rem;
   flex: 1 1 20%;
-    text-align: center;
 }
 
 header a {
@@ -52,6 +51,15 @@ header a {
 header a:last-child {
     justify-content: flex-end;
 }
+
+header h1 a:last-child {
+    color: #ffffff;
+    text-align: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
 
 .container {
   padding: 0 1rem;
@@ -106,7 +114,7 @@ header a:last-child {
   -webkit-box-align: end;
       -ms-flex-align: end;
           align-items: flex-end;
-  //height: 3rem;
+  min-height: 4rem;
   padding: .5rem 0;
 }
 
@@ -170,6 +178,12 @@ select {
   font-size: 2rem;
   font-family: 'Material Icons';
   pointer-events: none;
+}
+
+.container-header .register-form {
+    -ms-flex-preferred-size: 50%;
+    flex-basis: 50%;
+    margin-bottom: -5px;
 }
 
 input:focus, input[required]:valid {
@@ -531,6 +545,13 @@ button:disabled {
     align-items: center;
 }
 
+.feed-messages .watch {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+}
+
 .lead {
     margin: 0;
     font-weight: normal;
@@ -570,7 +591,7 @@ button:disabled {
     tarnsition: all .2s ease-in-out;
 }
 
-.more-info[loaded="true"] {
+.more-info[loaded="true"], .more-info.loaded {
     //box-shadow: 0 -.5px 0 0 #000000;
     padding: 0 1rem .5rem;
     opacity: 1;
@@ -959,22 +980,6 @@ text-align: center;
     }
 }
 
-@media(min-width: 750px) {
-    header h1 {
-       width: 696px;
-        text-align: center;
-    }
-
-    header a:first-child {
-        margin-left: auto;
-    }
-
-    header a:last-child {
-        margin-right: auto;
-    }
-
-}
-
 
 /* SPINNER */
 .typing_loader {
@@ -1008,4 +1013,26 @@ text-align: center;
 #staffForm {
     margin-bottom: 2.5rem;
     display: none;
+}
+
+@media (min-width: 750px) {
+    header h1 {
+        width: 696px;
+        text-align: center;
+    }
+
+    header a:first-child {
+        margin-left: auto;
+    }
+
+    header a:last-child {
+        margin-right: auto;
+    }
+
+}
+
+@media (max-width: 450px) {
+    header a span {
+        display: none;
+    }
 }
