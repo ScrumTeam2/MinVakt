@@ -39,6 +39,7 @@ $(document).ready(function() {
             //console.log(data[i].userBasics);
             userListElement.append(html);
             //console.log("index = "+i);
+            var category = sessionStorage.getItem("SessionIdCat");
             for(j = 0; j < data[i].userBasics.length;j++) {
                 data[i].userBasics[j]["orderCharacter"] = data[i].orderCharacter;
                 users.push(data[i].userBasics[j]);
@@ -51,8 +52,8 @@ $(document).ready(function() {
                     "<p class='lead'>" + name + "</p>" +
                     "<p class='sub'>" + shiftTypes[user.category] + "</p>" +
                     "</div>";
-                if (sessionStorage.getItem("SessionIdCat") == 'ADMIN') {
-                    html += "<div><a href='/edit-user.html?userId=" + user.id + "' class='link'>Endre</a></div>"
+                if (category == 'ADMIN') {
+                    html += "<div><a href='/edit-user.html?userId=" + user.id + "' class='link'>Endre</a></div>";
                 }
                 html += "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";
