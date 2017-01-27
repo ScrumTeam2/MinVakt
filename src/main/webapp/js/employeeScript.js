@@ -51,7 +51,8 @@ $(document).ready(function() {
                             "<p class='lead'>"+name+"</p>" +
                             "<p class='sub'>" +shiftTypes[user.category]+ "</p>" +
                         "</div>" +
-                        "<div class='user-data more-info' data-hasInfo='0'></div>" +
+                        "<div><a href='/edit-user.html?userId="+user.id+"' class='link'>Endre</a></div>" +
+                    "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";
                 userListElement.append(html);
                 //console.log("index = "+i+" J = "+j+"Userbasics"+data[i].userBasics.length);
@@ -80,9 +81,10 @@ $(document).ready(function() {
                     "<i class='material-icons'>panorama_fish_eye</i>" +
                     "<i class='material-icons'>phone</i></i>"
                 + user.phoneNumber + "</p>" +
-                "<p class='more-info__text'>100% stilling</p>";
+                "<p class='more-info__text'>"+(user.workPercentage*100)+"% stilling</p>";
             //console.log(html);
             userDataElement.append(html);
+            console.log(user.workPercentage*100);
         }
         else {
             userDataElement.slideToggle(200);
