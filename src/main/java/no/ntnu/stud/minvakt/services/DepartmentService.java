@@ -1,13 +1,11 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Department;
+import no.ntnu.stud.minvakt.data.department.Department;
+import no.ntnu.stud.minvakt.data.department.DepartmentUser;
 import no.ntnu.stud.minvakt.database.DepartmentDBManager;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -33,7 +31,8 @@ public class DepartmentService extends SecureService{
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Department> getDepartments(){
-        return deptDB.getDepartments();
+    @Path("/withData")
+    public ArrayList<DepartmentUser> getDepartments(){
+        return deptDB.getDepartmentsWithData(getSession().getUser().getId());
     }
 }

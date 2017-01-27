@@ -73,7 +73,6 @@ $('#logout').on("click", function(e){
     logOut();
 });
 
-
 function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
@@ -155,7 +154,8 @@ var employeelinks = [
     "/html/resetpassword.html",
     "/html/index.html",
     "/html/messages-e.html",
-    "/html/change-password.html"
+    "/html/change-password.html",
+    "/html/register-overtime.html"
 ];
 
 function adminAccess(){

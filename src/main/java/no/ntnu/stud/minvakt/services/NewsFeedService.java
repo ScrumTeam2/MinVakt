@@ -36,6 +36,7 @@ public class NewsFeedService extends SecureService{
     @Path("/{feedId}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true") @FormParam("accepted") boolean accepted){
+
         boolean isUpdated = ShiftChangeUtil.updateNotification(feedId, accepted);
         if(isUpdated){
             return Response.status(Response.Status.OK).build();

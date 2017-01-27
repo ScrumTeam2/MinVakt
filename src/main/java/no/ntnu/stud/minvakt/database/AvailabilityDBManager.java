@@ -33,6 +33,7 @@ public class AvailabilityDBManager extends DBManager{
     }
 
 
+    /*TODO delete if not used
     // Find available staff for a given shift, returns arraylist with userIDs
     public ArrayList<Integer> getAvailability(int shiftID){
         ArrayList<Integer> userList = new ArrayList<>();
@@ -61,7 +62,9 @@ public class AvailabilityDBManager extends DBManager{
         }
         return userList;
     }
+    */
 
+    /* TODO: delete if not used
     // Find available staff for a given shift, returns arraylist with userIDs
     public ArrayList<Integer> getAvailabilityForUser2(int userId){
         ArrayList<Integer> userList = new ArrayList<>();
@@ -89,6 +92,7 @@ public class AvailabilityDBManager extends DBManager{
         }
         return userList;
     }
+    */
 
     public UserAvailableShifts getAvailabilityForUser(int userId){
         ArrayList<Integer> shiftList = new ArrayList<>();
@@ -250,6 +254,7 @@ public class AvailabilityDBManager extends DBManager{
         return out;
     }
 
+    /*TODO delete if not used
     // Find all available shifts for a specific date
     @Deprecated
     public ArrayList<ShiftAvailable> getAvailabilityForDate(String day){
@@ -283,5 +288,6 @@ public class AvailabilityDBManager extends DBManager{
         }
         return out;
     }
+    */
 
 }

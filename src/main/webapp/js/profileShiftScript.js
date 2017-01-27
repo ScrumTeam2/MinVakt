@@ -11,27 +11,34 @@ function setDeptOptions() {
     var html;
     $.ajax({
         //     url: "rest/shift/user/"+userId,
-        url: "../rest/department",
+        url: "../rest/department/withData",
         type: 'GET',
         dataType: 'json',
-        data: {"withData": true},
         success: function (data) {
             var $dropdown = $("#dept-options");
             $.each(data, function (index, dept) {
-                if(dept.deptId == sessionStorage.getItem("SessionIdDept")) {
-                    $dropdown.append("<option selected name='category' id = '"+dept.deptId+"' value='" + dept.deptId + "'>" + dept.name +
+                console.log(sessionStorage.getItem("SessionIdDept"));
+                if(dept.id == sessionStorage.getItem("SessionIdDept")) {
+                    $dropdown.append("<option selected name='category' class='dept-category' id = '"+dept.id+"' value='" + dept.id + "'>" + dept.name +
                         "</option>");
                 }
                 else{
-                    $dropdown.append("<option name='category' id = '"+dept.deptId+"' value='" + dept.deptId + "'>" + dept.name +
+                    $dropdown.append("<option name='category' data-id = '"+dept.id+"' class='dept-category' id = 'dept"+dept.id+"' value='" + dept.id + "'>" + dept.name +
                         "</option>");
                 }
                 if(dept.hasAvailable){
-                    $dropdown.children("#"+dept.deptId).append("<span class='circle green'></span>'")
+                    $dropdown.children("#dept"+dept.id).append("<span class='circle green'></span>")
                 }
                 if(dept.hasUser){
-                    $dropdown.children("#"+dept.deptId).append("<span class='circle blue'></span>")
+                    $dropdown.children("#dept"+dept.id).append("<span class='circle blue'></span>")
                 }
+            });
+            $dropdown.change(function (e) {
+                console.log($(e));
+                var $selected = $("select option:selected" );
+                console.log("Value:", $selected.attr("data-id"));
+                e.preventDefault();
+                createAjaxForAllShifts($selected.attr("data-id"))
             })
         },
         error: function (data) {
@@ -43,11 +50,20 @@ function setDeptOptions() {
 
 
 }
-function createAjaxForAllShifts() {
+function createAjaxForAllShifts(deptId) {
+    var data;
+    console.log(deptId);
+    if(!deptId || deptId < 1){
+        data = {daysForward: 7}
+    }
+    else {
+        data = {daysForward: 7, "deptId" : deptId}
+    }
+    console.log(data);
     $.ajax({
         //     url: "rest/shift/user/"+userId,
         url: "../rest/shift",
-        data: {daysForward : 7}, //TODO: edit to 7?
+        data: data, //TODO: edit to 7?
         type: 'GET',
         dataType: 'json',
         success: createAllShiftsHtml,
@@ -57,6 +73,7 @@ function createAjaxForAllShifts() {
             calendarList.append("<p>" + data + "</p>");
         }
     });
+
 }
 //});
 var absenceIds = [];
@@ -74,7 +91,6 @@ function addShiftInfoHtml (element, shiftId, data) {
     var removed = false;
     //Could be made more efficient
     var baseUrl = "../html/user-e.html?search=";
-    console.log(data);
     for (var i = 0; i < categoriesForLoop.length; i++) {
         var hasPerson = false;
         //console.log(categoriesForLoop[i]);
@@ -129,18 +145,18 @@ function addShiftInfoHtml (element, shiftId, data) {
             html +=
                 /*'<div class="button-group"><button type="submit" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button><button type="submit" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Du har registrert sykdom</button></div>';
                 */
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
-                '<div class="dialogboks"><h3>Du har registrert sykdom</h3></div></div>';
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift();" id="regByttVakt">Bytt vakt</button>' +
+                '<button class="btn-secondary" disabled>Du har registrert sykdom</button>';
                 
         } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
             html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift();" id="regByttVakt">Bytt vakt</button>' +
                 '<div class="dialogboks"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
         }else {
             html +=
-                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regByttVakt();" id="regByttVakt">Bytt vakt</button>' +
-                '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regSykdom(this);" id="regSykdom">Registrer sykdom</button>' +
-                '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
+                '<div class="button-group"><button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="reqChangeShift();" id="regByttVakt">Bytt vakt</button>' +
+                '<button type="submit" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
+                '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime();" id="regOvertime">Registrer overtid</button></div>';
         }
     }
 

@@ -106,7 +106,7 @@ public class ShiftDBManagerTest {
 
     @Test
     public void getShifts(){
-        ArrayList<ShiftUserAvailability> status = shiftDB.getShifts(300, 1,new java.sql.Date(System.currentTimeMillis()));
+        ArrayList<ShiftUserAvailability> status = shiftDB.getShifts(300, 1,new java.sql.Date(System.currentTimeMillis()),1);
         assertFalse(status.isEmpty());
 
     }

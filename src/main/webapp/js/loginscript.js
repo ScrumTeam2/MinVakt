@@ -27,6 +27,7 @@ $(document).ready(function(){
         var emptyField = true;
         var $identificator = $('#identificator');
         var $password = $('#password');
+        $('#login').html(`<div class="typing_loader"></div>`);
 
         if(!$identificator.val()){
             $identificator.addClass('error');
@@ -39,7 +40,9 @@ $(document).ready(function(){
         }
 
         if(emptyField){
+
             $.ajax({
+
                 url: "/rest/session/login",
                 type: 'POST',
                 data: {
@@ -50,6 +53,7 @@ $(document).ready(function(){
                 error: invalid
             });
         }
+        setTimeout(function() {$('#login').resetLoader("Logg inn");}, 500);
     });
 });
 
@@ -84,4 +88,10 @@ function errorHere(data){
 function invalid(data){
     $('.feedback').show();
     console.log("Invalid", data);
+}
+//function to reset the loading button animation
+$.fn.resetLoader = function(buttonText){
+    $('.typing_loader').remove();
+    //$(this).html(`<div class="submit"></div>`);
+    $(this).text(buttonText);
 }

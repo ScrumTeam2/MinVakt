@@ -88,7 +88,7 @@ public class ShiftServiceTest extends ServiceTest {
     @Test
     public void getShifts() {
         logInUser();
-        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300, new Date(System.currentTimeMillis()));
+        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShifts(300, new Date(System.currentTimeMillis()),1);
         assertFalse(statusOk.isEmpty());
     }
 
