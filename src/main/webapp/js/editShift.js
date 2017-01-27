@@ -5,6 +5,7 @@
 var $staffNumInput;
 var $staffForm;
 var $saveButton;
+var $cancelButton;
 var $popup;
 
 var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
@@ -15,12 +16,15 @@ var $list = $('.list');
 var shiftId = getUrlParameter("id");
 var feedId = getUrlParameter("feedId");
 var userId = getUrlParameter("userId");
+feedId = feedId && feedId > 0 ? feedId : 0;
+userId = userId && userId > 0 ? userId : 0;
 
 $(document).ready(function() {
     $staffNumInput = $('#staffNum');
     $staffForm = $("#staffForm");
     $saveButton = $("#saveBtn");
-
+    $cancelButton = $("#cancel-button");
+    console.log($cancelButton);
     initPopup();
     getNewShift();
 });
@@ -53,6 +57,27 @@ function performSave(e) {
         console.log(data);
         $saveButton.text("Lagre");
         getNewShift();
+        var userRemoved = true;
+        var elements = $(".watch");
+        for(var i = 0;i<elements.length;i++){
+            if(($(elements[i]).attr("data-userId")) == userId){
+                userRemoved = false;
+            }
+        }
+        if(userRemoved){
+            $.ajax({
+                url: "/rest/newsfeed/" + feedId,
+                method: "POST",
+                data: {"accepted" : true},
+                success: function() {
+                    window.location = "user-a.html";
+                },
+                error: function(e) {
+                    console.error("Error", e);
+                }
+            });
+        }
+
     }).error(function (data) {
         console.log(data);
         $popup.show();
@@ -67,30 +92,35 @@ function showShiftInfo(data) {
                 <h3>${convertDate(data.date)} - ${shiftTypes[data.type]}</h3>
                 </div>`;
 
-
+    //Add cancel button
+    if(feedId > 0 && userId > 0){
+        $cancelButton.removeClass("hide");
+        $cancelButton.click(function(){
+            console.log("Dette var feil");
+            window.location = "home-a.html"
+        });
+    }
     $saveButton.click(performSave);
-
     $staffNumInput.val(data.staffNumb);
     $staffForm.show();
 
     var counter = 0;
+
     while(counter < data.staffNumb) {
         if (counter < data.shiftUsers.length) {
             var user = data.shiftUsers[counter];
             if(feedId && feedId > 0 && userId == user.userId){
-                output += "<div class='watch green' data-category='"+user.userCategory+"'>";
+                output += "<div class='watch green' data-userId='"+user.userId+"' data-category='"+user.userCategory+"'>";
             }
             else{
                 output += '<div class="watch" data-category="'+user.userCategory+'">';
-                feedId = 0;
-                userId = 0;
             }
             output += `<div class="watch-info">
                         <p class="lead">${user.userName}</p>
                         <p class="sub">${userTypes[user.userCategory]}</p>
                     </div>
                     <div>
-                    <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}&edit=1" class="link">Bytt</a>
+                    <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}&edit=1&feedId=${feedId}&userId=${userId}" class="link">Bytt</a>
                     <a href="#" data-userId="${user.userId}" class="link btnRemove">Fjern</a>
                     </div>
 
@@ -100,7 +130,7 @@ function showShiftInfo(data) {
                     <div class="watch-info">
                         <p>Ledig</p>
                     </div>
-                    <a href="/html/add-employee.html?shift=${data.id}&feedId=${feedId}&userId=" class="link">Legg til</a>
+                    <a href="/html/add-employee.html?shift=${data.id}&feedId=${feedId}&userId=${userId}" class="link">Legg til</a>
                 </div>`;
         }
         counter++;
