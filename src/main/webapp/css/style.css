@@ -552,6 +552,15 @@ button:disabled {
     flex-flow: row nowrap;
 }
 
+.watch .longer {
+    flex-basis: 70%;
+    display: flex;
+}
+
+.watch .longer input {
+    width: 50%;
+}
+
 .lead {
     margin: 0;
     font-weight: normal;
