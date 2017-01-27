@@ -88,8 +88,8 @@ public class OvertimeService extends SecureService{
     @Path("/shiftId/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOvertimeByShiftId(@PathParam("shiftId") int shiftId, @QueryParam("userId") int userId) {
+        System.out.println("userid: "+userId+", shiftId: "+shiftId);
         ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByShift(userId, shiftId);
-
         GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
         return Response.ok(entity).build();
     }
