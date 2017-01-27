@@ -36,10 +36,18 @@ public class DepartmentService extends SecureService{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/withData")
-    public ArrayList<DepartmentUser> getDepartments(){
+    public ArrayList<DepartmentUser> getDepartmentsWithData(){
         if(getSession() == null) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
         return deptDB.getDepartmentsWithData(getSession().getUser().getId());
+    }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Department> getDepartments(){
+        if(getSession() == null) {
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+        }
+        return deptDB.getDepartments();
     }
 }

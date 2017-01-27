@@ -53,7 +53,7 @@ $(document).ready(function() {
                     "<p class='sub'>" + shiftTypes[user.category] + "</p>" +
                     "</div>";
                 if (category == 'ADMIN') {
-                    html += "<div><a href='/edit-user.html?userId=" + user.id + "' class='link'>Endre</a></div>";
+                    html += "<div><a href='user-profile.html?userId=" + user.id + "' class='link'>Endre</a></div>";
                 }
                 html += "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";

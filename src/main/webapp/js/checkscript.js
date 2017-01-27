@@ -148,7 +148,8 @@ var adminlinks = [
     "/html/add-employee.html",
     "/html/change-employee.html",
     "/html/change-password.html",
-    "/html/edit-shift.html"
+    "/html/edit-shift.html",
+    "/html/user-profile.html"
 ];
 
 var employeelinks = [
