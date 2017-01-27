@@ -21,7 +21,6 @@ $(document).ready(function() {
     $staffForm = $("#staffForm");
     $saveButton = $("#saveBtn");
 
-    initPopup();
     getNewShift();
 });
 
@@ -150,9 +149,15 @@ function showShiftInfo(data) {
                 },
                 error: function(e) {
                     console.log("Error", e);
+                    initPopup();
                     $("#userPopup").show();
                 }
             });
+        }
+
+        if(absence.length === 0) { // TODO: Fix problem with popup
+            initPopup();
+            $("#userPopup").show();
         }
     });
 }
@@ -162,7 +167,7 @@ function initPopup() {
 
     //close popup when clicking outside of the popup
     window.onclick = function(e) {
-        if (!$popup.is(e.target) && $popup.has(e.target).length === 0 && popupVisible) {
+        if (!$popup.is(e.target) && $popup.has(e.target).length === 0) {
             $popup.hide();
         }
     };
