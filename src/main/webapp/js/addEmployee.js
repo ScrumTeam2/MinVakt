@@ -24,6 +24,8 @@ var suggestedAllUsers = [];
 var allUsers = [];
 var headers = [];
 var shift = getUrlParameter("shift");
+var feedId = getUrlParameter("feedId");
+var userId = getUrlParameter("userId");
 
 
 $(document).ready(function() {
@@ -172,12 +174,11 @@ function search(header, searchStr) {
 
 function addToShift(id) {
     var shiftId = getUrlParameter("shift");
-
     $.ajax({
         url: "/rest/shift/" + shiftId + "/user/" + id,
         type: 'POST',
         success: function() {
-            window.location = "edit-shift.html?id=" + shiftId;
+            window.location = "edit-shift.html?id=" + shiftId+"&feedId="+feedId+"&userId="+userId;
         },
         error: function (e) {
             console.log("addToShift", e);
