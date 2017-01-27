@@ -132,6 +132,7 @@ public class ShiftChangeUtil {
             if(status == 0) return false;
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
 
+
         }
         //If the employee do not want the shift, check if there are any other users pending confirmation
         else{
