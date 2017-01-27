@@ -127,7 +127,9 @@ public class ShiftChangeUtil {
             int status =  newsDB.createNotification(notification);
             if(status == 0) return false;
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
-
+            if(userAccepted.getCategory() == userInvolving.getCategory()){
+                updateNotification(status,true);
+            }
         }
         //If the employee do not want the shift, check if there are any other users pending confirmation
         else{

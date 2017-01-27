@@ -478,6 +478,8 @@ public class UserDBManager extends DBManager {
                 prep.setInt(5, user.getCategory().getValue());
                 prep.setFloat(6, user.getWorkPercentage());
                 prep.setInt(7, user.getDeptId());
+                prep.setInt(8, user.getId());
+
                 change = prep.executeUpdate();
             } catch (Exception e) {
                 log.log(Level.WARNING, "Could not change user info", e);

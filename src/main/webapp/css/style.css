@@ -422,6 +422,9 @@ button:disabled {
 #userBtn {
     margin-top: 1.5rem;
 }
+#cancel-change-button {
+    margin-top: 1.5rem;
+}
 
 .link {
   text-decoration: none;
@@ -1031,7 +1034,6 @@ text-align: center;
 .red{
     border-bottom: 2px solid #B92D00;
     margin-bottom: 0.4375rem;
-
 }
 
 #shift-status {
