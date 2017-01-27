@@ -3,9 +3,7 @@ import no.ntnu.stud.minvakt.data.Overtime;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class OvertimeDBManagerTest {
     @Test
     public void getOvertimeByUserId(){
         int userId = 3;
-        ArrayList<Overtime> res = overtimeDB.getOvertimeByUserId(userId);
+        ArrayList<Overtime> res = overtimeDB.getOvertimeListByUserId(userId);
         Overtime[] expRes = {new Overtime(3, 52, 960, 35, true)};
 
         for(int i = 0; i < res.size(); i++){
@@ -100,7 +98,7 @@ public class OvertimeDBManagerTest {
         Date toDate = Date.valueOf(toDateString);
 
 
-        int res = overtimeDB.getMinutes(userId,fromDate,toDate);
+        int res = overtimeDB.getMinutesByDate(userId,fromDate,toDate);
         int expRes = -180;
 
         assertEquals(expRes, res);

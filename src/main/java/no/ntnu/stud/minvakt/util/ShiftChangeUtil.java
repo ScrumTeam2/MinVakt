@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.util;
 
+import no.ntnu.stud.minvakt.data.Content;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
@@ -25,16 +26,15 @@ public class ShiftChangeUtil {
     private static UserDBManager userDB = new UserDBManager();
     private static NewsFeedDBManager newsDB = new NewsFeedDBManager();
     private static OvertimeDBManager overtimeDB = new OvertimeDBManager();
+    private static Content content = new Content();
 
     public static boolean sendNewResponsibleChangeNotification(int userId, int shiftId){
         User user = userDB.getUserById(userId);
-        Shift shift = shiftDB.getShift(shiftId);
         Timestamp timestamp = Timestamp.from(Instant.now());
-        String content = user.getFirstName()+" "+user.getLastName()+" er blitt satt som ny ansvarsvakt på skiftet "+
-                FormattingUtil.formatDate(shift.getDate())+".";
         int adminId = userDB.getAdminId();
         if(adminId == 0) return false;
-        NewsFeedItem newsFeedItem = new NewsFeedItem(-1,timestamp,content, adminId,userId,shiftId, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
+        NewsFeedItem newsFeedItem = new NewsFeedItem(-1,timestamp,
+                content.userResponsible(user), adminId,userId,shiftId, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
         return newsDB.createNotification(newsFeedItem) != 0;
     }
 
@@ -57,17 +57,16 @@ public class ShiftChangeUtil {
 
     }
     private static boolean approveTimeBank(NewsFeedItem newsFeedItem, boolean shiftAccepted){
-
         if(shiftAccepted){
             if(overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())){
-
                 Timestamp timestamp = Timestamp.from(Instant.now());
-                Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
                 if(!overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())) return false;
-                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten "+
-                        FormattingUtil.formatDate(shift.getDate())+ " er blitt godkjent av" +
-                        " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                int minutes = overtimeDB.getMinutes(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
+
+                NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                        content.acceptTimebank(minutes), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                         newsFeedItem.getShiftId(), NOTIFICATION);
+
                 newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
                 return newsDB.createNotification(notification) != 0;
             }
@@ -75,10 +74,8 @@ public class ShiftChangeUtil {
         }
         else {
             Timestamp timestamp = Timestamp.from(Instant.now());
-            Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
-            NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten " +
-                    FormattingUtil.formatDate(shift.getDate()) + " er ikke blitt godkjent av" +
-                    " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+            NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                    content.rejectTimebank(), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                     newsFeedItem.getShiftId(), NOTIFICATION);
             overtimeDB.deleteOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
             newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -92,8 +89,8 @@ public class ShiftChangeUtil {
             !shiftDB.setValidAbsence(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), true)) return false;
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    "Du har fått godkjent fravær på vakten din "+FormattingUtil.formatDate(shift.getDate())+".",
-                    newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
+                    content.acceptValidAbsence(), newsFeedItem.getUserIdInvolving(),
+                    newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
 
             newsDB.createNotification(notification);
             boolean result = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -102,8 +99,8 @@ public class ShiftChangeUtil {
         else {
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    "Du har ikke fått godkjent fravær på vakten din " + FormattingUtil.formatDate(shift.getDate()) + ", og burde kontakte administrasjonen.",
-                    newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
+                    content.rejectValidAbsence(), newsFeedItem.getUserIdInvolving(),
+                    newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
 
             newsDB.createNotification(notification);
             return newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -124,10 +121,9 @@ public class ShiftChangeUtil {
             if(adminId == 0) return false;
 
             //Create a notification to be sent to admin.
-            NewsFeedItem notification = new NewsFeedItem(-1, timestamp, userAccepted.getFirstName()+" "+userAccepted.getLastName()+" ønsker å ta vakten " +
-                    "til "+userInvolving.getFirstName()+" "+userInvolving.getLastName()+" på dato "+
-                    FormattingUtil.formatDate(shift.getDate()), adminId, newsFeedItem.getUserIdTo(),
-                    newsFeedItem.getShiftId(), SHIFT_CHANGE_ADMIN);
+            NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                    content.shiftChangeAdminUserFromTo(shift, userAccepted, userInvolving), adminId,
+                    newsFeedItem.getUserIdTo(), newsFeedItem.getShiftId(), SHIFT_CHANGE_ADMIN);
             int status =  newsDB.createNotification(notification);
             if(status == 0) return false;
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -137,16 +133,15 @@ public class ShiftChangeUtil {
         else{
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             if(newsDB.getShiftChangeCountPending(shift.getId(), userInvolving.getId())==0){
-              String content = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt "+FormattingUtil.formatDate(shift.getDate())+" ("+FormattingUtil.formatShiftType(shift.getType())+").";
-                int adminId = userDB.getAdminId();
+              int adminId = userDB.getAdminId();
                 if(adminId == 0) {
                     System.out.println("Could not find admin user");
                     return false;
                 }
-                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId,userInvolving.getId(),
+                NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                        content.shiftChangeAdmin(userInvolving), adminId,userInvolving.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
                 int status =  newsDB.createNotification(notification);
-                //System.out.println("Notification sent to admin");
 
                 if (status ==0){
                     return false;
@@ -173,14 +168,12 @@ public class ShiftChangeUtil {
 
             //Creates new update notification to the user who wants to change shift.
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    "Din vakt " + FormattingUtil.formatDate(shift.getDate()) + " er byttet bort til " + userTo.getFirstName() + " " + userTo.getLastName()
-                            + ".", userTo.getId(), userFrom.getId(), shift.getId(), NOTIFICATION);
+                    content.shiftChangeUserFrom(), userTo.getId(), userFrom.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
 
             //Creates update notification for user who accepted the shift change
             NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    "Ditt vaktbytte " + FormattingUtil.formatDate(shift.getDate()) + " er godkjent av administrasjonen.",
-                    userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
+                    content.shiftChangeUserTo(),  userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
             newsDB.createNotification(notification2);
 

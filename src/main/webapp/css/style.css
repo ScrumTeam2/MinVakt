@@ -126,6 +126,12 @@ header a:last-child {
     align-items: flex-end;
 }
 
+.container-header form {
+    flex-grow: 1;
+    margin: 0 4rem -.5rem;
+    min-width: 112px;
+}
+
 input, select {
   border: 0;
   background: none;
@@ -181,6 +187,10 @@ input:focus, input[required]:valid {
 input.error, select.error, input:not([value=""]):focus:invalid {
   border-bottom: 2px solid #B92D00;
   margin-bottom: 0.4375rem;
+}
+
+#staffNum {
+    width: 3.75rem;
 }
 
 [type="number"] {
@@ -558,6 +568,13 @@ button:disabled {
 
 .watch a {
     margin-left: .5rem;
+}
+
+.watch.highlight {
+    padding: 0 .7rem;
+    margin: .5rem -.7rem 0;
+    box-shadow: 0px 0px 2px #777373;
+    background: #fafafa;
 }
 
 .more-info {
@@ -938,6 +955,7 @@ text-align: center;
     text-decoration: underline;
 }
 
+
 @media(min-width: 500px) {
     .container {
         max-width: 750px;
@@ -1008,4 +1026,16 @@ text-align: center;
 #staffForm {
     margin-bottom: 2.5rem;
     display: none;
+}
+
+.red{
+    border-bottom: 2px solid #B92D00;
+    margin-bottom: 0.4375rem;
+
+}
+
+#shift-status {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
 }

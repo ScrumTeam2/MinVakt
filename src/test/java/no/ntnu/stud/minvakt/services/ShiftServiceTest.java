@@ -75,7 +75,7 @@ public class ShiftServiceTest extends ServiceTest {
 
     @Test
     public void addEmployeeToShift() {
-        logInUser();
+        logInAdmin();
 
         Response statusOk = shiftService.addEmployeeToShift(1, 9);
 
@@ -145,7 +145,8 @@ public class ShiftServiceTest extends ServiceTest {
     }
 
     @Test
-    public void getAvailableShiftsTest() {
+    public void getAvailableShiftsTest(){
+        logInUser();
         ArrayList<ShiftAvailable> statusOk = shiftService.getAvailableShifts();
         assertFalse(statusOk.isEmpty());
     }
@@ -162,9 +163,9 @@ public class ShiftServiceTest extends ServiceTest {
 
     @Test
     public void getUserBasicFromId() throws Exception {
+        logInAdmin();
         int userId = 1;
         ArrayList<ShiftUserBasic> shiftUserRes = shiftService.getUserBasicFromId(userId);
-        //System.out.println(shiftUserRes.get(0).getShiftId());
 
         Assert.assertTrue(shiftUserRes.get(0) instanceof ShiftUserBasic);
     }
