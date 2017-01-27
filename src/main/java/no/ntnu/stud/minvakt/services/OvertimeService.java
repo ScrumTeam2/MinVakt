@@ -58,7 +58,7 @@ public class OvertimeService extends SecureService{
                 return Response.status(400).entity("Overtime registered, but could not find admin user").build();
             }else {
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                        content.regTimebank(user), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
+                        content.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
                 int newsfeedId = newsfeedDBM.createNotification(notification);
 
                 if (newsfeedId == 0){

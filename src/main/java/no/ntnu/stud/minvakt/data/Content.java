@@ -7,20 +7,10 @@ import no.ntnu.stud.minvakt.util.FormattingUtil;
 /**
  * Created by Marit on 27.01.2017.
  */
+
+//Contains all the newfeed "content"
 public class Content {
     public Content(){}
-
-    //VALID_ABSENCE
-    public String validAbsence(User user){
-        String res = user.getFirstName()+" "+user.getLastName()+" har meldt fravær";
-        return res;
-    }
-
-    //TIMEBANK
-    public String regTimebank(User user){
-        String res = user.getFirstName()+" "+user.getLastName()+" har registert timeavvik";
-        return res;
-    }
 
     //SHIFT_CHANGE_EMPLOYEE
     public String employeeShiftChange(Shift shift){
@@ -31,6 +21,18 @@ public class Content {
     //SHIFT_CHANGE_ADMIN
     public String shiftChangeAdmin(User userInvolving){
         String res  = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt.";
+        return res;
+    }
+
+    //VALID_ABSENCE
+    public String validAbsence(User user){
+        String res = user.getFirstName()+" "+user.getLastName()+" har meldt fravær";
+        return res;
+    }
+
+    //TIMEBANK
+    public String regTimebank(User user, int minutes){
+        String res = user.getFirstName()+" "+user.getLastName()+" har registert timeavvik på "+minutesFormat(minutes);
         return res;
     }
 
@@ -56,17 +58,6 @@ public class Content {
         }else {
             int posMin = Math.abs(minutes);
             res ="Fravær registrert : "+minutesFormat(posMin);
-        }
-        return res;
-    }
-    private String minutesFormat(int minutes){
-        String res;
-        if(minutes<60){
-            res = "("+minutes+"min)";
-        }else{
-            int hours = minutes/60;
-            int minRest = minutes%60;
-            res = "("+hours+"t "+minRest+"min)";
         }
         return res;
     }
@@ -101,4 +92,15 @@ public class Content {
         return res;
     }
 
+    private String minutesFormat(int minutes){
+        String res;
+        if(minutes<60){
+            res = "("+minutes+"min)";
+        }else{
+            int hours = minutes/60;
+            int minRest = minutes%60;
+            res = "("+hours+"t "+minRest+"min)";
+        }
+        return res;
+    }
 }
