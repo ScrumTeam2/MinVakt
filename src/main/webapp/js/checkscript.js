@@ -73,13 +73,6 @@ $('#logout').on("click", function(e){
     logOut();
 });
 
-//function to reset the loading button animation
-$.fn.resetLoader = function(buttonText){
-    $('.typing_loader').remove();
-    $(this).html(`<div class="submit"></div>`);
-    $(this).text(buttonText);
-}
-
 function logOut(){
     $.ajax({
         url: "/rest/session/log_out",
