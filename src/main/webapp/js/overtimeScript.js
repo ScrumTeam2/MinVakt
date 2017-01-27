@@ -4,7 +4,9 @@
 var shiftId = getUrlParameter("shiftId");
 var date = getUrlParameter("date");
 var type = getUrlParameter("type");
-
+console.log(shiftId);
+console.log(date);
+console.log(type);
 $(document).ready(function () {
     getShift();
 
