@@ -86,7 +86,7 @@ function performSave(e) {
 }
 
 function showShiftInfo(data) {
-    console.log(data);
+    var employeesPerCategory = { "ADMIN": 0, "ASSISTANT": 0, "HEALTH_WORKER": 0, "NURSE": 0 };
 
     var output = `<div class="container-title">
                 <h3>${convertDate(data.date)} - ${shiftTypes[data.type]}</h3>
@@ -123,7 +123,6 @@ function showShiftInfo(data) {
                     <a href="/html/change-employee.html?user=${user.userId}&shift=${data.id}&edit=1&feedId=${feedId}&userId=${userId}" class="link">Bytt</a>
                     <a href="#" data-userId="${user.userId}" class="link btnRemove">Fjern</a>
                     </div>
-
                 </div>`;
         } else {
             output += `<div class="watch">
@@ -135,6 +134,7 @@ function showShiftInfo(data) {
         }
         counter++;
     }
+    console.log(employeesPerCategory);
 
     $list.html(output);
 
@@ -218,3 +218,4 @@ function createStatusHtml(percentages) {
     }
     $divElement.append(html);
 }
+

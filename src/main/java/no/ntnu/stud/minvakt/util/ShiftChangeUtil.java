@@ -67,7 +67,7 @@ public class ShiftChangeUtil {
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten "+
                         FormattingUtil.formatDate(shift.getDate())+ " er blitt godkjent av" +
                         " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
-                        newsFeedItem.getShiftId(), TIMEBANK);
+                        newsFeedItem.getShiftId(), NOTIFICATION);
                 newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
                 return newsDB.createNotification(notification) != 0;
             }
@@ -79,7 +79,7 @@ public class ShiftChangeUtil {
             NewsFeedItem notification = new NewsFeedItem(-1, timestamp, "Din overtid på vakten " +
                     FormattingUtil.formatDate(shift.getDate()) + " er ikke blitt godkjent av" +
                     " administrasjonen.", newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
-                    newsFeedItem.getShiftId(), TIMEBANK);
+                    newsFeedItem.getShiftId(), NOTIFICATION);
             overtimeDB.deleteOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
             newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             return newsDB.createNotification(notification) != 0;

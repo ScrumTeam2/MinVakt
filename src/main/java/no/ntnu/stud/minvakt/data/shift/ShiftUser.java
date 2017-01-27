@@ -13,7 +13,6 @@ public class ShiftUser {
     private int valid_absence;
     private User.UserCategory userCategory;
     User user = null;
-    private int valid_absence2;
     private boolean shift_change;
     private boolean removed;
     private int departmentId;
@@ -24,7 +23,6 @@ public class ShiftUser {
         this.userId = userId;
         this.responsibility = responsibility;
         this.valid_absence = valid_absence;
-        this.valid_absence2 = valid_absence;
         this.shift_change = false;
         this.removed = false;
         this.departmentId = departmentId;
@@ -36,7 +34,6 @@ public class ShiftUser {
         this.userId = userId;
         this.responsibility = responsibility;
         this.valid_absence = valid_absence;
-        this.valid_absence2 = valid_absence;
         this.shift_change = shift_change;
         this.removed = removed;
         this.departmentId = departmentId;
@@ -79,14 +76,6 @@ public class ShiftUser {
             return true;
         }
         return false;
-    }
-
-    public int getValid_absence2() {
-        return valid_absence2;
-    }
-
-    public void setValid_absence2(int valid_absence2) {
-        this.valid_absence2 = valid_absence2;
     }
 
     public int getValidAbsence() {

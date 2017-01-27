@@ -14,6 +14,7 @@ public class NewsFeedDBManager extends DBManager{
 
     private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?,?)";
     private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
+    private final String sqlDeleteNotificationsForShift = "DELETE FROM newsfeed WHERE shift_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
     private final String sqlGetNewsFeedForAdmin = "SELECT feed_id, date_time,content,newsfeed.category, user.user_id, shift_id, shift_user_id " +
@@ -63,6 +64,23 @@ public class NewsFeedDBManager extends DBManager{
             }
         }
         return id;
+    }
+    public boolean deleteNotificationsForShift(int shiftId){
+        int status = 0;
+        if(setUp()) {
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlDeleteNotificationsForShift);
+                prep.setInt(1,shiftId);
+                status = prep.executeUpdate();
+
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to delete notifications for shift " + shiftId + " from news feed", e);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return status != 0;
     }
     public boolean deleteNotification(int notificationId){
         int status = 0;
