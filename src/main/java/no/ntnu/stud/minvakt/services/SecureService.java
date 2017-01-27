@@ -21,7 +21,7 @@ public abstract class SecureService {
         this.request = request;
     }
 
-    protected Session getSession() throws NotAuthorizedException {
+    public Session getSession() throws NotAuthorizedException {
         // Tries to get session of logged in user. If no session, throw exception
         Session session = (Session)request.getSession().getAttribute("session");
         if(session == null) {
