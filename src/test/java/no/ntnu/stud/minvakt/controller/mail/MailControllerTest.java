@@ -11,7 +11,7 @@ import static org.junit.Assert.assertTrue;
 public class MailControllerTest {
     @Test
     public void testEmailSend(){
-        int result = Mail.sendMail("system.minvakt@gmail.com","Test","Dette er en test");
-        assertTrue(result == 1);
+        boolean result = Mail.sendMail("system.minvakt@gmail.com","Test","Dette er en test");
+        assertTrue(result);
     }
 }
