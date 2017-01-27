@@ -23,9 +23,13 @@ public class DatabaseConnection {
     private Connection connection = null;
 
     public DatabaseConnection() {
+
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(databasename, username, password);
-        }  catch (SQLException e) {
+        } catch (ClassNotFoundException e) {
+            log.log(Level.SEVERE, "Issue with database driver.", e);
+        } catch (SQLException e) {
             log.log(Level.SEVERE, "Issue with connecting to database.", e);
         }
     }
