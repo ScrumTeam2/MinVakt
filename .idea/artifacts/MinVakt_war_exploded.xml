@@ -72,6 +72,7 @@
           <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-jaspic-api:8.5.9" />
           <element id="library" level="project" name="Maven: com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20160628.1" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:21.0" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat:tomcat-jdbc:8.5.9" />
         </element>
       </element>
       <element id="directory" name="META-INF">
