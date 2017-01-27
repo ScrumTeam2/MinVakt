@@ -52,28 +52,28 @@ public class ShiftService extends SecureService{
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createShift(Shift shift) {
-        if(getSession().isAdmin()) {
-            int shiftId = shiftDB.createNewShift(shift);
-            shift.setId(shiftId);
-            if (shiftId < 0) {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Unable to create new shift.").build();
-            } else {
-                //TODO: Add shiftId to response
-                String json = "{\"id\": \"" + shiftId + "\"}";
-                return Response.ok(json, MediaType.APPLICATION_JSON).build();
-            }
+        if (!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Cannot access service").build();
         }
-        else{
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User is not an admin").build();
+
+        int shiftId = shiftDB.createNewShift(shift);
+        shift.setId(shiftId);
+        if (shiftId < 0) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Unable to create new shift.").build();
+        } else {
+            String json = "{\"id\": \"" + shiftId + "\"}";
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
         }
+
     }
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward,
                                                       @QueryParam("date") Date date, @DefaultValue("-1")@QueryParam("deptId") int deptId){
+        if(getSession() == null) return null;
+
         if(deptId <= 0) deptId = getSession().getUser().getDeptId();
         if(date == null) date = new Date(System.currentTimeMillis());
-        System.out.println(deptId);
 
         return shiftDB.getShifts(daysForward, getSession().getUser().getId(), date, deptId);
     }
@@ -81,16 +81,15 @@ public class ShiftService extends SecureService{
     @DELETE
     @Path("/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") int id) {
-        if(getSession().isAdmin()) {
-            boolean isDeleted = shiftDB.deleteShift(id);
-            if (!isDeleted) {
-                return Response.status(400).entity("Unable to delete shift.").build();
-            } else {
-                return Response.status(200).build();
-            }
+        if (!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Cannot access service").build();
         }
-        else{
-            return Response.status(Response.Status.UNAUTHORIZED).entity("User is not an admin").build();
+
+        boolean isDeleted = shiftDB.deleteShift(id);
+        if (!isDeleted) {
+            return Response.status(400).entity("Unable to delete shift.").build();
+        } else {
+            return Response.status(200).build();
         }
     }
 
@@ -99,7 +98,6 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public Shift getShift(@PathParam("shiftId") int shiftId) {
         if (getSession() == null) return null;
-        System.out.println("GetShift");
 
         return shiftDB.getShift(shiftId);
     }
@@ -112,7 +110,9 @@ public class ShiftService extends SecureService{
     @Path("/{shiftId}/user/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addEmployeeToShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId) {
-        if(getSession() == null) return null;
+        if (!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Cannot access service").build();
+        }
 
         User userData = userDB.getUserById(userId);
         ShiftUser shiftUser = new ShiftUser(userId, userData.getFirstName() + " " + userData.getLastName(), userData.getCategory(), false, 0, userData.getDeptId());
@@ -120,7 +120,6 @@ public class ShiftService extends SecureService{
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
         if (statusOk) {
             Response res = Response.status(200).build();
-            System.out.println(res.getStatus());
             return res;
         } else {
             return Response.status(400).entity("Unable to add employee").build();
@@ -132,6 +131,10 @@ public class ShiftService extends SecureService{
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteEmployeeFromShift(@PathParam("userId") int userId, @PathParam("shiftId") int shiftId,
                                             @QueryParam("findNewEmployee") boolean findNewEmployee) {
+        if (!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Cannot access service").build();
+        }
+
         boolean statusOk = false;
         if(!findNewEmployee) {
             statusOk = shiftDB.deleteEmployeeFromShift(userId, shiftId);
@@ -151,7 +154,9 @@ public class ShiftService extends SecureService{
     @Path("/{shiftId}/replaceuser")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response replaceEmployeeOnShift(@PathParam("shiftId") int shiftId, @FormParam("oldUserId") int oldUserId, @FormParam("newUserId") int newUserId) {
-        if(getSession() == null || !getSession().isAdmin()) return null;
+        if (!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Cannot access service").build();
+        }
 
         boolean statusOk = shiftDB.replaceEmployeeOnShift(shiftId, oldUserId, newUserId);
         if (statusOk) {
@@ -164,7 +169,9 @@ public class ShiftService extends SecureService{
     @POST
     @Path("/{shiftId}/set_staff")
     public Response setStaffCount(@PathParam("shiftId") int shiftId, @FormParam("staffCount") int newStaffCount) {
-        if(getSession() == null || !getSession().isAdmin()) return null;
+        if (!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Cannot access service").build();
+        }
 
         // Do not accept staff count below some number
         if(newStaffCount < 1) {
@@ -222,15 +229,18 @@ public class ShiftService extends SecureService{
     @Path("user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserBasic> getUserBasicFromId(@PathParam("userId") int userId){
-        //if(getSession().isAdmin()){
+        if (!getSession().isAdmin()) {
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+        }
         return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
-        //}
     }
 
     @GET
     @Path("/availableShifts")
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftAvailable> getAvailableShifts(){
+        if(getSession() == null) return null;
+
         return shiftDB.getAvailableShifts();
     }
 
@@ -240,17 +250,16 @@ public class ShiftService extends SecureService{
     public Response requestValidAbsence(@PathParam("shiftId") int shiftId){
         Timestamp timestamp = Timestamp.from(Instant.now());
         User user = getSession().getUser();
-        /*VULNERABILITY*/
-        //Her MÅ det verifiseres om at brukeren virkelig er koblet til dette shiftet. ELlers er det mulighet å forandre
-        //shiftid på kleint.
-        /*VULNERABILITY*/
-
-        /*Escape all displayed output in client*/
         Shift shift = shiftDB.getShift(shiftId);
 
         // Check if shift starts within 2 hours
         if(LocalDateTime.now().until(shift.getStartTime(), ChronoUnit.HOURS) < 2) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Fristen for å melde sykdom har gått ut.").build();
+        }
+      
+        // Check if the user actually is on this shift
+        if(!shift.getShiftUsers().stream().anyMatch(u -> u.getUserId() == user.getId())) {
+            throw new BadRequestException("Invalid shift ID");
         }
 
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.

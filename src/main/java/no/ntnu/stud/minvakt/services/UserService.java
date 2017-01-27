@@ -28,12 +28,18 @@ public class UserService extends SecureService{
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<UserBasicList> getUserBasics() {
+        if(getSession() == null) return null;
+
         return userDB.getUserBasics();
     }
     @Path("/category")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<UserBasic> getUserBasicsWithCategory(@QueryParam("category")User.UserCategory category) {
+        if(!getSession().isAdmin()) {
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+        }
+
         return userDB.getUserBasicsWithCategory(category);
     }
 
@@ -41,15 +47,16 @@ public class UserService extends SecureService{
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public User getUserBasics(@PathParam("userId") int userId) {
+        if(getSession() == null) return null;
+
         return userDB.getUserById(userId);
     }
 
     @POST
     @Path("/changepass")
     public Response changePassword(@FormParam("oldpass") String oldPass, @FormParam("newpass") String newPass){
-        System.out.println("Oldpass = "+oldPass+" Newpass = "+newPass);
         int status = userDB.changePasswordUserId(Integer.toString(getSession().getUser().getId()), oldPass, newPass);
-        System.out.println(status);
+
         if(status > 0){
             return Response.ok().entity("Password is changed").build();
         }
@@ -61,15 +68,18 @@ public class UserService extends SecureService{
     @Path("/forgottenpass")
     public Response sendNewPassword(@FormParam("email") String email){
         int status = ForgotPass.sendEmailWithNewPass(email);
-        if(status < 0){
-            return Response.status(Response.Status.BAD_REQUEST).entity("Issue with request, mail may be wrong").build();
-        }
-        else if (status == 0){
-            return Response.status(Response.Status.EXPECTATION_FAILED).entity("Error sending mail, password is changed, but mail not sent").build();
-        }
-        else{
-            return Response.ok().entity("Mail with new password sent!").build();
-        }
+
+        // Replaced detailed responses with a generic one. This way nobody can abuse this function to check for registered mails.
+        return Response.ok().entity("Hvis e-posten er gyldig, har det blitt sendt et nytt passord.").build();
+//        if(status < 0){
+//            return Response.status(Response.Status.BAD_REQUEST).entity("Issue with request, mail may be wrong").build();
+//        }
+//        else if (status == 0){
+//            return Response.status(Response.Status.EXPECTATION_FAILED).entity("Error sending mail, password is changed, but mail not sent").build();
+//        }
+//        else{
+//            return Response.ok().entity("Mail with new password sent!").build();
+//        }
     }
     @GET
     @Path("/profile")
@@ -77,6 +87,4 @@ public class UserService extends SecureService{
     public User getUserForProfile(){
         return getSession().getUser();
     }
-
-
 }

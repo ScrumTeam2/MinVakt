@@ -38,16 +38,15 @@ public class AvailabilityServiceTest extends ServiceTest {
     */
 
     @Test
-    public void deleteAvailability(){
-        availDB.setAvailability(3,19);
-        Response response = availabilityService.deleteAvailability(3,19);
+    public void checkSetAvailability() {
+        availDB.setAvailability(3, 19);
+        Response response = availabilityService.deleteAvailability(3, 19);
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
     @Test
-    public void checkSetAvailability(){
-        Response response = availabilityService.setAvailability(3,19);
+    public void deleteAvailability() {
+        Response response = availabilityService.setAvailability(3, 19);
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
-
 }
