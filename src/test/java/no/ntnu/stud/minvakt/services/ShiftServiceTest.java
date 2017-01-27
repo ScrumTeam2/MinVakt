@@ -93,6 +93,13 @@ public class ShiftServiceTest extends ServiceTest {
     }
 
     @Test
+    public void getShiftsNoDept() {
+        logInUser();
+        ArrayList<ShiftUserAvailability> statusOk = shiftService.getShiftsDisregardDept(300, new Date(System.currentTimeMillis()));
+        assertFalse(statusOk.isEmpty());
+    }
+
+    @Test
     public void setStaffCount() {
         logInAdmin();
         Response response = shiftService.setStaffCount(-1, 5);
