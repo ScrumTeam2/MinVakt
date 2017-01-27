@@ -71,7 +71,6 @@ public class ShiftService extends SecureService{
     public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward,
                                                       @QueryParam("date") Date date, @DefaultValue("-1")@QueryParam("deptId") int deptId){
         if(getSession() == null) return null;
-
         if(deptId <= 0) deptId = getSession().getUser().getDeptId();
         if(date == null) date = new Date(System.currentTimeMillis());
 
@@ -83,6 +82,7 @@ public class ShiftService extends SecureService{
     public ArrayList<ShiftUserAvailability> getShiftsDisregardDept(@QueryParam("daysForward") int daysForward,
                                                       @QueryParam("date") Date date){
       //  if(deptId <= 0) deptId = getSession().getUser().getDeptId();
+        if(getSession() == null) return null;
         if(date == null) date = new Date(System.currentTimeMillis());
         return shiftDB.getShiftsNoDept(daysForward, getSession().getUser().getId(), date);
     }
