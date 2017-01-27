@@ -28,10 +28,13 @@ var headers = [];
 var returnToEditPage = getUrlParameter("edit") === "1";
 var user = getUrlParameter("user");
 var shift = getUrlParameter("shift");
+var feedId = getUrlParameter("feedId");
+var userId = getUrlParameter("userId");
 var $sameCategory;
 var category;
 var same = true;
 var test = false;
+
 
 
 $(document).ready(function() {
@@ -266,7 +269,8 @@ function addToShift(id) {
             newUserId: id
         },
         success: function() {
-            window.location = returnToEditPage ? "edit-shift.html?id=" + shiftId : "add-users-to-shift.html";
+            window.location = returnToEditPage ? "edit-shift.html?id="+shiftId+"&feedId="
+            +feedId+"&userId="+userId : "add-users-to-shift.html?feedId="+feedId+"&userId="+userId;
         },
         error: function (e) {
             console.error("addToShift", e);

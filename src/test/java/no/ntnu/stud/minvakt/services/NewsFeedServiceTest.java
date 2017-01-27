@@ -42,8 +42,9 @@ public class NewsFeedServiceTest extends ServiceTest{
 
     @Test
     public void setResolved() throws Exception {
+        logInUser();
         Timestamp date = Timestamp.valueOf("1995-01-01 00:00:00");
-        NewsFeedItem notification = new NewsFeedItem(-1, date, "Test", 26, 1, 1,
+        NewsFeedItem notification = new NewsFeedItem(-1, date, "Test", 1, 1, 1,
                 NewsFeedItem.NewsFeedCategory.NOTIFICATION);
         NewsFeedDBManager newsFeedDBM = new NewsFeedDBManager();
         int feedId = newsFeedDBM.createNotification(notification);

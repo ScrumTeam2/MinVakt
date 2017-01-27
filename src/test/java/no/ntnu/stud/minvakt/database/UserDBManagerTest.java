@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.database;
 
+import no.ntnu.stud.minvakt.controller.encryption.Encryption;
+import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -94,13 +96,9 @@ public class UserDBManagerTest {
 
     @Test
     public void loginUserId() {
-        String userId = "1";
-        int status = userDB.checkLoginId(userId, "password");
-        boolean successLogin = false;
-        if(status>0) {
-            successLogin = true;
-        }
-        assertTrue(successLogin);
+        final int userId = 1;
+        final String password = "password";
+        assertTrue(userDB.checkLoginId(userId, password));
     }
 
     @Test
@@ -165,5 +163,16 @@ public class UserDBManagerTest {
     @Test
     public void getAdminId(){
         assertTrue(userDB.getAdminId() != 0);
+    }
+
+    @Test
+    public void setNewPassword() {
+        final int userId = 1;
+        final String password = "password";
+        Encryption e = new Encryption();
+        String[] hashSalt = e.passEncoding(password);
+        Assert.assertTrue(userDB.setNewPassword(userId, hashSalt));
+
+        Assert.assertTrue(userDB.checkLoginId(userId, password));
     }
 }

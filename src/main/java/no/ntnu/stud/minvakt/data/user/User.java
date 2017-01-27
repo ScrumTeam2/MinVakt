@@ -3,6 +3,7 @@ package no.ntnu.stud.minvakt.data.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -173,5 +174,18 @@ public class User {
                 ", hash='" + hash + '\'' +
                 ", salt='" + salt + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
