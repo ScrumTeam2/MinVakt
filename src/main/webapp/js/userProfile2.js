@@ -1,74 +1,92 @@
 /**
  * Created by evend on 1/27/2017.
  */
+/**
+ * Created by ingvildbroen on 11.01.2017.
+ */
+var createSuccess = false;
+var $first;
+var $last;
+var $percent;
+var $email;
+var $phone;
+var $category;
+var $department;
+
 $(document).ready(function () {
+    $first = $('#firstname');
+    $last = $('#lastname');
+    $percent = $('#percentage');
+    $email = $('#email');
+    $phone = $('#phone');
+    $category = $('#category');
+    $department = $("#department");
     $.ajax({
         url: "/rest/user/"+getUrlParameter("userId"),
         type: 'GET',
-        success: fillUserData,
-        error: function (data) {
-            console.log("Not able to get userdata")
-        }
-    });
-    $.ajax({
-        url: "/rest/department",
-        type: 'GET',
-        success: addDepartments,
-        error: function (data) {
-            console.log("Not able to get userdata")
-        }
-    });
-    setEventListeners();
-});
-function fillUserData(data){
-    console.log(data);
-    console.log(data.firstName);
+        success: function (data) {
+            console.log(data);
+            console.log(data.firstName);
+            var categoryOptions = $category.children();
 
-    var $firstname = $("#firstname");
-    var $lastname = $("#lastname");
-    var $email = $("#email");
-    var $phone = $("#phone");
-    var $percentage = $("#percentage");
-    var categoryOptions = $("#category").children();
-
-    $firstname.val(data.firstName);
-    $lastname.val(data.lastName);
-    $email.val(data.email);
-    $phone.val(data.phoneNumber);
-    $percentage.val(data.workPercentage * 100);
-    for(var i = 0; i < categoryOptions.length;i++){
-        if($(categoryOptions[i]).attr("value") == data.category){
-            $(categoryOptions[i]).prop("selected", true);
-        }
-    }
-    $.ajax({
-        url: "/rest/department",
-        type: 'GET',
-        success: function (depts) {
-            var element = $("#department");
-            $.each(depts, function (index, dept) {
-                var html = "";
-                if(dept.id == data.deptId) {
-                    html += "<option selected>"+dept.name+"</option>";
+            $first.val(data.firstName);
+            $last.val(data.lastName);
+            $email.val(data.email);
+            $phone.val(data.phoneNumber);
+            $percent.val(data.workPercentage * 100);
+            for(var i = 0; i < categoryOptions.length;i++){
+                if($(categoryOptions[i]).attr("value") == data.category){
+                    $(categoryOptions[i]).prop("selected", true);
                 }
-                else{
-                    html += "<option>"+dept.name+"</option>";
+            }
+            $.ajax({
+                url: "/rest/department",
+                type: 'GET',
+                success: function (depts) {
+                    $.each(depts, function (index, dept) {
+                        var html = "";
+                        if(dept.id == data.deptId) {
+                            html += "<option selected>"+dept.name+"</option>";
+                        }
+                        else{
+                            html += "<option>"+dept.name+"</option>";
+                        }
+                        $department.append(html);
+                    });
+                },
+                error: function (data) {
+                    console.log("Not able to get departments")
                 }
-                element.append(html);
             });
+            if(data.category == "ADMIN"){
+                showAdminInput();
+                $("#employee-label").hide();
+            }
+            else {
+                showEmployeeInput();
+                $("#admin-label").hide();
+            }
         },
         error: function (data) {
-            console.log("Not able to get departments")
+            console.log("Not able to get userdata")
         }
     });
-}
-function setEventListeners() {
-    var cancelButton = $("#change-user-button");
-    var changeUserButton = $("#cancel-change-button");
-    cancelButton.click(location.reload());
-    changeUserButton.click(function () {
+
+    var userValue = $(".user-type:checked").val();
+    $("#cancel-change-button").click(location.reload());
+    $('#userBtn').click(function (e) {
         e.preventDefault();
+
         var formError = false;
+
+        $first.removeClass('error').parent().attr('data-content', '');
+        $last.removeClass('error').parent().attr('data-content', '');
+        $percent.removeClass('error').parent().attr('data-content', '');
+        $email.removeClass('error').parent().attr('data-content', '');
+        $phone.removeClass('error').parent().attr('data-content', '');
+        $category.removeClass('error').parent().attr('data-content', '');
+        $department.removeClass('error').parent().attr('data-content', '');
+
         if (!$first.val()) {
             $first.addClass('error').parent().attr('data-content', 'Du må fylle inn fornavn.');
             formError = true;
@@ -159,43 +177,6 @@ function setEventListeners() {
         }
     });
     initPopup();
-    }
-    }
-}
-var createSuccess = false;
-var $first;
-var $last;
-var $percent;
-var $email;
-var $phone;
-var $category;
-var $department;
-
-$(document).ready(function () {
-    $first = $('#firstname');
-    $last = $('#lastname');
-    $percent = $('#percentage');
-    $email = $('#email');
-    $phone = $('#phone');
-    $category = $('#category');
-    loadDepartments();
-
-
-    var userValue = $(".user-type:checked").val();
-
-    $(".user-type").on('change', function () {
-        userValue = $(".user-type:checked").val();
-
-        if (userValue === "admin") {
-            showAdminInput();
-        } else {
-            showEmployeeInput();
-        }
-    });
-
-
-    $('#userBtn').click(function (e) {
-
 });
 
 function initPopup() {
@@ -227,7 +208,7 @@ function submitUser(formData) {
     $('#userBtn').html(`<div class="typing_loader"></div>`);
 
     $.ajax({
-        url: "/rest/admin/createuser",
+        url: "/rest/admin/edit",
         type: 'POST',
         dataType: "json",
         contentType: "application/json",
@@ -252,6 +233,48 @@ function showEmployeeInput() {
     $select.removeClass("hide");
     $percent.removeClass("hide");
     $department.removeClass("hide");
+    $.ajax({
+        url: "/rest/user/"+getUrlParameter("userId"),
+        type: 'GET',
+        success: function (data) {
+            console.log(data);
+            console.log(data.firstName);
+            var categoryOptions = $category.children();
+
+            $first.val(data.firstName);
+            $last.val(data.lastName);
+            $email.val(data.email);
+            $phone.val(data.phoneNumber);
+            $percent.val(data.workPercentage * 100);
+            for(var i = 0; i < categoryOptions.length;i++){
+                if($(categoryOptions[i]).attr("value") == data.category){
+                    $(categoryOptions[i]).prop("selected", true);
+                }
+            }
+            $.ajax({
+                url: "/rest/department",
+                type: 'GET',
+                success: function (depts) {
+                    $.each(depts, function (index, dept) {
+                        var html = "";
+                        if(dept.id == data.deptId) {
+                            html += "<option selected>"+dept.name+"</option>";
+                        }
+                        else{
+                            html += "<option>"+dept.name+"</option>";
+                        }
+                        $department.append(html);
+                    });
+                },
+                error: function (data) {
+                    console.log("Not able to get departments")
+                }
+            });
+        },
+        error: function (data) {
+            console.log("Not able to get userdata")
+        }
+    });
 }
 
 function addUser(data) {
@@ -259,13 +282,13 @@ function addUser(data) {
     console.log("OK", data);
     console.log("Adduser");
     $('.title').text("Vellykket!");
-    $('.result').text("Bruker ble laget med passord: " + data.password);
+    $('.result').text("Brukeren har nå blit oppdatert");
     $('#userViewBtn').attr("href", "user-a.html?search=" + $first.val() + " " + $last.val());
 
     $('.popup').show();
 
     // Reset loading animation
-    $('#userBtn').text("Registrer bruker");
+    $('#userBtn').text("Endre bruker");
 }
 
 function invalidField(data) {
@@ -281,19 +304,6 @@ function invalidField(data) {
     $('.popup').show();
 
     // Reset loading animation
-    $('#userBtn').text("Registrer bruker");
+    $('#userBtn').text("Endre bruker");
 }
 
-function loadDepartments() {
-    $department = $('#department');
-
-    $.get("/rest/department/")
-        .done(function (data) {
-            data.forEach(function (department) {
-                $department.append(`<option value="${department.id}">${department.name}</option>`);
-            })
-        })
-        .fail(function (data) {
-            console.log("fail", data);
-        });
-}

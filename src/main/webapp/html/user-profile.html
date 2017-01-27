@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Endre bruker</title>
+    <title>MinVakt | Registrer bruker</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link rel="stylesheet" href="../css/style.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -36,8 +36,14 @@
 <div class="container">
     <div class="container-header">
         <div>
-            <h2>Endre bruker</h2>
+            <h2>Registrer bruker</h2>
         </div>
+    </div>
+    <div class="radio-group">
+        <input type="radio" class="user-type" name="user-type" id="employee" value="employee" checked>
+        <label for="employee" id = "employee-label" class="hide">Ansatt</label>
+        <input type="radio" class="user-type" name="user-type" id="admin" value="admin">
+        <label for="admin" id = "admin-label" class="hide">Administrasjon</label>
     </div>
     <form class="register-form" method="POST">
         <div>
@@ -67,9 +73,12 @@
         </div>
         <div class="select-container">
             <select name="department" id="department">
+                <option selected disabled>Avdeling</option>
             </select>
         </div>
-        <button type="submit" id="userBtn">Registrer bruker</button>
+        <button type="submit" id="userBtn">Endre bruker</button>
+        <button type="submit" id="cancel-change-button">Avbryt</button>
+
     </form>
 
     <div id="userPopup" class="popup">
@@ -84,6 +93,6 @@
 
 </div>
 <script src="../js/checkscript.js"></script>
-<script src="../js/userProfile.js"></script>
+<script src="../js/userProfile2.js"></script>
 </body>
 </html>
