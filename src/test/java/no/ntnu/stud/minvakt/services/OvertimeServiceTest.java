@@ -58,6 +58,17 @@ public class OvertimeServiceTest extends ServiceTest {
         Assert.assertEquals(expRes.get(0), actual.get(0));
         Assert.assertEquals(expRes.get(1), actual.get(1));
     }
+    @Test
+    public void getOvertimeByShiftId() throws Exception {
+        int userId = 1;
+        int shiftId = 16;
+        Response response = overtimeService.getOvertimeByShiftId(shiftId, userId);
+        ArrayList<Overtime> actual = (ArrayList<Overtime>) response.getEntity();
+
+        ArrayList<Overtime> expRes = new ArrayList<>();
+        expRes.add(new Overtime(1,16,960, 60, true));
+        Assert.assertEquals(expRes.get(0), actual.get(0));
+    }
 
     @Test
     public void deleteOvertime() throws Exception{

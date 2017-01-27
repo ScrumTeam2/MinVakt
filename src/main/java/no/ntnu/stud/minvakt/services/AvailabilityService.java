@@ -36,8 +36,9 @@ public class AvailabilityService extends SecureService {
         super(request);
     }
 
-    @POST
-    public Response setAvailability(@QueryParam("userId") int userId, @QueryParam("shiftId") int shiftId) {
+    // Only used in tests, disabled annotations
+    //@POST
+    public Response setAvailability(/*@QueryParam("userId")*/ int userId, /*@QueryParam("shiftId")*/ int shiftId) {
 
         boolean ok = availabilityDB.setAvailability(userId, shiftId);
         if (!ok) {
@@ -52,10 +53,8 @@ public class AvailabilityService extends SecureService {
     @Produces(MediaType.APPLICATION_JSON)
     public UserAvailableShifts getAvailabilityUser() {
         if (getSession() == null) return null;
-        System.out.println("Get availability");
         int id = getSession().getUser().getId();
         UserAvailableShifts us = availabilityDB.getAvailabilityForUser(id);
-        System.out.println(us.getShifts());
       //  Mail.sendMailConfirm(); //Mailkassen blir ikke initialisert..
         return us;
     }
@@ -74,9 +73,7 @@ public class AvailabilityService extends SecureService {
             int num = arr.getJSONObject(i).getInt("id");
             int id = getSession().getUser().getId();
 
-            System.out.println(num);
             boolean ok = availabilityDB.setAvailability(id, num);
-            System.out.println(ok);
         }
         return "correct";
     }
@@ -119,9 +116,7 @@ public class AvailabilityService extends SecureService {
             int num = arr.getJSONObject(i).getInt("id");
             int id = getSession().getUser().getId();
 
-            System.out.println(num);
             boolean ok = availabilityDB.deleteAvailability(id, num);
-            System.out.println(ok);
         }
         return "correct";
     }
@@ -131,23 +126,27 @@ public class AvailabilityService extends SecureService {
     @Path("/shift/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAvailableUsersForShift(@PathParam("shiftId") int shiftId, @QueryParam("category") String categoryString, @QueryParam("limitByCategory") boolean onlyThisCategory){
+        if(!getSession().isAdmin()) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         AvailableUsersUtil availUsersU = new AvailableUsersUtil();
         ShiftDBManager shiftDBM = new ShiftDBManager();
         Shift shift = shiftDBM.getShift(shiftId);
         User.UserCategory category = User.UserCategory.valueOf(categoryString);
         LocalDate date = shift.getDate().toLocalDate();
         ArrayList<UserBasicWorkHours> userList = availUsersU.sortAvailableEmployeesWithCategory(shiftId, date, category, onlyThisCategory);
-        //System.out.println("Category: "+category.toString());
         GenericEntity entity = new GenericEntity<List<UserBasicWorkHours>>(userList){};
 
         return Response.ok(entity).build();
     }
 
-    @DELETE
-    @Path("/{shiftId}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAvailability(@QueryParam("brukerId") int brukerId, @PathParam("shiftId") int shiftId) {
-        boolean isDeleted = availabilityDB.deleteAvailability(brukerId, shiftId);
+    // Only used in tests, disabled annotations
+    //@DELETE
+    //@Path("/{shiftId}")
+    //@Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteAvailability(/*@QueryParam("brukerId")*/ int userId, /*@PathParam("shiftId")*/ int shiftId) {
+        boolean isDeleted = availabilityDB.deleteAvailability(userId, shiftId);
         if (!isDeleted) {
             return Response.status(400).entity("Unable to delete availability.").build();
         } else {

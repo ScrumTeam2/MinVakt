@@ -34,6 +34,8 @@ public class ShiftPlanService extends SecureService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{startDate}")
     public Response getGeneratedShiftPlan(@PathParam("startDate") Date startDate, ShiftPlan plan) {
+        if(!getSession().isAdmin()) throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+
         plan.setStartDate(startDate.toLocalDate());
         ShiftPlanController controller = new ShiftPlanController(plan);
 
@@ -68,6 +70,8 @@ public class ShiftPlanService extends SecureService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response approveShiftPlan(IntArrayWrapper container) {
+        if(!getSession().isAdmin()) throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+
         if(shiftDBManager.approveShifts(container.getContent())) {
             return Response.ok().build();
         } else {
