@@ -86,6 +86,15 @@ public abstract class DBManager{
         closeConnection();
     }
 
+    protected void finallyStatement(ResultSet res) {
+        try {
+            if (res != null) res.close();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Finally Statement failed", e);
+        }
+        closeConnection();
+    }
+
     protected void finallyStatement(PreparedStatement prep) {
         try {
             if (!connection.getAutoCommit()) {
