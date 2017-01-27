@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.data.shift;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -35,6 +36,10 @@ public class Shift {
         public String toString() {
             String constName = super.toString();
             return constName.substring(0, 1) + constName.substring(1).toLowerCase();
+        }
+
+        public int getStartHour() {
+            return (super.ordinal() + 1) * 8 - 1;
         }
     }
     public Shift(){
@@ -111,6 +116,10 @@ public class Shift {
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    public LocalDateTime getStartTime() {
+        return date.toLocalDate().atStartOfDay().plusHours(type.getStartHour());
     }
 
     @Override

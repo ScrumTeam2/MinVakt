@@ -104,6 +104,16 @@
             <artifactId>javax.mail</artifactId>
             <version>1.5.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.22</version>
+        </dependency>
     </dependencies>
 
     <build>

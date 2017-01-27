@@ -26,7 +26,7 @@ public abstract class DBManager{
             closeConnection();
             return false;
         }
-        return !(connection == null);
+        return connection != null;
     }
     protected void closeConnection(){
         try {

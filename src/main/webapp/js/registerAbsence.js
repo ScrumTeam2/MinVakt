@@ -79,17 +79,24 @@ function showShiftInfo(data) {
         if (counter < data.shiftUsers.length) {
             var user = data.shiftUsers[counter];
             if (user.valid_absence !== 0) { //TODO: Bør dette gjøres her? Isåfall hvor får vi hvor mye absence?
-                output += `<div class="watch" data-id="${user.userId}">
-                    <div class="watch-info">
-                        <p class="lead">${user.userName}</p>
-                        <p class="sub">${userTypes[user.userCategory]}</p>
-                    </div>
-                    <div class="longer">
-                        <input type="number" id="hours" min="0" max="8" placeholder="Timer">
-                        <input type="number" id="minutes" min="0" max="55" step="5" placeholder="Minutter">
-                    </div>
+                $.ajax({
+                    url: "/rest/overtime/shiftId/" + getUrlParameter("id") + "?userId=" + user.userId,
+                    type: "GET",
+                    success: function(data) {
+                        console.log(data);
+                        output += `<div class="watch" data-id="${user.userId}">
+                                    <div class="watch-info">
+                                        <p class="lead">${user.userName}</p>
+                                        <p class="sub">${userTypes[user.userCategory]}</p>
+                                    </div>
+                                    <div class="longer">
+                                        <input type="number" id="hours" min="0" max="8" placeholder="Timer">
+                                        <input type="number" id="minutes" min="0" max="55" step="5" placeholder="Minutter">
+                                    </div>
 
-                </div>`;
+                                </div>`;
+                    }
+                });
             } else {
                 output += `<div class="watch" data-id="${user.userId}">
                     <div class="watch-info">

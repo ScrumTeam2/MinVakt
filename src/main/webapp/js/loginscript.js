@@ -53,14 +53,12 @@ $(document).ready(function(){
                 error: invalid
             });
         }
-        setTimeout(function() {$('#login').resetLoader("Logg inn");}, 500);
     });
 });
 
 function login(data){
     console.log("Login", data.id);
     console.log("Login", data.category);
-
     sessionStorage.SessionId = data.id;
     sessionStorage.SessionIdCat = data.category;
     sessionStorage.SessionIdDept = data.deptId;
@@ -86,12 +84,13 @@ function errorHere(data){
 }
 
 function invalid(data){
+    setTimeout(function() {$('#login').resetLoader("Logg inn");}, 500);
     $('.feedback').show();
     console.log("Invalid", data);
 }
+
 //function to reset the loading button animation
 $.fn.resetLoader = function(buttonText){
     $('.typing_loader').remove();
-    //$(this).html(`<div class="submit"></div>`);
     $(this).text(buttonText);
 }

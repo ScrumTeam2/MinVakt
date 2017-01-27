@@ -69,7 +69,7 @@ function addShiftInfoHtml (element, shiftId, data) {
     $('#absenceBtn').on('click', function(e) {
         e.preventDefault();
         var $this = $(e.currentTarget);
-        window.location = "/html/edit-shift.html?id=" + $this.attr("data-id");
+        window.location = "/html/register-absence.html?id=" + $this.attr("data-id");
     });
 }
 

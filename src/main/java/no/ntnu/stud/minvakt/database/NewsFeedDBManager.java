@@ -14,6 +14,7 @@ public class NewsFeedDBManager extends DBManager{
 
     private final String sqlCreateNotification = "INSERT INTO newsfeed VALUES(DEFAULT,?,?,0,?,?,?,?,?)";
     private final String sqlDeleteNotification = "DELETE FROM newsfeed WHERE feed_id = ?";
+    private final String sqlDeleteNotificationsForShift = "DELETE FROM newsfeed WHERE shift_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
     private final String sqlGetNewsFeedForAdmin = "SELECT feed_id, date_time,content,newsfeed.category, user.user_id, shift_id, shift_user_id " +
@@ -55,14 +56,30 @@ public class NewsFeedDBManager extends DBManager{
                     }
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to add notification to news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to add notification to news feed", e);
             } finally {
                 finallyStatement(res, prep);
             }
         }
         return id;
+    }
+    public boolean deleteNotificationsForShift(int shiftId){
+        int status = 0;
+        if(setUp()) {
+            try {
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlDeleteNotificationsForShift);
+                prep.setInt(1,shiftId);
+                status = prep.executeUpdate();
+
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to delete notifications for shift " + shiftId + " from news feed", e);
+            } finally {
+                finallyStatement(prep);
+            }
+        }
+        return status != 0;
     }
     public boolean deleteNotification(int notificationId){
         int status = 0;
@@ -103,9 +120,8 @@ public class NewsFeedDBManager extends DBManager{
                     );
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to delete notification from news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to delete notification from news feed", e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -132,9 +148,8 @@ public class NewsFeedDBManager extends DBManager{
                     );
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to get notification from news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to get notification from news feed", e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -163,9 +178,8 @@ public class NewsFeedDBManager extends DBManager{
                     );
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to delete notification from news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to delete notification from news feed", e);
             } finally {
                 finallyStatement(res,prep);
             }
@@ -182,9 +196,8 @@ public class NewsFeedDBManager extends DBManager{
                 prep.setInt(2,feedId);
                 status = prep.executeUpdate();
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to update notification resolve to "+resolved);
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to update notification resolve to "+resolved, e);
             } finally {
                 finallyStatement(prep);
             }
@@ -205,9 +218,8 @@ public class NewsFeedDBManager extends DBManager{
                 res = prep.executeQuery();
                 res.next();
                 feedId = res.getInt("feed_id");
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to find feedId for userID: "+userId+", shiftID: " +shiftId+ ", startTime: "+startTime);
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to find feedId for userID: "+userId+", shiftID: " +shiftId+ ", startTime: "+startTime, e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -229,15 +241,38 @@ public class NewsFeedDBManager extends DBManager{
                 res = prep.executeQuery();
                 res.next();
                 resolvedCount = res.getInt("pending");
-                System.out.println(prep.toString());
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to find unresolved user count for shiftID: " +shiftId+ " and shift_user: "+shiftUserId);
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to find unresolved user count for shiftID: " +shiftId+ " and shift_user: "+shiftUserId, e);
             } finally {
                 finallyStatement(res, prep);
             }
         }
         return resolvedCount;
+    }
+
+    private static final String sqlUserHasFeed = "SELECT 1 FROM newsfeed WHERE user_id = ? AND feed_id = ?";
+
+    /**
+     * Checks if an user has access to a specified feed item
+     * @param userId The ID of the user
+     * @param feedId The ID of the feed item
+     * @return True if the user has access
+     */
+    public boolean userHasFeed(int userId, int feedId) {
+        if(!setUp()) {
+            return false;
+        }
+
+        try {
+            conn = getConnection();
+            prep = conn.prepareStatement(sqlUserHasFeed);
+            prep.setInt(1, userId);
+            prep.setInt(2, feedId);
+            return prep.executeQuery().next();
+        } catch (SQLException e) {
+            log.log(Level.WARNING, "Unable to check if user " + userId + " has feed " + feedId, e);
+        }
+        return false;
     }
 }
 
