@@ -4,6 +4,7 @@
 
 var $this, feedId, shiftId, categoryPop;
 var popVisible = false;
+var popOpened = false;
 
 $(document).ready(function(){
     loadMessages();
@@ -98,16 +99,9 @@ function showMessages(data){
 }
 
 
-function checkPopup(e){
-    var $popup = $('.popup');
-    if($popup.is(":visible")){
-        if(event.target !== $popup){
-            //hidePopup(e);
-        }
-    } else{
-        console.log($popup.is(":visible"));
-        console.log("not visible");
-    }
+function checkPopup(){
+    console.log("sjekker check og setter true");
+    popOpened = true;
 }
 
 function showPopup(e){
@@ -115,13 +109,6 @@ function showPopup(e){
     popVisible = true;
     var $popup = $('.popup');
     $popup.show();
-
-
-    /*
-    $('.popup').click(function(e){
-        console.log("klikkkk");
-        //e.stopPropagation();
-    });*/
 
     //no button
     var $deny = $('#denyBtn');
@@ -139,32 +126,14 @@ function showPopup(e){
         closePopup(e, feedId);
     });
 
-    /*console.log(e.target);
-    if($popup.is(":visible")){
-        console.log(e.target);
-        console.log("visible");
-        if(e.target !== $popup){
-            console.log("show still");
-        } else{
-            hidePopup(e);
-            console.log("hide");
-        }
-    } else{
-        console.log($popup.is(":visible"));
-        console.log("not visible");
-    }*/
+    //checkPopup();
 }
 
-/*var $popup = $('#feed-popup');
-window.onclick = function(event) {
-    if (event.target !== $popup) {
-        $popup.hide();
-    }
-};*/
 
 function hidePopup(e){
     e.preventDefault();
     popVisible = false;
+    popOpened = false;
     var $popup = $('.popup');
     $popup.hide();
 
@@ -214,13 +183,12 @@ function removeMessage(element){
     setResolved(feedId);
 }
 
-
-
 //closes popup after pressing yes or no
 function closePopup(e, feedId){
     e.preventDefault();
     popVisible = false;
-    $('#feed-popup').hide();
+    popOpened = false;
+    $('.popup').hide();
 }
 
 // set boolean to true
@@ -278,6 +246,7 @@ function acceptChangeover(data){
         if (!popVisible) {
             e.preventDefault();
             openPopup(e);
+            popOpened = false;
         }
     });
 }
@@ -303,6 +272,7 @@ function acceptAbsence(data){
         if (!popVisible) {
             e.preventDefault();
             openPopup(e);
+            popOpened = false;
         }
     });
 }
@@ -328,6 +298,7 @@ function acceptTimebank(data){
         if (!popVisible) {
             e.preventDefault();
             openPopup(e);
+            popOpened = false;
         }
     });
 }
@@ -349,12 +320,16 @@ function showNotification(data){
     $notifications.append($html);
 }
 
-//close popup when clicking outside of the popup
-/*var $popup = $('#feed-popup');
-window.onclick = function(event) {
-    if ( nmpopVisible) {
-        if (event.target !== $popup) {
-            hidePopup(event);
+var $popup = $('.popup');
+$(document).on("click", function (e) {
+    if(popOpened){
+        if (popVisible) {
+            if (!$popup.is(e.currentTarget) && $popup.has(e.target).length === 0) {
+                hidePopup(e);
+                popOpened = false;
+            }
         }
+    } else{
+        popOpened = true;
     }
-};*/
+});

@@ -81,6 +81,7 @@ public class UserDBManager extends DBManager {
                                 res.getString("last_name"), null,null,res.getString("email"), res.getString("phonenumber"),
                                 User.UserCategory.valueOf(res.getInt("category")), res.getFloat("percentage_work"),
                                 res.getInt("dept_id"));
+                        System.out.println(user);
                         return user;
                     }
                     else{

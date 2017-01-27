@@ -10,44 +10,51 @@ $(document).ready(function () {
 
     var $hours = $('#hours');
     var $minutes = $('#minutes');
-
     $hours.removeClass('error').parent().attr('data-content', '');
     $minutes.removeClass('error').parent().attr('data-content', '');
 
     checkInput();
 });
 
-function reformatData(){
+function reformatType(type){
     var formattedType;
+    switch (type){
+        case "DAY":
+            formattedType = "Dagvakt";
+            break;
+        case "EVENING":
+            formattedType = "Kveldsvakt";
+            break;
+        case "NIGHT":
+            formattedType = "Nattevakt";
+            break;
+        default:
+            console.log("type not known", type);
+    }
+    return formattedType;
+}
+
+function reformatTime(type){
     var typeTime;
     switch (type){
         case "DAY":
-            formattedType = "dagvakt";
             typeTime = "07:00-15:00";
             break;
         case "EVENING":
-            formattedType = "kveldsvakt";
             typeTime = "15:00-23:00";
             break;
         case "NIGHT":
-            formattedType = "nattevakt";
             typeTime = "23:00-07:00";
             break;
         default:
             console.log("type not known", type);
     }
-
-
-
-    //var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
-    //var shiftTimes = {"DAY" : "07.00 - 15.00", "EVENING" : "15.00 - 23.00", "NIGHT" : "23.00 - 07.00"};
+    return typeTime;
 }
 
 function checkInput(){
     $('#timebankBtn').click(function(e){
         e.preventDefault();
-
-        console.log("klikket");
 
         var formError = false;
 
@@ -69,7 +76,6 @@ function checkInput(){
         var hoursVal = $hours.val();
         var minutesVal = $minutes.val();
 
-        console.log(formError);
 
         if(!formError){
             calcMinutes(hoursVal, minutesVal);
@@ -96,24 +102,24 @@ function sendTimebank(formData){
 }
 
 function errorMessage(e){
-    console.log("ikke ok post", e);
-    console.error("error", e);
+    console.log("Post error");
 }
 
 function getShift(){
     var $shiftInfo = $('.shift-info');
-    var message1 = "Mandag 19. januar 2017";
-    var message2 = "Dagvakt 07:00-15:00";
+    var shiftTime = reformatTime(type);
+    var shiftType = reformatType(type);
+    var shiftDate = convertDate(date);
     $shiftInfo.html(
-        `<p class="lead">${message1}</p>
-        <p class="sub">${message2}</p>`
+        `<p class="lead">${shiftDate}</p>
+        <p class="sub">${shiftType} ${shiftTime}</p>`
     );
 
 }
 
 function registerOvertime(minutes){
     var startTime;
-    var type = "DAY";
+    //var type = "DAY";
     switch (type){
         case "DAY":
             startTime = 900;
@@ -130,11 +136,11 @@ function registerOvertime(minutes){
     var formData;
     formData = {
         //"userId": 1,
-        "shiftId": 43,
+        "shiftId": shiftId,
         "startTime": startTime,
         "minutes": minutes,
         "approved": false,
-        "date": "2017-02-06",
+        "date": date,
         "type": type
     };
     sendTimebank(formData);
@@ -143,29 +149,29 @@ function registerOvertime(minutes){
 function popupContent(){
     var $popupCont = $('#content');
 
+    var shiftType = reformatType(type);
+    var shiftDate = convertDate(date);
 
-    var message1 = "Mandag 19. januar 2017";
-    var message2 = "dagvakt";
     var hours = parseInt($('#hours').val());
     var minutes = parseInt($('#minutes').val());
 
     if(hours === 0){
         $popupCont.html(
             `<h3>Overtid sendt til godkjenning</h3>
-                <p>${message1}, ${message2}</p>
+                <p>${shiftType} - ${shiftDate}</p>
                 <p>Overtid: ${minutes} minutter</p>`
         );
     } else if(hours === 1){
         $popupCont.html(
             `<h3>Overtid sendt til godkjenning</h3>
-                <p>${message1}, ${message2}</p>
+                <p>${shiftType} - ${shiftDate}</p>
                 <p>Overtid: ${hours} time og ${minutes} minutter</p>`
         );
     }
     else{
         $popupCont.html(
             `<h3>Overtid sendt til godkjenning</h3>
-                <p>${message1}, ${message2}</p>
+                <p>${shiftType} - ${shiftDate}</p>
                 <p>Overtid: ${hours} timer og ${minutes} minutter</p>`
         );
     }
@@ -174,7 +180,7 @@ function popupContent(){
 
 function showPopup(){
     var $popup = $('.popup');
-    console.log("ok post");
+    console.log("Post success");
     $popup.show();
 }
 
