@@ -126,6 +126,12 @@ header a:last-child {
     align-items: flex-end;
 }
 
+.container-header form {
+    flex-grow: 1;
+    margin: 0 4rem -.5rem;
+    min-width: 112px;
+}
+
 input, select {
   border: 0;
   background: none;
