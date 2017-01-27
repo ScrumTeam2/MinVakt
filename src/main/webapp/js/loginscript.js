@@ -89,9 +89,9 @@ function invalid(data){
     $('.feedback').show();
     console.log("Invalid", data);
 }
+
 //function to reset the loading button animation
 $.fn.resetLoader = function(buttonText){
     $('.typing_loader').remove();
-    //$(this).html(`<div class="submit"></div>`);
     $(this).text(buttonText);
 }
