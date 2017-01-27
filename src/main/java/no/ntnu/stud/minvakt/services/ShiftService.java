@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.data.Content;
 import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
@@ -42,7 +43,7 @@ public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
     UserDBManager userDB = new UserDBManager();
     NewsFeedDBManager newsDB = new NewsFeedDBManager();
-    FormattingUtil format = new FormattingUtil();
+    Content content = new Content();
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -261,12 +262,11 @@ public class ShiftService extends SecureService{
             throw new BadRequestException("Invalid shift ID");
         }
 
-        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt "+
-                shift.getDate() + ".";
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
         boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
         int adminId = userDB.getAdminId();
-        NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), shiftId,
+        NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                content.validAbsence(user), adminId, user.getId(), shiftId,
                 NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
         if(newsDB.createNotification(notification) != 0){
             return Response.ok().entity("Notification sent to administration.").build();
