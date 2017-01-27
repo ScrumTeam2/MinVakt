@@ -59,7 +59,6 @@ $(document).ready(function(){
 function login(data){
     console.log("Login", data.id);
     console.log("Login", data.category);
-
     sessionStorage.SessionId = data.id;
     sessionStorage.SessionIdCat = data.category;
     sessionStorage.SessionIdDept = data.deptId;
