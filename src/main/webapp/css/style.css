@@ -938,6 +938,7 @@ text-align: center;
     text-decoration: underline;
 }
 
+
 @media(min-width: 500px) {
     .container {
         max-width: 750px;
@@ -1008,4 +1009,10 @@ text-align: center;
 #staffForm {
     margin-bottom: 2.5rem;
     display: none;
+}
+
+.red{
+    border-bottom: 2px solid #B92D00;
+    margin-bottom: 0.4375rem;
+
 }

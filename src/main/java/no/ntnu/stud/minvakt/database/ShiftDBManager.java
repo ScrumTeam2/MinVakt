@@ -221,7 +221,6 @@ public class ShiftDBManager extends DBManager {
         if(setUp()){
             ResultSet res = null;
             try{
-                startTransaction();
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetShiftUser);
                 prep.setInt(1,shiftId);
@@ -250,11 +249,9 @@ public class ShiftDBManager extends DBManager {
                             shiftUsers, res.getBoolean("approved"));
             }
             catch (SQLException e){
-                rollbackStatement();
                 log.log(Level.WARNING, "Not able to get shift from shift ID = " + shiftId, e);
             }
             finally {
-                endTransaction();
                 finallyStatement(res, prep);
             }
         }
