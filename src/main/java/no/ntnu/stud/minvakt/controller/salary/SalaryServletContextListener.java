@@ -22,10 +22,11 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class SalaryServletContextListener implements ServletContextListener {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
+    private Scheduler scheduler;
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         // Start the scheduler
-        Scheduler scheduler;
         try {
             scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
@@ -63,6 +64,10 @@ public class SalaryServletContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+        try {
+            scheduler.shutdown(true);
+        } catch (SchedulerException e) {
+            log.log(Level.SEVERE, "Could not shut down QUARTZ scheduler", e);
+        }
     }
 }

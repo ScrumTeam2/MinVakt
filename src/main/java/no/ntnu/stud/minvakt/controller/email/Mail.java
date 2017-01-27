@@ -1,16 +1,17 @@
 package no.ntnu.stud.minvakt.controller.email;
 
-import java.lang.invoke.MethodHandles;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.lang.invoke.MethodHandles;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Mail {
+    private static final String CHARSET = "ISO-8859-1";
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     public Mail() {
@@ -46,25 +47,21 @@ public class Mail {
                 });
 
         try {
-            Message m = new MimeMessage(session);
-            m.setFrom(new InternetAddress(from));
+            MimeMessage m = new MimeMessage(session);
+            InternetAddress address = new InternetAddress(from);
+            address.setPersonal("MinVakt", CHARSET);
+            m.setFrom(address);
             m.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            m.setSubject(title);
-            m.setText(mailMessage);
+            m.setSubject(title, CHARSET);
+            m.setText(mailMessage, CHARSET);
             Transport.send(m);
             return true;
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.log(Level.WARNING, "Could not send mail", e);
             return false;
         }
     }
 
-    /**
-     * @param recipient
-     * @param title
-     * @param mailMessage
-     * @return
-     */
     /**
      * Sends an email to a specified recipient, with a specified title, message & attachment
      * @param recipient email of recipient
@@ -97,18 +94,20 @@ public class Mail {
 
         try {
             MimeMessage m = new MimeMessage(session);
-            m.setFrom(new InternetAddress(from));
+            InternetAddress address = new InternetAddress(from);
+            address.setPersonal("MinVakt", CHARSET);
+            m.setFrom(address);
             m.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-            m.setSubject(title, "ISO-8859-1");
+            m.setSubject(title, CHARSET);
 
             Multipart multipart = new MimeMultipart();
 
             MimeBodyPart textBodyPart = new MimeBodyPart();
-            textBodyPart.setText(mailMessage, "ISO-8859-1");
+            textBodyPart.setText(mailMessage, CHARSET);
 
             MimeBodyPart attachmentBodyPart = new MimeBodyPart();
             attachmentBodyPart.setFileName(fileName);
-            attachmentBodyPart.setText(content, "ISO-8859-1");
+            attachmentBodyPart.setText(content, CHARSET);
 
             multipart.addBodyPart(textBodyPart);
             multipart.addBodyPart(attachmentBodyPart);
@@ -116,7 +115,7 @@ public class Mail {
 
             Transport.send(m);
             return true;
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             log.log(Level.WARNING, "Could not send mail", e);
             return false;
         }

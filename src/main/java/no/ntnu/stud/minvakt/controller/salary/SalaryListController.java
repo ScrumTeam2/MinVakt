@@ -28,7 +28,7 @@ public class SalaryListController implements Job {
         SalaryDBManager dbManager = new SalaryDBManager();
         Map<Integer, UserWorkInfo> workInfo = dbManager.getAllWorkHours();
 
-        StringBuilder csvBuilder = new StringBuilder("Fornavn;Etternavn;Ordinære timer;Overtid (timer)\n");
+        StringBuilder csvBuilder = new StringBuilder("Fornavn;Etternavn;Ordinære timer;Overtid (timer)");
         for(UserWorkInfo user : workInfo.values()) {
             csvBuilder.append(user.getCsvString());
         }

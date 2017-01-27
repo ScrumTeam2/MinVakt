@@ -77,6 +77,6 @@ public class UserWorkInfo {
     }
 
     public String getCsvString() {
-        return firstName + ";" + lastName + ";" + calculateOrdinaryWorkHours() + ";" + calculateOvertimeWorkHours() + "\n";
+        return "\n\"" + firstName + "\";\"" + lastName + "\";\"" + calculateOrdinaryWorkHours() + "\";\"" + calculateOvertimeWorkHours() + "\"";
     }
 }
