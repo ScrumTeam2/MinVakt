@@ -115,7 +115,7 @@ function addShiftInfoHtml (element, shiftId, data) {
             if(user.userId == sessionStorage.SessionId) {
                 iAmOnShift = true;
             }
-            switch (user.valid_absence2) {
+            switch (user.valid_absence) {
                 case 1:
                     absence = 1;
                     break;
