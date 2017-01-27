@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.data.user;
 
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
  * Created by evend on 1/13/2017.
@@ -28,7 +29,7 @@ public class UserBasic {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = SanitizeUtil.filterInput(firstName);
     }
 
     public String getLastName() {
@@ -36,7 +37,7 @@ public class UserBasic {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = SanitizeUtil.filterInput(lastName);
     }
 
 

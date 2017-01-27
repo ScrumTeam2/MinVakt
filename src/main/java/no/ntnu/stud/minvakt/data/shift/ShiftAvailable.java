@@ -1,6 +1,7 @@
 package no.ntnu.stud.minvakt.data.shift;
 
 import no.ntnu.stud.minvakt.data.shift.Shift;
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 import java.util.Date;
 
@@ -57,7 +58,7 @@ public class ShiftAvailable {
     }
 
     public void setDeptName(String deptName) {
-        this.deptName = deptName;
+        this.deptName = SanitizeUtil.filterInput(deptName);
     }
 
     public boolean isAvailable() {
