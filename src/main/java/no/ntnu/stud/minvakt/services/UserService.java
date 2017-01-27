@@ -47,9 +47,8 @@ public class UserService extends SecureService{
     @POST
     @Path("/changepass")
     public Response changePassword(@FormParam("oldpass") String oldPass, @FormParam("newpass") String newPass){
-        System.out.println("Oldpass = "+oldPass+" Newpass = "+newPass);
         int status = userDB.changePasswordUserId(Integer.toString(getSession().getUser().getId()), oldPass, newPass);
-        System.out.println(status);
+
         if(status > 0){
             return Response.ok().entity("Password is changed").build();
         }

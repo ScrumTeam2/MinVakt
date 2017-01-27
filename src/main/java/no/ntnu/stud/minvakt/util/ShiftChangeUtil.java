@@ -146,7 +146,6 @@ public class ShiftChangeUtil {
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId,userInvolving.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
                 int status =  newsDB.createNotification(notification);
-                //System.out.println("Notification sent to admin");
 
                 if (status ==0){
                     return false;

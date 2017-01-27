@@ -34,7 +34,6 @@ public class UserAdminServiceTest extends ServiceTest {
         Response response = userAdminService.addUser(user);
         if (response.getStatus() == 200) {
             String rawJson = (String) response.getEntity();
-            System.out.println(rawJson);
             JSONObject o = new JSONObject(rawJson);
             Integer userId = o.getInt("id");
             boolean isDeleted = userAdminService.deleteUser(userId);

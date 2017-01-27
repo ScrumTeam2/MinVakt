@@ -94,8 +94,6 @@ public class AvailableUsersUtil {
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
                 int status =  newsFeedDMB.createNotification(notification);
 
-                //System.out.println("Notification sent to user");
-
                 if (status ==0){
                     System.out.println("could not make notification for user "+userTo.getId());
                 }
@@ -113,8 +111,6 @@ public class AvailableUsersUtil {
             NewsFeedItem notification = new NewsFeedItem(-1, dateTime, content, adminId,userFrom.getId(),
                     shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
             int status =  newsFeedDMB.createNotification(notification);
-
-            //System.out.println("Notification sent to admin");
 
             if (status ==0){
                 System.out.println("Could not make notification to administrator");

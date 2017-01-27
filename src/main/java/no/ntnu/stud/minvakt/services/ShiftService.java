@@ -70,7 +70,6 @@ public class ShiftService extends SecureService{
                                                       @QueryParam("date") Date date, @DefaultValue("-1")@QueryParam("deptId") int deptId){
         if(deptId <= 0) deptId = getSession().getUser().getDeptId();
         if(date == null) date = new Date(System.currentTimeMillis());
-        System.out.println(deptId);
 
         return shiftDB.getShifts(daysForward, getSession().getUser().getId(), date, deptId);
     }
@@ -96,7 +95,6 @@ public class ShiftService extends SecureService{
     @Produces(MediaType.APPLICATION_JSON)
     public Shift getShift(@PathParam("shiftId") int shiftId) {
         if (getSession() == null) return null;
-        System.out.println("GetShift");
 
         return shiftDB.getShift(shiftId);
     }
@@ -117,7 +115,6 @@ public class ShiftService extends SecureService{
         boolean statusOk = shiftDB.addEmployeeToShift(shiftUser, shiftId);
         if (statusOk) {
             Response res = Response.status(200).build();
-            System.out.println(res.getStatus());
             return res;
         } else {
             return Response.status(400).entity("Unable to add employee").build();

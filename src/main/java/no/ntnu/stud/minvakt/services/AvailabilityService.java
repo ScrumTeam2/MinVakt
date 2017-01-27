@@ -52,10 +52,8 @@ public class AvailabilityService extends SecureService {
     @Produces(MediaType.APPLICATION_JSON)
     public UserAvailableShifts getAvailabilityUser() {
         if (getSession() == null) return null;
-        System.out.println("Get availability");
         int id = getSession().getUser().getId();
         UserAvailableShifts us = availabilityDB.getAvailabilityForUser(id);
-        System.out.println(us.getShifts());
       //  Mail.sendMailConfirm(); //Mailkassen blir ikke initialisert..
         return us;
     }
@@ -74,9 +72,7 @@ public class AvailabilityService extends SecureService {
             int num = arr.getJSONObject(i).getInt("id");
             int id = getSession().getUser().getId();
 
-            System.out.println(num);
             boolean ok = availabilityDB.setAvailability(id, num);
-            System.out.println(ok);
         }
         return "correct";
     }
@@ -119,9 +115,7 @@ public class AvailabilityService extends SecureService {
             int num = arr.getJSONObject(i).getInt("id");
             int id = getSession().getUser().getId();
 
-            System.out.println(num);
             boolean ok = availabilityDB.deleteAvailability(id, num);
-            System.out.println(ok);
         }
         return "correct";
     }
@@ -137,7 +131,6 @@ public class AvailabilityService extends SecureService {
         User.UserCategory category = User.UserCategory.valueOf(categoryString);
         LocalDate date = shift.getDate().toLocalDate();
         ArrayList<UserBasicWorkHours> userList = availUsersU.sortAvailableEmployeesWithCategory(shiftId, date, category, onlyThisCategory);
-        //System.out.println("Category: "+category.toString());
         GenericEntity entity = new GenericEntity<List<UserBasicWorkHours>>(userList){};
 
         return Response.ok(entity).build();

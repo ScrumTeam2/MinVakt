@@ -55,9 +55,8 @@ public class NewsFeedDBManager extends DBManager{
                     }
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to add notification to news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to add notification to news feed", e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -103,9 +102,8 @@ public class NewsFeedDBManager extends DBManager{
                     );
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to delete notification from news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to delete notification from news feed", e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -132,9 +130,8 @@ public class NewsFeedDBManager extends DBManager{
                     );
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to get notification from news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to get notification from news feed", e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -163,9 +160,8 @@ public class NewsFeedDBManager extends DBManager{
                     );
                 }
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to delete notification from news feed");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to delete notification from news feed", e);
             } finally {
                 finallyStatement(res,prep);
             }
@@ -182,9 +178,8 @@ public class NewsFeedDBManager extends DBManager{
                 prep.setInt(2,feedId);
                 status = prep.executeUpdate();
 
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to update notification resolve to "+resolved);
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to update notification resolve to "+resolved, e);
             } finally {
                 finallyStatement(prep);
             }
@@ -205,9 +200,8 @@ public class NewsFeedDBManager extends DBManager{
                 res = prep.executeQuery();
                 res.next();
                 feedId = res.getInt("feed_id");
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to find feedId for userID: "+userId+", shiftID: " +shiftId+ ", startTime: "+startTime);
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to find feedId for userID: "+userId+", shiftID: " +shiftId+ ", startTime: "+startTime, e);
             } finally {
                 finallyStatement(res, prep);
             }
@@ -229,10 +223,8 @@ public class NewsFeedDBManager extends DBManager{
                 res = prep.executeQuery();
                 res.next();
                 resolvedCount = res.getInt("pending");
-                System.out.println(prep.toString());
-            } catch (SQLException sqle) {
-                log.log(Level.WARNING, "Not able to find unresolved user count for shiftID: " +shiftId+ " and shift_user: "+shiftUserId);
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Not able to find unresolved user count for shiftID: " +shiftId+ " and shift_user: "+shiftUserId, e);
             } finally {
                 finallyStatement(res, prep);
             }
