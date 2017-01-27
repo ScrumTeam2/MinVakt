@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.data.Content;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.Overtime;
 import no.ntnu.stud.minvakt.data.shift.Shift;
@@ -31,6 +32,7 @@ public class OvertimeService extends SecureService{
     OvertimeDBManager overtimeDBM = new OvertimeDBManager();
     NewsFeedDBManager newsfeedDBM = new NewsFeedDBManager();
     UserDBManager userDBM = new UserDBManager();
+    Content content = new Content();
 
     public OvertimeService(@Context HttpServletRequest request) {
         super(request);
@@ -55,13 +57,13 @@ public class OvertimeService extends SecureService{
 
         if(isRegistered) {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            String content = user.getFirstName()+" "+user.getLastName()+" har registert timeavvik på "+overtime.getMinutes()+" minutter "+ FormattingUtil.formatDate(shift.getDate())+".";
             int adminId = userDBM.getAdminId();
 
             if(adminId==0){
                 return Response.status(400).entity("Overtime registered, but could not find admin user").build();
             }else {
-                NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
+                NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                        content.regTimebank(user), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
                 int newsfeedId = newsfeedDBM.createNotification(notification);
 
                 if (newsfeedId == 0){

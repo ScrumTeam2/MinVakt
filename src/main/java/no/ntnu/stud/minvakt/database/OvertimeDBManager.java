@@ -1,5 +1,4 @@
 package no.ntnu.stud.minvakt.database;
-import com.mysql.cj.api.mysqla.result.Resultset;
 import no.ntnu.stud.minvakt.data.Overtime;
 
 import java.sql.*;
@@ -21,7 +20,8 @@ public class OvertimeDBManager extends DBManager{
 
     private final String getSqlGetOvertimeByUserId = "SELECT overtime.*, shift.date, shift.time FROM overtime NATURAL JOIN employee_shift JOIN shift ON (shift.shift_id = employee_shift.shift_id) WHERE overtime.user_id =?;";
     private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
-    private final String sqlGetMinutes = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
+    private final String sqlGetMinutesByDate = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
+    private final String sqlGetMinutes = "SELECT minutes FROM overtime WHERE user_id = ? AND shift_id = ? AND start_time = ?";
 
 
     Connection conn;
@@ -237,8 +237,7 @@ public class OvertimeDBManager extends DBManager{
         return count;
     }
     */
-
-    public int getMinutes(int userId, Date fromDate, Date toDate){
+    public int getMinutes(int userId, int shiftId, int startTime){
         int minutes = 0;
         ResultSet res = null;
 
@@ -247,6 +246,35 @@ public class OvertimeDBManager extends DBManager{
                 startTransaction();
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetMinutes);
+
+                prep.setInt(1, userId);
+                prep.setInt(2, shiftId);
+                prep.setInt(3, startTime);
+
+                res = prep.executeQuery();
+                res.next();
+
+                minutes = res.getInt("minutes");
+
+            } catch (SQLException sqlE){
+                log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);
+            } finally {
+                endTransaction();
+                finallyStatement(res, prep);
+            }
+        }
+        return minutes;
+    }
+
+    public int getMinutesByDate(int userId, Date fromDate, Date toDate){
+        int minutes = 0;
+        ResultSet res = null;
+
+        if(setUp()){
+            try {
+                startTransaction();
+                conn = getConnection();
+                prep = conn.prepareStatement(sqlGetMinutesByDate);
 
                 prep.setInt(1, userId);
                 prep.setDate(2, fromDate);
