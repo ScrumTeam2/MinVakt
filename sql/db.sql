@@ -129,7 +129,7 @@ INSERT INTO department VALUES(2, 'Avdeling 2');
 -- USERS
 
 -- category: 0 - Admin, 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
-INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8,0);
+INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8,1);
 INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2', 1, 0.8,1);
 INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3', 1, 1,2);
 INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'password', 'password', 'email4', 'phone4', 1, 1,1);

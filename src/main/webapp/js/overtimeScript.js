@@ -1,151 +1,196 @@
 /**
  * Created by AnitaKristineAune on 24.01.2017.
  */
+var shiftId = getUrlParameter("shiftId");
+var date = getUrlParameter("date");
+var type = getUrlParameter("type");
 
-/*
-not finished
- */
-/*
 $(document).ready(function () {
+    getShift();
 
+    var $hours = $('#hours');
+    var $minutes = $('#minutes');
+    $hours.removeClass('error').parent().attr('data-content', '');
+    $minutes.removeClass('error').parent().attr('data-content', '');
 
-
-    function isChecked(e) {
-        var overtimeValue = $(".overtime-type:checked").val();
-
-        if(overtimeValue === "absence"){
-            $("#overtime-h").hide();
-        } else{
-            $("#absence-h").hide();
-        }
-    }
-
-}
-*/
-
-
-/*
-    var user = $.urlParam('userId');
-    var userNr;
-    $.getJSON(('/rest/overtime/' + user, function (data) {
-        userNr = data.name;
-
-    }
-
-
-    function absence(minutes) {
-        var overtimeValue = $(".overtime-type:checked").val();
-
-        if(overtimeValue === "absence"){
-            minutes *= -1;
-        } else{
-            minutes *= 1;
-        }
-     return minutes;
-    }
-
-
-    $('#userBtn').click(function(e){
-        e.preventDefault();
-
-        var emptyField = false;
-
-        var $date = $('#date');
-        var $time = $('#time');
-        var $minutes = $('#minutes');
-
-        if(!$date.val()){
-            $date.addClass('error');
-            emptyField = true;
-        }
-
-        if(!$time.val()){
-            $time.addClass('error');
-            emptyField = true;
-        }
-
-        if(!$minutes.val()){
-            $minutes.addClass('error');
-            emptyField = true;
-        }
-
-        var formData;
-
-        if(overtimeValue === "overtime"){
-            if(!emptyField){
-                formData = {
-                    "userId": ,
-                    "shiftId": ,
-                    "startTime": $time.val(),
-                    "minutes": $minutes.val(),
-                    "approved": false,
-                };
-                console.log(JSON.stringify(formData));
-            }
-        }
-        */
-/*
- private int userId;
- private int shiftId;
- private int startTime;
- private int minutes;
- private boolean approved;
- */
-/*
-        }
-
-        var available;
-        var date;
-        var hasUser;
-        var shiftId;
-        var shiftType;
-        $.ajax({
-            url: "/rest/shift/{shiftId}",
-            type: 'GET',
-            dataType: "json",
-            contentType: "application/json",
-            data: {
-                "available": available,
-                "date": date,
-                "hasUser": hasUser,
-                "shiftId": shiftId,
-                "shiftType": shiftType,
-            }
-        })
-
-        $.ajax({
-            url: "/rest/{userId}",
-            type: 'POST',
-            dataType: "json",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
-            success: addOvertime,
-            error: invalidField
-        });
-
-    });
-
+    checkInput();
 });
 
-function addOvertime(){
-    createSuccess = true;
-    $('.title').text("Vellykket!");
-    $('.result').text("Overtid sendt inn til godkjenning");
-
-    $('.popup').show();
+function reformatType(type){
+    var formattedType;
+    switch (type){
+        case "DAY":
+            formattedType = "Dagvakt";
+            break;
+        case "EVENING":
+            formattedType = "Kveldsvakt";
+            break;
+        case "NIGHT":
+            formattedType = "Nattevakt";
+            break;
+        default:
+            console.log("type not known", type);
+    }
+    return formattedType;
 }
 
-function invalidField(data){
-    $('.title').text("Feil");
-
-    if(data.responseJSON == null) {
-        $('.result').text("En uventet feil oppsto");
-    } else {
-        $('.result').text(data.responseJSON.error);
+function reformatTime(type){
+    var typeTime;
+    switch (type){
+        case "DAY":
+            typeTime = "07:00-15:00";
+            break;
+        case "EVENING":
+            typeTime = "15:00-23:00";
+            break;
+        case "NIGHT":
+            typeTime = "23:00-07:00";
+            break;
+        default:
+            console.log("type not known", type);
     }
+    return typeTime;
+}
 
-    $('#userViewBtn').hide();
-    $('.popup').show();
+function checkInput(){
+    $('#timebankBtn').click(function(e){
+        e.preventDefault();
 
-}*/
+        var formError = false;
 
+        var $hours = $('#hours');
+        var $minutes = $('#minutes');
+
+        $hours.removeClass('error').parent().attr('data-content', '');
+        $minutes.removeClass('error').parent().attr('data-content', '');
+
+        if(!$hours.val()){
+            $hours.addClass('error').parent().attr('data-content', 'Du må fylle inn timer.');
+            formError = true;
+        }
+        if(!$minutes.val()){
+            $minutes.addClass('error').parent().attr('data-content', 'Du må fylle inn minutter.');
+            formError = true;
+        }
+
+        var hoursVal = $hours.val();
+        var minutesVal = $minutes.val();
+
+
+        if(!formError){
+            calcMinutes(hoursVal, minutesVal);
+        }
+    });
+}
+
+function calcMinutes(hoursVal, minutesVal){
+    var parsedH = parseInt(hoursVal);
+    var parsedM = parseInt(minutesVal);
+    var minutes = (parsedH * 60) + parsedM;
+    registerOvertime(minutes);
+}
+
+function sendTimebank(formData){
+    $.ajax({
+        url: "/rest/overtime",
+        type: 'POST',
+        contentType: "application/json",
+        data: JSON.stringify(formData),
+        success: popupContent,
+        error: errorMessage
+    });
+}
+
+function errorMessage(e){
+    console.log("Post error");
+}
+
+function getShift(){
+    var $shiftInfo = $('.shift-info');
+    var shiftTime = reformatTime(type);
+    var shiftType = reformatType(type);
+    var shiftDate = convertDate(date);
+    $shiftInfo.html(
+        `<p class="lead">${shiftDate}</p>
+        <p class="sub">${shiftType} ${shiftTime}</p>`
+    );
+
+}
+
+function registerOvertime(minutes){
+    var startTime;
+    //var type = "DAY";
+    switch (type){
+        case "DAY":
+            startTime = 900;
+            break;
+        case "EVENING":
+            startTime = 1380;
+            break;
+        case "NIGHT":
+            startTime = 420;
+            break;
+        default:
+            console.log("type not known", type);
+    }
+    var formData;
+    formData = {
+        //"userId": 1,
+        "shiftId": shiftId,
+        "startTime": startTime,
+        "minutes": minutes,
+        "approved": false,
+        "date": date,
+        "type": type
+    };
+    sendTimebank(formData);
+}
+
+function popupContent(){
+    var $popupCont = $('#content');
+
+    var shiftType = reformatType(type);
+    var shiftDate = convertDate(date);
+
+    var hours = parseInt($('#hours').val());
+    var minutes = parseInt($('#minutes').val());
+
+    if(hours === 0){
+        $popupCont.html(
+            `<h3>Overtid sendt til godkjenning</h3>
+                <p>${shiftType} - ${shiftDate}</p>
+                <p>Overtid: ${minutes} minutter</p>`
+        );
+    } else if(hours === 1){
+        $popupCont.html(
+            `<h3>Overtid sendt til godkjenning</h3>
+                <p>${shiftType} - ${shiftDate}</p>
+                <p>Overtid: ${hours} time og ${minutes} minutter</p>`
+        );
+    }
+    else{
+        $popupCont.html(
+            `<h3>Overtid sendt til godkjenning</h3>
+                <p>${shiftType} - ${shiftDate}</p>
+                <p>Overtid: ${hours} timer og ${minutes} minutter</p>`
+        );
+    }
+    showPopup();
+}
+
+function showPopup(){
+    var $popup = $('.popup');
+    console.log("Post success");
+    $popup.show();
+}
+
+$('#closeBtn').click(function(e) {
+    e.preventDefault();
+    redirectToHome();
+});
+
+function redirectToHome(){
+    var $popup = $('.popup');
+    $popup.hide();
+    window.location = "home-e.html";
+}

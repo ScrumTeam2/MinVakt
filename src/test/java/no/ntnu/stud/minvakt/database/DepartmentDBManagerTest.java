@@ -1,7 +1,5 @@
 package no.ntnu.stud.minvakt.database;
 
-import no.ntnu.stud.minvakt.data.Department;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,4 +26,9 @@ public class DepartmentDBManagerTest {
     public void getDepartments(){
         assertFalse(deptDB.getDepartments().isEmpty());
     }
+    @Test
+    public void getDepartmentsWithData(){
+        assertFalse(deptDB.getDepartmentsWithData(1).isEmpty());
+    }
+
 }

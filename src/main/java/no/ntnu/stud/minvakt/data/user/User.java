@@ -169,6 +169,7 @@ public class User {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", category=" + category +
                 ", workPercentage=" + workPercentage +
+                ", deptId=" + deptId +
                 ", hash='" + hash + '\'' +
                 ", salt='" + salt + '\'' +
                 '}';

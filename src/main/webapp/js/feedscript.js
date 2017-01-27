@@ -2,6 +2,10 @@
  * Created by marith 18.01.2017.
  */
 
+var $this, feedId, shiftId, categoryPop;
+var popVisible = false;
+var popOpened = false;
+
 $(document).ready(function(){
     loadMessages();
 });
@@ -19,12 +23,12 @@ function loadMessages(){
 
 // Toggle messages
 $('.container-title').click(function() {
-    var $this = $(this);
-    $this.siblings('.feed-messages').toggle('1000');
-    $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
+    if (!popVisible) {
+        var $this = $(this);
+        $this.siblings('.feed-messages').toggle('1000');
+        $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
+    }
 });
-
-var $this, feedId, shiftId, categoryPop;
 
 // display messages sorted by category
 function showMessages(data){
@@ -64,6 +68,14 @@ function showMessages(data){
                 console.log("Category not known", data[i].category);
         }
     }
+    var $remove = $('.remove-message');
+    $remove.on("click", function(e){
+        if (!popVisible) {
+            e.preventDefault();
+            var element = $(e.currentTarget).parent();
+            removeMessage(element);
+        }
+    });
 
     //display category as empty if no messages
     var empty = `<div class="watch">
@@ -86,6 +98,47 @@ function showMessages(data){
     }
 }
 
+
+function checkPopup(){
+    console.log("sjekker check og setter true");
+    popOpened = true;
+}
+
+function showPopup(e){
+    e.preventDefault();
+    popVisible = true;
+    var $popup = $('.popup');
+    $popup.show();
+
+    //no button
+    var $deny = $('#denyBtn');
+    $deny.on("click", function(e){
+        e.preventDefault();
+        setUnResolved(feedId);
+        closePopup(e, feedId);
+    });
+
+//yes button
+    var $accept = $('#acceptBtn');
+    $accept.on("click", function(e){
+        e.preventDefault();
+        setResolved(feedId);
+        closePopup(e, feedId);
+    });
+
+    //checkPopup();
+}
+
+
+function hidePopup(e){
+    e.preventDefault();
+    popVisible = false;
+    popOpened = false;
+    var $popup = $('.popup');
+    $popup.hide();
+
+}
+
 //open popup
 function openPopup(e){
     e.preventDefault();
@@ -95,7 +148,7 @@ function openPopup(e){
     categoryPop = $this.children().first().data("cat");
     var content = $this.children().first().children().first().children().first().html();
     var $popup = $('#content');
-    var $showPop = $('#feed-popup');
+    var $showPop = $('.popup');
 
     switch(categoryPop){
         case "SHIFT_CHANGE_ADMIN":
@@ -103,51 +156,39 @@ function openPopup(e){
                 `<h3>Godkjenne vaktbytte?</h3>
                 <p>${content}</p>`
             );
-            $showPop.show();
+            showPopup(e);
             break;
         case "TIMEBANK":
             $popup.html(
-                `<h3>Godkjenne timebank?</h3>
+                `<h3>Godkjenne timeavvik?</h3>
                 <p>${content}</p>`
             );
-            $showPop.show();
+            showPopup(e);
             break;
         case "VALID_ABSENCE":
             $popup.html(
                 `<h3>Godkjenne fravær?</h3>
                 <p>${content}</p>`
             );
-            $showPop.show();
-            break;
-        case "NOTIFICATION":
-            // removes directly
-            setResolved(feedId);
+            showPopup(e);
             break;
         default:
             console.log("Category not known", categoryPop);
     }
 }
 
-//no button
-var $deny = $('#denyBtn');
-$deny.on("click", function(e){
-    e.preventDefault();
-    setUnResolved(feedId);
-    closePopup(e, feedId);
-});
-
-//yes button
-var $accept = $('#acceptBtn');
-$accept.on("click", function(e){
-    e.preventDefault();
+// remove notification
+function removeMessage(element){
+    feedId = element.data("feed");
     setResolved(feedId);
-    closePopup(e, feedId);
-});
+}
 
 //closes popup after pressing yes or no
 function closePopup(e, feedId){
     e.preventDefault();
-    $('#feed-popup').hide();
+    popVisible = false;
+    popOpened = false;
+    $('.popup').hide();
 }
 
 // set boolean to true
@@ -185,21 +226,28 @@ function resolveTask(feedId, resolvedTo){
 function acceptChangeover(data){
     var $changes = $('#accept_change');
     var content = data.content;
+    var subContent = "mer info";
     var html=
-        `<a href="#" id="open-popup">
+        `<a href="#" id="open-popup" class="open-pop">
             <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
+                    <p class="sub">${subContent}</p>
                 </div>
-                <i class="symbol right-arrow">
+                <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
         </a>`;
     var $html = $(html);
     $changes.append($html);
+
     $html.on("click", function(e){
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+            popOpened = false;
+        }
     });
 }
 
@@ -208,12 +256,12 @@ function acceptAbsence(data){
     var $absence = $('#accept_absence');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
+        `<a href="#" id="open-popup" class="open-pop">
             <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="symbol right-arrow">
+                <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
@@ -221,7 +269,11 @@ function acceptAbsence(data){
     var $html = $(html);
     $absence.append($html);
     $html.on("click", function(e){
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+            popOpened = false;
+        }
     });
 }
 
@@ -230,12 +282,12 @@ function acceptTimebank(data){
     var $timebank = $('#accept_timebank');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
+        `<a href="#" id="open-popup" class="open-pop">
             <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="symbol right-arrow">
+                <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
@@ -243,7 +295,11 @@ function acceptTimebank(data){
     var $html = $(html);
     $timebank.append($html);
     $html.on("click", function(e){
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+            popOpened = false;
+        }
     });
 }
 
@@ -252,17 +308,28 @@ function showNotification(data){
     var $notifications = $('#show_notification');
     var content = data.content;
     var html=
-        `<a href="#" id="open-popup">
-            <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
+        `<div class="watch" data-feed="${data.feedId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                 </div>
-                <i class="material-icons">close</i>
-            </div>
-        </a>`;
+                <a href="#" class="remove-message" id="remove">
+                    <i class="material-icons">close</i>
+                </a>
+        </div>`;
     var $html = $(html);
     $notifications.append($html);
-    $html.on("click", function(e){
-        openPopup(e);
-    });
 }
+
+var $popup = $('.popup');
+$(document).on("click", function (e) {
+    if(popOpened){
+        if (popVisible) {
+            if (!$popup.is(e.currentTarget) && $popup.has(e.target).length === 0) {
+                hidePopup(e);
+                popOpened = false;
+            }
+        }
+    } else{
+        popOpened = true;
+    }
+});
