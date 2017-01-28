@@ -76,6 +76,7 @@ $(document).ready(function () {
     $("#cancel-change-button").click(function () {
         location.reload();
     });
+
     $('#userBtn').click(function (e) {
         e.preventDefault();
 
@@ -178,8 +179,40 @@ $(document).ready(function () {
                 submitUser(formData);
             }
         }
+        initPopup();
     });
-    initPopup();
+    console.log("Før klikk");
+    $('#set-inactive').click(function (e){
+        console.log("Ble trykket!");
+
+        e.preventDefault();
+        var $popup = $("#userPopup");
+        $popup.children(".title").text("Slett bruker");
+        $popup.children(".result").text("Er du sikker på at du ønsker å slette denne brukeren?");
+        $btn1 = $("#userViewBtn");
+        $btn2 = $("#userCloseBtn");
+        console.log($btn1.text());
+        $btn1.text("Ja");
+        $btn2.text("Nei");
+        $popup.show();
+        $btn1.click(function () {
+            $.ajax({
+                url: "/rest/admin/deleteuser/"+getUrlParameter("userId"),
+                type: 'DELETE',
+                success: function (depts) {
+                    window.location = "user-a.html";
+                },
+                error: function (data) {
+                    $popup.hide();
+                    console.log("Employee not deleted")
+                }
+            });
+        });
+        $btn2.click(function (e) {
+            e.preventDefault();
+            $popup.hide();
+        })
+    });
 });
 
 function initPopup() {
@@ -257,11 +290,14 @@ function invalidField(data) {
 
     if (data.responseJSON == null) {
         $('.result').text("En uventet feil oppsto");
+
     } else {
         $('.result').text(data.responseJSON.error);
     }
 
     $('#userViewBtn').hide();
+    $('#userCloseBtn').text("Lukk");
+
     $('.popup').show();
 
     // Reset loading animation

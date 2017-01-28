@@ -436,7 +436,7 @@ button:disabled {
 #userBtn {
     margin-top: 1.5rem;
 }
-#cancel-change-button {
+.edituser-btn{
     margin-top: 1.5rem;
 }
 
