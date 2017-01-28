@@ -18,7 +18,9 @@ $(document).ready(function(){
             type: 'GET',
             dataType: 'json',
             success: login,
-            error: errorHere
+            error: function(e) {
+                //console.error(e);
+            }
         });
     }
 
@@ -77,10 +79,6 @@ function login(data){
         console.log("ansatt");
         window.location = "home-e.html";
     }
-}
-
-function errorHere(data){
-    console.log(data);
 }
 
 function invalid(data){
