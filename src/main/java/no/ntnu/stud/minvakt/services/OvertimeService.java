@@ -50,24 +50,29 @@ public class OvertimeService extends SecureService{
 
         boolean isRegistered = overtimeDBM.setOvertime(user.getId(), overtime.getShiftId(), overtime.getStartTime(), overtime.getMinutes());
 
+        //C
+
         if(isRegistered) {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            int adminId = userDBM.getAdminId();
+            if (!getSession().isAdmin()) {
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                int adminId = userDBM.getAdminId();
 
-            if(adminId==0){
-                return Response.status(400).entity("Overtime registered, but could not find admin user").build();
-            }else {
-                NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                        content.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
-                int newsfeedId = newsfeedDBM.createNotification(notification);
+                if (adminId == 0) {
+                    return Response.status(400).entity("Overtime registered, but could not find admin user").build();
+                } else {
+                    //Sends notification to admin if not admin
+                    NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                            content.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
+                    int newsfeedId = newsfeedDBM.createNotification(notification);
 
-                if (newsfeedId == 0){
-                    return Response.status(400).entity("Overtime registered, but sending notification to admin failed").build();
-                }else{
-                    return Response.status(200).build();
+                    if (newsfeedId == 0) {
+                        return Response.status(400).entity("Overtime registered, but sending notification to admin failed").build();
+                    }
                 }
             }
-        }else{
+            return Response.status(200).build();
+        }
+        else{
             return Response.status(400).entity("Could not register overtime").build();
         }
     }
