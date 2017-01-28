@@ -18,12 +18,27 @@ public class MinVaktApp extends Application {
     private static final String PROPERTIES_FILE = "/WEB-INF/MinVakt.properties";
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    private static Properties properties = new Properties();
+    private static Properties properties;
 
     @Context
     private ServletContext servletContext;
 
+    static {
+        // Load default config (used for unit tests)
+        properties = new Properties();
+        properties.setProperty("mysql.url", "jdbc:mysql://mysql.stud.iie.ntnu.no/g_scrum02");
+        properties.setProperty("mysql.user", "g_scrum02");
+        properties.setProperty("mysql.password", "82dvE5og");
+        properties.setProperty("mail.smtp.auth", "true");
+        properties.setProperty("mail.smtp.starttls.enable", "true");
+        properties.setProperty("mail.smtp.host", "smtp.googlemail.com");
+        properties.setProperty("mail.smtp.port", "587");
+        properties.setProperty("mail.user", "system.minvakt@gmail.com");
+        properties.setProperty("mail.password", "m!v9#kTl");
+    }
+
     private Properties readProperties() {
+        properties = new Properties();
         InputStream inputStream = servletContext.getResourceAsStream(PROPERTIES_FILE);
         if (inputStream != null) {
             try {
