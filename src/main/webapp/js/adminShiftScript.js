@@ -2,14 +2,73 @@
  * Created by evend on 1/12/2017.
  */
 $(document).ready(function () {
+    createAjaxForAllShifts();
     createCalendarListener();
+    setDeptOptions();
 });
-createAjaxForOwnShifts();
-function createAjaxForOwnShifts() {
+//});
+
+function setDeptOptions() {
+    var html;
+    $.ajax({
+        //     url: "rest/shift/user/"+userId,
+        url: "../rest/department/withData",
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            var $dropdown = $("#dept-options");
+            $.each(data, function (index, dept) {
+                console.log(sessionStorage.getItem("SessionIdDept"));
+                if(dept.id == sessionStorage.getItem("SessionIdDept")) {
+                    $dropdown.append("<option selected name='category' class='dept-category' id = '"+dept.id+"' value='" + dept.id + "'>" + dept.name +
+                        "</option>");
+                }
+                else{
+                    $dropdown.append("<option name='category' data-id = '"+dept.id+"' class='dept-category' id = 'dept"+dept.id+"' value='" + dept.id + "'>" + dept.name +
+                        "</option>");
+                }
+                if(dept.hasAvailable){
+                    $dropdown.children("#dept"+dept.id).append("<span class='circle green'></span>")
+                }
+                if(dept.hasUser){
+                    $dropdown.children("#dept"+dept.id).append("<span class='circle blue'></span>")
+                }
+            });
+            $dropdown.change(function (e) {
+                var $selected = $("select option:selected");
+                var deptId = $selected.attr("data-id");
+                departmentId = deptId;
+
+                e.preventDefault();
+                createAjaxForAllShifts(deptId);
+                createCalendatWithData(); // Refresh calendar
+            })
+        },
+        error: function (data) {
+            //console.log("Error, no data found");
+            var calendarList = $(".list");
+            calendarList.append("<p>" + data + "</p>");
+        }
+    });
+}
+
+function createAjaxForAllShifts(deptId) {
+    var data;
+    console.log(deptId);
+    if(!deptId || deptId < 1){
+        data = {daysForward: 7}
+    }
+    else {
+        data = {daysForward: 7, "deptId" : deptId}
+    }
+    if(currentDate !== undefined) {
+        data["date"] = currentDate;
+    }
+    console.log(data);
     $.ajax({
         //     url: "rest/shift/user/"+userId,
         url: "../rest/shift",
-        data: {daysForward : 300}, //TODO: edit to 7?
+        data: data, //TODO: edit to 7?
         type: 'GET',
         dataType: 'json',
         success: createAllShiftsHtml,
@@ -19,8 +78,8 @@ function createAjaxForOwnShifts() {
             calendarList.append("<p>" + data + "</p>");
         }
     });
+
 }
-//});
 
 function addShiftInfoHtml (element, shiftId, data) {
 
@@ -105,7 +164,7 @@ function createUserShiftHtml(data) {
     createInfoListeners();
 }
 function createInfoListeners() {
-    $('.info-button').click(function (e) {
+    $('.clickable').click(function (e) {
         var clickedElement = $(this);
         var moreInfoElement = clickedElement.next();
         //console.log(moreInfoElement);
@@ -154,26 +213,20 @@ function createAllShiftsHtml(data) {
                 "<h3>" + convertDate(element.date) + "</h3>" +
                 "</div>";
         }
-        html += "<div class='watch'>" +
+        html += "<div class='clickable cursor-point' data-id='" + element.shiftId + "'><div class='watch'>" +
             "<div class='watch-info'>" +
             "<p class='lead'>" + shiftTypes[element.shiftType] + "</p>" +
             "<p class='sub'>" + shiftTimes[element.shiftType] + "</p>" +
             "</div>";
-        if (element.hasUser) {
+        if (element.available) {
             html +=
                 "<div class='watch-info'>" +
-                "<p class='sub'>Din vakt</p>" +
-                "</div>";
-        }
-        else if (element.available) {
-            html +=
-                "<div class='watch-info'>" +
-                "<p class='sub'>Ledig vakt</p>" +
+                "<p class='sub'><span class='circle green'></span>Ledig vakt</p>" +
                 "</div>";
         }
         html +=
-            "<i class='symbol info-button' data-id='" + element.shiftId + "'><i class='material-icons'>info_outlines</i></i>" +
-            "<div class='more-info'></div></div>";
+            "<i class='symbol info-button' ><i class='material-icons'>info_outlines</i></i>" +
+            "</div></div><div class='more-info'></div>";
         calendarList.append(html);
         html = ""
     });

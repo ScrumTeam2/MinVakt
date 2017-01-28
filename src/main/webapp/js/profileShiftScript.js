@@ -34,11 +34,13 @@ function setDeptOptions() {
                 }
             });
             $dropdown.change(function (e) {
-                console.log($(e));
-                var $selected = $("select option:selected" );
-                console.log("Value:", $selected.attr("data-id"));
+                var $selected = $("select option:selected");
+                var deptId = $selected.attr("data-id");
+                departmentId = deptId;
+
                 e.preventDefault();
-                createAjaxForAllShifts($selected.attr("data-id"))
+                createAjaxForAllShifts(deptId);
+                createCalendatWithData(); // Refresh calendar
             })
         },
         error: function (data) {
@@ -49,6 +51,7 @@ function setDeptOptions() {
     });
 }
 function createAjaxForAllShifts(deptId) {
+    console.log("departmentId: " + departmentId);
     var data;
     console.log(deptId);
     if(!deptId || deptId < 1){
@@ -56,6 +59,9 @@ function createAjaxForAllShifts(deptId) {
     }
     else {
         data = {daysForward: 7, "deptId" : deptId}
+    }
+    if(currentDate !== undefined) {
+        data["date"] = currentDate;
     }
     console.log(data);
     $.ajax({
