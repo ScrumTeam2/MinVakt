@@ -2,6 +2,10 @@
  * Created by ingvildbroen on 20.01.2017.
  */
 
+var $this, feedId, shiftId, categoryPop;
+var popVisible = false;
+var popOpened = false;
+
 $(document).ready(function(){
     loadMessages();
 });
@@ -19,12 +23,45 @@ function loadMessages(){
 
 // Toggle messages
 $('.container-title').click(function() {
-    var $this = $(this);
-    $this.siblings('.feed-messages').toggle('1000');
-    $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
+    if (!popVisible) {
+        var $this = $(this);
+        $this.siblings('.feed-messages').toggle('1000');
+        $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
+    }
 });
 
-var $this, feedId, shiftId, categoryPop;
+//yes button
+var $accept = $('#acceptBtn');
+$accept.on("click", function(e){
+    e.preventDefault();
+    console.log("yes", feedId);
+    $.ajax({
+        url: "/rest/newsfeed/" + feedId,
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        success: postOk,
+        error: postNotOk
+    });
+    hidePopup();
+});
+
+//no button
+var $deny = $('#denyBtn');
+$deny.on("click", function(e){
+    e.preventDefault();
+    console.log("no", feedId);
+    var formData = {"accepted":false};
+
+    $.ajax({
+        url: "/rest/newsfeed/" + feedId,
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        data: formData,
+        success: postOk,
+        error: postNotOk
+    });
+    hidePopup();
+});
 
 // display messages sorted by category
 function showMessages(data){
@@ -53,9 +90,11 @@ function showMessages(data){
 
     var $remove = $('.remove-message');
     $remove.on("click", function(e){
-        e.preventDefault();
-        var element = $(e.currentTarget).parent();
-        removeMessage(element);
+        if (!popVisible) {
+            e.preventDefault();
+            var element = $(e.currentTarget).parent();
+            removeMessage(element);
+        }
     });
 
     //display category as empty if no messages
@@ -103,27 +142,14 @@ function removeMessage(element){
     setResolved(feedId);
 }
 
-//no button
-var $deny = $('#denyBtn');
-$deny.on("click", function(e, feedId){
+function hidePopup(e){
     e.preventDefault();
-    setUnResolved(feedId);
-    closePopup(e, feedId);
-});
-
-//yes button
-var $accept = $('#acceptBtn');
-$accept.on("click", function(e){
-    e.preventDefault();
-    setResolved(feedId);
-    closePopup(e, feedId);
-});
-
-//closes popup after pressing yes or no
-function closePopup(e, feedId){
-    e.preventDefault();
-    $('#feed-popup').hide();
+    popVisible = false;
+    popOpened = false;
+    var $popup = $('.popup');
+    $popup.hide();
 }
+
 
 // set boolean to true
 function setResolved(feedId){
@@ -174,7 +200,11 @@ function acceptShift(data){
     var $html = $(html);
     $requests.append($html);
     $html.on("click", function(e){
-        openPopup(e);
+        if (!popVisible) {
+            e.preventDefault();
+            openPopup(e);
+            popOpened = false;
+        }
     });
 }
 
@@ -194,3 +224,19 @@ function showNotification(data){
     var $html = $(html);
     $notifications.append($html);
 }
+
+var $popup = $('.popup');
+$(document).on("click", function (e) {
+    if(popOpened){
+        if (popVisible) {
+            if (!$popup.is(e.currentTarget) && $popup.has(e.target).length === 0) {
+                //hidePopup(e);
+                popOpened = false;
+                console.log("should hide");
+            }
+        }
+    } else{
+        console.log("open, set true");
+        popOpened = true;
+    }
+});

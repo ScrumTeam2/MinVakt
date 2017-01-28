@@ -2,9 +2,11 @@
  * Created by marith 18.01.2017.
  */
 
-var $this, feedId, shiftId, categoryPop;
+var $this, feedId, categoryPop;
 var popVisible = false;
 var popOpened = false;
+
+var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 
 $(document).ready(function(){
     loadMessages();
@@ -21,6 +23,16 @@ function loadMessages(){
     });
 }
 
+function loadShiftInfo(feedData, callback){
+    $.ajax({
+        url: "/rest/shift/" + feedData.shiftId,
+        type: 'GET',
+        success: function(data){
+            callback(data);
+        }
+    });
+}
+
 // Toggle messages
 $('.container-title').click(function() {
     if (!popVisible) {
@@ -29,6 +41,7 @@ $('.container-title').click(function() {
         $this.children('div').children('.right-arrow-circle').toggleClass("rotate90");
     }
 });
+
 
 // display messages sorted by category
 function showMessages(data){
@@ -46,6 +59,7 @@ function showMessages(data){
     var absence = 0;
     var timebank = 0;
     var notification = 0;
+
     for(var i in data){
         switch(data[i].category){
             case "SHIFT_CHANGE_ADMIN":
@@ -61,21 +75,13 @@ function showMessages(data){
                 absence++;
                 break;
             case "NOTIFICATION":
-                showNotification(data[i]);
+                adminNotification(data[i]);
                 notification++;
                 break;
             default:
                 console.log("Category not known", data[i].category);
         }
     }
-    var $remove = $('.remove-message');
-    $remove.on("click", function(e){
-        if (!popVisible) {
-            e.preventDefault();
-            var element = $(e.currentTarget).parent();
-            removeMessage(element);
-        }
-    });
 
     //display category as empty if no messages
     var empty = `<div class="watch">
@@ -98,35 +104,53 @@ function showMessages(data){
     }
 }
 
+//yes button
+var $accept = $('#acceptBtn');
+$accept.on("click", function(e){
+    e.preventDefault();
+    console.log("yes", feedId);
+    $.ajax({
+        url: "/rest/newsfeed/" + feedId,
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        success: postOk,
+        error: postNotOk
+    });
+    hidePopup(e);
+});
 
-function checkPopup(){
-    console.log("sjekker check og setter true");
-    popOpened = true;
-}
+//edit button
+var $edit = $('#editBtn');
+$edit.on("click", function(e){
+    e.preventDefault();
+    console.log("edit", feedId);
+    //window.location = "";
+});
+
+
+//no button
+var $deny = $('#denyBtn');
+$deny.on("click", function(e){
+    e.preventDefault();
+    console.log("no", feedId);
+    var formData = {"accepted":false};
+
+    $.ajax({
+        url: "/rest/newsfeed/" + feedId,
+        type: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        data: formData,
+        success: postOk,
+        error: postNotOk
+    });
+    hidePopup(e);
+});
 
 function showPopup(e){
     e.preventDefault();
     popVisible = true;
     var $popup = $('.popup');
     $popup.show();
-
-    //no button
-    var $deny = $('#denyBtn');
-    $deny.on("click", function(e){
-        e.preventDefault();
-        setUnResolved(feedId);
-        closePopup(e, feedId);
-    });
-
-//yes button
-    var $accept = $('#acceptBtn');
-    $accept.on("click", function(e){
-        e.preventDefault();
-        setResolved(feedId);
-        closePopup(e, feedId);
-    });
-
-    //checkPopup();
 }
 
 
@@ -136,7 +160,6 @@ function hidePopup(e){
     popOpened = false;
     var $popup = $('.popup');
     $popup.hide();
-
 }
 
 //open popup
@@ -144,31 +167,44 @@ function openPopup(e){
     e.preventDefault();
     $this = $(e.currentTarget);
     feedId = $this.children().first().data("feed");
-    shiftId = $this.children().first().data("shift");
     categoryPop = $this.children().first().data("cat");
     var content = $this.children().first().children().first().children().first().html();
+    var shift = $this.children().first().children().first().children().last().html();
     var $popup = $('#content');
-    var $showPop = $('.popup');
+
+    var $yes = $('#acceptBtn');
+    var $edit = $('#editBtn');
+
+    if($yes.hasClass("hide")){
+        $yes.removeClass("hide");
+    }
+    if($edit.hasClass("hide")){
+        $edit.removeClass("hide");
+    }
 
     switch(categoryPop){
         case "SHIFT_CHANGE_ADMIN":
+            $yes.addClass("hide");
             $popup.html(
                 `<h3>Godkjenne vaktbytte?</h3>
-                <p>${content}</p>`
+                <p>${content}<br>${shift}</p>
+                <p>Det finnes ingen ledige ansatte i samme kategori</p>`
             );
             showPopup(e);
             break;
         case "TIMEBANK":
+            $edit.addClass("hide");
             $popup.html(
                 `<h3>Godkjenne timeavvik?</h3>
-                <p>${content}</p>`
+                <p>${content}<br>${shift}</p>`
             );
             showPopup(e);
             break;
         case "VALID_ABSENCE":
+            $yes.addClass("hide");
             $popup.html(
                 `<h3>Godkjenne fravær?</h3>
-                <p>${content}</p>`
+                <p>${content}<br>${shift}</p>`
             );
             showPopup(e);
             break;
@@ -180,148 +216,167 @@ function openPopup(e){
 // remove notification
 function removeMessage(element){
     feedId = element.data("feed");
-    setResolved(feedId);
-}
-
-//closes popup after pressing yes or no
-function closePopup(e, feedId){
-    e.preventDefault();
-    popVisible = false;
-    popOpened = false;
-    $('.popup').hide();
-}
-
-// set boolean to true
-function setResolved(feedId){
-    var resolvedTo = true;
-    resolveTask(feedId, resolvedTo);
-}
-
-// set boolean to false
-function setUnResolved(feedId){
-    var resolvedTo = false;
-    resolveTask(feedId, resolvedTo);
-}
-
-// post resolved/unresolved
-function resolveTask(feedId, resolvedTo){
+    console.log(feedId);
     $.ajax({
         url: "/rest/newsfeed/" + feedId,
         type: 'POST',
-        data: {
-            accepted: resolvedTo
-        },
-        success: function(){
-            console.log("ok post", feedId);
-            loadMessages();
-        },
-        error: function(){
-            console.log("ikke ok post", feedId);
-        }
+        contentType: "application/x-www-form-urlencoded",
+        success: postOk,
+        error: postNotOk
     });
 }
 
+function postOk(){
+    console.log("ok post", feedId);
+    loadMessages();
+}
+
+function postNotOk(){
+    console.log("ikke ok post", feedId);
+}
 
 // add changeover messages
-function acceptChangeover(data){
-    var $changes = $('#accept_change');
-    var content = data.content;
-    var subContent = "mer info";
-    var html=
-        `<a href="#" id="open-popup" class="open-pop">
-            <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
+function acceptChangeover(feedData){
+    var feedId = feedData.feedId;
+    var category = feedData.category;
+    var content = feedData.content;
+    var shiftId = feedData.shiftId;
+    loadShiftInfo(feedData, function(shiftData){
+        var shiftType = shiftTypes[shiftData.type];
+        var shiftDate = convertDate(shiftData.date);
+        var $changes = $('#accept_change');
+        var html=
+            `<a href="#" id="open-popup" class="open-pop">
+            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
-                    <p class="sub">${subContent}</p>
+                    <p class="sub">${shiftType}, ${shiftDate}</p>
                 </div>
                 <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
         </a>`;
-    var $html = $(html);
-    $changes.append($html);
+        var $html = $(html);
 
-    $html.on("click", function(e){
-        if (!popVisible) {
-            e.preventDefault();
-            openPopup(e);
-            popOpened = false;
-        }
-    });
-}
-
-// add absence messages
-function acceptAbsence(data){
-    var $absence = $('#accept_absence');
-    var content = data.content;
-    var html=
-        `<a href="#" id="open-popup" class="open-pop">
-            <div class="watch" data-feed="${data.feedId}" data-shift="${data.shiftId}" data-cat="${data.category}">
-                <div class="watch-info">
-                    <p class="lead">${content}</p>
-                </div>
-                <i class="symbol">
-                    <i class="material-icons">chevron_right</i>
-                </i>
-            </div>
-        </a>`;
-    var $html = $(html);
-    $absence.append($html);
-    $html.on("click", function(e){
-        if (!popVisible) {
-            e.preventDefault();
-            openPopup(e);
-            popOpened = false;
-        }
+        $changes.append($html);
+        $html.on("click", function(e){
+            if (!popVisible) {
+                e.preventDefault();
+                openPopup(e);
+                popOpened = false;
+            }
+        });
     });
 }
 
 // add timebank messages
-function acceptTimebank(data){
-    var $timebank = $('#accept_timebank');
-    var content = data.content;
-    var html=
-        `<a href="#" id="open-popup" class="open-pop">
-            <div class="watch" data-feed="${data.feedId}" data-cat="${data.category}">
+function acceptTimebank(feedData){
+    var feedId = feedData.feedId;
+    var category = feedData.category;
+    var content = feedData.content;
+    var shiftId = feedData.shiftId;
+    loadShiftInfo(feedData, function(shiftData){
+        var shiftType = shiftTypes[shiftData.type];
+        var shiftDate = convertDate(shiftData.date);
+        var $timebank = $('#accept_timebank');
+        var html=
+            `<a href="#" id="open-popup" class="open-pop">
+            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
+                    <p class="sub">${shiftType}, ${shiftDate}</p>
                 </div>
                 <i class="symbol">
                     <i class="material-icons">chevron_right</i>
                 </i>
             </div>
         </a>`;
-    var $html = $(html);
-    $timebank.append($html);
-    $html.on("click", function(e){
-        if (!popVisible) {
-            e.preventDefault();
-            openPopup(e);
-            popOpened = false;
-        }
+        var $html = $(html);
+
+        $timebank.append($html);
+        $html.on("click", function(e){
+            if (!popVisible) {
+                e.preventDefault();
+                openPopup(e);
+                popOpened = false;
+            }
+        });
+    });
+}
+
+// add absence messages
+function acceptAbsence(feedData){
+    var feedId = feedData.feedId;
+    var category = feedData.category;
+    var content = feedData.content;
+    var shiftId = feedData.shiftId;
+    loadShiftInfo(feedData, function(shiftData){
+        var shiftType = shiftTypes[shiftData.type];
+        var shiftDate = convertDate(shiftData.date);
+        var $absence = $('#accept_absence');
+        var html=
+            `<a href="#" id="open-popup" class="open-pop">
+            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}">
+                <div class="watch-info">
+                    <p class="lead">${content}</p>
+                    <p class="sub">${shiftType}, ${shiftDate}</p>
+                </div>
+                <i class="symbol">
+                    <i class="material-icons">chevron_right</i>
+                </i>
+            </div>
+        </a>`;
+        var $html = $(html);
+
+        $absence.append($html);
+        $html.on("click", function(e){
+            if (!popVisible) {
+                e.preventDefault();
+                openPopup(e);
+                popOpened = false;
+            }
+        });
     });
 }
 
 //add notifications messages
-function showNotification(data){
-    var $notifications = $('#show_notification');
-    var content = data.content;
-    var html=
-        `<div class="watch" data-feed="${data.feedId}">
+function adminNotification(feedData){
+    var feedId = feedData.feedId;
+    var content = feedData.content;
+    loadShiftInfo(feedData, function(shiftData){
+        var $notifications = $('#show_notification');
+        var shiftType = shiftTypes[shiftData.type];
+        var shiftDate = convertDate(shiftData.date);
+        var html=
+            `<div class="watch" data-feed="${feedId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
+                    <p class="sub">${shiftType}, ${shiftDate}</p>
                 </div>
-                <a href="#" class="remove-message" id="remove">
-                    <i class="material-icons">close</i>
-                </a>
         </div>`;
-    var $html = $(html);
-    $notifications.append($html);
+        var $html = $(html);
+        $notifications.append($html);
+        var html2=
+            `<a href="#" class="remove-message" id="remove">
+             <i class="material-icons">close</i>
+        </a>`;
+        var $html2 = $(html2);
+        $html.append($html2);
+        $html2.on("click", function(e){
+            if (!popVisible) {
+                e.preventDefault();
+                var element = $(e.currentTarget).parent();
+                removeMessage(element);
+            }
+        });
+    });
 }
 
+//hide popup if click outside
 var $popup = $('.popup');
 $(document).on("click", function (e) {
+    //e.preventDefault();
     if(popOpened){
         if (popVisible) {
             if (!$popup.is(e.currentTarget) && $popup.has(e.target).length === 0) {
