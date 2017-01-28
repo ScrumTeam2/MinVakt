@@ -234,7 +234,7 @@ function invalidField(data) {
 function loadDepartments() {
     $department = $('#department');
 
-    $.get("/rest/department/")
+    $.get("/rest/department/withData")
         .done(function (data) {
             data.forEach(function (department) {
                 $department.append(`<option value="${department.id}">${department.name}</option>`);

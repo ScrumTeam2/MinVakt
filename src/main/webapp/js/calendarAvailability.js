@@ -29,8 +29,11 @@ function loadAvailableShiftsChosen() {
 function getAvailabilityForUser(data) {
   shiftsChosen = data.shifts;
 }
-var C = function Calendar(month, year) {
+var C = function Calendar(month, year, data) {
   var now = new Date();
+  if(!this.data){
+       this.data = {};
+  }
 
   // labels for week days and months
   var day  = 1,
@@ -79,6 +82,13 @@ var C = function Calendar(month, year) {
   html += '<tbody>';
   html += '<tr class="week">';
   // weeks loop (rows)
+    var shiftDate;
+    var hasUser = false;
+    var isAvailable = false;
+    var count = 0;
+    var timeOfDay;
+    var currentDate;
+    console.log(data);
   for (var i = 0; i < 9; i++) {
     // weekdays loop (cells)
     for (var j = 1; j <= 7; j++) {
@@ -98,9 +108,34 @@ var C = function Calendar(month, year) {
                     }
                     else html += '<td class="day">';
                 }
-        html += day;
-        html += '</td>';
-        day++;
+        //Add dots if person is on shift
+                if(data[count]){
+                    currentDate = new Date(data[count].date);
+                    while(data[count] && currentDate.getDate() == day && currentDate.getMonth() == nowMonth){
+                        if(data[count].available && !data[count].hasUser){
+                            isAvailable = true;
+                        }
+                        if(data[count].hasUser){
+                            hasUser = true;
+                        }
+                        count++;
+                        if(data[count]) {
+                            currentDate = new Date(data[count].date);
+                        }
+                    }
+                }
+         html += day;
+                html += "<div class='circle-wrap'>";
+                if(hasUser){
+                    html += "<span class='circle blue'></span>";
+                }
+                if(isAvailable){
+                    html += "<span class='circle green'></span>";
+                }
+                html += '</div></td>';
+                day++;
+                isAvailable = false;
+                hasUser = false;
       } else {
         if (day <= monthEndDay) {
           // previous month
@@ -133,7 +168,8 @@ var C = function Calendar(month, year) {
 }
 
 // document.getElementById('calendar').innerHTML = Calendar(12, 2015); 
-document.getElementById('calendar').innerHTML = C();
+//document.getElementById('calendar').innerHTML = C();
+createCalendatWithData();
 
 C.prototype.switchDate = function(postfix) {
   var curMonth = this.month;
@@ -248,7 +284,9 @@ function displayAvailabilityHtml(data) {
                       "<p class='sub'>"+element.deptName+"</p>" +
                   "</div>";
                   if(element.hasUser) {
-                    html+="<p>Min vakt</p>";
+                    html+="<div class='watch-info'>" +
+                "<p class='sub'><span class='circle blue'></span>Din vakt</p>" +
+                  "</div>";
                   } else {
                     html+="<input type='checkbox' class='checkBox' name='check' id='"+element.shiftId+"' value='employee'>"+
                     "<label for='"+element.shiftId+"'>Ledig</label>";
@@ -266,7 +304,7 @@ function displayAvailabilityHtml(data) {
                     html+="<p>Min vakt</p>";
                   } else {
                     html+="<input type='checkbox' class='checkBox2' name='check' id='"+element.shiftId+"' value='employee' checked>"+
-                    "<label for='"+element.shiftId+"'>Du er satt som ledig</label>";
+                    "<label for='"+element.shiftId+"'>Registrert som tilgjengelig</label>";
                   }
               html+="</div>";
         }
@@ -295,7 +333,7 @@ $('#submitAvailability').click(function() {
       var push = {id: id};
       selected.push(push);
       shiftsChosen.push(parseInt(id));
-      $("label[for='"+id+"']").text("Du er satt som ledig");
+      $("label[for='"+id+"']").text("Registrert som tilgjengelig");
       tempSelection.push(id);
   });
 
@@ -328,7 +366,7 @@ $('#submitAvailability').click(function() {
         var push = {id: id};
         selected.push(push);
         shiftsChosen.push(parseInt(id));
-        $("label[for='"+$(this).attr("id")+"']").text("Du er satt som ledig");
+        $("label[for='"+$(this).attr("id")+"']").text("Registrert som tilgjengelig");
         var index2 = tempUnSelection.indexOf(parseInt(id));
         tempUnSelection.splice(index2,1);
       }
@@ -381,6 +419,38 @@ function switchDate(postfix) {
       this.month++;
     }
   }
-  document.getElementById('calendar').innerHTML = C(this.month,this.year);
-  loadCalendar();
+  createCalendatWithData(this.month,this.year);
+}
+
+function createCalendatWithData(month,year) {
+    //Check if date (month) is correct
+    var now = new Date();
+    if(isNaN(month) || month == null) {
+        this.month = now.getMonth() + 1;
+    } else {
+        this.month = month;
+    }
+    //Check if date (year) is correct
+    if(isNaN(year) || year == null) {
+        this.year = now.getFullYear();
+    } else {
+        this.year = year;
+    }
+    var dateString = this.year + "-" + this.month + "-01";
+    var thisMonth = this.month;
+    var thisYear = this.year;
+    $.ajax({
+        url: "../rest/shift/shiftsAvailability",
+        type: 'GET',
+        dataType: 'json',
+        data: {daysForward:31, date:dateString},
+        success: function (data) {
+            document.getElementById('calendar').innerHTML = C(thisMonth, thisYear, data);
+            loadCalendar();
+
+        },
+        error: function (data) {
+            console.log(data)
+        }
+    });
 }

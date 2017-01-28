@@ -26,7 +26,7 @@ public abstract class DBManager{
             closeConnection();
             return false;
         }
-        return !(connection == null);
+        return connection != null;
     }
     protected void closeConnection(){
         try {
@@ -80,6 +80,15 @@ public abstract class DBManager{
             }
             if (res != null) res.close();
             if (prep != null) prep.close();
+        } catch (SQLException e) {
+            log.log(Level.SEVERE, "Finally Statement failed", e);
+        }
+        closeConnection();
+    }
+
+    protected void finallyStatement(ResultSet res) {
+        try {
+            if (res != null) res.close();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Finally Statement failed", e);
         }

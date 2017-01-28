@@ -29,13 +29,12 @@ public class UserAdminService extends SecureService {
     @Path("/createuser")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addUser(User user) {
-        Session session = getSession();
-        if(!session.isAdmin()) {
+        if(!getSession().isAdmin()) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
 
         // Verify user data
-        Response errorResponse = InputUtil.verifyUser(user);
+        Response errorResponse = InputUtil.validateUser(user);
         if (errorResponse != null) return errorResponse;
 
         // Check that identifiers doesn't already exist
@@ -62,12 +61,49 @@ public class UserAdminService extends SecureService {
         }
     }
 
+    @POST
+    @Path("/edituser")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response editUser(User user) {
+        Session session = getSession();
+        if(!session.isAdmin()) {
+            throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
+        }
+
+        // Verify user data
+        Response errorResponse = InputUtil.validateUser(user);
+        if (errorResponse != null) return errorResponse;
+
+        // Check that identifiers doesn't already exist
+        if(userDBManager.isPhoneNumberTaken(user.getPhoneNumber())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorInfo("Telefonnummeret er allerede i bruk")).build();
+        }
+
+        if(userDBManager.isEmailTaken(user.getEmail())) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(new ErrorInfo("E-posten er allerede i bruk")).build();
+        }
+
+        // Insert into database
+        int userInfo = userDBManager.changeUserInfo(user);
+        /*Object[] userInfo = userDBManager.changeUserInfo(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPhoneNumber(), user.getCategory(), user.getWorkPercentage(),
+                user.getDeptId());
+        user.setId((int)userInfo[0]);*/
+        if(userInfo>-1) {
+            String json = "{\"Success. id\": \"" + user.getId() + "\"}";
+            //Mail.sendMail(user.getEmail(), "Brukerinfo oppdatert", " brukerId: "+user.getId());
+            return Response.ok(json, MediaType.APPLICATION_JSON).build();
+        } else {
+            log.log(Level.WARNING, "Failed to edit user: " + user);
+            return Response.serverError().build();
+        }
+    }
+
+
     @DELETE
     @Path("/deleteuser/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Boolean deleteUser(@PathParam("userId") int userId) {
-        Session session = getSession();
-        if(!session.isAdmin()) {
+        if(!getSession().isAdmin()) {
             throw new NotAuthorizedException("Cannot access service", Response.Status.UNAUTHORIZED);
         }
 

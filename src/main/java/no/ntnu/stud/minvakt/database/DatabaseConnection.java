@@ -16,21 +16,11 @@ import java.util.logging.Logger;
 public class DatabaseConnection {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
-    private final String username = TravisUtil.isTravis() ? "root" : "g_scrum02";
-    private final String password = TravisUtil.isTravis() ? "" : "82dvE5og";
-    private final String databasename = TravisUtil.isTravis() ? "jdbc:mysql://localhost/test" : "jdbc:mysql://mysql.stud.iie.ntnu.no/g_scrum02";
-
-    private final String databasedriver = "com.mysql.cj.jdbc.Driver";
     private Connection connection = null;
 
-
     public DatabaseConnection() {
-
         try {
-            Class.forName(databasedriver);
-            connection = DriverManager.getConnection(databasename, username, password);
-        } catch (ClassNotFoundException e) {
-            log.log(Level.SEVERE, "Issue with database driver.", e);
+            connection = DatabaseConfiguration.getConnection();
         } catch (SQLException e) {
             log.log(Level.SEVERE, "Issue with connecting to database.", e);
         }
@@ -44,6 +34,4 @@ public class DatabaseConnection {
     public Connection getConnection() {
         return connection;
     }
-
-
 }

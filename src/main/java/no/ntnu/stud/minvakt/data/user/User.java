@@ -1,8 +1,13 @@
 package no.ntnu.stud.minvakt.data.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
+import org.owasp.html.HtmlPolicyBuilder;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,7 +90,7 @@ public class User {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = SanitizeUtil.filterInput(firstName);
     }
 
     public String getLastName() {
@@ -93,7 +98,7 @@ public class User {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = SanitizeUtil.filterInput(lastName);
     }
 
     public String getHash() {
@@ -118,7 +123,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = SanitizeUtil.filterInput(email);
     }
 
     public String getPhoneNumber() {
@@ -126,7 +131,7 @@ public class User {
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+        this.phoneNumber = SanitizeUtil.filterInput(phoneNumber);
     }
 
     public UserCategory getCategory() {
@@ -173,5 +178,18 @@ public class User {
                 ", hash='" + hash + '\'' +
                 ", salt='" + salt + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

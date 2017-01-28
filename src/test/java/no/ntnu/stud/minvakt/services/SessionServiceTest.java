@@ -53,7 +53,7 @@ public class SessionServiceTest {
         // Try to login once more
         Response response = sessionService.checkLogin(request, "email1", "password");
         Assert.assertEquals(response.getStatus(), Response.Status.UNAUTHORIZED.getStatusCode());
-        Assert.assertEquals(null, response.getEntity());
+        Assert.assertTrue(response.getEntity() instanceof ErrorInfo);
     }
 
     @Test

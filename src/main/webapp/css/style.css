@@ -36,7 +36,6 @@ header h1 {
   font-weight: normal;
   font-size: 1.25rem;
   flex: 1 1 20%;
-    text-align: center;
 }
 
 header a {
@@ -52,6 +51,15 @@ header a {
 header a:last-child {
     justify-content: flex-end;
 }
+
+header h1 a:last-child {
+    color: #ffffff;
+    text-align: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
 
 .container {
   padding: 0 1rem;
@@ -106,7 +114,7 @@ header a:last-child {
   -webkit-box-align: end;
       -ms-flex-align: end;
           align-items: flex-end;
-  //height: 3rem;
+  min-height: 4rem;
   padding: .5rem 0;
 }
 
@@ -124,6 +132,12 @@ header a:last-child {
     -webkit-box-align: end;
     -ms-flex-align: end;
     align-items: flex-end;
+}
+
+.container-header form {
+    flex-grow: 1;
+    margin: 0 4rem -.5rem;
+    min-width: 112px;
 }
 
 input, select {
@@ -172,6 +186,12 @@ select {
   pointer-events: none;
 }
 
+.container-header .register-form {
+    -ms-flex-preferred-size: 50%;
+    flex-basis: 50%;
+    margin-bottom: -5px;
+}
+
 input:focus, input[required]:valid {
   outline: none;
   border-bottom: 2px solid #034584;
@@ -181,6 +201,10 @@ input:focus, input[required]:valid {
 input.error, select.error, input:not([value=""]):focus:invalid {
   border-bottom: 2px solid #B92D00;
   margin-bottom: 0.4375rem;
+}
+
+#staffNum {
+    width: 3.75rem;
 }
 
 [type="number"] {
@@ -412,6 +436,9 @@ button:disabled {
 #userBtn {
     margin-top: 1.5rem;
 }
+.edituser-btn{
+    margin-top: 1.5rem;
+}
 
 .link {
   text-decoration: none;
@@ -531,6 +558,22 @@ button:disabled {
     align-items: center;
 }
 
+.feed-messages .watch {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+}
+
+.watch .longer {
+    flex-basis: 70%;
+    display: flex;
+}
+
+.watch .longer input {
+    width: 50%;
+}
+
 .lead {
     margin: 0;
     font-weight: normal;
@@ -560,6 +603,13 @@ button:disabled {
     margin-left: .5rem;
 }
 
+.watch.highlight {
+    padding: 0 .7rem;
+    margin: .5rem -.7rem 0;
+    box-shadow: 0px 0px 2px #777373;
+    background: #fafafa;
+}
+
 .more-info {
     width: 100%;
     display: -webkit-box;
@@ -570,7 +620,7 @@ button:disabled {
     tarnsition: all .2s ease-in-out;
 }
 
-.more-info[loaded="true"] {
+.more-info[loaded="true"], .more-info.loaded {
     //box-shadow: 0 -.5px 0 0 #000000;
     padding: 0 1rem .5rem;
     opacity: 1;
@@ -777,7 +827,20 @@ button:disabled {
 #popup_menu a.active {
     font-weight: 600;
 }
-
+.dialogboks {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    background-color: #034584;
+    color:white;
+}
+#absence {
+  box-shadow: 0px 0px 2px #777373;
+}
+#absence-sick {
+  background-color: #c34a4a;
+  box-shadow: 0px 0px 2px #777373;
+}
 .logo {
     text-align:center;
 }
@@ -938,44 +1001,6 @@ text-align: center;
     text-decoration: underline;
 }
 
-@media(min-width: 500px) {
-    .container {
-        max-width: 750px;
-        margin: 0 auto;
-    }
-
-    #popup_menu, #popup_more {
-        width: auto;
-        background: #f2f2f2;
-        box-shadow: 0 0 5px 0 #000000;
-    }
-
-    #popup_menu a:hover, #popup_more a:hover {
-        background: #ffffff;
-    }
-
-    #popup_more {
-        right: 0;
-    }
-}
-
-@media(min-width: 750px) {
-    header h1 {
-       width: 696px;
-        text-align: center;
-    }
-
-    header a:first-child {
-        margin-left: auto;
-    }
-
-    header a:last-child {
-        margin-right: auto;
-    }
-
-}
-
-
 /* SPINNER */
 .typing_loader {
     width: 6px;
@@ -1008,4 +1033,59 @@ text-align: center;
 #staffForm {
     margin-bottom: 2.5rem;
     display: none;
+}
+
+.red{
+    border-bottom: 2px solid #B92D00;
+    margin-bottom: 0.4375rem;
+}
+
+#shift-status {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+}
+
+
+@media (min-width: 750px) {
+    header h1 {
+        width: 696px;
+        text-align: center;
+    }
+
+    header a:first-child {
+        margin-left: auto;
+    }
+
+    header a:last-child {
+        margin-right: auto;
+    }
+
+}
+
+@media(min-width: 500px) {
+    .container {
+        max-width: 750px;
+        margin: 0 auto;
+    }
+
+    #popup_menu, #popup_more {
+        width: auto;
+        background: #f2f2f2;
+        box-shadow: 0 0 5px 0 #000000;
+    }
+
+    #popup_menu a:hover, #popup_more a:hover {
+        background: #ffffff;
+    }
+
+    #popup_more {
+        right: 0;
+    }
+}
+
+@media (max-width: 450px) {
+    header a span {
+        display: none;
+    }
 }

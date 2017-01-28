@@ -25,7 +25,9 @@ public class UserDBManager extends DBManager {
     private final String sqlGetUsers = "SELECT * FROM user;";
     private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
     private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?);";
-    private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =? WHERE user_id =?;";
+    private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =?, category=?, percentage_work=?, dept_id=? WHERE user_id =?;";
+    private final String sqlChangeUserInfoSimple = "UPDATE user SET email =?, phonenumber =? WHERE user_id =?;";
+
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
     private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
     private final String sqlGetUserBasicsWithCategory = "SELECT user_id, first_name, last_name, category FROM user WHERE category = ? " +
@@ -73,15 +75,12 @@ public class UserDBManager extends DBManager {
                 prep.setString(2, pass);
                 res = prep.executeQuery();
                 if (res.next()) {
-                    System.out.println(username+ " " + pass);
-
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
                         //New user
                         User user = new User(res.getInt("user_id"), res.getString("first_name"),
                                 res.getString("last_name"), null,null,res.getString("email"), res.getString("phonenumber"),
                                 User.UserCategory.valueOf(res.getInt("category")), res.getFloat("percentage_work"),
                                 res.getInt("dept_id"));
-                        System.out.println(user);
                         return user;
                     }
                     else{
@@ -90,8 +89,7 @@ public class UserDBManager extends DBManager {
                 }
 
             } catch (Exception e) {
-                System.out.println("Error at loginUser");
-                e.printStackTrace();
+                log.log(Level.WARNING, "Could not log in user " + username, e);
             }finally{
                 endTransaction();
                 finallyStatement(res, prep);
@@ -104,31 +102,30 @@ public class UserDBManager extends DBManager {
      * Checks whether the user ID and password matches a row in the database
      * @param userId
      * @param pass plaintext
-     * @return Integer>-1 if success, -1 if fail
+     * @return Integer>True if success
      */
-    public int checkLoginId(String userId, String pass) {
-        int login = -1;
+    public boolean checkLoginId(int userId, String pass) {
         if (setUp()) {
             try {
                 startTransaction();
                 prep = getConnection().prepareStatement(sqlLoginId);
-                prep.setString(1, userId);
+                prep.setInt(1, userId);
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {
-                        login = res.getInt(1);
+                        return true;
                     }
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.WARNING, "Unable to check login for ID " + userId, e);
             }
             finally {
                 endTransaction();
                 finallyStatement(res,prep);
             }
         }
-        return login;
+        return false;
     }
 
     public int checkUserAdmin(String userId) {
@@ -317,7 +314,10 @@ public class UserDBManager extends DBManager {
                     u.setEmail(res.getString("email"));
                     u.setPhoneNumber(res.getString("phonenumber"));
                     u.setCategory(User.UserCategory.valueOf(res.getInt("category")));
+                    u.setWorkPercentage(res.getFloat("percentage_work"));
+                    u.setDeptId(res.getInt("dept_id"));
                     user = u;
+                    System.out.println(user);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -448,9 +448,8 @@ public class UserDBManager extends DBManager {
                     }
 
                 }
-            } catch (SQLException sqle) {
-                System.out.println("Error at changePasswordUserId()");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "User ID: " + user_id, e);
             } finally {
                 endTransaction();
                 finallyStatement(res, prep);
@@ -476,11 +475,14 @@ public class UserDBManager extends DBManager {
                 prep.setString(2, user.getLastName());
                 prep.setString(3, user.getEmail());
                 prep.setString(4, user.getPhoneNumber());
-                // prep.setInt(5, user.getCategory());
+                prep.setInt(5, user.getCategory().getValue());
+                prep.setFloat(6, user.getWorkPercentage());
+                prep.setInt(7, user.getDeptId());
+                prep.setInt(8, user.getId());
+
                 change = prep.executeUpdate();
             } catch (Exception e) {
-                System.out.println("Error at changeUserInfo()");
-                e.printStackTrace();
+                log.log(Level.WARNING, "Could not change user info", e);
             } finally {
                 endTransaction();
                 finallyStatement(res,prep);
@@ -489,6 +491,29 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
+    public int changeUserInfoSimple(String email, String phone, int userId) {
+        int change = -1;
+        if(setUp()) {
+            try {
+                startTransaction();
+                conn = getConnection();
+                //conn.setAutoCommit(false);
+                prep = conn.prepareStatement(sqlChangeUserInfoSimple);
+                prep.setString(1, email);
+                prep.setString(2, phone);
+                prep.setInt(3, userId);
+
+                change = prep.executeUpdate();
+            } catch (Exception e) {
+                System.out.println("Error at changeUserInfoSimple()");
+                e.printStackTrace();
+            } finally {
+                endTransaction();
+                finallyStatement(res,prep);
+            }
+        }
+        return change;
+    }
 
     public ArrayList<UserBasicList> getUserBasics() {
         ArrayList<UserBasicList> userBasics = new ArrayList<>();
@@ -518,9 +543,8 @@ public class UserDBManager extends DBManager {
                             User.UserCategory.valueOf(res.getInt("category"))
                     ));
                 }
-            } catch (SQLException sqle) {
-                System.out.println("Issue with getting user basics");
-                sqle.printStackTrace();
+            } catch (SQLException e) {
+                log.log(Level.WARNING, "Issue with getting user basics", e);
             } finally {
                 finallyStatement(res, prep);
             }

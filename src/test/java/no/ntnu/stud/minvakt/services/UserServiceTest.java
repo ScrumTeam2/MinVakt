@@ -24,6 +24,7 @@ public class UserServiceTest extends ServiceTest {
 
     @Test
     public void getUserBasicsCategory(){
+        logInAdmin();
         assertFalse(userService.getUserBasicsWithCategory(User.UserCategory.ASSISTANT).isEmpty());
     }
 }

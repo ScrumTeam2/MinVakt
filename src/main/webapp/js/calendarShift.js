@@ -1,5 +1,9 @@
-$(document).ready(function() {
+$(document).ready(function () {
 });
+
+var currentDate;
+var departmentId;
+
 function loadCalendar() {
     //Hente dato trykket på
     var tableId = $('#calendar-availability tr');
@@ -10,28 +14,30 @@ function loadCalendar() {
     }
 }
 var dateClicked = new Date();
-var C = function Calendar(month, year, data) {
-
-    if(!this.data){
+var C = function Calendar(month, year, data, dateClicked) {
+    if(typeof dateClicked != Date) {
+        dateClicked = this.dateClicked;
+    }
+    if (!this.data) {
         this.data = {};
     }
     var now = new Date();
 
     // labels for week days and months
-    var day  = 1,
+    var day = 1,
         prev = 1,
         next = 1;
     var dayInWeek = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn'],
         monthInYear = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember'];
 
     //Check if date (month) is correct
-    if(isNaN(month) || month == null) {
+    if (isNaN(month) || month == null) {
         this.month = now.getMonth() + 1;
     } else {
         this.month = month;
     }
     //Check if date (year) is correct
-    if(isNaN(year) || year == null) {
+    if (isNaN(year) || year == null) {
         this.year = now.getFullYear();
     } else {
         this.year = year;
@@ -76,14 +82,14 @@ var C = function Calendar(month, year, data) {
         for (var j = 1; j <= 7; j++) {
             if (day <= monthEndDay && (i > 0 || j >= dayStartWeek)) {
                 // current month
-                if(dateClicked && dateClicked.getDate() === day && dateClicked.getMonth() === nowMonth
+                if (dateClicked && dateClicked.getDate() === day && dateClicked.getMonth() === nowMonth
                     && dateClicked.getFullYear() === this.year)
-                    if(now.getDate() == day && now.getMonth() == nowMonth
+                    if (now.getDate() == day && now.getMonth() == nowMonth
                         && now.getFullYear() == this.year) {
                         html += '<td class="day current-day calendar-clicked">';
                     }
                     else    html += '<td class="day calendar-clicked">';
-                else{
+                else {
                     if (now.getDate() == day && now.getMonth() == nowMonth
                         && now.getFullYear() == this.year) {
                         html += '<td class="day current-day">';
@@ -91,27 +97,27 @@ var C = function Calendar(month, year, data) {
                     else html += '<td class="day">';
                 }
                 //Add dots if person is on shift
-                if(data[count]){
+                if (data[count]) {
                     currentDate = new Date(data[count].date);
-                    while(data[count] && currentDate.getDate() == day && currentDate.getMonth() == nowMonth){
-                        if(data[count].available && !data[count].hasUser){
+                    while (data[count] && currentDate.getDate() == day && currentDate.getMonth() == nowMonth) {
+                        if (data[count].available && !data[count].hasUser) {
                             isAvailable = true;
                         }
-                        if(data[count].hasUser){
+                        if (data[count].hasUser) {
                             hasUser = true;
                         }
                         count++;
-                        if(data[count]) {
+                        if (data[count]) {
                             currentDate = new Date(data[count].date);
                         }
                     }
                 }
                 html += day;
                 html += "<div class='circle-wrap'>";
-                if(hasUser){
+                if (hasUser) {
                     html += "<span class='circle blue'></span>";
                 }
-                if(isAvailable){
+                if (isAvailable) {
                     html += "<span class='circle green'></span>";
                 }
                 html += '</div></td>';
@@ -152,22 +158,22 @@ var C = function Calendar(month, year, data) {
 // document.getElementById('calendar').innerHTML = Calendar(12, 2015);
 createCalendatWithData();
 
-C.prototype.switchDate = function(postfix) {
+C.prototype.switchDate = function (postfix) {
     var curMonth = this.month;
     var curYear = this.year;
     var num = 0;
-    if(postfix == 0) {
+    if (postfix == 0) {
         this.month--;
     } else {
         this.month++;
     }
-    document.getElementById('calendar').innerHTML = C(this.month,this.year);
+    document.getElementById('calendar').innerHTML = C(this.month, this.year);
 
 };
 
 function clickHandler() {
     console.log("clickhandler");
-    if($(this).hasClass("disabled-month")){
+    if ($(this).hasClass("disabled-month")) {
         return;
     }
     var url, data, dateString;
@@ -176,7 +182,12 @@ function clickHandler() {
     dateString = year + '-' + month + '-' + this.textContent;
     console.log(dateString);
     if (this.textContent > 0) {
-        data = {date:dateString, daysForward : 7};
+        currentDate = dateString;
+        data = {date: dateString, daysForward: 7};
+        console.log("departmentId: " + departmentId);
+        if(departmentId !== undefined) {
+            data["deptId"] = departmentId;
+        }
         $.ajax({
             url: "/rest/shift",
             type: 'GET',
@@ -190,7 +201,7 @@ function clickHandler() {
         dateClicked = new Date();
         dateClicked.setFullYear(year);
         dateClicked.setDate(this.textContent);
-        dateClicked.setMonth(month-1);
+        dateClicked.setMonth(month - 1);
 
     }
 }
@@ -201,36 +212,36 @@ function invalid(data) {
 
 function switchDate(postfix) {
     var switched = false;
-    if(this.month == 12 && postfix>0) {
+    if (this.month == 12 && postfix > 0) {
         this.month = 1;
         this.year++;
         switched = true;
     }
-    if(this.month == 1 && postfix<1) {
+    if (this.month == 1 && postfix < 1) {
         this.month = 12;
         this.year--;
         switched = true;
     }
     var num = 0;
-    if(postfix == 0 && !switched) {
+    if (postfix == 0 && !switched) {
         this.month--;
     } else {
-        if(!switched) {
+        if (!switched) {
             this.month++;
         }
     }
-    createCalendatWithData(this.month,this.year);
+    createCalendatWithData(this.month, this.year);
 }
-function createCalendatWithData(month,year) {
+function createCalendatWithData(month, year) {
     //Check if date (month) is correct
     var now = new Date();
-    if(isNaN(month) || month == null) {
+    if (isNaN(month) || month == null) {
         this.month = now.getMonth() + 1;
     } else {
         this.month = month;
     }
     //Check if date (year) is correct
-    if(isNaN(year) || year == null) {
+    if (isNaN(year) || year == null) {
         this.year = now.getFullYear();
     } else {
         this.year = year;
@@ -238,13 +249,22 @@ function createCalendatWithData(month,year) {
     var dateString = this.year + "-" + this.month + "-01";
     var thisMonth = this.month;
     var thisYear = this.year;
+
+    var data = {daysForward: 31, date: dateString};
+    if(departmentId !== undefined) {
+        data["deptId"] = departmentId;
+    }
     $.ajax({
         url: "../rest/shift/",
         type: 'GET',
         dataType: 'json',
-        data: {daysForward:31, date:dateString},
+        data: data,
         success: function (data) {
-            document.getElementById('calendar').innerHTML = C(thisMonth, thisYear, data);
+            var date;
+            if(currentDate !== undefined) {
+                date = Date.parse(currentDate);
+            }
+            document.getElementById('calendar').innerHTML = C(thisMonth, thisYear, data, date);
             loadCalendar();
 
         },

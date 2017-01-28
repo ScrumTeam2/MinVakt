@@ -124,7 +124,7 @@ $(document).ready(function() {
 function loadDepartments() {
     $departmentSelect = $("#department");
 
-    $.get("/rest/department/")
+    $.get("/rest/department/withData")
         .done(function (data) {
             data.forEach(function (department) {
                 $departmentSelect.append(`<option value="${department.id}">${department.name}</option>`);

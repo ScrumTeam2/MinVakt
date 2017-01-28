@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MinVakt | Endre bruker</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/style.css"/>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<header>
+    <a href="#" class="white" id="menu_icon">
+        <i class="material-icons">menu</i>
+        Meny
+    </a>
+    <h1>MinVakt</h1>
+    <a href="#" class="white" id="more_icon">
+        <i class="material-icons">more_vert</i>
+    </a>
+</header>
+<aside class="popup-menu admin hide" id="popup_menu">
+    <ul>
+        <li><a href="home-a.html">Godkjenninger<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="calendar-a.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="user-a.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="register.html">Registrer bruker<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
+    </ul>
+</aside>
+<aside class="popup-more employee hide" id="popup_more">
+    <ul>
+        <li><a href="change-password.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
+    </ul>
+</aside>
+<div class="container">
+    <div class="container-header">
+        <div>
+            <h2>Endre bruker</h2>
+        </div>
+    </div>
+    <div class="radio-group">
+        <input type="radio" class="user-type" name="user-type" id="employee" value="employee" checked>
+        <label for="employee" id = "employee-label" class="hide">Ansatt</label>
+        <input type="radio" class="user-type" name="user-type" id="admin" value="admin">
+        <label for="admin" id = "admin-label" class="hide">Administrasjon</label>
+    </div>
+    <form class="register-form" method="POST">
+        <div>
+            <input type="text" name="firstname" id="firstname" placeholder="Fornavn" required/>
+        </div>
+        <div>
+            <input type="text" name="lastname" id="lastname" placeholder="Etternavn" required/>
+        </div>
+        <div>
+            <input type="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" name="email" id="email"
+                   placeholder="E-post" required/>
+        </div>
+        <div>
+            <input type="tel" pattern="^[0-9]{8,8}$" name="phone" id="phone" placeholder="Mobilnummer" required/>
+        </div>
+        <div>
+            <input type="number" name="percentage" id="percentage" placeholder="Stillingsprosent" min="0" max="100"
+                   required/>
+        </div>
+        <div class="select-container">
+            <select name="category" id="category" required>
+                <option id="nurse" value=NURSE>Sykepleier</option>
+                <option id="health" value=HEALTH_WORKER>Helsefagarbeider</option>
+                <option id="assistant" value=ASSISTANT>Assistent</option>
+            </select>
+        </div>
+        <div class="select-container">
+            <select name="department" id="department">
+            </select>
+        </div>
+        <div class="button-group">
+            <button type="submit" id="userBtn">Endre bruker</button>
+            <button class = "edituser-btn" type="button" id="set-inactive">Slett bruker</button>
+            <button class = "edituser-btn" type="button" id="cancel-change-button">Avbryt</button>
+        </div>
+    </form>
+
+    <div id="userPopup" class="popup">
+        <h3 class="title">Tittel</h3>
+        <p class="result"></p>
+        <div class="links">
+            <a href="#" id="userViewBtn">Se bruker</a>
+            <a href="#" id="userCloseBtn">Lukk</a>
+
+        </div>
+    </div>
+
+
+</div>
+<script src="../js/checkscript.js"></script>
+<script src="../js/userProfile.js"></script>
+</body>
+</html>

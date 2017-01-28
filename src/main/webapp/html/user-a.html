@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Ansatt</title>
+    <title>MinVakt | Ansatte</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="
+            crossorigin="anonymous"></script>
 </head>
 <body>
-
 <header>
     <a href="#" class="white" id="menu_icon">
         <i class="material-icons">menu</i>
-        Meny
+        <span>Meny</span>
     </a>
-    <h1>MinVakt</h1>
+    <h1><a href="/html">MinVakt</a></h1>
     <a href="#" class="white" id="more_icon">
         <i class="material-icons">more_vert</i>
     </a>
@@ -28,23 +31,28 @@
         <li><a href="new-shift.html">Opprett turnus<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
-<aside class="popup-more hide" id="popup_more">
+<aside class="popup-more admin hide" id="popup_more">
     <ul>
         <li><a href="change-password.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
-
 <div class="container">
-    <h3 class="name-profile"></h3>
-    <p class="category-profile"></p>
-    <div class="contact-profile">
-        <p class="email-profile"></p>
-        <p class="phone-profile"></p>
-        <p class="percentage-profile"></p>
+    <div class="container-header">
+        <div>
+            <h2>Ansatte</h2>
+        </div>
     </div>
+    <div class="search-wrapper">
+        <input type="search" id="search" placeholder="Søk etter ansatt"/>
+        <label for="search"><i class="material-icons">search</i></label>
+    </div>
+
+    <section class="list">
+
+    </section>
 </div>
 <script src="../js/checkscript.js"></script>
-<script src="../js/registerscript.js"></script>
+<script src="../js/employeeScript.js"></script>
 </body>
 </html>
