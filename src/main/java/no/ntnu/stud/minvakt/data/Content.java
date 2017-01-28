@@ -32,7 +32,7 @@ public class Content {
 
     //TIMEBANK
     public String regTimebank(User user, int minutes){
-        String res = user.getFirstName()+" "+user.getLastName()+" har registert timeavvik på "+minutesFormat(minutes);
+        String res = user.getFirstName()+" "+user.getLastName()+" har registert overtid "+minutesFormat(minutes);
         return res;
     }
 
