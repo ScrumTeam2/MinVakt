@@ -105,26 +105,20 @@ public class OvertimeService extends SecureService{
     //@Produces(MediaType.APPLICATION_JSON)
     public Response deleteOvertime(/*@PathParam("userId")*/ int userId, /*@QueryParam("shiftId")*/ int shiftId, /*@QueryParam("startTime")*/ int startTime) {
 
-        int feedId = newsfeedDBM.getNewsFeedIdThroughOvertime(userId, shiftId, startTime);
-        if(feedId<1){
-            return Response.status(400).entity("Could not find feedId").build();
-        }else{
-            boolean delNotification = newsfeedDBM.deleteNotification(feedId);
-
-            if (delNotification){
-                boolean isDeleted = overtimeDBM.deleteOvertime(userId, shiftId, startTime);
-
-                if(isDeleted){
-                    return Response.status(200).build();
-                }else{
-                    return Response.status(400).entity("Could not delete overtime").build();
-                }
-
-            }else{
-                return Response.status(400).entity("Could not delete overtime notification in newsfeed. Overtime ot deleted.").build();
+        if (!getSession().isAdmin()) {
+            int feedId = newsfeedDBM.getNewsFeedIdThroughOvertime(userId, shiftId, startTime);
+            if (feedId < 1) {
+                return Response.status(400).entity("Could not find feedId").build();
             }
-
+            boolean delNotification = newsfeedDBM.deleteNotification(feedId);
         }
 
+        boolean isDeleted = overtimeDBM.deleteOvertime(userId, shiftId, startTime);
+
+        if (isDeleted) {
+            return Response.status(200).build();
+        } else {
+            return Response.status(400).entity("Could not delete overtime").build();
+        }
     }
 }
