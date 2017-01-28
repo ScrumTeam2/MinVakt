@@ -8,6 +8,8 @@ var $saveButton;
 var $popup;
 var shiftType;
 
+var users = [];
+
 var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
 var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 var startTimes = {"DAY" : 420, "EVENING" : 900, "NIGHT" : 1380};
@@ -49,18 +51,18 @@ function performSave(e) {
             staffCount: newStaffCount
         }
     }).success(function (data) {
-        console.log(data);
+        //console.log(data);
         $saveButton.text("Lagre");
         getNewShift();
-    }).error(function (data) {
-        console.log(data);
+    }).error(function (e) {
+        console.error(e);
         $popup.show();
         $saveButton.text("Lagre");
     });
 }
 
 function showShiftInfo(data) {
-    console.log(data);
+    //console.log(data);
 
     shiftType = data.type;
     $list.html("");
@@ -78,35 +80,7 @@ function showShiftInfo(data) {
     var counter = 0;
     while(counter < data.staffNumb) {
         if (counter < data.shiftUsers.length) {
-            var user = data.shiftUsers[counter];
-            $.ajax({
-                url: "/rest/overtime/shiftId/" + getUrlParameter("id") + "?userId=" + user.userId,
-                type: "GET",
-                success: function(data) {
-                    console.log(data);
-                    var hours;
-                    var minutes;
-                    for (var i = 0; i < data.length; i++) {
-                        if (data[i].minutes < 0) {
-                            var tempTime = data[i].minutes * -1;
-                            hours = Math.floor(tempTime/60);
-                            minutes = tempTime - (hours * 60);
-                        }
-                    }
-                    $list.append(`<div class="watch" data-id="${user.userId}">
-                                    <div class="watch-info">
-                                        <p class="lead">${user.userName}</p>
-                                        <p class="sub">${userTypes[user.userCategory]}</p>
-                                    </div>
-                                    <div class="longer">
-                                        <input type="number" id="hours" min="0" max="8" placeholder="Timer" value="${hours}">
-                                        <input type="number" id="minutes" min="0" max="55" step="5" placeholder="Minutter" value="${minutes}">
-                                    </div>
-
-                                </div>`);
-                }
-            });
-
+            users.push(data.shiftUsers[counter]);
         } else {
             $list.append(`<div class="watch">
                     <div class="watch-info">
@@ -118,7 +92,12 @@ function showShiftInfo(data) {
         counter++;
     }
 
+    for(var i in users) {
+        displayUsers(users[i]);
+    }
+
     $('#btnConfirmAbsence').on('click', function() {
+        $('#btnConfirmAbsence').html(`<div class="typing_loader"></div>`);
         var absence = [];
         var $employees = $('.watch');
         for (var i = 0; i < $employees.length; i++) {
@@ -137,7 +116,7 @@ function showShiftInfo(data) {
             }
         }
 
-        console.log(absence.length);
+        //console.log(absence.length);
 
         for (var i = 0; i < absence.length; i++) {
             $.ajax({
@@ -146,9 +125,11 @@ function showShiftInfo(data) {
                 contentType: 'application/json',
                 data: JSON.stringify(absence[i]),
                 success: function(data) {
-                    console.log("YAY!", data);
+                    $('#btnConfirmAbsence').html(`Registrer fravær`);
+                    window.location = "/html/calendar-a.html";
                 },
                 error: function(e) {
+                    $('#btnConfirmAbsence').html(`Registrer fravær`);
                     console.log("Error", e);
                     initPopup();
                     $("#userPopup").show();
@@ -159,6 +140,36 @@ function showShiftInfo(data) {
         if(absence.length === 0) { // TODO: Fix problem with popup
             initPopup();
             $("#userPopup").show();
+        }
+    });
+}
+
+function displayUsers(user) {
+    $.ajax({
+        url: "/rest/overtime/shiftId/" + getUrlParameter("id") + "?userId=" + user.userId,
+        type: "GET",
+        success: function(data) {
+            console.log(data);
+            var hours;
+            var minutes;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].minutes < 0) {
+                    var tempTime = data[i].minutes * -1;
+                    hours = Math.floor(tempTime/60);
+                    minutes = (tempTime - (hours * 60) === 0) ? '' : tempTime - (hours * 60);
+                }
+            }
+            $list.append(`<div class="watch" data-id="${user.userId}">
+                                    <div class="watch-info">
+                                        <p class="lead">${user.userName}</p>
+                                        <p class="sub">${userTypes[user.userCategory]}</p>
+                                    </div>
+                                    <div class="longer">
+                                        <input type="number" id="hours" min="0" max="8" placeholder="Timer" value="${isNaN(hours) ? '' : hours}">
+                                        <input type="number" id="minutes" min="0" max="55" step="5" placeholder="Minutter" value="${isNaN(minutes) ? '' : minutes}">
+                                    </div>
+
+                                </div>`);
         }
     });
 }
