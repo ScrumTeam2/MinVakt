@@ -72,6 +72,7 @@ $(document).ready(function() {
 
     function dropDownUser(user, element){
         var userDataElement = element.children(".user-data");
+        userDataElement.addClass("loaded");
         //console.log(userDataElement.length);
         if(userDataElement.data("hasInfo") != "1") {
             userDataElement.data("hasInfo", "1");

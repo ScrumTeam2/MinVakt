@@ -11,7 +11,7 @@ import java.util.logging.Level;
 public class OvertimeDBManager extends DBManager{
 
 
-    private final String sqlSetOvertime = "INSERT INTO overtime VALUES(?,?,?,?,?)";
+    private final String sqlSetOvertime = "REPLACE INTO overtime VALUES(?,?,?,?,?)";
     private final String sqlApproveOvertime = "UPDATE overtime SET approved=1 WHERE user_id = ? AND shift_id = ?";
     private final String sqlDeleteOvertime = "DELETE FROM overtime WHERE user_id = ? AND shift_id = ? AND start_time = ?";
 
