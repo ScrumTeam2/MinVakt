@@ -33,9 +33,7 @@
 </aside>
 <div class="container">
     <div class="container-header">
-        <div class="person cursor-point">
-            <h2 class="my-shifts">Vaktliste</h2>
-        </div>
+        <h2 class="my-shifts">Vaktliste</h2>
         <form class="register-form">
             <div class="select-container">
                 <select name="category" id="dept-options">
@@ -52,49 +50,49 @@
         <div class="links">
             <a onclick="poopStatus(true,this);">Ja</a>
             <a onclick="poopStatus(false,this);">Nei</a>
-          </div>
         </div>
-            <div class="popup" id="popup">
+    </div>
+    <div class="popup" id="popup">
         <h3>Fristen er ute</h3>
         <p>Fristen for å registrere sykdom for denne datoen er gått ut.</p>
         <div class="links">
             <a onclick="closePopup()">Ok</a>
-          </div>
         </div>
-        <div class="popup" id="changeShiftPopup" style="z-index:1;">
-          <h3>Bytte vakt</h3>
-          <p></p>
-          <div class="links">
+    </div>
+    <div class="popup" id="changeShiftPopup" style="z-index:1;">
+        <h3>Bytte vakt</h3>
+        <p></p>
+        <div class="links">
             <a onclick="changeShiftStatus(true,this);">Ja</a>
             <a onclick="changeShiftStatus(false,this);">Nei</a>
-          </div>
         </div>
-        <div class="calendar" id="calendar">
-            <div class="calendar-header">
-                <a href="#" class="prev">
-                    <i class="material-icons">chevron_left</i>
-                </a>
-                <h3>Januar 2014</h3>
-                <a href="#" class="next">
-                    <i class="material-icons">chevron_right</i>
-                </a>
-            </div>
-            <table id="calendar-availability" class="calendar">
-                <thead>
-                <tr>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <section class="list">
-
-        </section>
     </div>
-    <script src="../js/checkscript.js"></script>
-    <script src="../js/calendarShift.js"></script>
-    <script src="../js/profileShiftScript.js"></script>
+    <div class="calendar" id="calendar">
+        <div class="calendar-header">
+            <a href="#" class="prev">
+                <i class="material-icons">chevron_left</i>
+            </a>
+            <h3>Januar 2014</h3>
+            <a href="#" class="next">
+                <i class="material-icons">chevron_right</i>
+            </a>
+        </div>
+        <table id="calendar-availability" class="calendar">
+            <thead>
+            <tr>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <section class="list">
+
+    </section>
+</div>
+<script src="../js/checkscript.js"></script>
+<script src="../js/calendarShift.js"></script>
+<script src="../js/profileShiftScript.js"></script>
 
 </body>
 </html>

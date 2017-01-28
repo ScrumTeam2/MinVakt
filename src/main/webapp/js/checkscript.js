@@ -157,7 +157,6 @@ var employeelinks = [
     "/html/user-e.html",
     "/html/availability.html",
     "/html/availability-select.html",
-    "/html/calendar-e.html",
     "/html/login.html",
     "/html/user-shifts.html",
     "/html/resetpassword.html",

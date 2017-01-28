@@ -5,7 +5,6 @@
     <title>MinVakt | Hjem</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="../js/adminShiftScript.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -36,17 +35,18 @@
 </aside>
 <div class="container">
     <div class="container-header">
-        <div class="people">
-            <i class="symbol x2">
-                <i class="material-icons">person</i>
-            </i>
-            <h2 class="all-shifts">Alle vakter</h2>
-        </div>
+        <h2 class="my-shifts">Vaktliste</h2>
+        <form class="register-form">
+            <div class="select-container">
+                <select name="category" id="dept-options">
+                </select>
+            </div>
+        </form>
         <i class="symbol x2">
             <i class="material-icons hidden" id="today">today</i>
         </i>
     </div>
-    <div class="calendar" id="calendar" style="display: none;">
+    <div class="calendar" id="calendar">
         <div class="calendar-header">
             <a href="#" class="prev">
                 <i class="material-icons">chevron_left</i>
@@ -71,6 +71,6 @@
 </div>
 <script src="../js/checkscript.js"></script>
 <script src="../js/calendarShift.js"></script>
-
+<script src="../js/adminShiftScript.js"></script>
 </body>
 </html>
