@@ -114,10 +114,22 @@ function addShiftInfoHtml (element, shiftId, data) {
 
     element.append(html);
     // Add edit button
-    element.append(`
-        <a href="edit-shift.html?id=${shiftId}">
-            <button type="submit" id="editBtn">Endre vakt</button>
-        </a>`);
+    element.append(`<div class="button-group">
+                        <button data-id="${shiftId}" id="editBtn">Endre vakt</button>
+                        <button data-id="${shiftId}" id="absenceBtn">Registrer fravær</button>
+                    </div>`);
+
+    $('#editBtn').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(e.currentTarget);
+        window.location = "/html/edit-shift.html?id=" + $this.attr("data-id");
+    });
+
+    $('#absenceBtn').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(e.currentTarget);
+        window.location = "/html/register-absence.html?id=" + $this.attr("data-id");
+    });
 }
 
 

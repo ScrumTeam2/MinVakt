@@ -149,6 +149,7 @@ var adminlinks = [
     "/html/change-employee.html",
     "/html/change-password.html",
     "/html/edit-shift.html",
+    "/html/register-absence.html",
     "/html/user-profile.html"
 ];
 
@@ -257,5 +258,5 @@ function convertDate(dateInput) {
 }
 
 function addNameToTop() {
-    $("#more_icon").prepend(sessionStorage.firstName + " " + sessionStorage.lastName);
+    $("#more_icon").prepend("<span>" + sessionStorage.firstName + " " + sessionStorage.lastName + "</span>");
 }
