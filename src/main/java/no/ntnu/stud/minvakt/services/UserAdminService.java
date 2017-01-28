@@ -34,7 +34,7 @@ public class UserAdminService extends SecureService {
         }
 
         // Verify user data
-        Response errorResponse = InputUtil.verifyUser(user);
+        Response errorResponse = InputUtil.validateUser(user);
         if (errorResponse != null) return errorResponse;
 
         // Check that identifiers doesn't already exist
@@ -71,7 +71,7 @@ public class UserAdminService extends SecureService {
         }
 
         // Verify user data
-        Response errorResponse = InputUtil.verifyUser(user);
+        Response errorResponse = InputUtil.validateUser(user);
         if (errorResponse != null) return errorResponse;
 
         // Check that identifiers doesn't already exist

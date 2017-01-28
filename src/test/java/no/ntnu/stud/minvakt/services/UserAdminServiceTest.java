@@ -1,6 +1,8 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.controller.encryption.Encryption;
 import no.ntnu.stud.minvakt.data.user.User;
+import no.ntnu.stud.minvakt.database.UserDBManager;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,9 +47,15 @@ public class UserAdminServiceTest extends ServiceTest {
     @Test
     public void changePassword(){
         logInUser();
-        Response response = userService.changePassword("password", "password");
-        assertTrue(response.getStatus() == 200);
-        response = userService.changePassword("passwor", "password");
-        assertTrue(response.getStatus() != 200);
+        try {
+            Response response = userService.changePassword("password", "Password12");
+            assertTrue(response.getStatus() == 200);
+            response = userService.changePassword("passwor", "password");
+            assertTrue(response.getStatus() != 200);
+        }
+        finally {
+            // Reset password
+            new UserDBManager().setNewPassword(userService.getSession().getUser().getId(), new Encryption().passEncoding("password"));
+        }
     }
 }

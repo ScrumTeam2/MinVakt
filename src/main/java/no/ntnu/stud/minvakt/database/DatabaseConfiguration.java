@@ -39,12 +39,16 @@ public class DatabaseConfiguration {
         p.setTestOnReturn(false);
         p.setValidationInterval(30000);
         p.setTimeBetweenEvictionRunsMillis(30000);
-        p.setMaxActive(20);
+
+        // Pool size settings
         p.setInitialSize(1);
+        p.setMinIdle(0);
+        p.setMaxIdle(5);
+        p.setMaxActive(20);
+
         p.setMaxWait(10000);
         p.setRemoveAbandonedTimeout(60);
         p.setMinEvictableIdleTimeMillis(30000);
-        p.setMinIdle(0);
         p.setLogAbandoned(true);
         p.setRemoveAbandoned(true);
         p.setJdbcInterceptors(

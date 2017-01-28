@@ -5,6 +5,7 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.database.UserDBManager;
+import no.ntnu.stud.minvakt.util.InputUtil;
 import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,6 +59,11 @@ public class UserService extends SecureService{
     @POST
     @Path("/changepass")
     public Response changePassword(@FormParam("oldpass") String oldPass, @FormParam("newpass") String newPass){
+        // Validate new password
+        if(!InputUtil.validatePassword(newPass)) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
         int status = userDB.changePasswordUserId(Integer.toString(getSession().getUser().getId()), oldPass, newPass);
 
         if(status > 0){
