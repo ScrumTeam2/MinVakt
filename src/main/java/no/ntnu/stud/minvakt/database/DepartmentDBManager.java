@@ -88,7 +88,7 @@ public class DepartmentDBManager extends DBManager{
             }
             finally {
                 finallyStatement(res, prep);
-                finallyStatement(res2, prep);
+                finallyStatement(res2);
             }
         }
         return departments;

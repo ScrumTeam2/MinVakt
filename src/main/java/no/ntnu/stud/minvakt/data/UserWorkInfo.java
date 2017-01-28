@@ -1,5 +1,7 @@
 package no.ntnu.stud.minvakt.data;
 
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
+
 /**
  * Created by Audun on 26.01.2017.
  */
@@ -33,7 +35,7 @@ public class UserWorkInfo {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = SanitizeUtil.filterInput(firstName);
     }
 
     public String getLastName() {
@@ -41,7 +43,7 @@ public class UserWorkInfo {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = SanitizeUtil.filterInput(lastName);
     }
 
     public int getShiftsWorked() {

@@ -500,7 +500,7 @@ public class ShiftDBManager extends DBManager {
             finally {
                 endTransaction();
                 finallyStatement(res, prep);
-                finallyStatement(res2, prep);
+                finallyStatement(res2);
             }
         }
         return out;
@@ -548,7 +548,7 @@ public class ShiftDBManager extends DBManager {
             finally {
                 endTransaction();
                 finallyStatement(res, prep);
-                finallyStatement(res2, prep);
+                finallyStatement(res2);
             }
         }
         return out;

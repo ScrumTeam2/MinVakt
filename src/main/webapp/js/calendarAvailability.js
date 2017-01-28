@@ -304,7 +304,7 @@ function displayAvailabilityHtml(data) {
                     html+="<p>Min vakt</p>";
                   } else {
                     html+="<input type='checkbox' class='checkBox2' name='check' id='"+element.shiftId+"' value='employee' checked>"+
-                    "<label for='"+element.shiftId+"'>Du er satt som ledig</label>";
+                    "<label for='"+element.shiftId+"'>Registrert som tilgjengelig</label>";
                   }
               html+="</div>";
         }
@@ -333,7 +333,7 @@ $('#submitAvailability').click(function() {
       var push = {id: id};
       selected.push(push);
       shiftsChosen.push(parseInt(id));
-      $("label[for='"+id+"']").text("Du er satt som ledig");
+      $("label[for='"+id+"']").text("Registrert som tilgjengelig");
       tempSelection.push(id);
   });
 
@@ -366,7 +366,7 @@ $('#submitAvailability').click(function() {
         var push = {id: id};
         selected.push(push);
         shiftsChosen.push(parseInt(id));
-        $("label[for='"+$(this).attr("id")+"']").text("Du er satt som ledig");
+        $("label[for='"+$(this).attr("id")+"']").text("Registrert som tilgjengelig");
         var index2 = tempUnSelection.indexOf(parseInt(id));
         tempUnSelection.splice(index2,1);
       }

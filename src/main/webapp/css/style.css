@@ -436,6 +436,9 @@ button:disabled {
 #userBtn {
     margin-top: 1.5rem;
 }
+#cancel-change-button {
+    margin-top: 1.5rem;
+}
 
 .link {
   text-decoration: none;
@@ -824,7 +827,20 @@ button:disabled {
 #popup_menu a.active {
     font-weight: 600;
 }
-
+.dialogboks {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    background-color: #034584;
+    color:white;
+}
+#absence {
+  box-shadow: 0px 0px 2px #777373;
+}
+#absence-sick {
+  background-color: #c34a4a;
+  box-shadow: 0px 0px 2px #777373;
+}
 .logo {
     text-align:center;
 }
@@ -1022,7 +1038,6 @@ text-align: center;
 .red{
     border-bottom: 2px solid #B92D00;
     margin-bottom: 0.4375rem;
-
 }
 
 #shift-status {
@@ -1030,6 +1045,7 @@ text-align: center;
     flex-flow: row wrap;
     justify-content: space-between;
 }
+
 
 @media (min-width: 750px) {
     header h1 {
