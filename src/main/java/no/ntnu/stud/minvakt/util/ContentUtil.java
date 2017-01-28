@@ -1,4 +1,4 @@
-package no.ntnu.stud.minvakt.data;
+package no.ntnu.stud.minvakt.util;
 
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.user.User;
@@ -8,9 +8,9 @@ import no.ntnu.stud.minvakt.util.FormattingUtil;
  * Created by Marit on 27.01.2017.
  */
 
-//Contains all the newfeed "content"
-public class Content {
-    public Content(){}
+//Contains all the newfeed "contentUtil"
+public class ContentUtil {
+    public ContentUtil(){}
 
     //SHIFT_CHANGE_EMPLOYEE
     public String employeeShiftChange(Shift shift){

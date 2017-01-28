@@ -1,13 +1,11 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Content;
+import no.ntnu.stud.minvakt.util.ContentUtil;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.Overtime;
-import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
-import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +27,7 @@ public class OvertimeService extends SecureService{
     OvertimeDBManager overtimeDBM = new OvertimeDBManager();
     NewsFeedDBManager newsfeedDBM = new NewsFeedDBManager();
     UserDBManager userDBM = new UserDBManager();
-    Content content = new Content();
+    ContentUtil contentUtil = new ContentUtil();
 
     public OvertimeService(@Context HttpServletRequest request) {
         super(request);
@@ -62,7 +60,7 @@ public class OvertimeService extends SecureService{
                 } else {
                     //Sends notification to admin if not admin
                     NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                            content.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
+                            contentUtil.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
                     int newsfeedId = newsfeedDBM.createNotification(notification);
 
                     if (newsfeedId == 0) {

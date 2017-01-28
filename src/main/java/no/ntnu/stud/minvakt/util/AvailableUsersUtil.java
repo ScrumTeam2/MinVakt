@@ -1,6 +1,5 @@
 package no.ntnu.stud.minvakt.util;
 
-import no.ntnu.stud.minvakt.data.Content;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.user.User;
@@ -22,7 +21,7 @@ public class AvailableUsersUtil {
     FormattingUtil format = new FormattingUtil();
     NewsFeedDBManager newsFeedDMB = new NewsFeedDBManager();
     UserDBManager userDBM = new UserDBManager();
-    Content content = new Content();
+    ContentUtil contentUtil = new ContentUtil();
 
 
     //Sorts available employees on a shift and returns a sortet list
@@ -93,7 +92,7 @@ public class AvailableUsersUtil {
             for(UserBasicWorkHours userTo : userList){
 
                 NewsFeedItem notification = new NewsFeedItem(-1, dateTime,
-                        content.employeeShiftChange(shift), userTo.getId(), userFrom.getId(),
+                        contentUtil.employeeShiftChange(shift), userTo.getId(), userFrom.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
                 int status =  newsFeedDMB.createNotification(notification);
 
@@ -111,7 +110,7 @@ public class AvailableUsersUtil {
                 return false;
             }
             NewsFeedItem notification = new NewsFeedItem(-1, dateTime,
-                    content.shiftChangeAdmin(userFrom), adminId,userFrom.getId(),
+                    contentUtil.shiftChangeAdmin(userFrom), adminId,userFrom.getId(),
                     shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
             int status =  newsFeedDMB.createNotification(notification);
 
