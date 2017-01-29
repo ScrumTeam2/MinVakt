@@ -70,7 +70,7 @@ function performSave(e) {
                 method: "POST",
                 data: {"accepted" : true, "alreadyEdited" : true},
                 success: function() {
-                    window.location = "user-a.html";
+                    window.location = getUrlParameter("feedId") ? "home-a.html" : "user-a.html";
                 },
                 error: function(e) {
                     console.error("Error", e);

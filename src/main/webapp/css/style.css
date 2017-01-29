@@ -1087,8 +1087,18 @@ text-align: center;
     }
 }
 
+@media (max-width: 750px) {
+    .popup {
+        width: 95%;
+    }
+}
+
 @media (max-width: 450px) {
     header a span {
         display: none;
+    }
+
+    .popup {
+        max-width: 95%;
     }
 }
