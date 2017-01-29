@@ -90,7 +90,7 @@ public class ShiftPlanShift {
     }
 
     /**
-     * Generates candidates for s
+     * Generates candidates for a shift
      * @param userList - ArrayList<ShiftPlanUser>
      * @return HashMap<Integer, ShiftPlanUser>
      */
