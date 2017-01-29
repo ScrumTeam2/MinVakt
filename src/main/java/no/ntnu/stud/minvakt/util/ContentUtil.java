@@ -20,7 +20,7 @@ public class ContentUtil {
 
     //SHIFT_CHANGE_ADMIN
     public String shiftChangeAdmin(User userInvolving){
-        String res  = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt.";
+        String res  = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt";
         return res;
     }
 
