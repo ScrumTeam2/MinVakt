@@ -75,10 +75,11 @@ public class ShiftChangeUtil {
             if(overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())){
                 Timestamp timestamp = Timestamp.from(Instant.now());
                 if(!overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())) return false;
+                System.out.println(newsFeedItem);
                 int minutes = overtimeDB.getMinutes(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
-
+                System.out.println(minutes);
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                        contentUtil.acceptTimebank(minutes), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                        contentUtil.acceptTimebank(minutes), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(),
                         newsFeedItem.getShiftId(), NOTIFICATION);
 
                 newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -89,7 +90,7 @@ public class ShiftChangeUtil {
         else {
             Timestamp timestamp = Timestamp.from(Instant.now());
             NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                    contentUtil.rejectTimebank(), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                    contentUtil.rejectTimebank(), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdInvolving(),
                     newsFeedItem.getShiftId(), NOTIFICATION);
             overtimeDB.deleteOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
             newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);

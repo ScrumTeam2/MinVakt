@@ -144,7 +144,8 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
                                     res.getInt("shift_id"),
-                                    NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category"))
+                                    NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")),
+                                    res.getInt("start_time")
                     );
                 }
 
@@ -174,7 +175,9 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
                                     res.getInt("shift_id"),
-                            NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")))
+                            NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")),
+                                    res.getInt("start_time")
+                            )
                     );
                 }
 
