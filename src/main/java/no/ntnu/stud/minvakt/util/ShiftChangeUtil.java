@@ -177,7 +177,7 @@ public class ShiftChangeUtil {
             if(shift == null) return false;
             //Creates new update notification to the user who wants to change shift.
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()), contentUtil.shiftChangeUserFrom(),
-                    userInvolving.getId(), adminUser.getId(), shift.getId(), NOTIFICATION);
+                    userInvolving.getId(), userInvolving.getId(), shift.getId(), NOTIFICATION);
             System.out.println(notification);
             return newsDB.createNotification(notification) != 0;
 
@@ -185,7 +185,7 @@ public class ShiftChangeUtil {
         else {
             //Creates notification for user
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()), contentUtil.shiftChangeUserFromNotAccepted(),
-                    userInvolving.getId(), adminUser.getId(), shift.getId(), NOTIFICATION);
+                    userInvolving.getId(), userInvolving.getId(), shift.getId(), NOTIFICATION);
 
             //Removes admin notification if not accepted
             return newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);

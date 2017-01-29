@@ -38,7 +38,7 @@ public class NewsFeedDBManager extends DBManager{
             ResultSet res = null;
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlCreateNotification);
+                PreparedStatement prep = conn.prepareStatement(sqlCreateNotification);
 
                 prep.setTimestamp(1, notification.getDateTime());
                 prep.setString(2, notification.getContent());
@@ -69,7 +69,7 @@ public class NewsFeedDBManager extends DBManager{
         if(setUp()) {
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlDeleteNotificationsForShift);
+                PreparedStatement prep = conn.prepareStatement(sqlDeleteNotificationsForShift);
                 prep.setInt(1,shiftId);
                 status = prep.executeUpdate();
 
@@ -86,7 +86,7 @@ public class NewsFeedDBManager extends DBManager{
         if(setUp()) {
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlDeleteNotification);
+                PreparedStatement prep = conn.prepareStatement(sqlDeleteNotification);
                 prep.setInt(1,notificationId);
                 status = prep.executeUpdate();
 
@@ -105,7 +105,7 @@ public class NewsFeedDBManager extends DBManager{
             ResultSet res = null;
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetNewsFeedForUser);
+                PreparedStatement prep = conn.prepareStatement(sqlGetNewsFeedForUser);
                 prep.setInt(1, userId);
                 res = prep.executeQuery();
                 while(res.next()){
@@ -134,7 +134,7 @@ public class NewsFeedDBManager extends DBManager{
             ResultSet res = null;
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetNewsFeedItem);
+                PreparedStatement prep = conn.prepareStatement(sqlGetNewsFeedItem);
                 prep.setInt(1, feedId);
                 res = prep.executeQuery();
                 if(res.next()){
@@ -163,7 +163,7 @@ public class NewsFeedDBManager extends DBManager{
             ResultSet res = null;
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetNewsFeedForAdmin);
+                PreparedStatement prep = conn.prepareStatement(sqlGetNewsFeedForAdmin);
                 prep.setInt(1, User.UserCategory.ADMIN.getValue());
                 res = prep.executeQuery();
                 while(res.next()){
@@ -191,7 +191,7 @@ public class NewsFeedDBManager extends DBManager{
         if(setUp()) {
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlSetNewsFeedItemResolved);
+                PreparedStatement prep = conn.prepareStatement(sqlSetNewsFeedItemResolved);
                 prep.setBoolean(1,resolved);
                 prep.setInt(2,feedId);
                 status = prep.executeUpdate();
@@ -218,7 +218,7 @@ public class NewsFeedDBManager extends DBManager{
         if(setUp()){
             try{
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetNewsFeedIdFromOvertime);
+                PreparedStatement prep = conn.prepareStatement(sqlGetNewsFeedIdFromOvertime);
                 prep.setInt(1, userId);
                 prep.setInt(2, shiftId);
                 prep.setInt(3, startTime);
@@ -247,7 +247,7 @@ public class NewsFeedDBManager extends DBManager{
         if(setUp()){
             try{
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetShiftChangePendingCount);
+                PreparedStatement prep = conn.prepareStatement(sqlGetShiftChangePendingCount);
                 prep.setInt(1, shiftId);
                 prep.setInt(2, shiftUserId);
                 res = prep.executeQuery();
@@ -277,7 +277,7 @@ public class NewsFeedDBManager extends DBManager{
 
         try {
             conn = getConnection();
-            prep = conn.prepareStatement(sqlUserHasFeed);
+            PreparedStatement prep = conn.prepareStatement(sqlUserHasFeed);
             prep.setInt(1, userId);
             prep.setInt(2, feedId);
             return prep.executeQuery().next();

@@ -24,7 +24,7 @@ public class UserDBManager extends DBManager {
     private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ? AND removed = 0;";
     private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
     private final String sqlGetUsers = "SELECT * FROM user WHERE removed = 0;";
-    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ? AND removed = 0;";
+    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
     private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,DEFAULT);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =?, category=?, percentage_work=?, dept_id=? WHERE user_id =?;";
     private final String sqlChangeUserInfoSimple = "UPDATE user SET email =?, phonenumber =? WHERE user_id =?;";
@@ -339,9 +339,10 @@ public class UserDBManager extends DBManager {
         if(setUp()){
             try {
                 conn = getConnection();
-                prep = conn.prepareStatement(sqlGetUserById);
+                PreparedStatement prep = conn.prepareStatement(sqlGetUserById);
                 prep.setInt(1, userId);
                 res = prep.executeQuery();
+                System.out.println();
                 if (res.next()){
                     User u = new User();
                     u.setId(res.getInt("user_id"));
@@ -353,7 +354,6 @@ public class UserDBManager extends DBManager {
                     u.setWorkPercentage(res.getFloat("percentage_work"));
                     u.setDeptId(res.getInt("dept_id"));
                     user = u;
-                    System.out.println(user);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
