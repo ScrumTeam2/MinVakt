@@ -1,7 +1,7 @@
 package no.ntnu.stud.minvakt.data.department;
 
 /**
- * Created by evend on 1/26/2017.
+ * Data structure for the department entity, used for the calendar
  */
 public class DepartmentUser extends Department{
     private boolean hasUser;

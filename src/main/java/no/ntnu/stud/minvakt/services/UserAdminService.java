@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import java.util.logging.Level;
 
 /**
- * Created by Audun on 10.01.2017.
+ * Contains REST endpoints for manipulating users
  */
 @Path("admin")
 public class UserAdminService extends SecureService {

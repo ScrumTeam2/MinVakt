@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * Created by Audun on 26.01.2017.
+ * Database layer class for salary list
  */
 public class SalaryDBManager extends DBManager {
     private static final String sqlGetAllWorkHours = 

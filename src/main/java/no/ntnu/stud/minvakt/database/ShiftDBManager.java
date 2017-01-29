@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * Created by evend on 1/10/2017.
+ * Database layer class for shifts
  */
-
 public class ShiftDBManager extends DBManager {
     public ShiftDBManager(){
         super();

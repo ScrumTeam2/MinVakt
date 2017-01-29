@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.data.user;
 import java.util.Comparator;
 
 /**
- * Created by Marit on 17.01.2017.
+ * Represents the user entity, with additional info about work hours
  */
 public class UserBasicWorkHours extends UserBasic {
     private int shiftMinutes;

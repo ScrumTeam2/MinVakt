@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Contains REST endpoints for availability
+ */
 @Path("/availability")
 public class AvailabilityService extends SecureService {
     AvailabilityDBManager availabilityDB = new AvailabilityDBManager();

@@ -25,13 +25,10 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-/**
- * Created by evend on 1/10/2017.
- */
 
-/*
-    Class for creating shifts
-    Parameter date needs to be on correct format
+/**
+ * Class for creating shifts
+ * Parameter date needs to be on correct format
  */
 @Path("/shift")
 public class ShiftService extends SecureService{

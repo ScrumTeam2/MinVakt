@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.util.rest;
 import java.util.List;
 
 /**
- * Created by Audun on 24.01.2017.
+ * A wrapper class for converting int arrays to JSON
  */
 public class IntArrayWrapper {
     private int[] content;

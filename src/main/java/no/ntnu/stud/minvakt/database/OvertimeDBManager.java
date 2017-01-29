@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * Created by AnitaKristineAune on 12.01.2017.
+ * Database layer class for overtime
  */
 public class OvertimeDBManager extends DBManager{
 

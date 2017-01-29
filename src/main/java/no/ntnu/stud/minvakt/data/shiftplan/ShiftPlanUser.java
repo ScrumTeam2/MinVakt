@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.data.shiftplan;
 import no.ntnu.stud.minvakt.data.user.User;
 
 /**
- * Created by Audun on 20.01.2017.
+ * Represents an user while generating a shift plan. Extends the User class
  */
 public class ShiftPlanUser extends User {
     private static final int SHIFT_AMOUNT_100_PERCENT = 30;

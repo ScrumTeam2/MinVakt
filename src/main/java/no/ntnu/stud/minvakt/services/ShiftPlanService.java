@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * Created by Audun on 20.01.2017.
- *
- * REST endpoints of shift plan (turnus)
+ * Contains REST endpoints of shift plan (turnus)
  */
 @Path("shiftplan")
 public class ShiftPlanService extends SecureService {
