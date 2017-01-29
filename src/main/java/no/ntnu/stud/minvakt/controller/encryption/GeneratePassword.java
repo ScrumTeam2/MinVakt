@@ -12,8 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author 8460p
+ * Utility class for generating passwords.
  */
 public class GeneratePassword {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());

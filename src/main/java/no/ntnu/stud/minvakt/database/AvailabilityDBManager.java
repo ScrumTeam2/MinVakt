@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.sql.*;
 import java.util.logging.Level;
 
+/**
+ * Database layer class for availability
+ */
 public class AvailabilityDBManager extends DBManager{
 
     private final String sqlGetAvailability = "SELECT user_id, first_name, last_name FROM availability NATURAL JOIN user WHERE shift_id=?";

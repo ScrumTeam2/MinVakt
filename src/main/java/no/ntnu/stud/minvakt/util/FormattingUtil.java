@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- * Created by evend on 1/24/2017.
+ * An utility class to format/convert emun values
  */
 public class FormattingUtil {
     private static HashMap <Integer,String> monthNames;

@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 /**
- * Created by Audun on 27.01.2017.
+ * Database helper class for configuring the database connection pool on startup
  */
 public class DatabaseConfiguration {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());

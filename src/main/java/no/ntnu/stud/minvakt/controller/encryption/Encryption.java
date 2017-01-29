@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by M/ed on 07.03.2016.
+ * Utility class to handle password encryption and hash check
  */
 public class Encryption {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());

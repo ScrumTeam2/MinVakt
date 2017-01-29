@@ -1,7 +1,7 @@
 package no.ntnu.stud.minvakt.data.shiftplan;
 
 /**
- * Created by Audun on 20.01.2017.
+ * Reporesents a week in a shift plan
  */
 public class ShiftPlanWeek {
     private ShiftPlanDay[] days;

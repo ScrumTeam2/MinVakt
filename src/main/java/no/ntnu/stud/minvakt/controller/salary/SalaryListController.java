@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * Created by Audun on 26.01.2017.
+ * Controller class for salary list generation
  */
 public class SalaryListController implements Job {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
