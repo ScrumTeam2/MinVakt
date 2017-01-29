@@ -567,8 +567,9 @@ INSERT INTO availability VALUES(10, 41);
 INSERT INTO availability VALUES(15, 41);
 INSERT INTO availability VALUES(17, 42);
 INSERT INTO availability VALUES(7, 42);
-INSERT INTO availability VALUES(3, 43);
+
 INSERT INTO availability VALUES(2, 43);
+INSERT INTO availability VALUES(3, 43);
 INSERT INTO availability VALUES(4, 43);
 INSERT INTO availability VALUES(5, 43);
 INSERT INTO availability VALUES(7, 43);

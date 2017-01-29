@@ -289,6 +289,7 @@ public class ShiftService extends SecureService{
 
         //tries to set shift change
         if(shiftDB.setShiftChange(shiftId, user.getId())){
+
             //sends notifications to users/administrator, depending on the situation
             AvailableUsersUtil availableUsers = new AvailableUsersUtil();
             boolean ok = availableUsers.sendNotificationOfShiftChange(shift, user, timestamp);

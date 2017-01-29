@@ -27,6 +27,11 @@ public class ShiftChangeUtil {
     private static OvertimeDBManager overtimeDB = new OvertimeDBManager();
     private static ContentUtil contentUtil = new ContentUtil();
 
+    /** sends notification to admin about new responsibe employee on shift
+     * @param userId - the ID of the employee who set as responsible
+     * @param shiftId - the ID of the shift
+     * @return True if successful
+     */
     public static boolean sendNewResponsibleChangeNotification(int userId, int shiftId){
         User user = userDB.getUserById(userId);
         Timestamp timestamp = Timestamp.from(Instant.now());
@@ -37,6 +42,11 @@ public class ShiftChangeUtil {
         return newsDB.createNotification(newsFeedItem) != 0;
     }
 
+    /** updates news feed notification given by ID, according to which news feed caterogy the news feed item is.
+     * @param feedId - the ID of the news feed notification to be updated
+     * @param shiftAccepted - boolean used by cases where something is to be accepted or declined, default true if not applicable
+     * @return True if successful
+     */
     public static boolean updateNotification(int feedId, boolean shiftAccepted){
         NewsFeedItem newsFeedItem = newsDB.getNewsFeedItem(feedId);
         switch (newsFeedItem.getCategory()) {
@@ -53,8 +63,13 @@ public class ShiftChangeUtil {
             default:
                 return false;
         }
-
     }
+
+    /** Accepts or rejects overtime registered by employee, and resolves notification
+     * @param newsFeedItem - the ID news feed notification
+     * @param shiftAccepted - boolean if the overtime is to be accepted (true) or not (false)
+     * @return True if successfull
+     */
     private static boolean approveTimeBank(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted){
             if(overtimeDB.approveOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId())){
@@ -82,6 +97,11 @@ public class ShiftChangeUtil {
         }
     }
 
+    /**
+     * @param newsFeedItem
+     * @param shiftAccepted
+     * @return
+     */
     private static boolean approveValidAbsence(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted){
             if(!newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), shiftAccepted) ||
@@ -120,10 +140,12 @@ public class ShiftChangeUtil {
             if(adminId == 0) return false;
 
             //Create a notification to be sent to admin.
+            //TODO: skal denne notifikasjonen sendes?
             NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
                     contentUtil.shiftChangeAdminUserFromTo(shift, userAccepted, userInvolving), adminId,
                     newsFeedItem.getUserIdTo(), newsFeedItem.getShiftId(), SHIFT_CHANGE_ADMIN);
             int status =  newsDB.createNotification(notification);
+
             if(status == 0) return false;
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             if(userAccepted.getCategory() == userInvolving.getCategory()){
