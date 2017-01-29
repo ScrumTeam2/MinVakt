@@ -33,12 +33,13 @@ public class DatabaseConfiguration {
         }
 
         p.setJmxEnabled(true);
-        p.setTestWhileIdle(false);
+
+        p.setTestWhileIdle(true);
         p.setTestOnBorrow(true);
         p.setValidationQuery("SELECT 1");
         p.setTestOnReturn(false);
         p.setValidationInterval(30000);
-        p.setTimeBetweenEvictionRunsMillis(30000);
+        p.setTimeBetweenEvictionRunsMillis(10000);
 
         // Pool size settings
         p.setInitialSize(1);
@@ -47,13 +48,15 @@ public class DatabaseConfiguration {
         p.setMaxActive(20);
 
         p.setMaxWait(10000);
-        p.setRemoveAbandonedTimeout(60);
+        p.setRemoveAbandonedTimeout(20);
         p.setMinEvictableIdleTimeMillis(30000);
-        p.setLogAbandoned(true);
+        //p.setLogAbandoned(true);
         p.setRemoveAbandoned(true);
         p.setJdbcInterceptors(
                 "org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;" +
-                        "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer");
+                        "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;" +
+                        "org.apache.tomcat.jdbc.pool.interceptor.ResetAbandonedTimer"
+        );
         dataSource = new DataSource();
         dataSource.setPoolProperties(p);
     }
