@@ -29,6 +29,10 @@ public class AvailabilityService extends SecureService {
         super(request);
     }
 
+    /**
+     * Gets object with shifts for given user where user is available
+     * @return UserAvailableShifts object
+     */
     @GET
     @Path("/user")
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,6 +43,10 @@ public class AvailabilityService extends SecureService {
         return us;
     }
 
+    /**
+     * Gets a list of shifts to set available for given user
+     * @return string
+     */
     //Gets a list of shifts to set available for this user
     @Path("/setAvailable")
     @POST
@@ -59,6 +67,12 @@ public class AvailabilityService extends SecureService {
     }
 
 
+    /**
+     * Gets shifts from a date a given number of days forward
+     * @param daysForward Number of days
+     * @param date The date
+     * @return ArrayList<ShiftAvailable>
+     */
     @GET
     @Path("/date")
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,6 +82,11 @@ public class AvailabilityService extends SecureService {
         return availabilityDB.getShiftsForDate(daysForward, getSession().getUser().getId(), date);
     }
 
+    /**
+     * Deletes availability from user
+     * @param list List with shiftIDs
+     * @return string
+     */
     @Path("/deleteAvailable")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -87,6 +106,14 @@ public class AvailabilityService extends SecureService {
     }
 
 
+    /**
+     * Gets a list with available users for a shift
+     * @param shiftId ID for shift
+     * @param categoryString Category ("ASSISTANT", "HEALTH_WORKER", "NURSE")
+     * @param onlyThisCategory If true: Only get employees from specific category
+     * @return If success: Response OK
+     *         If not admin: Response UNAUTHORIZED
+     */
     @GET
     @Path("/shift/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
