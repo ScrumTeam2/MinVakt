@@ -1,9 +1,7 @@
 package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
-import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
-import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
 import org.junit.Assert;
 import org.junit.Before;
