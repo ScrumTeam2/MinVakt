@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
- * Created by Audun on 17.01.2017.
+ * Contains logic code for generating a shift plan, returning needed data to REST, and saving the generated plan
  */
 public class ShiftPlanController {
     private UserDBManager userDBManager = new UserDBManager();
@@ -24,19 +24,35 @@ public class ShiftPlanController {
      */
     private ArrayList<ShiftPlanUser> userList;
 
+    /**
+     * Gets the generated shift plan
+     * @return The generated shfit plan
+     */
     public ShiftPlan getShiftPlan() {
         return shiftPlan;
     }
 
+    /**
+     * Initializes a new instance from a shift plan containing a generated week.
+     * All normal employees will be loaded from the database in the constructor
+     * @param shiftPlan The shift plan
+     */
     public ShiftPlanController(ShiftPlan shiftPlan) {
         this.shiftPlan = shiftPlan;
         loadUsers();
     }
 
+    /**
+     * Checks if there is any planned shifts in the next 6 weeks (on the given department)
+     * @return True if there is no planned shifts
+     */
     public boolean verifyValidity() {
         return !shiftDBManager.hasAnyShiftsInPeriod(shiftPlan.getStartDate(), shiftPlan.getStartDate().plusWeeks(6), shiftPlan.getDepartmentId());
     }
 
+    /**
+     * Loads all users from the database. Admins are not included
+     */
     private void loadUsers() {
         userList = new ArrayList<>();
 
@@ -46,6 +62,9 @@ public class ShiftPlanController {
         }
     }
 
+    /**
+     * Generates the shift plan for the given period. Has to be called before <code>insertShiftsIntoDatabase</code>
+     */
     public void calculateShifPlan() {
         ShiftPlanWeek templateWeek = shiftPlan.getTemplateWeek();
 
@@ -70,11 +89,21 @@ public class ShiftPlanController {
         }
     }
 
+    /**
+     * Calculates the date for a week and day relative to the shift plan's start date
+     * @param week The relative week. 0 is the same week as the start day
+     * @param day The relative day. 0 is the same day of week as the start day
+     * @return A Date-object with the calculated date
+     */
     private Date calculateDate(int week, int day) {
         LocalDate date = shiftPlan.getStartDate();
         return Date.valueOf(date.plusWeeks(week).plusDays(day));
     }
 
+    /**
+     * Generates candidates for a given day
+     * @param day The day to get generated candidates for
+     */
     private void generateCandidates(ShiftPlanDay day) {
         HashMap<Integer, ShiftPlanUser> usersWorkingToday = new HashMap<>();
 
@@ -98,14 +127,6 @@ public class ShiftPlanController {
      * Adds all the generated shifts into the database, and updates their IDs
      */
     public boolean insertShiftsIntoDatabase() {
-//       for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
-//           for(ShiftPlanDay day : week.getDays()) {
-//               for(ShiftPlanShift shift : day.getShifts()) {
-//                   int shiftId = shiftDBManager.createNewShift(shift.getShift());
-//                   shift.getShift().setId(shiftId);
-//               }
-//           }
-//       }
         ArrayList<Shift> shifts = new ArrayList<>();
         for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
             for(ShiftPlanDay day : week.getDays()) {
@@ -117,10 +138,13 @@ public class ShiftPlanController {
         return shiftDBManager.bulkInsertShifts(shifts);
     }
 
+    /**
+     * Generates a list of all the IDs of the shifts
+     * @return An ArrayList containing all the IDs
+     */
     public ArrayList<Integer> getShiftIds() {
        ArrayList<Integer> ids = new ArrayList<>();
 
-        int i = 0;
         for(ShiftPlanWeek week : shiftPlan.getGeneratedWeeks()) {
             for(ShiftPlanDay day : week.getDays()) {
                 for(ShiftPlanShift shift : day.getShifts()) {

@@ -1,11 +1,15 @@
 package no.ntnu.stud.minvakt.util;
 
 /**
- * Created by Audun on 11.01.2017.
+ * Utility class for detecting if Travis CI is running
  */
 public class TravisUtil {
     private static Boolean travis;
 
+    /**
+     * Detects if Travis CI is running
+     * @return True if Travis CI is running
+     */
     public static boolean isTravis() {
         if(travis == null)
             travis = System.getenv("TRAVIS") != null;
