@@ -74,7 +74,7 @@ public abstract class DBManager{
 
     protected void finallyStatement(ResultSet res, PreparedStatement prep) {
         try {
-            if (!connection.getAutoCommit()) {
+            if (!connection.isClosed() && !connection.getAutoCommit()) {
                 connection.commit();
                 connection.setAutoCommit(true);
             }
@@ -97,7 +97,7 @@ public abstract class DBManager{
 
     protected void finallyStatement(PreparedStatement prep) {
         try {
-            if (!connection.getAutoCommit()) {
+            if (!connection.isClosed() && !connection.getAutoCommit()) {
                 connection.commit();
                 connection.setAutoCommit(true);
             }
