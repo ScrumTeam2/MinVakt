@@ -34,7 +34,7 @@ public class UserDBManagerTest {
     @Test
     public void isPhoneNumberTaken() {
         Assert.assertFalse(userDB.isPhoneNumberTaken("a"));
-        Assert.assertTrue(userDB.isPhoneNumberTaken("phone1"));
+        Assert.assertTrue(userDB.isPhoneNumberTaken("98765432"));
     }
 
     @Test

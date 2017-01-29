@@ -17,7 +17,7 @@ public class NewsFeedDBManager extends DBManager{
     private final String sqlDeleteNotificationsForShift = "DELETE FROM newsfeed WHERE shift_id = ?";
     private final String sqlGetLastID = "SELECT LAST_INSERT_ID();";
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
-    private final String sqlGetNewsFeedForAdmin = "SELECT feed_id, date_time,content,newsfeed.category, user.user_id, shift_id, shift_user_id " +
+    private final String sqlGetNewsFeedForAdmin = "SELECT feed_id, date_time,content,newsfeed.category, start_time, user.user_id, shift_id, shift_user_id " +
             "FROM newsfeed JOIN user ON(user.user_id = newsfeed.user_id) WHERE user.category = ? AND resolved = 0;";
     private final String sqlGetNewsFeedItem = "SELECT * FROM newsfeed WHERE feed_id = ?;";
     private final String sqlSetNewsFeedItemResolved = "UPDATE newsfeed SET resolved = ? WHERE feed_id = ?;";
@@ -173,7 +173,8 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
                                     res.getInt("shift_id"),
-                                    NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category"))
+                                    NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")),
+                                    res.getInt("start_time")
                     );
                 }
 
@@ -198,6 +199,8 @@ public class NewsFeedDBManager extends DBManager{
                 conn = getConnection();
                 PreparedStatement prep = conn.prepareStatement(sqlGetNewsFeedForAdmin);
                 prep.setInt(1, User.UserCategory.ADMIN.getValue());
+                System.out.println(prep);
+
                 res = prep.executeQuery();
                 while(res.next()){
                     out.add(
@@ -207,7 +210,9 @@ public class NewsFeedDBManager extends DBManager{
                                     res.getInt("user_id"),
                                     res.getInt("shift_user_id"),
                                     res.getInt("shift_id"),
-                            NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")))
+                            NewsFeedItem.NewsFeedCategory.valueOf(res.getInt("category")),
+                                    res.getInt("start_time")
+                            )
                     );
                 }
 

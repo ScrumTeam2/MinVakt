@@ -47,19 +47,6 @@ public class ContentUtil {
         return res;
     }
 
-    /**TODO: remove method?
-     * @param shift
-     * @param userAccepted
-     * @param userInvolving
-     * @return
-     */
-    public String shiftChangeAdminUserFromTo(Shift shift, User userAccepted, User userInvolving){
-        String res  = userAccepted.getFirstName()+" "+userAccepted.getLastName()+" ønsker å ta vakten " +
-                "til "+userInvolving.getFirstName()+" "+userInvolving.getLastName()+" på dato "+
-                FormattingUtil.formatDate(shift.getDate());
-        return res;
-    }
-
     /** Notification for the administrator that there has been selected a new employee as responsible for a shift
      * @param user employee who is responsible
      * @return formatted string with user name
@@ -120,7 +107,6 @@ public class ContentUtil {
     /** notification about shift change acceptance
      * @return string with shift change accepted notification
      */
-    //NOTIFICATION
     public String shiftChangeUserFrom(){
         String res = "Ønske om vaktbytte godkjent";
         return res;

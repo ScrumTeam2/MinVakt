@@ -25,6 +25,13 @@ public class UserAdminService extends SecureService {
         super(request);
     }
 
+    /** Creates a new user from a User object
+     * @param user - User object of the user to be created
+     * @return  if phoneNumber taken: Response BAD_REQUEST
+     *          if email taken: Response BAD_REQUEST
+     *          if successful: Response OK
+     *          else: Response SERVER_ERROR
+     */
     @POST
     @Path("/createuser")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,6 +68,13 @@ public class UserAdminService extends SecureService {
         }
     }
 
+    /** Edits a user with a User object
+     * @param user - User object of the user
+     * @return  if new phoneNumber taken: Response BAD_REQUEST
+     *          if new email taken: Response BAD_REQUEST
+     *          if successful: Response OK
+     *          else: Response SERVER_ERROR
+     */
     @POST
     @Path("/edituser")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -98,7 +112,12 @@ public class UserAdminService extends SecureService {
         }
     }
 
-
+    /** Deletes a user from database, should only be used for testing
+     * @param userId - the ID of the user who should be deleted
+     * @return if not admin: Response BAD_REQUEST
+     *         if deleted: returns True
+     *         else: returns False
+     */
     @DELETE
     @Path("/deleteuser/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)

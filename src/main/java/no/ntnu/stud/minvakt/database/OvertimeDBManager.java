@@ -223,6 +223,7 @@ public class OvertimeDBManager extends DBManager{
 
         if(setUp()){
             try {
+                System.out.println("User: "+userId+" Shift: "+shiftId+ " Starttime: "+startTime);
                 startTransaction();
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlGetMinutes);
@@ -230,11 +231,11 @@ public class OvertimeDBManager extends DBManager{
                 prep.setInt(1, userId);
                 prep.setInt(2, shiftId);
                 prep.setInt(3, startTime);
-
+                System.out.println(prep);
                 res = prep.executeQuery();
-                res.next();
-
-                minutes = res.getInt("minutes");
+                if(res.next()) {
+                    minutes = res.getInt("minutes");
+                }
 
             } catch (SQLException sqlE){
                 log.log(Level.WARNING,"Error getting minutes for user with id = " + userId, sqlE);

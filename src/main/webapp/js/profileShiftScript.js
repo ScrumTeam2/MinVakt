@@ -160,7 +160,7 @@ function addShiftInfoHtml (element, shiftId, data) {
         }
 
     }
-    else if(data.shiftUsers.length < data.staffNumb){
+    else {
         html+='<a href="availability.html?date='+data.date+'" ><button id="absence">Meld deg tilgjengelig</button></a>';
     }
 
