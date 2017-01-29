@@ -29,6 +29,9 @@ public class UserService extends SecureService{
         super(request);
     }
 
+    /**
+     * @return ArrayList<UserBasics>
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<UserBasicList> getUserBasics() {
@@ -36,6 +39,12 @@ public class UserService extends SecureService{
 
         return userDB.getUserBasics();
     }
+
+    /**
+     * @param category Integer: User category (0: Admin, 1: Nurse, 2: Healthworker, 3: Assistant)
+     * @return If success: ArrayList<UserBasic>
+     *         If not admin: Response UNAUTHORIZED
+     */
     @Path("/category")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -47,6 +56,10 @@ public class UserService extends SecureService{
         return userDB.getUserBasicsWithCategory(category);
     }
 
+    /**
+     * @param userId ID for given user
+     * @return User object
+     */
     @GET
     @Path("/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,6 +69,13 @@ public class UserService extends SecureService{
         return userDB.getUserById(userId);
     }
 
+    /**
+     * Changes password
+     * @param oldPass - String with old password
+     * @param newPass - String with new password
+     * @return If success: Response ok,
+     *         If not success: BAD_REQUEST
+     */
     @POST
     @Path("/changepass")
     public Response changePassword(@FormParam("oldpass") String oldPass, @FormParam("newpass") String newPass){
@@ -73,6 +93,12 @@ public class UserService extends SecureService{
             return Response.status(Response.Status.BAD_REQUEST).entity("Issue arised, old password may be wrong").build();
         }
     }
+
+    /**
+     * @param email String email address
+     * @return if success: Response.ok
+     * TODO: Remove unused code?
+     */
     @POST
     @Path("/forgottenpass")
     public Response sendNewPassword(@FormParam("email") String email){
@@ -91,6 +117,15 @@ public class UserService extends SecureService{
 //        }
     }
 
+    /**
+     * Edits user
+     * @param email String email address
+     * @param phoneNumber String phone number
+     * @return if success: response.ok
+     *         if phone number is taken: BAD_REQUEST
+     *         if email address is taken: BAD_REQUEST
+     *         fail to edit user: Response.serverError
+     */
     @POST
     @Path("/edituser")
     @Consumes(MediaType.APPLICATION_JSON)
