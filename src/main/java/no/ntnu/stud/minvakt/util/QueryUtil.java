@@ -6,12 +6,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Created by Audun on 12.01.2017.
+ * Utility class for database calls
  */
 public class QueryUtil {
     /**
      * Gets the generated key (usually AUTO_INCREMENT id) from a Statement.
-     *
      * @param statement The active statement
      * @return The generated key, or -1 if error.
      */
