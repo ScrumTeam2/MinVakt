@@ -7,7 +7,7 @@ import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanUser;
 import java.util.Comparator;
 
 /**
- * Created by Audun on 20.01.2017.
+ * A comparator used to sort shift candidates in the best way possible
  */
 public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
     private static final int DEPARTMENT_WEIGHT = 5;

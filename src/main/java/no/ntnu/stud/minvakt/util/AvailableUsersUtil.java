@@ -12,9 +12,8 @@ import java.util.ArrayList;
 import java.sql.Timestamp;
 
 /**
- * Created by Marit on 13.01.2017.
+ * Controller class for returning various info about available users
  */
-
 public class AvailableUsersUtil {
     private static final int SHIFT_LENGTH_MINUTES = 60*8;   //Using 40 hours of work/week
     private static final int MAX_WORK_MINUTES = 32*60+1;         //If the employee has more than 32 hours of work, they can't accept a new 8 hour shift

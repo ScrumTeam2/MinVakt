@@ -1,17 +1,11 @@
 package no.ntnu.stud.minvakt.util;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
-import no.ntnu.stud.minvakt.data.Overtime;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
-import no.ntnu.stud.minvakt.database.UserDBManager;
-import no.ntnu.stud.minvakt.services.ShiftService;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 
 import java.sql.Timestamp;
 

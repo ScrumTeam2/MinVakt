@@ -5,10 +5,8 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.util.FormattingUtil;
 
 /**
- * Created by Marit on 27.01.2017.
+ * Handles generation of all news feed messages
  */
-
-//Contains all the newfeed "contentUtil"
 public class ContentUtil {
     public ContentUtil(){}
 
@@ -46,19 +44,6 @@ public class ContentUtil {
      */
     public String regTimebank(User user, int minutes){
         String res = user.getFirstName()+" "+user.getLastName()+" har registert overtid "+minutesFormat(minutes);
-        return res;
-    }
-
-    /**TODO: remove method?
-     * @param shift
-     * @param userAccepted
-     * @param userInvolving
-     * @return
-     */
-    public String shiftChangeAdminUserFromTo(Shift shift, User userAccepted, User userInvolving){
-        String res  = userAccepted.getFirstName()+" "+userAccepted.getLastName()+" ønsker å ta vakten " +
-                "til "+userInvolving.getFirstName()+" "+userInvolving.getLastName()+" på dato "+
-                FormattingUtil.formatDate(shift.getDate());
         return res;
     }
 
@@ -122,7 +107,6 @@ public class ContentUtil {
     /** notification about shift change acceptance
      * @return string with shift change accepted notification
      */
-    //NOTIFICATION
     public String shiftChangeUserFrom(){
         String res = "Ønske om vaktbytte godkjent";
         return res;

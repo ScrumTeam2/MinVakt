@@ -17,10 +17,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * Created by evend on 1/10/2017.
- */
-
-/*
+ * Contains REST endpoints to get user information
  */
 @Path("/user")
 public class UserService extends SecureService{

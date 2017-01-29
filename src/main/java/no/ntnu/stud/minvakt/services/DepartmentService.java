@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 /**
- * Created by evend on 1/25/2017.
+ * Contains REST endpoints for departments
  */
 @Path("/department")
 public class DepartmentService extends SecureService{

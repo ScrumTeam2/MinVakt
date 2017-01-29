@@ -3,8 +3,6 @@ package no.ntnu.stud.minvakt.controller.encryption;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by Audun on 17.01.2017.
  */

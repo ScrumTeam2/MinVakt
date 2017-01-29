@@ -11,6 +11,9 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Represents the user entity
+ */
 public class User {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 

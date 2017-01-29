@@ -19,9 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Marit on 20.01.2017.
+ * Contains REST endpoints for overtime
  */
-
 @Path("/overtime")
 public class OvertimeService extends SecureService{
     OvertimeDBManager overtimeDBM = new OvertimeDBManager();
