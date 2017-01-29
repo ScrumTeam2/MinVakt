@@ -580,10 +580,10 @@ INSERT INTO availability VALUES(13, 43);
 
 -- OVERTIME
 INSERT INTO overtime VALUES(1, 16, 960,  60, TRUE);
-INSERT INTO overtime VALUES(1, 37, 960, -80, FALSE);
+INSERT INTO overtime VALUES(1, 37, 960,  80, FALSE);
 INSERT INTO overtime VALUES(3, 52, 960,  35, TRUE);
 INSERT INTO overtime VALUES(4, 28, 780, -120, TRUE );
-INSERT INTO overtime VALUES(4, 61, 840, -60, FALSE);
+INSERT INTO overtime VALUES(4, 61, 840,  60, FALSE);
 INSERT INTO overtime VALUES(5, 60, 960,  60, FALSE);
 
 -- NEWSFEED
@@ -610,9 +610,9 @@ INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Finn Fransen har m
 
 -- (3) TIMEBANK
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert timeavvik',     false,  3,  26,   37,   1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert timeavvik', false,  3,  26,   61,   4,   840);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert timeavvik',  false,  3,  26,   60,   5,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert overtid (1t 20min)',     false,  3,  26,   37,   1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert overtid (1t 0min)', false,  3,  26,   61,   4,   840);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert overtid (1t 0min)',  false,  3,  26,   60,   5,   960);
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Overtid registrert: (1t 0min)', false,  4,  1,  16,   1,   960);
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Overtid registrert: (35 min)',  false,  4,  3,  52,   3,   960);
 INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fravær registrert: (2t 0min)',  false,  4,  4,  28,   4,   780);
