@@ -267,7 +267,7 @@ public class ShiftService extends SecureService{
         }
 
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
-        boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
+        boolean ok = shiftDB.setValidAbsence(user.getId(), shiftId, 1);
         int adminId = userDB.getAdminId();
         NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
                 contentUtil.validAbsence(user), adminId, user.getId(), shiftId,

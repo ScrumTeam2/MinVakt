@@ -125,8 +125,8 @@ public class ShiftDBManagerTest {
 
     @Test
     public void setValidAbsence(){
-        assertTrue(shiftDB.setValidAbsence(1,4,true));
-        assertTrue(shiftDB.setValidAbsence(1,4,false));
+        assertTrue(shiftDB.setValidAbsence(1,4,1));
+        assertTrue(shiftDB.setValidAbsence(1,4,0));
     }
 
     @Test
