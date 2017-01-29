@@ -167,6 +167,9 @@ public class ShiftChangeUtil {
             NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
                     contentUtil.shiftChangeUserTo(),  userInvolving.getId(), userAccepted.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification2);
+
+            newsDB.updateResolvedNotifications(userInvolving.getId(),shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
+
         }
         //If the employees do not want the shift, check if there are any other users pending confirmation
         else{
@@ -198,7 +201,6 @@ public class ShiftChangeUtil {
      */
     private static boolean approveShiftChangeAdmin(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         boolean status = true;
-        User adminUser = userDB.getUserById(newsFeedItem.getUserIdTo());
         User userInvolving = userDB.getUserById(newsFeedItem.getUserIdInvolving());
         Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
 
@@ -211,7 +213,7 @@ public class ShiftChangeUtil {
             //Creates new update notification to the user who wants to change shift.
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()), contentUtil.shiftChangeUserFrom(),
                     userInvolving.getId(), userInvolving.getId(), shift.getId(), NOTIFICATION);
-            System.out.println(notification);
+
             return newsDB.createNotification(notification) != 0;
 
         }

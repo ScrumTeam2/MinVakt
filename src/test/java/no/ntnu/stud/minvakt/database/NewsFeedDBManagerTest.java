@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.validation.constraints.AssertTrue;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
@@ -76,5 +77,9 @@ public class NewsFeedDBManagerTest {
 
         Assert.assertTrue(newsFeedDB.userHasFeed(userId, validFeedId));
         Assert.assertFalse(newsFeedDB.userHasFeed(userId, invalidFeedId));
+    }
+    @Test
+    public void resolveNotifications(){
+        assertTrue(newsFeedDB.updateResolvedNotifications(2,26, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE));
     }
 }
