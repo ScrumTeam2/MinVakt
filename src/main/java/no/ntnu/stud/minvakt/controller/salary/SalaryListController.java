@@ -24,6 +24,9 @@ public class SalaryListController implements Job {
         generateSalaryList();
     }
 
+    /**
+     * Generates timelist/salarylist for salary management
+     */
     private void generateSalaryList() {
         SalaryDBManager dbManager = new SalaryDBManager();
         Map<Integer, UserWorkInfo> workInfo = dbManager.getAllWorkHours();
