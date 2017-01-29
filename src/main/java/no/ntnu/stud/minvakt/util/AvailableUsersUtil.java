@@ -21,10 +21,15 @@ public class AvailableUsersUtil {
     FormattingUtil format = new FormattingUtil();
     NewsFeedDBManager newsFeedDMB = new NewsFeedDBManager();
     UserDBManager userDBM = new UserDBManager();
+    ContentUtil contentUtil = new ContentUtil();
 
-
-
-    //Sorts available employees on a shift and returns a sortet list excluding employees with too many hours to work a new 8 hour shift
+    /**Sorts available employees on a shift by workhours
+     * @param shiftId - the shift that needs a new employee
+     * @param date - the date of the shift
+     * @return arraylist with sorted employees by category as UserBasicWorkHours objects
+     */
+    //Sorts available employees on a shift and returns a sortet list
+    // excluding employees with too many hours to work a new 8 hour shift
     public static ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, LocalDate date){
         AvailabilityDBManager availDBManager = new AvailabilityDBManager();
         OvertimeDBManager overtimeDBManager = new OvertimeDBManager();
@@ -40,11 +45,9 @@ public class AvailableUsersUtil {
         ArrayList<UserBasicWorkHours> userList = availDBManager.getAvailabilityUserBasic(shiftId);
         ArrayList<UserBasicWorkHours> userListDelimited = new ArrayList<>();
 
-
-
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {
-            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+            user.setOvertime(overtimeDBManager.getMinutesByDate(user.getId(), sqlFirstDay, sqlLastDay));
             user.setShiftMinutes(SHIFT_LENGTH_MINUTES * shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
             user.calculateTotalWorkHours();
             //If the user doesn't have too many work hours they are put in the new list
@@ -60,8 +63,14 @@ public class AvailableUsersUtil {
         return userListDelimited;
     }
 
-    //Sorts available employees on a shift, then returns the ones with the given category
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(int shiftId, LocalDate date, User.UserCategory category, boolean onlyThisCategory){
+    /**Sorts available employees on a shift by workhours and category, then returns the ones with the given category first
+     * @param shiftId - the shift that needs a new employee
+     * @param date - the date of the shift
+     * @param category - the employee category
+     * @param onlyThisCategory - if True, returns the list with only employees in the given category
+     * @return arraylist with sorted employees by category as UserBasicWorkHours objects
+     */
+     public ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(int shiftId, LocalDate date, User.UserCategory category, boolean onlyThisCategory){
         ArrayList<UserBasicWorkHours> sortedEmployees = AvailableUsersUtil.sortAvailableEmployees(shiftId, date);
         ArrayList<UserBasicWorkHours> outputEmployees = new ArrayList<>();
         for (UserBasicWorkHours user : sortedEmployees) {
@@ -79,18 +88,24 @@ public class AvailableUsersUtil {
         return outputEmployees;
     }
 
-    //Finds available users for a shift and sends a notification to the qualified users
-    public boolean sendNotificationOfShiftChange(Shift shift, User userFrom, Timestamp dateTime){
+    /**Finds available users for a shift and sends a notification to the qualified users
+     * @param shift - shift ID for the shift that needs a new employee
+     * @param userFrom - the employee that originally was working on this shift
+     * @param dateTime - the timestamp for the notification
+     * @return True if successful
+     */
+     public boolean sendNotificationOfShiftChange(Shift shift, User userFrom, Timestamp dateTime){
         User.UserCategory category = userFrom.getCategory();
-        ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(shift.getId(), shift.getDate().toLocalDate(), category, true);
+        ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(shift.getId(),
+                shift.getDate().toLocalDate(), category, true);
         boolean ok;
 
         //If user list is not empty, send notifications to employees on list
         if(!userList.isEmpty()){
             for(UserBasicWorkHours userTo : userList){
-                String content = "Vakten du har satt deg tilgjengelig på "+format.formatDate(shift.getDate())+" ("+format.formatShiftType(shift.getType())+") er ledig. Vennligs godta eller avslå vakt.";
 
-                NewsFeedItem notification = new NewsFeedItem(-1, dateTime, content, userTo.getId(), userFrom.getId(),
+                NewsFeedItem notification = new NewsFeedItem(-1, dateTime,
+                        contentUtil.employeeShiftChange(shift), userTo.getId(), userFrom.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
                 int status =  newsFeedDMB.createNotification(notification);
 
@@ -102,13 +117,13 @@ public class AvailableUsersUtil {
         }
         //if user list is empty, send notification to administrator
         else{
-            String content = userFrom.getFirstName()+" "+userFrom.getLastName()+" ønsker å bytte vakt "+format.formatDate(shift.getDate())+" ("+format.formatShiftType(shift.getType())+").";
             int adminId = userDBM.getAdminId();
             if(adminId == 0) {
                 System.out.println("Could not find admin user");
                 return false;
             }
-            NewsFeedItem notification = new NewsFeedItem(-1, dateTime, content, adminId,userFrom.getId(),
+            NewsFeedItem notification = new NewsFeedItem(-1, dateTime,
+                    contentUtil.shiftChangeAdmin(userFrom), adminId,userFrom.getId(),
                     shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
             int status =  newsFeedDMB.createNotification(notification);
 
@@ -136,7 +151,7 @@ public class AvailableUsersUtil {
 //
 //        for (UserBasicWorkHours user : userList) {
 //
-//            user.setOvertime(overtimeDBManager.getMinutes(user.getId(), sqlFirstDay, sqlLastDay));
+//            user.setOvertime(overtimeDBManager.getMinutesByDate(user.getId(), sqlFirstDay, sqlLastDay));
 //            user.setShiftMinutes(SHIFT_LENGTH_MINUTES*shiftDBManager.getNumberOfShifts(user.getId(), sqlFirstDay, sqlLastDay));
 //            user.calculateTotalWorkHours();
 //        }

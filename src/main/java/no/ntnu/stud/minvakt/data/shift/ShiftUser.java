@@ -2,6 +2,7 @@ package no.ntnu.stud.minvakt.data.shift;
 
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
  * Created by evend on 1/11/2017.
@@ -61,7 +62,7 @@ public class ShiftUser {
         return userName;
     }
     public void setUserName(String userName){
-        this.userName = userName;
+        this.userName = SanitizeUtil.filterInput(userName);
     }
     public boolean isResponsibility() {
         return responsibility;
@@ -78,9 +79,6 @@ public class ShiftUser {
         return false;
     }
 
-    public int getValidAbsence() {
-        return valid_absence;
-    }
     public int getValid_absence() {
         return valid_absence;
     }

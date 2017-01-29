@@ -1,4 +1,7 @@
 /**
+ * Created by evend on 1/27/2017.
+ */
+/**
  * Created by ingvildbroen on 11.01.2017.
  */
 var createSuccess = false;
@@ -17,28 +20,62 @@ $(document).ready(function () {
     $email = $('#email');
     $phone = $('#phone');
     $category = $('#category');
-    loadDepartments();
+    $department = $("#department");
+    $.ajax({
+        url: "/rest/user/"+getUrlParameter("userId"),
+        type: 'GET',
+        success: function (data) {
+            console.log(data);
+            console.log(data.firstName);
+            var categoryOptions = $category.children();
 
-    var userValue = $(".user-type:checked").val();
-
-    $(".user-type").on('change', function () {
-        userValue = $(".user-type:checked").val();
-
-        $first.removeClass('error').parent().attr('data-content', '');
-        $last.removeClass('error').parent().attr('data-content', '');
-        $percent.removeClass('error').parent().attr('data-content', '');
-        $email.removeClass('error').parent().attr('data-content', '');
-        $phone.removeClass('error').parent().attr('data-content', '');
-        $category.removeClass('error').parent().attr('data-content', '');
-        $department.removeClass('error').parent().attr('data-content', '');
-
-        if (userValue === "admin") {
-            showAdminInput();
-        } else {
-            showEmployeeInput();
+            $first.val(data.firstName);
+            $last.val(data.lastName);
+            $email.val(data.email);
+            $phone.val(data.phoneNumber);
+            $percent.val(data.workPercentage * 100);
+            for(var i = 0; i < categoryOptions.length;i++){
+                if($(categoryOptions[i]).attr("value") == data.category){
+                    $(categoryOptions[i]).prop("selected", true);
+                }
+            }
+            $.ajax({
+                url: "/rest/department",
+                type: 'GET',
+                success: function (depts) {
+                    $.each(depts, function (index, dept) {
+                        var html = "";
+                        if(dept.id == data.deptId) {
+                            html += "<option selected value='"+data.deptId+"'>"+dept.name+"</option>";
+                        }
+                        else{
+                            html += "<option value='"+data.deptId+"'>"+dept.name+"</option>";
+                        }
+                        $department.append(html);
+                    });
+                },
+                error: function (data) {
+                    console.log("Not able to get departments")
+                }
+            });
+            if(data.category == "ADMIN"){
+                showAdminInput();
+                $("#admin-label").show();
+            }
+            else {
+                showEmployeeInput();
+                $("#employee-label").show();
+            }
+        },
+        error: function (data) {
+            console.log("Not able to get userdata")
         }
     });
 
+    var userValue = $(".user-type:checked").val();
+    $("#cancel-change-button").click(function () {
+        location.reload();
+    });
 
     $('#userBtn').click(function (e) {
         e.preventDefault();
@@ -129,6 +166,7 @@ $(document).ready(function () {
             if (!formError) {
                 console.log("Submitting employee");
                 formData = {
+                    "id": getUrlParameter("userId"),
                     "firstName": $first.val(),
                     "lastName": $last.val(),
                     "email": $email.val(),
@@ -141,8 +179,40 @@ $(document).ready(function () {
                 submitUser(formData);
             }
         }
+        initPopup();
     });
-    initPopup();
+    console.log("Før klikk");
+    $('#set-inactive').click(function (e){
+        console.log("Ble trykket!");
+
+        e.preventDefault();
+        var $popup = $("#userPopup");
+        $popup.children(".title").text("Slett bruker");
+        $popup.children(".result").text("Er du sikker på at du ønsker å slette denne brukeren?");
+        $btn1 = $("#userViewBtn");
+        $btn2 = $("#userCloseBtn");
+        console.log($btn1.text());
+        $btn1.text("Ja");
+        $btn2.text("Nei");
+        $popup.show();
+        $btn1.click(function () {
+            $.ajax({
+                url: "/rest/admin/deleteuser/"+getUrlParameter("userId"),
+                type: 'DELETE',
+                success: function (depts) {
+                    window.location = "user-a.html";
+                },
+                error: function (data) {
+                    $popup.hide();
+                    console.log("Employee not deleted")
+                }
+            });
+        });
+        $btn2.click(function (e) {
+            e.preventDefault();
+            $popup.hide();
+        })
+    });
 });
 
 function initPopup() {
@@ -174,7 +244,7 @@ function submitUser(formData) {
     $('#userBtn').html(`<div class="typing_loader"></div>`);
 
     $.ajax({
-        url: "/rest/admin/createuser",
+        url: "/rest/admin/edituser",
         type: 'POST',
         dataType: "json",
         contentType: "application/json",
@@ -206,13 +276,13 @@ function addUser(data) {
     console.log("OK", data);
     console.log("Adduser");
     $('.title').text("Vellykket!");
-    $('.result').text("Bruker ble laget med passord: " + data.password);
+    $('.result').text("Brukeren har nå blit oppdatert");
     $('#userViewBtn').attr("href", "user-a.html?search=" + $first.val() + " " + $last.val());
 
     $('.popup').show();
 
     // Reset loading animation
-    $('#userBtn').text("Registrer bruker");
+    $('#userBtn').text("Endre bruker");
 }
 
 function invalidField(data) {
@@ -220,27 +290,17 @@ function invalidField(data) {
 
     if (data.responseJSON == null) {
         $('.result').text("En uventet feil oppsto");
+
     } else {
         $('.result').text(data.responseJSON.error);
     }
 
     $('#userViewBtn').hide();
+    $('#userCloseBtn').text("Lukk");
+
     $('.popup').show();
 
     // Reset loading animation
-    $('#userBtn').text("Registrer bruker");
+    $('#userBtn').text("Endre bruker");
 }
 
-function loadDepartments() {
-    $department = $('#department');
-
-    $.get("/rest/department/withData")
-        .done(function (data) {
-            data.forEach(function (department) {
-                $department.append(`<option value="${department.id}">${department.name}</option>`);
-            })
-        })
-        .fail(function (data) {
-            console.log("fail", data);
-        });
-}

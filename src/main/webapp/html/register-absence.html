@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MinVakt | Opprett skift</title>
+    <title>MinVakt | Registrer fravær</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -21,6 +21,7 @@
 <aside class="popup-menu admin hide" id="popup_menu">
     <ul>
         <li><a href="home-a.html">Godkjenninger<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
+        <li><a href="calendar-a.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
         <li><a href="user-a.html">Ansatte<i class="material-icons" aria-hidden="true">chevron_right</i></a></li>
         <li><a href="register.html">Registrer bruker<i class="material-icons" aria-hidden="true">chevron_right</i></a>
         </li>
@@ -38,20 +39,23 @@
 <div class="container">
     <div class="container-header">
         <div>
-            <h2>Ansatte</h2>
+            <h2>Registrer fravær</h2>
         </div>
     </div>
-    <section class="list">
 
-    </section>
-    <div class="button-group">
-        <button class="btnPrev">Forrige</button>
-        <button class="btnNext">Neste</button>
+    <section class="list"></section>
+    <button id="btnConfirmAbsence">Registrer fravær</button>
+
+    <div id="userPopup" class="popup">
+        <h3 class="title">Feil</h3>
+        <p class="result">Kunne ikke registrere fravær.</p>
+        <div class="links">
+            <a href="#" id="userCloseBtn">Lukk</a>
+        </div>
     </div>
-
 </div>
 
 <script src="../js/checkscript.js"></script>
-<script src="../js/addUsersToShift.js"></script>
+<script src="../js/registerAbsence.js"></script>
 </body>
 </html>

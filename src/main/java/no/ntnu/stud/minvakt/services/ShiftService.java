@@ -1,5 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
+import no.ntnu.stud.minvakt.util.ContentUtil;
 import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
@@ -11,11 +12,7 @@ import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
-import no.ntnu.stud.minvakt.util.FormattingUtil;
-import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
-import javax.management.Notification;
-import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -24,7 +21,6 @@ import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -42,7 +38,7 @@ public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
     UserDBManager userDB = new UserDBManager();
     NewsFeedDBManager newsDB = new NewsFeedDBManager();
-    FormattingUtil format = new FormattingUtil();
+    ContentUtil contentUtil = new ContentUtil();
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -70,11 +66,20 @@ public class ShiftService extends SecureService{
     public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward,
                                                       @QueryParam("date") Date date, @DefaultValue("-1")@QueryParam("deptId") int deptId){
         if(getSession() == null) return null;
-
         if(deptId <= 0) deptId = getSession().getUser().getDeptId();
         if(date == null) date = new Date(System.currentTimeMillis());
 
         return shiftDB.getShifts(daysForward, getSession().getUser().getId(), date, deptId);
+    }
+    @GET
+    @Path("/shiftsAvailability")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<ShiftUserAvailability> getShiftsDisregardDept(@QueryParam("daysForward") int daysForward,
+                                                      @QueryParam("date") Date date){
+      //  if(deptId <= 0) deptId = getSession().getUser().getDeptId();
+        if(getSession() == null) return null;
+        if(date == null) date = new Date(System.currentTimeMillis());
+        return shiftDB.getShiftsNoDept(daysForward, getSession().getUser().getId(), date);
     }
 
     @DELETE
@@ -261,12 +266,11 @@ public class ShiftService extends SecureService{
             throw new BadRequestException("Invalid shift ID");
         }
 
-        String content = user.getFirstName()+" "+user.getLastName()+" ønsker å søke fravær på skiftet sitt "+
-                shift.getDate() + ".";
         //Set valid_absence = 1. valid_absence = 2 når admin godkjenner.
         boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
         int adminId = userDB.getAdminId();
-        NewsFeedItem notification = new NewsFeedItem(-1, timestamp, content, adminId, user.getId(), shiftId,
+        NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
+                contentUtil.validAbsence(user), adminId, user.getId(), shiftId,
                 NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
         if(newsDB.createNotification(notification) != 0){
             return Response.ok().entity("Notification sent to administration.").build();

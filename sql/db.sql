@@ -130,34 +130,34 @@ INSERT INTO department VALUES(2, 'Avdeling 2');
 
 -- category: 0 - Admin, 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
 INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8,1);
-INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'password','password','email2', 'phone2', 1, 0.8,1);
-INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'password','password', 'email3', 'phone3', 1, 1,2);
-INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'password', 'password', 'email4', 'phone4', 1, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'password', 'password', 'email5', 'phone5', 1, 0.8,2);
+INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==','email2', 'phone2', 1, 0.8,1);
+INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email3', 'phone3', 1, 1,2);
+INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email4', 'phone4', 1, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email5', 'phone5', 1, 0.8,2);
 
-INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'password', 'password', 'email6', 'phone6',2, 0.2,1);
-INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'password', 'password', 'email7', 'phone7',2, 0.5,2);
-INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'passord', 'password', 'email8', 'phone8',2, 0.9,1);
-INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'password', 'password', 'email9', 'phone9',2, 0.75,2);
-INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'password', 'password', 'email10','phone10',2, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email6', 'phone6',2, 0.2,1);
+INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email7', 'phone7',2, 0.5,2);
+INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email8', 'phone8',2, 0.9,1);
+INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email9', 'phone9',2, 0.75,2);
+INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email10','phone10',2, 1,1);
 
-INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'password', 'password', 'email11', 'phone11',2, 1,2);
-INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'password', 'password', 'email12', 'phone12',2, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'password', 'password', 'email13','phone13',2, 0.6,2);
-INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'password', 'password', 'email14', 'phone14',2, 0.1,1);
-INSERT INTO user VALUES(DEFAULT, 'Bente', 'Svendsen', 'password', 'password', 'email15', 'phone15', 2, 0.5,2);
+INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email11', 'phone11',2, 1,2);
+INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email12', 'phone12',2, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email13','phone13',2, 0.6,2);
+INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email14', 'phone14',2, 0.1,1);
+INSERT INTO user VALUES(DEFAULT, 'Bente', 'Svendsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email15', 'phone15', 2, 0.5,2);
 
-INSERT INTO user VALUES(DEFAULT, 'Anna', 'Kristiansen', 'password', 'password', 'email16', 'phone16',2, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'password', 'password', 'email17', 'phone17',3, 1,2);
-INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'password', 'password', 'email18', 'phone18',3, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'password', 'password', 'email19', 'phone19',3, 0.65,2);
-INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'password', 'password', 'email20', 'phone20',3, 0.8,1);
+INSERT INTO user VALUES(DEFAULT, 'Anna', 'Kristiansen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email16', 'phone16',2, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email17', 'phone17',3, 1,2);
+INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email18', 'phone18',3, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email19', 'phone19',3, 0.65,2);
+INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email20', 'phone20',3, 0.8,1);
 
-INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'password','password', 'email21', 'phone21',3, 0.5,2);
-INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'password', 'password', 'email22', 'phone22',3, 0.80,1);
-INSERT INTO user VALUES(DEFAULT, 'Vincent', 'Hagen', 'password', 'password', 'email23', 'phone23', 3, 0.6,2);
-INSERT INTO user VALUES(DEFAULT, 'Erik', 'Jørgensen', 'password', 'password', 'email24', 'phone24', 3, 0.15,1);
-INSERT INTO user VALUES(DEFAULT, 'Heidi', 'Helmersen', 'password', 'password', 'email25', 'phone25', 3, 1,2);
+INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email21', 'phone21',3, 0.5,2);
+INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email22', 'phone22',3, 0.80,1);
+INSERT INTO user VALUES(DEFAULT, 'Vincent', 'Hagen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email23', 'phone23', 3, 0.6,2);
+INSERT INTO user VALUES(DEFAULT, 'Erik', 'Jørgensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email24', 'phone24', 3, 0.15,1);
+INSERT INTO user VALUES(DEFAULT, 'Heidi', 'Helmersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email25', 'phone25', 3, 1,2);
 
 INSERT INTO user VALUES(DEFAULT, 'Jens', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'admin', 'admin', 0, 1,1);
 
@@ -546,17 +546,16 @@ INSERT INTO employee_shift VALUES(21, 60, true, false, false,false);
 -- WEEK 3 : DAY 7
 INSERT INTO employee_shift VALUES(4, 61, false, false, false,false);
 INSERT INTO employee_shift VALUES(11, 61, false, false, false,false);
-INSERT INTO employee_shift VALUES(12, 61, false, false, false,false);
+INSERT INTO employee_shift VALUES(12, 61, false, TRUE, false,false);
 INSERT INTO employee_shift VALUES(23, 61, true, false, false,false);
 -- evening
-INSERT INTO employee_shift VALUES(5, 62, false, false, false,false);
-INSERT INTO employee_shift VALUES(8, 62, false, false, false,false);
+INSERT INTO employee_shift VALUES(5, 62, false, false, false, false);
+INSERT INTO employee_shift VALUES(8, 62, false, TRUE, false,false);
 INSERT INTO employee_shift VALUES(17, 62, true, false, false,false);
 -- night
-INSERT INTO employee_shift VALUES(3, 63, false, false, TRUE,false);
+INSERT INTO employee_shift VALUES(3, 63, false, false, TRUE, false);
 INSERT INTO employee_shift VALUES(14, 63, false, false, false,false);
 INSERT INTO employee_shift VALUES(24, 63, true, false, false,false);
-
 
 -- AVAILABILITY
 -- (user_id, shift_id)
@@ -588,50 +587,44 @@ INSERT INTO overtime VALUES(5, 60, 960,  60, FALSE);
 
 -- (0) SHIFT_CHANGE_EMPLOYEE
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Vakten du har satt deg tilgjengelig på søndag 05. februar (kveldsvakt) er tilgjengelig. Vennligst godta eller avslå vakt.', false, 0,    1,    41,    1,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Vakten du har satt deg tilgjengelig på søndag 05. februar (kveldsvakt) er tilgjengelig. Vennligst godta eller avslå vakt.', false, 0,    1,    41,    2,   -1);
--- "Vakten du har satt deg tilgjengelig på "dato" (dag/kveld/natt) er ledig. Vennligs godta eller avslå vakt.";
-
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36','Ledig kveldsvakt', false, 0,    1,    41,    1,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Ledig kveldsvakt', false, 0,    1,    41,    2,   -1);
+-- "Ledig (dag/natt/kvelds)vakt"
 
 -- (1) SHIFT_CHANGE_ADMIN
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen ønsker å bytte vakt mandag 30. februar (dagvakt)', false, 1,  26,  44,  1,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Mari Nilsen ønsker å bytte vakt mandag 30. februar (kveldsvakt)', false, 1,  26,  22, 10,   -1);
--- "... ønsker å bytte vakt "dato" (dag/kveld/natt)"
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen ønsker å bytte vakt', false, 1,  26,  44,  1,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Mari Nilsen ønsker å bytte vakt', false, 1,  26,  22, 10,   -1);
+-- "... ønsker å bytte vakt"
 
 
 -- (2) VALID_ABSENCE
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
--- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'content', false, 2,    26,    --,    --,   -1);
--- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'content', false, 2,    26,    --,    --,   -1);
--- INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'content', false, 2,    26,    --,    --,   -1);
--- "... ønsker å søke fravær på skiftet sitt den..."
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Gunnar Persen har meldt fravær', false, 2,    26,    61,    12,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Finn Fransen har meldt fravær', false, 2,    26,    61,    8,   -1);
+-- "... har meldt fravær"
 
 
 -- (3) TIMEBANK
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Ditt timeavvik på vakten lørdag 28. februar er blitt godkjent av administrasjonen.', false,  4,  1,    16,    1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Ditt timeavvik på vakten torsdag 09. februar er blitt godkjent av administrasjonen.', false,  4,  3,   52,    3,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Ditt timeavvik på vakten onsdag 01. februar er blitt godkjent av administrasjonen.', false,  4,  4,    28,    4,   780);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert timeavvik på -80 minutter lørdag 04. februar', false,  3,  26,    37,    1,   960);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert timeavvik på -60 minutter lørdag 04. februar', false,  3,  26,    61,    4,   840);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert timeavvik på 60 minutter lørdag 04. februar', false,  3,  26,    60,    5,   960);
--- "Ditt timeavvik på vakten ... er blitt godkjent av administrasjonen."
--- ""Brukernavn" har registert timeavvik på "minutter" minutter "dato".";
-
-
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Siri Andresen har registrert timeavvik', false,  3,  26,    37,    1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Maria Christensen har registrert timeavvik', false,  3,  26,    61,    4,   840);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fridtjof Karlsen har registrert timeavvik', false,  3,  26,    60,    5,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Overtid registrert: (1t 0min)', false,  4,  1,    16,    1,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Overtid registrert: (35 min)',  false,  4,  3,    52,    3,   960);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Fravær registrert: (2t 0min)', false,  4,  4,    28,    4,   780);
+-- "Overtid/fravær registrert (xxt, xxmin)"
+-- "... har registert timeavvik (xxt, xxmin)"
 
 -- (4) NOTIFICATION
 -- newsfeed(feed_id, date_time, content, resolved, category, user_id, shift_id, shift_user_id, start_time)
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
-INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Testnotifikasjon - du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
--- "Ditt vaktbytte den ... er godkjent av administrator!",
--- "Din vakt den ... er byttet bort til ..."
--- "Du har fått godkjent fravær på vakten din den ...",
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 14:02:36', 'Du har fått en beskjed', false,  4,  1,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 15:02:36', 'Du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 16:02:36', 'Du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
+INSERT INTO newsfeed VALUES (DEFAULT, '2017-01-23 17:02:36', 'Du har fått en beskjed', false,  4,  2,    NULL,    NULL,   -1);
+
 
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;

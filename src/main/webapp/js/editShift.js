@@ -110,7 +110,7 @@ function showShiftInfo(data) {
         if (counter < data.shiftUsers.length) {
             var user = data.shiftUsers[counter];
             if(feedId && feedId > 0 && userId == user.userId){
-                output += "<div class='watch green' data-userId='"+user.userId+"' data-category='"+user.userCategory+"'>";
+                output += "<div class='watch highlight' data-userId='"+user.userId+"' data-category='"+user.userCategory+"'>";
             }
             else{
                 output += '<div class="watch" data-category="'+user.userCategory+'">';
