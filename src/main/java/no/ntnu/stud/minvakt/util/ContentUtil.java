@@ -64,10 +64,10 @@ public class ContentUtil {
     public String acceptTimebank(int minutes){
         String res;
         if(minutes>0){
-            res ="Overtid registrert: "+minutesFormat(minutes);
+            res ="Overtid registrert "+minutesFormat(minutes);
         }else {
             int posMin = Math.abs(minutes);
-            res ="Fravær registrert : "+minutesFormat(posMin);
+            res ="Fravær registrert "+minutesFormat(posMin);
         }
         return res;
     }
