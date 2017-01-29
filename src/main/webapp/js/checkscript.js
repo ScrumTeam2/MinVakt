@@ -2,6 +2,8 @@
  * Created by ingvildbroen on 12.01.2017.
  */
 
+// Script used on all pages
+
 $(document).ajaxError(function (event, jqXHR) {
     // Called when we get an AJAX-error anywhere on the site
     if (jqXHR.status == 401) {
@@ -132,74 +134,62 @@ function clearLogin() {
  * se ledige vakter                      --
  * */
 
-
+// array with html pages admin can access, tot: 15
 var adminlinks = [
     "/html/home-a.html",
-    "/html/register.html",
-    "/html/user-a.html",
-    "/html/user-e.html",
-    "/html/new-shift.html",
-    "/html/login.html",
-    "/html/resetpassword.html",
-    "/html/add-users-to-shift.html",
     "/html/calendar-a.html",
-    "change-password-a.html",
-    "/html/index.html",
+    "/html/user-a.html",
+    "/html/user-profile.html",
+    "/html/register.html",
+    "/html/new-shift.html",
+    "/html/add-users-to-shift.html",
+    "/html/edit-shift.html",
     "/html/add-employee.html",
     "/html/change-employee.html",
-    "/html/edit-shift.html",
     "/html/register-absence.html",
-    "/html/user-profile.html"
+    "/html/change-password-a.html",
+    "/html/index.html",
+    "/html/login.html",
+    "/html/resetpassword.html"
 ];
 
+// array with html pages employee can access, tot: 9
 var employeelinks = [
     "/html/home-e.html",
+    "/html/messages-e.html",
     "/html/user-e.html",
     "/html/availability.html",
-    "/html/availability-select.html",
-    "/html/login.html",
-    "/html/resetpassword.html",
-    "/html/index.html",
-    "/html/messages-e.html",
     "/html/change-password.html",
-    "/html/register-overtime.html"
+    "/html/register-overtime.html",
+    "/html/index.html",
+    "/html/login.html",
+    "/html/resetpassword.html"
 ];
 
+// check if admin has access to html page
 function adminAccess() {
     var currentLocation = window.location.pathname;
-    //console.log("location: ", currentLocation);
-
     var found = $.inArray(currentLocation, adminlinks) > -1;
-
-    if (found) {
-        //console.log("OK a");
-    } else {
-        //console.log("FAIL for A go to");
-        window.location.replace("/html/index.html");
+    if (!found) {
+        window.location.replace("/html/home-a.html");
     }
 }
 
+// check if employee has access to html page
 function employeeAccess() {
     var currentLocation = window.location.pathname;
-    //console.log("location: ", currentLocation);
-
     var found = $.inArray(currentLocation, employeelinks) > -1;
-    if (found) {
-        //console.log("OK e");
-    } else {
-        //console.log("FAIL for E go to");
-        window.location.replace("/html/index.html");
+    if (!found) {
+        window.location.replace("/html/home-e.html");
     }
 }
 
-
-// URL PARAMETERS
+// URL PARAMETERS, updates url with key-value pairs
 function setUrlParameter(key, value) {
     key = encodeURI(key);
     value = encodeURI(value);
 
     var kvp = document.location.search.substr(1).split('&');
-
     var i = kvp.length;
     var x;
     while (i--) {
@@ -220,6 +210,7 @@ function setUrlParameter(key, value) {
     window.history.replaceState('', '', window.location.href.split("?")[0] + "?" + kvp.join('&'));
 }
 
+//
 var getUrlParameter = function getUrlParameter(sParam) {
     var sPageURL = decodeURIComponent(window.location.search.substring(1)),
         sURLVariables = sPageURL.split('&'),

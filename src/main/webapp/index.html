@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MinVakt</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            if(sessionStorage.getItem("SessionId")){
+                if(sessionStorage.getItem("SessionIdCat") === 'ADMIN'){
+                    window.location = "html/home-a.html";
+                    console.log("Already logged in as admin");
+                } else{
+                    window.location = "html/home-e.html";
+                    console.log("Already logged in as employee");
+                }
+            } else{
+                window.location = "html/login.html";
+                console.log("need to login");
+            }
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>
