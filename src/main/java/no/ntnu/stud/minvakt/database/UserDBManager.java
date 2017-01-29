@@ -19,24 +19,24 @@ public class UserDBManager extends DBManager {
     public UserDBManager() {
         super();
     }
-    private final String sqlLoginId = "SELECT * FROM user where user_id=?;";
-    private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?;";
+    private final String sqlLoginId = "SELECT * FROM user where user_id=? AND removed = 0;";
+    private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ? AND removed = 0;";
     private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
-    private final String sqlGetUsers = "SELECT * FROM user;";
-    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
-    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?);";
+    private final String sqlGetUsers = "SELECT * FROM user WHERE removed = 0;";
+    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ? AND removed = 0;";
+    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,DEFAULT);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =?, category=?, percentage_work=?, dept_id=? WHERE user_id =?;";
     private final String sqlChangeUserInfoSimple = "UPDATE user SET email =?, phonenumber =? WHERE user_id =?;";
 
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
-    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
+    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user WHERE removed = 0 ORDER BY last_name ASC, first_name ASC;";
     private final String sqlGetUserBasicsWithCategory = "SELECT user_id, first_name, last_name, category FROM user WHERE category = ? " +
-            "ORDER BY last_name ASC, first_name ASC;";
+            " AND removed = 0 ORDER BY last_name ASC, first_name ASC;";
 
     //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
-    private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
-    private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? LIMIT 1;";
-    private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ?";
+    private final String sqlDeleteUser = "UPDATE user SET removed = 1 WHERE user_id = ?";
+    private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? AND removed = 0 LIMIT 1;";
+    private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ? AND removed = 0";
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
