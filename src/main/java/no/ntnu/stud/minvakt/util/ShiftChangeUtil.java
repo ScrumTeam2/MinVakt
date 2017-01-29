@@ -97,10 +97,10 @@ public class ShiftChangeUtil {
         }
     }
 
-    /**
-     * @param newsFeedItem
-     * @param shiftAccepted
-     * @return
+    /** approves valid absence (ex. illness) that an employee has registered
+     * @param newsFeedItem - the ID of the news feed notification
+     * @param shiftAccepted - boolean if absence is accepted or not
+     * @return True if successfull
      */
     private static boolean approveValidAbsence(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted){
@@ -126,6 +126,14 @@ public class ShiftChangeUtil {
         }
 
     }
+
+    /** Employee accepts or rejects an offered shift (where they have set themselves as available).
+     * If rejected: method checks if there are other employees who have not
+     * accepted/rejected the new shift. If there are none pending, method sends notification to admin
+     * @param newsFeedItem - the ID of the news feed notification
+     * @param shiftAccepted - boolean if shift is accepted or not
+     * @return True if succesfully made notification
+     */
     private static boolean approveShiftChangeEmployee(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         //Get data needed to create notification
         Timestamp timestamp = Timestamp.from(Instant.now());
@@ -152,7 +160,7 @@ public class ShiftChangeUtil {
                 updateNotification(status,true);
             }
         }
-        //If the employee do not want the shift, check if there are any other users pending confirmation
+        //If the employees do not want the shift, check if there are any other users pending confirmation
         else{
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             if(newsDB.getShiftChangeCountPending(shift.getId(), userInvolving.getId())==0){
@@ -174,6 +182,12 @@ public class ShiftChangeUtil {
         //Remove current newsFeedItem
         return statusNewsfeed;
     }
+
+    /** For administrator to manually approve shift change
+     * @param newsFeedItem - the ID of the news feed notification
+     * @param shiftAccepted - boolean if shift change is accepted or not
+     * @return True if successful
+     */
     private static boolean approveShiftChangeAdmin(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted) {
             User userFrom = userDB.getUserById(newsFeedItem.getUserIdTo());
@@ -208,6 +222,11 @@ public class ShiftChangeUtil {
         }
 
     }
+
+    /** finds a responsible employee for a shift, prefers nurses, then health_workers, then assistants
+     * @param shiftId - the shift that needs a new employee responsible
+     * @return User obj for the new responsible employee
+     */
     public static User findResponsibleUserForShift(int shiftId){
         ArrayList<User> users = shiftDB.getUsersFromShift(shiftId);
         LinkedList<User> sortedUsers = new LinkedList<>();
