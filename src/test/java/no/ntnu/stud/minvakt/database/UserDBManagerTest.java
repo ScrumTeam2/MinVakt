@@ -66,7 +66,7 @@ public class UserDBManagerTest {
         Assert.assertTrue((int)userInfo1[0] > 0);
 
         Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicateMail@gmail.com", "11111111", User.UserCategory.ASSISTANT, 1,1);
-        Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
+        Assert.assertTrue(userDB.deleteUserCompletely((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }
 
@@ -76,7 +76,7 @@ public class UserDBManagerTest {
 
         Assert.assertTrue((int)userInfo1[0] > 0);
         Object[] userInfo2 = userDB.createNewUser("testFornavn", "testEtternavn", "createNewUserDuplicatePhone2@gmail.com", "11001100", User.UserCategory.ASSISTANT, 1,1);
-        Assert.assertTrue(userDB.deleteUser((int)userInfo1[0]));
+        Assert.assertTrue(userDB.deleteUserCompletely((int)userInfo1[0]));
         Assert.assertEquals(-1, userInfo2[0]);
     }
 
