@@ -13,7 +13,8 @@ public class ForgotPass {
     private static UserDBManager userDB = new UserDBManager();
 
     /**
-     * @param email
+     * Sends email with password to user
+     * @param email email-address
      * @return 1 = Everything succeeded, 0 = mail failed, -1 = nothing succeeded
      */
     public static int sendEmailWithNewPass(String email){

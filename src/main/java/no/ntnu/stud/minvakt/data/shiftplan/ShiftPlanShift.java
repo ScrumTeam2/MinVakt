@@ -50,17 +50,20 @@ public class ShiftPlanShift {
         this.shift = shift;
     }
 
+    /**
+     * Adds user to shift plan
+     * First user in queue always gets set with responisibility = true. This user is guaranteed to be a nurse
+     * @param user ShiftPlanUser object
+     */
     public void addShiftUser(ShiftPlanUser user) {
         shift.getShiftUsers().add(new ShiftUser(user.getId(), user.getFirstName() + " " + user.getLastName(), user.getCategory(), needResponsibilityUser, 0, user.getDeptId()));
         updateCounters(user);
         user.incrementShiftAmount();
-
-        // First user in queue always gets set as responisibility user. This user is guaranteed to be a nurse
         needResponsibilityUser = false;
     }
 
     /**
-     * Updates the nurse/healt worker counter after an user has been added
+     * Updates the nurse/health worker counter after an user has been added
      * @param user
      */
     private void updateCounters(ShiftPlanUser user) {
@@ -70,16 +73,27 @@ public class ShiftPlanShift {
             healthWorkerCount++;
     }
 
+    /**
+     * @return True if percentage of nurses on a shift is below the requirement
+     */
     public boolean requiresMoreNurses() {
         double percentage = (double)nurseCount / (double)shift.getStaffNumb();
         return percentage < MIN_NURSE_PERCENTAGE;
     }
 
+    /**
+     * @return True if percentage of health workers on a shift is below the requirement
+     */
     public boolean requiresMoreHealthWorkers() {
         double percentage = (double)healthWorkerCount / (double)shift.getStaffNumb();
         return percentage < MIN_HEALTH_WORKER_PERCENTAGE;
     }
 
+    /**
+     * Generates candidates for a shift
+     * @param userList - ArrayList<ShiftPlanUser>
+     * @return HashMap<Integer, ShiftPlanUser>
+     */
     public  HashMap<Integer, ShiftPlanUser> generateCandidates(ArrayList<ShiftPlanUser> userList) {
         setUpQueue(userList);
 
@@ -97,6 +111,10 @@ public class ShiftPlanShift {
         return usersWorking;
     }
 
+    /**
+     * Sets up PriorityQueue for ShiftPlanUser
+     * @param userList: ArrayList<ShiftPlanUser>
+     */
     private void setUpQueue(ArrayList<ShiftPlanUser> userList) {
         userQueue = new PriorityQueue<>(new ShiftPlanComparator(this));
 

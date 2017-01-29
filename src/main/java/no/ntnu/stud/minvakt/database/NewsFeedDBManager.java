@@ -32,6 +32,11 @@ public class NewsFeedDBManager extends DBManager{
         super();
     }
 
+    /**
+     * Creates a notification
+     * @param notification - NewsFeedItem object
+     * @return int: NewsFeed id
+     */
     public int createNotification(NewsFeedItem notification){
         int id = 0;
         if(setUp()) {
@@ -64,6 +69,12 @@ public class NewsFeedDBManager extends DBManager{
         }
         return id;
     }
+
+    /**
+     * Deletes notification for a given shift
+     * @param shiftId - ID for given shift
+     * @return True: If success
+     */
     public boolean deleteNotificationsForShift(int shiftId){
         int status = 0;
         if(setUp()) {
@@ -81,6 +92,12 @@ public class NewsFeedDBManager extends DBManager{
         }
         return status != 0;
     }
+
+    /**
+     * Deletes notification from news feed
+     * @param notificationId - ID for notification
+     * @return True: If success
+     */
     public boolean deleteNotification(int notificationId){
         int status = 0;
         if(setUp()) {
@@ -99,6 +116,12 @@ public class NewsFeedDBManager extends DBManager{
         }
         return status != 0;
     }
+
+    /**
+     * Returns news feed for given user
+     * @param userId - ID for given user
+     * @return ArrayList<NewsFeedItem>
+     */
     public ArrayList<NewsFeedItem> getNewsFeed(int userId){
         ArrayList<NewsFeedItem> out = new ArrayList<>();
         if(setUp()) {
@@ -128,6 +151,12 @@ public class NewsFeedDBManager extends DBManager{
         }
         return out;
     }
+
+    /**
+     * Returns NewsFeedItem object for given feed
+     * @param feedId - ID for given feed
+     * @return NewsFeedItem
+     */
     public NewsFeedItem getNewsFeedItem(int feedId){
         NewsFeedItem notification = null;
         if(setUp()) {
@@ -158,6 +187,10 @@ public class NewsFeedDBManager extends DBManager{
         return notification;
     }
 
+    /**
+     * Gets news feed for administrator
+     * @return ArrayList<NewsFeedItem>
+     */
     public ArrayList<NewsFeedItem> getNewsFeedAdmin(){
         ArrayList<NewsFeedItem> out = new ArrayList<>();
         if(setUp()) {
@@ -191,6 +224,13 @@ public class NewsFeedDBManager extends DBManager{
         }
         return out;
     }
+
+    /**
+     * Sets NewsFeedItem resolved
+     * @param feedId - ID for given feed
+     * @param resolved - boolean resolved
+     * @return True: If success
+     */
     public boolean setNewsFeedItemResolved(int feedId, boolean resolved){
         int status = 0;
         if(setUp()) {

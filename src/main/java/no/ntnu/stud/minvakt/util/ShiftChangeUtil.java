@@ -42,7 +42,7 @@ public class ShiftChangeUtil {
         return newsDB.createNotification(newsFeedItem) != 0;
     }
 
-    /** updates news feed notification given by ID, according to which news feed caterogy the news feed item is.
+    /** updates news feed notification given by ID, according to which news feed category the news feed item is.
      * @param feedId - the ID of the news feed notification to be updated
      * @param shiftAccepted - boolean used by cases where something is to be accepted or declined, default true if not applicable
      * @return True if successful

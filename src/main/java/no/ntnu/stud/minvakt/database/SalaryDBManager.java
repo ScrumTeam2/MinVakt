@@ -24,6 +24,10 @@ public class SalaryDBManager extends DBManager {
             "GROUP BY user.user_id " +
             "ORDER BY user.user_id";
 
+    /**
+     * Generates list with all work hours and user info for salary management
+     * @return Map<Integer, UserWorkInfo>
+     */
     public Map<Integer, UserWorkInfo> getAllWorkHours() {
         HashMap<Integer, UserWorkInfo> workHours = new HashMap<>();
 

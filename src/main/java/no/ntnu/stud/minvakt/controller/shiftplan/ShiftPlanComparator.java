@@ -27,6 +27,7 @@ public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
         this.shift = shift;
     }
 
+
     @Override
     public int compare(ShiftPlanUser user1, ShiftPlanUser user2) {
         // Prioritize nurses if they are needed
@@ -57,7 +58,7 @@ public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
      * Compares two users. Correct department + least shifts + assistants will be prioritized
      * @param user1 The first user
      * @param user2 The second user
-     * @return Negative if the best user is best, 0 if they are equal, positive if the last user is best
+     * @return Negative if the first user is best, 0 if they are equal, positive if the last user is best
      */
     private int compareShiftUsers(ShiftPlanUser user1, ShiftPlanUser user2) {
         int departmentWeight = getDepartmentWeight(user1, user2);
