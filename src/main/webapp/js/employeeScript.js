@@ -157,6 +157,8 @@ $(document).ready(function() {
 
         userListElement.html("");
 
+        var category = sessionStorage.getItem("SessionIdCat");
+
         for(var i = 0; i < output.length; i++) {
             html =
                 "<div class='container-title'>" +
@@ -174,8 +176,11 @@ $(document).ready(function() {
                     "<div class='watch-info'>" +
                     "<p class='lead'>" + name + "</p>" +
                     "<p class='sub'>" + shiftTypes[user.category] + "</p>" +
-                    "</div>" +
-                    "<div class='user-data more-info' data-hasInfo='0'></div>" +
+                    "</div>";
+                if (category == 'ADMIN') {
+                    html += "<div><a href='user-profile.html?userId=" + user.id + "' class='link'>Endre</a></div>";
+                }
+                html += "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";
                 userListElement.append(html);
 

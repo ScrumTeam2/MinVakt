@@ -89,7 +89,7 @@ function addShiftInfoHtml (element, shiftId, data) {
     var html = "";
 
     //Could be made more efficient
-    var baseUrl = "../html/user-e.html?search=";
+    var baseUrl = "../html/user-a.html?search=";
     for (var i = 0; i < categoriesForLoop.length; i++) {
         var hasPerson = false;
         //console.log(categoriesForLoop[i]);

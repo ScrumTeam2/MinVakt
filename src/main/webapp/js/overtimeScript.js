@@ -4,9 +4,6 @@
 var shiftId = getUrlParameter("shiftId");
 var date = getUrlParameter("date");
 var type = getUrlParameter("type");
-console.log(shiftId);
-console.log(date);
-console.log(type);
 $(document).ready(function () {
     getShift();
 
@@ -66,11 +63,11 @@ function checkInput(){
         $hours.removeClass('error').parent().attr('data-content', '');
         $minutes.removeClass('error').parent().attr('data-content', '');
 
-        if(!$hours.val()){
+        if(!$hours.val() || $hours.val() < 0 || $minutes.val() > 23){
             $hours.addClass('error').parent().attr('data-content', 'Du må fylle inn timer.');
             formError = true;
         }
-        if(!$minutes.val()){
+        if(!$minutes.val() || $minutes.val() < 0 || $minutes.val() > 59){
             $minutes.addClass('error').parent().attr('data-content', 'Du må fylle inn minutter.');
             formError = true;
         }
@@ -116,12 +113,10 @@ function getShift(){
         `<p class="lead">${shiftDate}</p>
         <p class="sub">${shiftType} ${shiftTime}</p>`
     );
-
 }
 
 function registerOvertime(minutes){
     var startTime;
-    //var type = "DAY";
     switch (type){
         case "DAY":
             startTime = 900;
@@ -137,7 +132,6 @@ function registerOvertime(minutes){
     }
     var formData;
     formData = {
-        //"userId": 1,
         "shiftId": shiftId,
         "startTime": startTime,
         "minutes": minutes,
