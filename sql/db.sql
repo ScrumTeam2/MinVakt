@@ -130,11 +130,11 @@ INSERT INTO department VALUES(2, 'Avdeling 2');
 -- USERS
 
 -- category: 0 - Admin, 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
-INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8,1,0);
-INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==','email2', 'phone2', 1, 0.8,1,0);
-INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email3', 'phone3', 1, 1,2,0);
-INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email4', 'phone4', 1, 1,1,0);
-INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email5', 'phone5', 1, 0.8,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', '98765432',1, 0.8,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==','email2@minvaktscrum.no', '87654329', 1, 0.8,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email3@minvaktscrum.no', '76543298', 1, 1,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email4@minvaktscrum.no', '65432987', 1, 1,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email5@minvaktscrum.no', '54329876', 1, 0.8,2,0);
 
 INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email6', 'phone6',2, 0.2,1,0);
 INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email7', 'phone7',2, 0.5,2,0);
@@ -565,6 +565,7 @@ INSERT INTO availability VALUES(1, 41);
 INSERT INTO availability VALUES(2, 41);
 INSERT INTO availability VALUES(10, 41);
 INSERT INTO availability VALUES(15, 41);
+
 INSERT INTO availability VALUES(17, 42);
 INSERT INTO availability VALUES(7, 42);
 
