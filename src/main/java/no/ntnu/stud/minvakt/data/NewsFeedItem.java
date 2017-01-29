@@ -137,4 +137,18 @@ public class NewsFeedItem {
     public void setShiftId(int shiftId) {
         this.shiftId = shiftId;
     }
+
+    @Override
+    public String toString() {
+        return "NewsFeedItem{" +
+                "feedId=" + feedId +
+                ", dateTime=" + dateTime +
+                ", content='" + content + '\'' +
+                ", userIdTo=" + userIdTo +
+                ", userIdInvolving=" + userIdInvolving +
+                ", shiftId=" + shiftId +
+                ", category=" + category +
+                ", startTimeTimebank=" + startTimeTimebank +
+                '}';
+    }
 }

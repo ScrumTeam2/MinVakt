@@ -68,7 +68,7 @@ function performSave(e) {
             $.ajax({
                 url: "/rest/newsfeed/" + feedId,
                 method: "POST",
-                data: {"accepted" : true},
+                data: {"accepted" : true, "alreadyEdited" : true},
                 success: function() {
                     window.location = "user-a.html";
                 },

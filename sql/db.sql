@@ -93,35 +93,35 @@ CREATE TABLE newsfeed (
 
 ALTER TABLE shift
   ADD CONSTRAINT fk_shift FOREIGN KEY(dept_id)
-  REFERENCES department(dept_id);
+REFERENCES department(dept_id);
 
 ALTER TABLE user
   ADD CONSTRAINT fk_user FOREIGN KEY(dept_id)
-  REFERENCES department(dept_id);
+REFERENCES department(dept_id);
 
 
 ALTER TABLE employee_shift
   ADD CONSTRAINT fk1_employee_shift FOREIGN KEY(user_id)
-  REFERENCES user(user_id),
+REFERENCES user(user_id),
   ADD CONSTRAINT fk2_employee_shift FOREIGN KEY(shift_id)
-  REFERENCES shift(shift_id);
+REFERENCES shift(shift_id);
 
 ALTER TABLE availability
   ADD CONSTRAINT fk1_availability FOREIGN KEY(user_id)
-  REFERENCES user(user_id),
+REFERENCES user(user_id),
   ADD CONSTRAINT fk2_availability FOREIGN KEY(shift_id)
-  REFERENCES shift(shift_id);
+REFERENCES shift(shift_id);
 
 ALTER TABLE overtime
   ADD CONSTRAINT fk1_overtime FOREIGN KEY(user_id, shift_id)
-  REFERENCES employee_shift(user_id, shift_id);
+REFERENCES employee_shift(user_id, shift_id);
 
 
 ALTER TABLE newsfeed
   ADD CONSTRAINT fk1_newsfeed FOREIGN KEY(user_id)
-  REFERENCES user(user_id),
+REFERENCES user(user_id),
   ADD CONSTRAINT fk2_newsfeed FOREIGN KEY(shift_user_id,shift_id)
-  REFERENCES employee_shift(user_id, shift_id);
+REFERENCES employee_shift(user_id, shift_id);
 
 -- DEPARTMENTS
 INSERT INTO department VALUES(1, 'Avdeling 1');
