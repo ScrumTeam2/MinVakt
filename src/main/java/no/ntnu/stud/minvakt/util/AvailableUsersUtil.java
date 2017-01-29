@@ -39,6 +39,7 @@ public class AvailableUsersUtil {
 
         java.sql.Date sqlFirstDay = java.sql.Date.valueOf(firstDayOfWeek);
         java.sql.Date sqlLastDay = java.sql.Date.valueOf(lastDayOfWeek);
+
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = availDBManager.getAvailabilityUserBasic(shiftId);
         ArrayList<UserBasicWorkHours> userListDelimited = new ArrayList<>();
@@ -53,9 +54,7 @@ public class AvailableUsersUtil {
             if(user.getTotalWorkMinutes() < MAX_WORK_MINUTES){
                 userListDelimited.add(user);
             }
-
         }
-
         //Sorts list of employees by workhours, ascending order
         userListDelimited.sort(UserBasicWorkHours.workHoursComparator);
         return userListDelimited;
@@ -94,8 +93,9 @@ public class AvailableUsersUtil {
      */
      public boolean sendNotificationOfShiftChange(Shift shift, User userFrom, Timestamp dateTime){
         User.UserCategory category = userFrom.getCategory();
-        ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(shift.getId(),
-                shift.getDate().toLocalDate(), category, true);
+
+        ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(
+                shift.getId(), shift.getDate().toLocalDate(), category, true);
         boolean ok;
 
         //If user list is not empty, send notifications to employees on list

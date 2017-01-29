@@ -15,6 +15,10 @@ public class FormattingUtil {
     private static HashMap<Integer, String> weekNames;
 
 
+    /** formatting shift type/time of day to norwegian string
+     * @param shiftType - the shift type/time of day
+     * @return formatted string
+     */
     public static String formatShiftType(Shift.ShiftType shiftType){
         if (shiftType.getValue() == 0){
             return "dagvakt";
@@ -26,6 +30,11 @@ public class FormattingUtil {
 
 
     }
+
+    /**Formatting date to string
+     * @param date - unformatted sql date
+     * @return string date as nameOfWeekday + dayOfMonth + nameOfMonth
+     */
     public static String formatDate(Date date){
 
         if(monthNames == null) {
@@ -61,7 +70,5 @@ public class FormattingUtil {
         //  String year = Integer.toString(cal.get(Calendar.YEAR));
         String dayOfMonth = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
         return day+" "+dayOfMonth+". "+month;
-
-
     }
 }

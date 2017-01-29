@@ -63,20 +63,19 @@ public class ContentUtil {
     }
 
     /** Notification for the administrator that there has been selected a new employee as responsible for a shift
-     * @param user
-     * @return
+     * @param user employee who is responsible
+     * @return formatted string with user name
      */
-    //NOTIFICATION
     public String userResponsible(User user){
         String res = "Ny ansvarsvakt: "+user.getFirstName()+" "+user.getLastName();
         return res;
     }
 
-    /**
-     * @param minutes
-     * @return
+    /** notification for overtime/absence
+     * @param minutes - the amount of minutes the employee has worked extra/been absent
+     * @return  if negative minutes, returns string formatted for absence
+     *          if postive minutes, returns string formatted for overtime
      */
-    //NOTIFICATION
     public String acceptTimebank(int minutes){
         String res;
         if(minutes>0){
@@ -88,44 +87,40 @@ public class ContentUtil {
         return res;
     }
 
-    /**
-     * @return
+    /** notification if overtime is not accepted
+     * @return string with "rejected" notification
      */
-    //NOTIFICATION
     public String rejectTimebank(){
         String res ="Overtid ikke godkjent";
         return res;
     }
 
-    /**
-     * @return
+    /** notification absence accepted
+     * @return string with "accepted" notification
      */
-    //NOTIFICATION
     public String acceptValidAbsence(){
         String res ="Fravær godkjent";
         return res;
     }
 
-    /**
-     * @return
+    /** notification valid absence not accepted (illness, for an entire shift)
+     * @return string with "absence not accepted"
      */
-    //NOTIFICATION
     public String rejectValidAbsence(){
         String res ="Fravær ikke godkjent";
         return res;
     }
 
-    /**
-     * @return
+    /** notification about new shift
+     * @return string with new shift notification
      */
-    //NOTIFICATION
     public String shiftChangeUserTo(){
         String res ="Du er satt på en ny vakt";
         return res;
     }
 
-    /**
-     * @return
+    /** notification about shift change acceptance
+     * @return string with shift change accepted notification
      */
     //NOTIFICATION
     public String shiftChangeUserFrom(){
@@ -133,6 +128,11 @@ public class ContentUtil {
         return res;
     }
 
+    /** private method to format minutes to minutes + hours
+     * @param minutes minutes that needs formatting
+     * @return  if minutes<60, string with just minutes
+     *          if minutes>=60, string with hours and minutes
+     */
     private String minutesFormat(int minutes){
         String res;
         if(minutes<60){

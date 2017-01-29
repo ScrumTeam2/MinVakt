@@ -112,6 +112,7 @@ public class AvailabilityDBManager extends DBManager{
                     shiftList.add(res.getInt("shift_id"));
                 }
                 u = new UserAvailableShifts(userId, shiftList);
+
             } catch (SQLException sqlE) {
                 log.log(Level.WARNING, "Error grabbing shifts for user with user ID = " + userId, sqlE);
             } finally {
