@@ -327,7 +327,9 @@ function displayAvailabilityHtml(data) {
                       "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
                       "<p class='sub'>"+shiftTimes[element.shiftType]+"<br></p>" +
                       "<p class='sub'>"+element.deptName+"</p>"+
-                  "</div>";
+                        "<p class='sub'> "+element.deptName+"</p>"+
+
+              "</div>";
                   if(element.hasUser) {
                     html+="<p>Min vakt</p>";
                   } else {
