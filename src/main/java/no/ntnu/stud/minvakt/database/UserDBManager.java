@@ -40,6 +40,9 @@ public class UserDBManager extends DBManager {
     private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? AND removed = 0 LIMIT 1;";
     private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ? AND removed = 0";
 
+    private static final String sqlCheckEmail = "SELECT 1 FROM user WHERE email = ?";
+    private static final String sqlCheckPhoneNumber = "SELECT 1 FROM user WHERE phonenumber = ?";
+
     //If string contains @, it's an email
    /* if(username.contains("@")) {
      checkLogin(username, password); //Email
