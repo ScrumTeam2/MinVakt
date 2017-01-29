@@ -127,6 +127,10 @@ public class ContentUtil {
         String res = "Ønske om vaktbytte godkjent";
         return res;
     }
+    public String shiftChangeUserFromNotAccepted(){
+        String res = "Ønske om vaktbytte ikke godkjent";
+        return res;
+    }
 
     /** private method to format minutes to minutes + hours
      * @param minutes minutes that needs formatting
