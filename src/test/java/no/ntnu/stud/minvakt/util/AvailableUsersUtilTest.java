@@ -4,15 +4,11 @@ import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
-import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
-import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import java.sql.Date;
+;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;

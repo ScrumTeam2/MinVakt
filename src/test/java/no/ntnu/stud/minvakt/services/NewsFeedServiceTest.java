@@ -2,8 +2,6 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
-import org.junit.BeforeClass;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.junit.*;
 import javax.ws.rs.core.Response;
 import java.sql.Timestamp;

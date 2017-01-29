@@ -1,11 +1,9 @@
 package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.controller.encryption.Encryption;
-import no.ntnu.stud.minvakt.controller.encryption.GeneratePassword;
 import no.ntnu.stud.minvakt.data.user.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
