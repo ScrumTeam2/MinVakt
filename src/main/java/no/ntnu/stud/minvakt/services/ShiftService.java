@@ -44,6 +44,10 @@ public class ShiftService extends SecureService{
         super(request);
     }
 
+    /**
+     * @param shift Shift object to be
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createShift(Shift shift) {
@@ -289,6 +293,7 @@ public class ShiftService extends SecureService{
 
         //tries to set shift change
         if(shiftDB.setShiftChange(shiftId, user.getId())){
+
             //sends notifications to users/administrator, depending on the situation
             AvailableUsersUtil availableUsers = new AvailableUsersUtil();
             boolean ok = availableUsers.sendNotificationOfShiftChange(shift, user, timestamp);

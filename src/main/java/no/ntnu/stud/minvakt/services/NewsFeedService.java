@@ -21,6 +21,9 @@ public class NewsFeedService extends SecureService{
         super(request);
     }
 
+    /**fetches all news feed notifications from database
+     * @return ArrayList with news feed notifications as NewsFeedItem objects
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<NewsFeedItem> getNewsFeed(){
@@ -32,6 +35,12 @@ public class NewsFeedService extends SecureService{
         }
     }
 
+    /** updates news feed notification given by ID, according to which news feed category the news feed item is.
+     * @param feedId -  the id of the news feed notification
+     * @param accepted - boolean used by cases where something is to be accepted or declined, default true if not applicable
+     * @return  response OK if successful
+     *          response BAD_REQUEST if not successful
+     */
     @POST
     @Path("/{feedId}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
