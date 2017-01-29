@@ -22,6 +22,7 @@ CREATE TABLE user(
   category INTEGER,
   percentage_work FLOAT,
   dept_id INTEGER,
+  removed BOOLEAN DEFAULT 0,
   CONSTRAINT pk_user PRIMARY KEY(user_id)
 );
 
@@ -129,37 +130,37 @@ INSERT INTO department VALUES(2, 'Avdeling 2');
 -- USERS
 
 -- category: 0 - Admin, 1 - Assistent, 2 - Helsefagarbeider, 3 - Sykepleier
-INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8,1);
-INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==','email2', 'phone2', 1, 0.8,1);
-INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email3', 'phone3', 1, 1,2);
-INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email4', 'phone4', 1, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email5', 'phone5', 1, 0.8,2);
+INSERT INTO user VALUES(DEFAULT, 'Siri', 'Andresen', 'oQaZgG266KjDzEkGTgXYMQ==','2oUGF8AAgobU1E3rcAtyiw==', 'email1', 'phone1',1, 0.8,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Geir', 'Geirsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==','email2', 'phone2', 1, 0.8,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Stine', 'Pettersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email3', 'phone3', 1, 1,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Maria', 'Christensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email4', 'phone4', 1, 1,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Fridtjof', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email5', 'phone5', 1, 0.8,2,0);
 
-INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email6', 'phone6',2, 0.2,1);
-INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email7', 'phone7',2, 0.5,2);
-INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email8', 'phone8',2, 0.9,1);
-INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email9', 'phone9',2, 0.75,2);
-INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email10','phone10',2, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Kari', 'Karlsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email6', 'phone6',2, 0.2,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Narve', 'Berntsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email7', 'phone7',2, 0.5,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Finn', 'Fransen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email8', 'phone8',2, 0.9,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Per', 'Persen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email9', 'phone9',2, 0.75,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Mari', 'Nilsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email10','phone10',2, 1,1,0);
 
-INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email11', 'phone11',2, 1,2);
-INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email12', 'phone12',2, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email13','phone13',2, 0.6,2);
-INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email14', 'phone14',2, 0.1,1);
-INSERT INTO user VALUES(DEFAULT, 'Bente', 'Svendsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email15', 'phone15', 2, 0.5,2);
+INSERT INTO user VALUES(DEFAULT, 'Hanne', 'Holm', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email11', 'phone11',2, 1,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Gunnar', 'Persen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email12', 'phone12',2, 1,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Harry', 'Olsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email13','phone13',2, 0.6,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Tom', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email14', 'phone14',2, 0.1,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Bente', 'Svendsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email15', 'phone15', 2, 0.5,2,0);
 
-INSERT INTO user VALUES(DEFAULT, 'Anna', 'Kristiansen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email16', 'phone16',2, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email17', 'phone17',3, 1,2);
-INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email18', 'phone18',3, 1,1);
-INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email19', 'phone19',3, 0.65,2);
-INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email20', 'phone20',3, 0.8,1);
+INSERT INTO user VALUES(DEFAULT, 'Anna', 'Kristiansen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email16', 'phone16',2, 1,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Tonje', 'Tønne', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email17', 'phone17',3, 1,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Stig', 'Smith', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email18', 'phone18',3, 1,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Silje', 'Stigsen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email19', 'phone19',3, 0.65,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Greg', 'Hansen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email20', 'phone20',3, 0.8,1,0);
 
-INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email21', 'phone21',3, 0.5,2);
-INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email22', 'phone22',3, 0.80,1);
-INSERT INTO user VALUES(DEFAULT, 'Vincent', 'Hagen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email23', 'phone23', 3, 0.6,2);
-INSERT INTO user VALUES(DEFAULT, 'Erik', 'Jørgensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email24', 'phone24', 3, 0.15,1);
-INSERT INTO user VALUES(DEFAULT, 'Heidi', 'Helmersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email25', 'phone25', 3, 1,2);
+INSERT INTO user VALUES(DEFAULT, 'Helge', 'Helgesen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email21', 'phone21',3, 0.5,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Bjørg', 'Solvang', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email22', 'phone22',3, 0.80,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Vincent', 'Hagen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email23', 'phone23', 3, 0.6,2,0);
+INSERT INTO user VALUES(DEFAULT, 'Erik', 'Jørgensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email24', 'phone24', 3, 0.15,1,0);
+INSERT INTO user VALUES(DEFAULT, 'Heidi', 'Helmersen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'email25', 'phone25', 3, 1,2,0);
 
-INSERT INTO user VALUES(DEFAULT, 'Jens', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'admin', 'admin', 0, 1,1);
+INSERT INTO user VALUES(DEFAULT, 'Jens', 'Jensen', 'oQaZgG266KjDzEkGTgXYMQ==', '2oUGF8AAgobU1E3rcAtyiw==', 'admin', 'admin', 0, 1,1,0);
 
 -- SCHEDULED SHIFTS
 -- shift(shift_id, staff_number, date, time, approved, dept_id)
