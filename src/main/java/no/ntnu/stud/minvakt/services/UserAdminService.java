@@ -25,6 +25,10 @@ public class UserAdminService extends SecureService {
         super(request);
     }
 
+    /**
+     * @param user - user object of the user to be created
+     * @return
+     */
     @POST
     @Path("/createuser")
     @Consumes(MediaType.APPLICATION_JSON)
