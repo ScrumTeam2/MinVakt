@@ -23,6 +23,10 @@ public class DepartmentService extends SecureService{
 
     DepartmentDBManager deptDB = new DepartmentDBManager();
 
+    /**
+     * @param deptId - the Id of the department
+     * @return department object
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{deptId}")
@@ -33,6 +37,10 @@ public class DepartmentService extends SecureService{
         return deptDB.getDepartment(deptId);
     }
 
+    /**Fetches delimited information about employees from a deparment,
+     * in order to show information about employees and shifts in calendar for a spesific department
+     * @return ArrayList of DepartmentUser objects
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/withData")
@@ -42,6 +50,10 @@ public class DepartmentService extends SecureService{
         }
         return deptDB.getDepartmentsWithData(getSession().getUser().getId());
     }
+
+    /**
+     * @return ArrayList with Department objects with all departments
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<Department> getDepartments(){

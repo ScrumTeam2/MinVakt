@@ -23,18 +23,18 @@ public class GeneratePassword {
     public static final String VALID_CHARACTERS = "!-_#";
     public static final int MAX_LENGTH = 10;
 
+    /**
+     * Generates random password for user containing
+     * minimum 1 letter in caps lock, maximum 3. Uppercase is 20% of the password. Password contains 12 characters, and minimum 2 special characters
+     * @return String password
+     */
     public static String generateRandomPass() {
-        //Requirements:
-        //Min 1 stor bokstav
-        //min 8 tegn
-        //min 2 spesialtegn
-        SecureRandom rn = new SecureRandom();
 
-        //small, uppercase 20% of the passw. Password contains of 12 characters
+        SecureRandom rn = new SecureRandom();
         int numAlph = 0; //6 - 2 upper
         int numNumb = 0; //2
         int numChars = 0; //2
-        int numUpperCase = 0; //to bokstaver
+        int numUpperCase = 0; // two letters
         String password = "";
 
         for (int i = 0; i < MAX_LENGTH; i++) {
@@ -43,11 +43,11 @@ public class GeneratePassword {
                 int rndNumb = rn.nextInt(VALID_NUMBERS.length());
                 password += VALID_NUMBERS.charAt(rndNumb);
                 numNumb++;
-            } else if ((numChars < 2 && randomNum == 2) || (numChars < 2 && i > 2 && i != 3)) { //Increase spesialChars
+            } else if ((numChars < 2 && randomNum == 2) || (numChars < 2 && i > 2 && i != 3)) { //Increase specialChars
                 int rndChars = rn.nextInt(VALID_CHARACTERS.length());
                 password += VALID_CHARACTERS.charAt(rndChars);
                 numChars++;
-            } else {        //3/5 probability
+            } else {
                 char charSpecific;
                 if (i >= 1) {
                     charSpecific = password.charAt(i - 1);
@@ -57,8 +57,6 @@ public class GeneratePassword {
                 }
                 boolean endCharIsUpper = Character.isUpperCase(charSpecific);
                 if (!endCharIsUpper && numUpperCase < 2) {
-                    // Maks 3 uppercase. Kan ikke vÃ¦re 2 uppercase etter hverandre.
-                    //Previous char was not uppercase. We'll make this one
                     int rndAlph = rn.nextInt(VALID_LETTERS.length());
                     char toUpper = VALID_LETTERS.charAt(rndAlph);
                     char upperChar = (char) (toUpper & 0x5f);

@@ -25,6 +25,10 @@ public class DepartmentDBManager extends DBManager{
             "AND date >= CURDATE()";
 
 
+    /**
+     * Returns a list of the departments
+     * @return ArrayList<Department> with Department objects
+     */
     public ArrayList<Department> getDepartments(){
         ArrayList<Department> departments = new ArrayList<>();
         if(setUp()){
@@ -50,6 +54,12 @@ public class DepartmentDBManager extends DBManager{
         }
         return departments;
     }
+
+    /**
+     * Returns ArrayList with Departments - contains info about whether a department has available users...?
+     * @param userId
+     * @return
+     */
     public ArrayList<DepartmentUser> getDepartmentsWithData(int userId){
         ArrayList<DepartmentUser> departments = new ArrayList<>();
         if(setUp()){
@@ -93,6 +103,13 @@ public class DepartmentDBManager extends DBManager{
         }
         return departments;
     }
+
+
+    /**
+     * Returns department given department ID
+     * @param deptId - ID of department
+     * @return Department object
+     */
     public Department getDepartment(int deptId){
         Department dept = null;
         if(setUp()){

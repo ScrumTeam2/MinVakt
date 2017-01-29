@@ -17,6 +17,10 @@ public abstract class DBManager{
     private Connection connection;
     private DatabaseConnection c;
 
+    /**
+     * Sets up connection with database
+     * @return True if success
+     */
     protected boolean setUp(){
         try {
             c = new DatabaseConnection();
@@ -28,6 +32,10 @@ public abstract class DBManager{
         }
         return connection != null;
     }
+
+    /**
+     * Closes the connection with database
+     */
     protected void closeConnection(){
         try {
             if(connection != null)DbUtils.closeQuietly(connection);
@@ -36,6 +44,10 @@ public abstract class DBManager{
             log.log(Level.SEVERE, "Problem with closing connection", e);
         }
     }
+
+    /**
+     * Starts transaction with database
+     */
     protected void startTransaction(){
         try{
             if(connection.getAutoCommit()){
@@ -48,6 +60,9 @@ public abstract class DBManager{
 
     }
 
+    /**
+     * Ends transaction with database
+     */
     protected void endTransaction(){
         try{
             if(!connection.getAutoCommit()){
@@ -60,6 +75,9 @@ public abstract class DBManager{
         }
     }
 
+    /**
+     * Rollbacks database
+     */
     protected void rollbackStatement() {
         try {
             if (!connection.getAutoCommit()) {
@@ -72,6 +90,11 @@ public abstract class DBManager{
     }
 
 
+    /**
+     * Closes database connection
+     * @param res - The ResultSet to be closed
+     * @param prep - SQL statement
+     */
     protected void finallyStatement(ResultSet res, PreparedStatement prep) {
         try {
             if (!connection.isClosed() && !connection.getAutoCommit()) {
@@ -86,6 +109,10 @@ public abstract class DBManager{
         closeConnection();
     }
 
+    /**
+     * Closes database connection
+     * @param res - The ResultSet to be closed
+     */
     protected void finallyStatement(ResultSet res) {
         try {
             if (res != null) res.close();
@@ -95,6 +122,10 @@ public abstract class DBManager{
         closeConnection();
     }
 
+    /**
+     * Closes database connection
+     * @param prep - SQL statement
+     */
     protected void finallyStatement(PreparedStatement prep) {
         try {
             if (!connection.isClosed() && !connection.getAutoCommit()) {

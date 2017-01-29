@@ -44,6 +44,10 @@ public class ShiftService extends SecureService{
         super(request);
     }
 
+    /**
+     * @param shift Shift object to be
+     * @return
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createShift(Shift shift) {
