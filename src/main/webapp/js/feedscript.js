@@ -1,7 +1,6 @@
 /**
  * Created by marith 18.01.2017.
  */
-
 var $this, feedId, categoryPop, shiftId, userId;
 var popVisible = false;
 var popOpened = false;
@@ -23,6 +22,7 @@ function loadMessages(){
     });
 }
 
+// info of shift from shiftid
 function loadShiftInfo(feedData, callback){
     $.ajax({
         url: "/rest/shift/" + feedData.shiftId,
@@ -33,6 +33,7 @@ function loadShiftInfo(feedData, callback){
     });
 }
 
+// department name from departmentid
 function loadDeptInfo(shiftData, deptCallback){
     $.ajax({
         url: "/rest/department/" + shiftData.deptId,
@@ -125,7 +126,6 @@ $close.on("click", function(e){
 var $accept = $('#acceptBtn');
 $accept.on("click", function(e){
     e.preventDefault();
-    console.log("yes", feedId);
     $.ajax({
         url: "/rest/newsfeed/" + feedId,
         type: 'POST',
@@ -147,7 +147,6 @@ $edit.on("click", function(e){
 var $deny = $('#denyBtn');
 $deny.on("click", function(e){
     e.preventDefault();
-    console.log("no", feedId);
     var formData = {"accepted":false};
 
     $.ajax({
@@ -233,7 +232,6 @@ function openPopup(e){
 // remove notification
 function removeMessage(element){
     feedId = element.data("feed");
-    console.log(feedId);
     $.ajax({
         url: "/rest/newsfeed/" + feedId,
         type: 'POST',
@@ -244,13 +242,11 @@ function removeMessage(element){
 }
 
 function postOk(){
-    console.log("ok post", feedId);
     loadMessages();
 }
 
-function postNotOk(){
-    console.log("ikke ok post", feedId);
-    loadMessages();
+function postNotOk(e){
+    console.error(e);
 }
 
 // add changeover messages
