@@ -33,6 +33,16 @@ function loadShiftInfo(feedData, callback){
     });
 }
 
+function loadDeptInfo(shiftData, deptCallback){
+    $.ajax({
+        url: "/rest/department/" + shiftData.deptId,
+        type: 'GET',
+        success: function(data){
+            deptCallback(data);
+        }
+    });
+}
+
 // Toggle messages
 $('.container-title').click(function() {
     if (!popVisible) {
@@ -104,6 +114,13 @@ function showMessages(data){
     }
 }
 
+//close button
+var $close = $('#closePop');
+$close.on("click", function(e){
+    e.preventDefault();
+    hidePopup(e);
+});
+
 //yes button
 var $accept = $('#acceptBtn');
 $accept.on("click", function(e){
@@ -125,7 +142,6 @@ $edit.on("click", function(e){
     e.preventDefault();
     window.location = "/html/edit-shift.html?id=" + shiftId + "&feedId=" + feedId + "&userId=" + userId;
 });
-
 
 //no button
 var $deny = $('#denyBtn');
@@ -349,30 +365,33 @@ function adminNotification(feedData){
     var feedId = feedData.feedId;
     var content = feedData.content;
     loadShiftInfo(feedData, function(shiftData){
-        var $notifications = $('#show_notification');
         var shiftType = shiftTypes[shiftData.type];
         var shiftDate = convertDate(shiftData.date);
-        var html=
-            `<div class="watch" data-feed="${feedId}">
-                <div class="watch-info">
-                    <p class="lead">${content}</p>
-                    <p class="sub">${shiftType}, ${shiftDate}</p>
-                </div>
-        </div>`;
-        var $html = $(html);
-        $notifications.append($html);
-        var html2=
-            `<a href="#" class="remove-message" id="remove">
-             <i class="material-icons">close</i>
-        </a>`;
-        var $html2 = $(html2);
-        $html.append($html2);
-        $html2.on("click", function(e){
-            if (!popVisible) {
-                e.preventDefault();
-                var element = $(e.currentTarget).parent();
-                removeMessage(element);
-            }
+        loadDeptInfo(shiftData, function(deptData){
+            var shiftDpt = deptData.name;
+            var $notifications = $('#show_notification');
+            var html=
+                `<div class="watch" data-feed="${feedId}">
+                    <div class="watch-info">
+                        <p class="lead">${content}</p>
+                        <p class="sub">${shiftDpt}: ${shiftType}, ${shiftDate}</p>
+                    </div>
+                </div>`;
+            var $html = $(html);
+            $notifications.append($html);
+            var html2=
+                `<a href="#" class="remove-message" id="remove">
+                    <i class="material-icons">close</i>
+                </a>`;
+            var $html2 = $(html2);
+            $html.append($html2);
+            $html2.on("click", function(e){
+                if (!popVisible) {
+                    e.preventDefault();
+                    var element = $(e.currentTarget).parent();
+                    removeMessage(element);
+                }
+            });
         });
     });
 }
