@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 /**
- * Created by evend on 1/20/2017.
+ * Represents the newsfeed entity
  */
 public class NewsFeedItem {
     private int feedId;

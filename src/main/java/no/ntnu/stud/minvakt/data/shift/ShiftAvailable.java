@@ -6,7 +6,7 @@ import no.ntnu.stud.minvakt.util.SanitizeUtil;
 import java.util.Date;
 
 /**
- * Created by 8460p on 17.01.2017.
+ * Data structure for the department entity, used for availability
  */
 public class ShiftAvailable {
     private int shiftId;

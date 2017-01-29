@@ -5,10 +5,8 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.util.FormattingUtil;
 
 /**
- * Created by Marit on 27.01.2017.
+ * Handles generation of all news feed messages
  */
-
-//Contains all the newfeed "contentUtil"
 public class ContentUtil {
     public ContentUtil(){}
 

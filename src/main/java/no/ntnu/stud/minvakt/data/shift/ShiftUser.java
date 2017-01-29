@@ -5,7 +5,7 @@ import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
- * Created by evend on 1/11/2017.
+ * Data structure for the many-to-many relationship between shifts and users
  */
 public class ShiftUser {
     private int userId;

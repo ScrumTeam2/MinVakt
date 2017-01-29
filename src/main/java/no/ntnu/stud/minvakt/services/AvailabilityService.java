@@ -21,6 +21,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains REST endpoints for availability
+ */
 @Path("/availability")
 public class AvailabilityService extends SecureService {
     AvailabilityDBManager availabilityDB = new AvailabilityDBManager();

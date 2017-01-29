@@ -17,13 +17,16 @@ import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 /**
- * Created by Audun on 26.01.2017.
+ * A Java EE context listener which handles deploy-time initializations
  */
 public class SalaryServletContextListener implements ServletContextListener {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
 
     private Scheduler scheduler;
 
+    /**
+     * Called when servlet is being deployed. Starts the QUARTZ scheduler
+     */
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         // Start the scheduler
@@ -62,6 +65,10 @@ public class SalaryServletContextListener implements ServletContextListener {
         }
     }
 
+    /**
+     * Called when the servlet is stopping, shuts down the QUARTZ scheduler
+     * @param servletContextEvent
+     */
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
         try {

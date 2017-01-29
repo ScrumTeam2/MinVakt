@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Audun on 10.01.2017.
+ * Handles user logging in/logging out
  */
 @Path("session")
 public class SessionService {
