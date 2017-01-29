@@ -326,6 +326,8 @@ public class UserDBManager extends DBManager {
                 finallyStatement(res,prep);
             }
         }
+        System.out.println("Users ! " + user);
+
         return user;
     }
     /**

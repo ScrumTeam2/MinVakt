@@ -1,6 +1,5 @@
 package no.ntnu.stud.minvakt.util;
 
-import no.ntnu.stud.minvakt.data.Content;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
@@ -26,7 +25,7 @@ public class ShiftChangeUtil {
     private static UserDBManager userDB = new UserDBManager();
     private static NewsFeedDBManager newsDB = new NewsFeedDBManager();
     private static OvertimeDBManager overtimeDB = new OvertimeDBManager();
-    private static Content content = new Content();
+    private static ContentUtil contentUtil = new ContentUtil();
 
     public static boolean sendNewResponsibleChangeNotification(int userId, int shiftId){
         User user = userDB.getUserById(userId);
@@ -34,7 +33,7 @@ public class ShiftChangeUtil {
         int adminId = userDB.getAdminId();
         if(adminId == 0) return false;
         NewsFeedItem newsFeedItem = new NewsFeedItem(-1,timestamp,
-                content.userResponsible(user), adminId,userId,shiftId, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
+                contentUtil.userResponsible(user), adminId,userId,shiftId, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
         return newsDB.createNotification(newsFeedItem) != 0;
     }
 
@@ -64,7 +63,7 @@ public class ShiftChangeUtil {
                 int minutes = overtimeDB.getMinutes(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
 
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                        content.acceptTimebank(minutes), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                        contentUtil.acceptTimebank(minutes), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                         newsFeedItem.getShiftId(), NOTIFICATION);
 
                 newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -75,7 +74,7 @@ public class ShiftChangeUtil {
         else {
             Timestamp timestamp = Timestamp.from(Instant.now());
             NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                    content.rejectTimebank(), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
+                    contentUtil.rejectTimebank(), newsFeedItem.getUserIdInvolving(), newsFeedItem.getUserIdTo(),
                     newsFeedItem.getShiftId(), NOTIFICATION);
             overtimeDB.deleteOvertime(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), newsFeedItem.getStartTimeTimebank());
             newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
@@ -89,7 +88,7 @@ public class ShiftChangeUtil {
             !shiftDB.setValidAbsence(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), true)) return false;
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    content.acceptValidAbsence(), newsFeedItem.getUserIdInvolving(),
+                    contentUtil.acceptValidAbsence(), newsFeedItem.getUserIdInvolving(),
                     newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
 
             newsDB.createNotification(notification);
@@ -99,7 +98,7 @@ public class ShiftChangeUtil {
         else {
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    content.rejectValidAbsence(), newsFeedItem.getUserIdInvolving(),
+                    contentUtil.rejectValidAbsence(), newsFeedItem.getUserIdInvolving(),
                     newsFeedItem.getUserIdInvolving(), shift.getId(), NOTIFICATION);
 
             newsDB.createNotification(notification);
@@ -122,7 +121,7 @@ public class ShiftChangeUtil {
 
             //Create a notification to be sent to admin.
             NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                    content.shiftChangeAdminUserFromTo(shift, userAccepted, userInvolving), adminId,
+                    contentUtil.shiftChangeAdminUserFromTo(shift, userAccepted, userInvolving), adminId,
                     newsFeedItem.getUserIdTo(), newsFeedItem.getShiftId(), SHIFT_CHANGE_ADMIN);
             int status =  newsDB.createNotification(notification);
             if(status == 0) return false;
@@ -141,7 +140,7 @@ public class ShiftChangeUtil {
                     return false;
                 }
                 NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                        content.shiftChangeAdmin(userInvolving), adminId,userInvolving.getId(),
+                        contentUtil.shiftChangeAdmin(userInvolving), adminId,userInvolving.getId(),
                         shift.getId(), NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
                 int status =  newsDB.createNotification(notification);
 
@@ -170,12 +169,12 @@ public class ShiftChangeUtil {
 
             //Creates new update notification to the user who wants to change shift.
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    content.shiftChangeUserFrom(), userTo.getId(), userFrom.getId(), shift.getId(), NOTIFICATION);
+                    contentUtil.shiftChangeUserFrom(), userTo.getId(), userFrom.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
 
             //Creates update notification for user who accepted the shift change
             NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
-                    content.shiftChangeUserTo(),  userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
+                    contentUtil.shiftChangeUserTo(),  userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
             newsDB.createNotification(notification);
             newsDB.createNotification(notification2);
 

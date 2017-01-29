@@ -17,8 +17,7 @@ $(document).ready(function(){
             url: "/rest/session/check",
             type: 'GET',
             dataType: 'json',
-            success: login,
-            error: errorHere
+            success: login
         });
     }
 
@@ -79,10 +78,6 @@ function login(data){
     }
 }
 
-function errorHere(data){
-    console.log(data);
-}
-
 function invalid(data){
     setTimeout(function() {$('#login').resetLoader("Logg inn");}, 500);
     $('.feedback').show();
@@ -93,4 +88,4 @@ function invalid(data){
 $.fn.resetLoader = function(buttonText){
     $('.typing_loader').remove();
     $(this).text(buttonText);
-}
+};

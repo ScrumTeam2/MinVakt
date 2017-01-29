@@ -63,13 +63,12 @@ public class ShiftDBManager extends DBManager {
 
     Connection conn;
     PreparedStatement prep;
-    /*
-        Creates new shift for a specific employee
 
-        Returns:
-            If not successful - negative number (-1)
-            if successful - shiftID
-
+    /**
+     * Creates new shift for a specific employee
+     * @param shift
+     * @return  If not successful - negative number (-1)
+     *          If successful - shiftID
      */
     public int createNewShift(Shift shift) {
         int out = -1;
@@ -184,8 +183,12 @@ public class ShiftDBManager extends DBManager {
         return false;
     }
 
-    //Deletes a shift using the shift ID. Meant mainly for cleaning up database when running tests.
-    public boolean deleteShift(int shiftId){
+    /**
+     * Deletes a shift using the shift ID. Meant mainly for cleaning up database when running tests.
+     * @param shiftId ID of the shift to be deleted
+     * @return True if success
+     */
+     public boolean deleteShift(int shiftId){
         int status = 0;
         if(setUp()){
             try {
@@ -216,6 +219,14 @@ public class ShiftDBManager extends DBManager {
         }
         return status != 0;
     }
+
+
+    /**
+     * Fetches a single shift
+     * @param shiftId - ID of the shift to fetch
+     * @return if successfull: a Shift object
+     *         if failure: null
+     */
     public Shift getShift(int shiftId){
         Shift out = null;
         if(setUp()){
@@ -428,6 +439,7 @@ public class ShiftDBManager extends DBManager {
                     "ORDER BY shifts_worked DESC " +
                     "LIMIT ?";
 
+    /* TODO: delete if not used
     public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end, int limit) {
         ArrayList<UserBasicWorkHours> users = new ArrayList<>();
         ResultSet res=null;
@@ -457,6 +469,9 @@ public class ShiftDBManager extends DBManager {
         }
         return users;
     }
+    */
+
+
     public ArrayList<ShiftUserAvailability> getShifts(int daysForward, int userId, Date date, int deptId){
         ArrayList<ShiftUserAvailability> out = new ArrayList<>();
         if (setUp()){
@@ -661,6 +676,7 @@ public class ShiftDBManager extends DBManager {
                 finallyStatement(res, prep);
             }
         }
+        System.out.println("Shfituser! " + shiftUser);
         return shiftUser;
     }
 
