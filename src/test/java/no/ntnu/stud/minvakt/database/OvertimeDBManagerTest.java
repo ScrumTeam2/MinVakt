@@ -46,8 +46,8 @@ public class OvertimeDBManagerTest {
     public void getUnapprovedOvertimeTest(){
         Overtime[] res = overtimeDB.getUnapprovedOvertime();
         Overtime[] expRes = {
-                new Overtime(1,37,960,-80, false),
-                new Overtime(4, 61, 840, -60, false),
+                new Overtime(1,37,960, 80, false),
+                new Overtime(4, 61, 840, 60, false),
                 new Overtime(5, 60, 960, 60, false)
         };
         ArrayList<Overtime> resArray = new ArrayList<Overtime>(Arrays.asList(res));
@@ -99,7 +99,7 @@ public class OvertimeDBManagerTest {
 
 
         int res = overtimeDB.getMinutesByDate(userId,fromDate,toDate);
-        int expRes = -180;
+        int expRes = -60;
 
         assertEquals(expRes, res);
     }
