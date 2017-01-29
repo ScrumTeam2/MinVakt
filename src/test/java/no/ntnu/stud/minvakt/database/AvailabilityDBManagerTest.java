@@ -17,30 +17,6 @@ public class AvailabilityDBManagerTest {
         availabilityDB = new AvailabilityDBManager();
     }
 
-    /*
-    @Test
-    public void getAvailabilityTest() {
-        ArrayList<Integer> userList = new ArrayList<>();
-        ArrayList<Integer> userListTest;
-
-        userList.add(0, 1);
-        userList.add(1, 2);
-
-        int res1 = 0;
-        int res2 = 0;
-
-        userListTest = availabilityDB.getAvailability(41);
-
-        for (int i = 0; i < userList.size(); i++) {
-            res1 += userList.get(i);
-            res2 += userListTest.get(i);
-
-        }
-        assertEquals(res1, res2);
-    }
-    */
-
-
     @Test
     public void setAvailabilityTest() {
         boolean res = availabilityDB.setAvailability(2, 22);
@@ -49,10 +25,8 @@ public class AvailabilityDBManagerTest {
         if(test) {
             availabilityDB.deleteAvailability(2, 22); // Clean up
         }
-
         assertEquals(res, test);
     }
-
 
     @Test
     public void setAvailableFailTest() {
