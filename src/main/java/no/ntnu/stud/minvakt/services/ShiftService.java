@@ -44,9 +44,11 @@ public class ShiftService extends SecureService{
         super(request);
     }
 
-    /**
-     * @param shift Shift object to be
-     * @return
+    /** Creates new shift in database
+     * @param shift Shift object of shift to be created
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -65,6 +67,14 @@ public class ShiftService extends SecureService{
         }
 
     }
+
+    //TODO: hva er egentlg ShiftUserAvailability?
+    /** Fetches shifts for an employee using the session userId
+     * @param daysForward how many days forward to get shifts
+     * @param date the date to start from when fetching shifts
+     * @param deptId the ID of the department (default set to -1)
+     * @return Arraylist of ShiftUserAvailability objects
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<ShiftUserAvailability> getShifts(@QueryParam("daysForward") int daysForward,
@@ -75,17 +85,30 @@ public class ShiftService extends SecureService{
 
         return shiftDB.getShifts(daysForward, getSession().getUser().getId(), date, deptId);
     }
+
+    //TODO: skriv javadoc
+    /**
+     * @param daysForward
+     * @param date
+     * @return
+     */
     @GET
     @Path("/shiftsAvailability")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<ShiftUserAvailability> getShiftsDisregardDept(@QueryParam("daysForward") int daysForward,
-                                                      @QueryParam("date") Date date){
-      //  if(deptId <= 0) deptId = getSession().getUser().getDeptId();
+    public ArrayList<ShiftUserAvailability> getShiftsDisregardDept(
+            @QueryParam("daysForward") int daysForward, @QueryParam("date") Date date){
+
         if(getSession() == null) return null;
         if(date == null) date = new Date(System.currentTimeMillis());
         return shiftDB.getShiftsNoDept(daysForward, getSession().getUser().getId(), date);
     }
 
+    /** deletes shift from database
+     * @param id - the ID of the shift
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
+     */
     @DELETE
     @Path("/{shiftId}")
     public Response deleteShift(@PathParam("shiftId") int id) {
@@ -101,6 +124,10 @@ public class ShiftService extends SecureService{
         }
     }
 
+    /**Get a shift from database with shiftId
+     * @param shiftId - ID of shift to get
+     * @return Shift object
+     */
     @GET
     @Path("/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -110,9 +137,13 @@ public class ShiftService extends SecureService{
         return shiftDB.getShift(shiftId);
     }
 
-    /*
-        Parameters:
 
+    /** Add employee to shift
+     * @param userId - the ID of the employee to be added
+     * @param shiftId - the ID of the shift
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
      */
     @POST
     @Path("/{shiftId}/user/{userId}")
@@ -134,6 +165,14 @@ public class ShiftService extends SecureService{
         }
     }
 
+    /** remove an employee from a shift
+     * @param userId - the ID of the employee to be removed
+     * @param shiftId - the ID of the shift
+     * @param findNewEmployee - boolean whether to find a new employee for this shift or not
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
+     */
     @DELETE
     @Path("/{shiftId}/user/{userId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -158,6 +197,14 @@ public class ShiftService extends SecureService{
         }
     }
 
+    /** replaces one employee with another
+     * @param shiftId - the ID of the shift
+     * @param oldUserId - the ID of the employee who previously worked on this shift
+     * @param newUserId - the ID of the new employee
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
+     */
     @POST
     @Path("/{shiftId}/replaceuser")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
@@ -174,6 +221,13 @@ public class ShiftService extends SecureService{
         }
     }
 
+    /**Set the number of employees that this shift should have
+     * @param shiftId - the ID of the shift
+     * @param newStaffCount - the new staffcount for this shift (number of employees who should work)
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
+     */
     @POST
     @Path("/{shiftId}/set_staff")
     public Response setStaffCount(@PathParam("shiftId") int shiftId, @FormParam("staffCount") int newStaffCount) {
@@ -193,6 +247,10 @@ public class ShiftService extends SecureService{
         }
     }
 
+    /**Fetches the shifts worked on a single day for the user identified with the Session userID
+     * @param date - the date of the shift
+     * @return ArrayList with ShiftUserBasic objects
+     */
     @GET
     @Path("/user/")
     @Produces(MediaType.APPLICATION_JSON)
@@ -201,38 +259,11 @@ public class ShiftService extends SecureService{
         return shiftDB.getShiftWithUserId(getSession().getUser().getId(), date);
     }
 
-//    /**
-//     * Generates a list of possible candidates for a specific shift
-//     * @param shiftId
-//     * @return A Response containing an array of Users
-//     */
-//    @GET
-//    @Path("/{shiftId}/possiblecandidates")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getPossibleCandidates(@PathParam("shiftId") int shiftId) {
-//        if (getSession() == null || !getSession().isAdmin()) {
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
-//
-//        Shift shift = new ShiftDBManager().getShift(shiftId);
-//        if (shift == null) {
-//            return Response.status(Response.Status.BAD_REQUEST).build();
-//        }
-//
-//        ShiftPlanController controller = new ShiftPlanController(shift);
-//        ArrayList<UserBasicWorkHours> candidates = controller.getPossibleCandidates();
-//
-//        // Add the candidates to db (admin can change these)
-//        controller.savePossibleCandidates();
-//
-//        GenericEntity<List<UserBasicWorkHours>> entity =
-//                new GenericEntity<List<UserBasicWorkHours>>(Lists.newArrayList(candidates)) {
-//                };
-//
-//
-//        return Response.ok().entity(entity).build();
-//    }
-
+    /** Fetches an arraylist of all the shifts for a single employee as ShiftUserBasic objects
+     * @param userId - the ID of the employee that should be fetched
+     * @return  if not admin: Response UNAUTHORIZED
+     *          if successful: ArrayList with ShiftUserBasic objects
+     */
     @GET
     @Path("user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -243,6 +274,9 @@ public class ShiftService extends SecureService{
         return shiftDB.getShiftWithUserId(userId, new Date(System.currentTimeMillis()));
     }
 
+    /**Fetches the shifts that does not have the required number of employees
+     * @return ArrayList with ShiftsAvailable objects
+     */
     @GET
     @Path("/availableShifts")
     @Produces(MediaType.APPLICATION_JSON)
@@ -252,7 +286,12 @@ public class ShiftService extends SecureService{
         return shiftDB.getAvailableShifts();
     }
 
-    //Registrates absence
+    /** registers a valid absence request and notifies admin
+     * @param shiftId - the ID of the shift
+     * @return  if it's too late to register absence: Response BAD_REQUEST
+     *          if not successful: Response NOT_MODIFIED
+     *          if successful: Response OK
+     */
     @GET
     @Path("/user/valid_absence/{shiftId}")
     public Response requestValidAbsence(@PathParam("shiftId") int shiftId){
@@ -284,6 +323,12 @@ public class ShiftService extends SecureService{
         }
     }
 
+    /** uses the session userID to request a shift change for the employee, sends notification(s)
+     * @param shiftId - the ID of the shift
+     * @return  if notification not created: Response NOT_MODIFIED
+     *          if not successful: Response BAD_REQUEST
+     *          if successful: Response OK
+     */
     @GET
     @Path("/user/shift_change/{shiftId}")
     public Response requestShiftChange(@PathParam("shiftId") int shiftId){
