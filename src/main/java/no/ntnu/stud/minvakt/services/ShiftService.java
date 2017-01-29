@@ -1,6 +1,6 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Content;
+import no.ntnu.stud.minvakt.util.ContentUtil;
 import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.shift.Shift;
@@ -12,11 +12,7 @@ import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 import no.ntnu.stud.minvakt.util.AvailableUsersUtil;
-import no.ntnu.stud.minvakt.util.FormattingUtil;
-import no.ntnu.stud.minvakt.util.ShiftChangeUtil;
 
-import javax.management.Notification;
-import javax.print.attribute.standard.Media;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -25,7 +21,6 @@ import javax.ws.rs.core.Response;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -43,7 +38,7 @@ public class ShiftService extends SecureService{
     ShiftDBManager shiftDB = new ShiftDBManager();
     UserDBManager userDB = new UserDBManager();
     NewsFeedDBManager newsDB = new NewsFeedDBManager();
-    Content content = new Content();
+    ContentUtil contentUtil = new ContentUtil();
 
     public ShiftService(@Context HttpServletRequest request) {
         super(request);
@@ -275,7 +270,7 @@ public class ShiftService extends SecureService{
         boolean ok = shiftDB.setValidAbsenceInt(user.getId(), shiftId, 1);
         int adminId = userDB.getAdminId();
         NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                content.validAbsence(user), adminId, user.getId(), shiftId,
+                contentUtil.validAbsence(user), adminId, user.getId(), shiftId,
                 NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
         if(newsDB.createNotification(notification) != 0){
             return Response.ok().entity("Notification sent to administration.").build();
