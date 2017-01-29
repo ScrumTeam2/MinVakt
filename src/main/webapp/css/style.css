@@ -781,7 +781,7 @@ button:disabled {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-/* Modal Content */
+/* Modal ContentUtil */
 .modal-content {
     background-color: #fefefe;
     margin: auto;

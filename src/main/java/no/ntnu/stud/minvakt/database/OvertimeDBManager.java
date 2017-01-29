@@ -33,7 +33,14 @@ public class OvertimeDBManager extends DBManager{
         super();
     }
 
-    // Registers overtime on a given user. Returns true or false
+    /**
+     * Registers overtime/absence on a given user. (not an entire shift)
+     * @param userId - employee ID
+     * @param shiftId - shift ID
+     * @param startTime - time of day
+     * @param minutes - the amount of minutes worked extra/been absent
+     * @return True if success
+     */
     public boolean setOvertime(int userId, int shiftId, int startTime, int minutes){
         int out = 0;
 
@@ -62,6 +69,14 @@ public class OvertimeDBManager extends DBManager{
         return out != 0;
     }
 
+
+    /**
+     * Deletes overtime from database
+     * @param userId - employee ID
+     * @param shiftId - shift ID
+     * @param startTime
+     * @return True if success
+     */
     public boolean deleteOvertime(int userId, int shiftId, int startTime){
         int out = 0;
 
@@ -85,8 +100,13 @@ public class OvertimeDBManager extends DBManager{
         return out != 0;
     }
 
-    // For admin to approve overtime, sets approved to true in DB for given user on given shift
-    public boolean approveOvertime(int userId, int shiftId){
+    /**
+     * For admin to approve overtime, sets approved to true in DB for given user on given shift
+     * @param userId - employee ID
+     * @param shiftId - shift ID
+     * @return True if success
+     */
+     public boolean approveOvertime(int userId, int shiftId){
         int out = 0;
 
         if(setUp()){
@@ -109,7 +129,10 @@ public class OvertimeDBManager extends DBManager{
         return out != 0;
     }
 
-    // returns array with overtime for given user
+    /**
+     * @param userId - employee ID
+     * @return ArrayList<Overtime> - Overtime objects for user given by userId
+     */
     public ArrayList<Overtime> getOvertimeListByUserId(int userId){
         Overtime overtimeObj;
         ArrayList<Overtime> timeList = new ArrayList<>();
@@ -118,7 +141,6 @@ public class OvertimeDBManager extends DBManager{
 
         if(setUp()){
             try{
-                startTransaction();
                 conn = getConnection();
                 prep = conn.prepareStatement(getSqlGetOvertimeByUserId);
                 prep.setInt(1,userId);
@@ -141,16 +163,18 @@ public class OvertimeDBManager extends DBManager{
             } catch (SQLException sqlE){
                 log.log(Level.WARNING, "Error returning overtime for user with ID = " + userId, sqlE);
             } finally {
-                endTransaction();
                 finallyStatement(res, prep);
             }
         }
         return timeList;
     }
 
-    // Returns array of Overtime objects with the overtimes not yet approved
+    /**
+     * Fetched all unapproved overtime registered by employees
+     * @return Overime[] - array of Overtime objects with the overtimes not yet approved by admin
+     */
     public Overtime[] getUnapprovedOvertime(){
-        Overtime overtimeObj = null;
+        Overtime overtimeObj;
         int rowCount = getRowCount();
         Overtime[] timeList = new Overtime[rowCount];
 
@@ -187,6 +211,13 @@ public class OvertimeDBManager extends DBManager{
         }
         return timeList;
     }
+
+    /**
+     * @param userId - employee ID
+     * @param shiftId - shift ID
+     * @param startTime - time of day for worked overtime
+     * @return int - minutes worked for a given user, shift and time of day
+     */
     public int getMinutes(int userId, int shiftId, int startTime){
         int minutes = 0;
         ResultSet res = null;
@@ -215,7 +246,13 @@ public class OvertimeDBManager extends DBManager{
         }
         return minutes;
     }
-    public ArrayList<Overtime> getOvertimeByShift(int userId, int shiftId){
+
+    /**
+     * @param userId - employee ID
+     * @param shiftId - shift ID
+     * @return ArrayList<Overtime> - List of Overtime objects for the given shift
+     */
+     public ArrayList<Overtime> getOvertimeByShift(int userId, int shiftId){
         ArrayList<Overtime> overtimeList = new ArrayList<>();
         Overtime overtime = null;
         ResultSet res = null;
@@ -250,8 +287,14 @@ public class OvertimeDBManager extends DBManager{
         return overtimeList;
     }
 
-
-    public int getMinutesByDate(int userId, Date fromDate, Date toDate){
+    /**
+     * Calculates total minutes registered (aside from shifts) for a given period
+     * @param userId - employee ID
+     * @param fromDate - date start of period
+     * @param toDate - date end of period
+     * @return int - total minutes
+     */
+     public int getMinutesByDate(int userId, Date fromDate, Date toDate){
         int minutes = 0;
         ResultSet res = null;
 
@@ -280,6 +323,7 @@ public class OvertimeDBManager extends DBManager{
         return minutes;
     }
 
+    //helping method
     private int getRowCount() {
         int count = 0;
         ResultSet res = null;
@@ -302,32 +346,4 @@ public class OvertimeDBManager extends DBManager{
         }
         return count;
     }
-
-    /*
-    private int getRowCountUser(int userId) {
-        int count = 0;
-        ResultSet res = null;
-        if(setUp()){
-            try{
-                startTransaction();
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlCountOvertimeUser);
-                prep.setInt(1, userId);
-
-                res = prep.executeQuery();
-
-                prep.setInt(1, userId);
-                while(res.next()){
-                    count += res.getInt("COUNT(*)");
-                }
-            } catch (SQLException sqlE){
-                log.log(Level.WARNING, "Error getting row count", sqlE);
-            } finally{
-                endTransaction();
-                finallyStatement(prep);
-            }
-        }
-        return count;
-    }
-    */
 }

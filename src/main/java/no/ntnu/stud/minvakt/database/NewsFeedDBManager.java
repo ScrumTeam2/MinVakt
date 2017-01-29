@@ -204,6 +204,13 @@ public class NewsFeedDBManager extends DBManager{
         }
         return status != 0;
     }
+
+    /**
+     * @param userId - the ID of the employee who has worked overtime
+     * @param shiftId - the ID of the shift
+     * @param startTime - the time of day for given overtime
+     * @return int - the ID of the news feed item
+     */
     public int getNewsFeedIdThroughOvertime(int userId, int shiftId, int startTime){
         int feedId = 0;
         ResultSet res = null;
@@ -227,6 +234,11 @@ public class NewsFeedDBManager extends DBManager{
         return feedId;
     }
 
+    /**
+     * @param shiftId the ID of the shift
+     * @param shiftUserId the ID of the employee who wants to change their shift
+     * @return int - count of the employees who have yet to accept or reject an offer to take a shift
+     */
     public int getShiftChangeCountPending(int shiftId, int shiftUserId){
         int resolvedCount = 0;
         ResultSet res=null;

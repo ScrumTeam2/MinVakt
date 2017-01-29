@@ -91,4 +91,4 @@ function invalid(data){
 $.fn.resetLoader = function(buttonText){
     $('.typing_loader').remove();
     $(this).text(buttonText);
-}
+};

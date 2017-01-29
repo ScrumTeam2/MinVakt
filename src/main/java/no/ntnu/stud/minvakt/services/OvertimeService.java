@@ -1,13 +1,11 @@
 package no.ntnu.stud.minvakt.services;
 
-import no.ntnu.stud.minvakt.data.Content;
+import no.ntnu.stud.minvakt.util.ContentUtil;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import no.ntnu.stud.minvakt.data.Overtime;
-import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.OvertimeDBManager;
-import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,14 +27,17 @@ public class OvertimeService extends SecureService{
     OvertimeDBManager overtimeDBM = new OvertimeDBManager();
     NewsFeedDBManager newsfeedDBM = new NewsFeedDBManager();
     UserDBManager userDBM = new UserDBManager();
-    Content content = new Content();
+    ContentUtil contentUtil = new ContentUtil();
 
     public OvertimeService(@Context HttpServletRequest request) {
         super(request);
     }
 
-    //POST register overtime (used by employee-user)
-    //setOvertime(int userId, int shiftId, int startTime, int minutes) returnes true/false
+    /**POST register overtime (used by employee-user)
+     * uses session userID if the user is not an admin
+     * @param overtime - Overtime obj
+     * @return status 200 if registered, status 400 if not successful
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setOvertime(Overtime overtime) {
@@ -62,7 +63,7 @@ public class OvertimeService extends SecureService{
                 } else {
                     //Sends notification to admin if not admin
                     NewsFeedItem notification = new NewsFeedItem(-1, timestamp,
-                            content.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
+                            contentUtil.regTimebank(user, overtime.getMinutes()), adminId, user.getId(), overtime.getShiftId(), NewsFeedItem.NewsFeedCategory.TIMEBANK, overtime.getStartTime());
                     int newsfeedId = newsfeedDBM.createNotification(notification);
 
                     if (newsfeedId == 0) {
@@ -77,6 +78,10 @@ public class OvertimeService extends SecureService{
         }
     }
 
+    /**
+     * uses the session to get the ID of the user to fetch an arraylist of overtime
+     * @return response with arraylist of Overtime obj
+     */
     //GET fetch overtime for user (used by employee-user)
     //getOvertimeListByUserId(int userId) returns Overtime[]
     @GET
@@ -89,11 +94,15 @@ public class OvertimeService extends SecureService{
         return Response.ok(entity).build();
     }
 
+    /**
+     * @param shiftId - the ID of the shift
+     * @param userId - the ID of the employee
+     * @return Response with ArrayList with Overtime obj for all registered overtime for given shift
+     */
     @GET
     @Path("/shiftId/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOvertimeByShiftId(@PathParam("shiftId") int shiftId, @QueryParam("userId") int userId) {
-        //System.out.println("userid: "+userId+", shiftId: "+shiftId);
         ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByShift(userId, shiftId);
         GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
         return Response.ok(entity).build();
