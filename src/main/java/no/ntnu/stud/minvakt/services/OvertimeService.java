@@ -33,8 +33,11 @@ public class OvertimeService extends SecureService{
         super(request);
     }
 
-    //POST register overtime (used by employee-user)
-    //setOvertime(int userId, int shiftId, int startTime, int minutes) returnes true/false
+    /**POST register overtime (used by employee-user)
+     * uses session userID if the user is not an admin
+     * @param overtime - Overtime obj
+     * @return status 200 if registered, status 400 if not successful
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response setOvertime(Overtime overtime) {
@@ -75,6 +78,10 @@ public class OvertimeService extends SecureService{
         }
     }
 
+    /**
+     * uses the session to get the ID of the user to fetch an arraylist of overtime
+     * @return response with arraylist of Overtime obj
+     */
     //GET fetch overtime for user (used by employee-user)
     //getOvertimeListByUserId(int userId) returns Overtime[]
     @GET
@@ -87,11 +94,15 @@ public class OvertimeService extends SecureService{
         return Response.ok(entity).build();
     }
 
+    /**
+     * @param shiftId - the ID of the shift
+     * @param userId - the ID of the employee
+     * @return Response with ArrayList with Overtime obj for all registered overtime for given shift
+     */
     @GET
     @Path("/shiftId/{shiftId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getOvertimeByShiftId(@PathParam("shiftId") int shiftId, @QueryParam("userId") int userId) {
-        //System.out.println("userid: "+userId+", shiftId: "+shiftId);
         ArrayList<Overtime> overtime = overtimeDBM.getOvertimeByShift(userId, shiftId);
         GenericEntity entity = new GenericEntity<List<Overtime>>(overtime) {};
         return Response.ok(entity).build();

@@ -23,7 +23,11 @@ public class AvailableUsersUtil {
     UserDBManager userDBM = new UserDBManager();
     ContentUtil contentUtil = new ContentUtil();
 
-
+    /**Sorts available employees on a shift by workhours
+     * @param shiftId - the shift that needs a new employee
+     * @param date - the date of the shift
+     * @return arraylist with sorted employees by category as UserBasicWorkHours objects
+     */
     //Sorts available employees on a shift and returns a sortet list
     // excluding employees with too many hours to work a new 8 hour shift
     public static ArrayList<UserBasicWorkHours> sortAvailableEmployees(int shiftId, LocalDate date){
@@ -40,8 +44,6 @@ public class AvailableUsersUtil {
         //Fetches available employees for a shift
         ArrayList<UserBasicWorkHours> userList = availDBManager.getAvailabilityUserBasic(shiftId);
         ArrayList<UserBasicWorkHours> userListDelimited = new ArrayList<>();
-
-
 
         //Fetches workhours from DB
         for (UserBasicWorkHours user : userList) {
@@ -61,8 +63,14 @@ public class AvailableUsersUtil {
         return userListDelimited;
     }
 
-    //Sorts available employees on a shift, then returns the ones with the given category
-    public ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(int shiftId, LocalDate date, User.UserCategory category, boolean onlyThisCategory){
+    /**Sorts available employees on a shift by workhours and category, then returns the ones with the given category first
+     * @param shiftId - the shift that needs a new employee
+     * @param date - the date of the shift
+     * @param category - the employee category
+     * @param onlyThisCategory - if True, returns the list with only employees in the given category
+     * @return arraylist with sorted employees by category as UserBasicWorkHours objects
+     */
+     public ArrayList<UserBasicWorkHours> sortAvailableEmployeesWithCategory(int shiftId, LocalDate date, User.UserCategory category, boolean onlyThisCategory){
         ArrayList<UserBasicWorkHours> sortedEmployees = AvailableUsersUtil.sortAvailableEmployees(shiftId, date);
         ArrayList<UserBasicWorkHours> outputEmployees = new ArrayList<>();
         for (UserBasicWorkHours user : sortedEmployees) {
@@ -80,8 +88,13 @@ public class AvailableUsersUtil {
         return outputEmployees;
     }
 
-    //Finds available users for a shift and sends a notification to the qualified users
-    public boolean sendNotificationOfShiftChange(Shift shift, User userFrom, Timestamp dateTime){
+    /**Finds available users for a shift and sends a notification to the qualified users
+     * @param shift - shift ID for the shift that needs a new employee
+     * @param userFrom - the employee that originally was working on this shift
+     * @param dateTime - the timestamp for the notification
+     * @return True if successful
+     */
+     public boolean sendNotificationOfShiftChange(Shift shift, User userFrom, Timestamp dateTime){
         User.UserCategory category = userFrom.getCategory();
         ArrayList<UserBasicWorkHours> userList = sortAvailableEmployeesWithCategory(shift.getId(),
                 shift.getDate().toLocalDate(), category, true);
