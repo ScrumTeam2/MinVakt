@@ -8,7 +8,6 @@ import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -71,7 +70,7 @@ public class UserDBManager extends DBManager {
                 startTransaction();
                 prep = getConnection().prepareStatement(sqlLogin);
                 prep.setString(1, username);
-                prep.setString(2, pass);
+                prep.setString(2, username);
                 res = prep.executeQuery();
                 if (res.next()) {
                     if (en.passDecoding(pass, res.getString("hash"), res.getString("salt"))) {

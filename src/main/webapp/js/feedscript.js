@@ -250,6 +250,7 @@ function postOk(){
 
 function postNotOk(){
     console.log("ikke ok post", feedId);
+    loadMessages();
 }
 
 // add changeover messages
