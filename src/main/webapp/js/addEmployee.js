@@ -31,7 +31,7 @@ var userId = getUrlParameter("userId");
 $(document).ready(function() {
 
     headers = [ "Tilgjengelige ansatte for dette skiftet",
-                "Søker etter ansatte med navn "];
+                "Søker etter ansatte med navn ", "Viser alle ansatte"];
     loadAll();
 
     var $search = $('#search');
@@ -53,7 +53,7 @@ function loadAll() {
         success: function(data) {
             //console.log("LOAD SUGGESTED USERS WITHOUT CATEGORY", data);
             suggestedAllUsers = data;
-            showAll();
+            if(suggestedAllUsers.length > 0) showAll();
         },
         error: function(e) {
             console.error("Couldn't get data from category " + catName, e);
@@ -71,6 +71,10 @@ function loadAll() {
                 var letterArray = data[i].userBasics;
                 allUsers.push.apply(allUsers, letterArray);
             }
+            //if no users, display all
+            if(suggestedAllUsers.length == 0){
+                search(headers[2], " ");
+            }
         },
         error: function (e) {
             console.error("loadAll", e);
@@ -80,7 +84,10 @@ function loadAll() {
 
 function showAll() {
     if (!getUrlParameter("search")) {
-        displayUsers(headers[0], suggestedAllUsers);
+        if(suggestedAllUsers > 0) displayUsers(headers[0], suggestedAllUsers);
+        else{
+            search(headers[2], "");
+        }
     } else {
         search(headers[1], getUrlParameter("search"));
     }
@@ -113,11 +120,9 @@ function displayUsers(header, data) {
                     </div>`;
 
         userListElement.append(html);
-
-
     }
 
-    $(".addEmployee").click(function(e) {
+    $(".addEmployee").click(function (e) {
         e.preventDefault();
         var changeId = $(e.currentTarget).parent().data("id");
         addToShift(changeId);
@@ -140,14 +145,20 @@ function search(header, searchStr) {
             output.push(users[i]);
         }
     }
-
     userListElement.html("");
-    html =`
+    if(searchStr === ""){
+        html =`
                 <div class='container-title'>
-                    <h3>${header + '"' + searchStr + '"'}</h3>
+                    <h3>${header}</h3>
                 </div>`;
+    }
+    else {
+        html = `
+                    <div class='container-title'>
+                        <h3>${header + '"' + searchStr + '"'}</h3>
+                    </div>`;
+    }
     userListElement.append(html);
-
     for(var i = 0; i < output.length; i++) {
 
         var user = output[i];
