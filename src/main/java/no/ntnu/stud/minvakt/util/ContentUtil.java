@@ -12,31 +12,49 @@ import no.ntnu.stud.minvakt.util.FormattingUtil;
 public class ContentUtil {
     public ContentUtil(){}
 
-    //SHIFT_CHANGE_EMPLOYEE
+    /**Used for shiftChange content in newsfeed for employees
+     * @param shift - ID of the available shift
+     * @return formatted string with shifttype (day/evening/night)
+     */
     public String employeeShiftChange(Shift shift){
         String res = "Ledig "+FormattingUtil.formatShiftType(shift.getType());
         return res;
     }
 
-    //SHIFT_CHANGE_ADMIN
+    /**Used for shiftChange notifications for administrators
+     * @param userInvolving - the employee that wants to change the shift
+     * @return formatted string with the name of the employee who wants to change his/her shift
+     */
     public String shiftChangeAdmin(User userInvolving){
-        String res  = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt.";
+        String res  = userInvolving.getFirstName()+" "+userInvolving.getLastName()+" ønsker å bytte vakt";
         return res;
     }
 
-    //VALID_ABSENCE
+    /**Used for valid absence notifications for administrators
+     * @param user - the user who has registered valid absence (illness)
+     * @return formatted string with the name of the employee who has registered valid absence
+     */
     public String validAbsence(User user){
         String res = user.getFirstName()+" "+user.getLastName()+" har meldt fravær";
         return res;
     }
 
-    //TIMEBANK
+    /**Used for the "timebank" notification for administrators
+     * @param user - employee who has registered overtime
+     * @param minutes - #minutes the employee has worked
+     * @return formatted string with name of the employee who has worked overtime and amt of minutes
+     */
     public String regTimebank(User user, int minutes){
         String res = user.getFirstName()+" "+user.getLastName()+" har registert overtid "+minutesFormat(minutes);
         return res;
     }
 
-    //SHIFT_CHANGE_ADMIN
+    /**TODO: remove method?
+     * @param shift
+     * @param userAccepted
+     * @param userInvolving
+     * @return
+     */
     public String shiftChangeAdminUserFromTo(Shift shift, User userAccepted, User userInvolving){
         String res  = userAccepted.getFirstName()+" "+userAccepted.getLastName()+" ønsker å ta vakten " +
                 "til "+userInvolving.getFirstName()+" "+userInvolving.getLastName()+" på dato "+
@@ -44,12 +62,20 @@ public class ContentUtil {
         return res;
     }
 
+    /** Notification for the administrator that there has been selected a new employee as responsible for a shift
+     * @param user
+     * @return
+     */
     //NOTIFICATION
     public String userResponsible(User user){
         String res = "Ny ansvarsvakt: "+user.getFirstName()+" "+user.getLastName();
         return res;
     }
 
+    /**
+     * @param minutes
+     * @return
+     */
     //NOTIFICATION
     public String acceptTimebank(int minutes){
         String res;
@@ -62,30 +88,45 @@ public class ContentUtil {
         return res;
     }
 
+    /**
+     * @return
+     */
     //NOTIFICATION
     public String rejectTimebank(){
         String res ="Overtid ikke godkjent";
         return res;
     }
 
+    /**
+     * @return
+     */
     //NOTIFICATION
     public String acceptValidAbsence(){
         String res ="Fravær godkjent";
         return res;
     }
 
+    /**
+     * @return
+     */
     //NOTIFICATION
     public String rejectValidAbsence(){
         String res ="Fravær ikke godkjent";
         return res;
     }
 
+    /**
+     * @return
+     */
     //NOTIFICATION
     public String shiftChangeUserTo(){
         String res ="Du er satt på en ny vakt";
         return res;
     }
 
+    /**
+     * @return
+     */
     //NOTIFICATION
     public String shiftChangeUserFrom(){
         String res = "Ønske om vaktbytte godkjent";

@@ -40,8 +40,10 @@ public class UserAdminServiceTest extends ServiceTest {
             Integer userId = o.getInt("id");
             boolean isDeleted = userAdminService.deleteUser(userId);
             assertTrue(isDeleted);
-
+            UserDBManager userDB = new UserDBManager();
+            userDB.deleteUserCompletely(userId);
         }
+
         assertTrue(response.getStatus() == 200);
     }
     @Test

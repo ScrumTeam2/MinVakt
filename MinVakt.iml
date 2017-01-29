@@ -39,7 +39,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="mail-1.4.7" level="project" />
-
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-catalina:8.5.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-servlet-api:8.5.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jsp-api:8.5.9" level="project" />

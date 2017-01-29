@@ -98,6 +98,7 @@ function addShiftInfoHtml (element, shiftId, data) {
     var baseUrl = "../html/user-e.html?search=";
     for (var i = 0; i < categoriesForLoop.length; i++) {
         var hasPerson = false;
+
         $.each(shiftUsers, function (index, user) {
 
             console.log("Loop", index, user);
@@ -150,6 +151,9 @@ function addShiftInfoHtml (element, shiftId, data) {
                 '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
         }
 
+    }
+    else if(data.shiftUsers.length < data.staffNumb){
+        html+='<a href="availability.html?date='+data.date+'" ><button id="absence">Meld deg tilgjengelig</button></a>';
     }
 
     element.append(html);

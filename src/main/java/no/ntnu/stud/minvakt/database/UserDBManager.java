@@ -19,24 +19,29 @@ public class UserDBManager extends DBManager {
     public UserDBManager() {
         super();
     }
-    private final String sqlLoginId = "SELECT * FROM user where user_id=?;";
-    private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ?;";
+    private final String sqlLoginId = "SELECT * FROM user where user_id=? AND removed = 0;";
+    private final String sqlLogin = "SELECT * FROM user WHERE email = ? OR phonenumber = ? AND removed = 0;";
     private final String sqlChangePass = "UPDATE user SET hash = ?, salt = ? WHERE user_id = ?;";
-    private final String sqlGetUsers = "SELECT * FROM user;";
-    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ?;";
-    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?);";
+    private final String sqlGetUsers = "SELECT * FROM user WHERE removed = 0;";
+    private final String sqlGetUserById = "SELECT * FROM user WHERE user_id = ? AND removed = 0;";
+    private final String sqlCreateNewUser = "INSERT INTO user VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,DEFAULT);";
     private final String sqlChangeUserInfo = "UPDATE user SET first_name = ?, last_name = ?, email =?, phonenumber =?, category=?, percentage_work=?, dept_id=? WHERE user_id =?;";
     private final String sqlChangeUserInfoSimple = "UPDATE user SET email =?, phonenumber =? WHERE user_id =?;";
 
     private final String sqlIsAdmin = "SELECT * FROM admin WHERE user_id = ?";
-    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user ORDER BY last_name ASC, first_name ASC;";
+    private final String sqlGetUserBasics = "SELECT user_id, first_name, last_name, category FROM user WHERE removed = 0 ORDER BY last_name ASC, first_name ASC;";
     private final String sqlGetUserBasicsWithCategory = "SELECT user_id, first_name, last_name, category FROM user WHERE category = ? " +
-            "ORDER BY last_name ASC, first_name ASC;";
+            " AND removed = 0 ORDER BY last_name ASC, first_name ASC;";
 
     //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
-    private final String sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
-    private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? LIMIT 1;";
-    private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ?";
+    private final String sqlDeleteUser = "UPDATE user SET removed = 1 WHERE user_id = ?";
+    private final String sqlDeleteUserCompletely = "DELETE FROM user WHERE user_id = ?";
+
+    private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? AND removed = 0 LIMIT 1;";
+    private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ? AND removed = 0";
+
+    private static final String sqlCheckEmail = "SELECT 1 FROM user WHERE email = ?";
+    private static final String sqlCheckPhoneNumber = "SELECT 1 FROM user WHERE phonenumber = ?";
 
     //If string contains @, it's an email
    /* if(username.contains("@")) {
@@ -49,16 +54,6 @@ public class UserDBManager extends DBManager {
     Connection conn;
     ResultSet res;
     Encryption en = new Encryption();
-    
-     /*Contents
-        loginUser()
-        checkLoginId()
-        getUsers();
-        getUserById();
-        createNewUser();
-        changePasswordUserId();
-        changeDepartment();
-    */
 
     /**
      * Tries to log in a user with either mail or phone number
@@ -133,11 +128,39 @@ public class UserDBManager extends DBManager {
         return isAdmin;
     }
 
+    /**
+     * Deletes user, only used for updating database during tests
+     * @param userId - ID for user to delete
+     * @return True: If successful
+     */
     public boolean deleteUser(int userId) {
         //"Deletes" the row of this specific user? Possible?
         if (setUp()) {
             try {
                 prep = getConnection().prepareStatement(sqlDeleteUser);
+                prep.setInt(1, userId);
+
+                int affectedRows = prep.executeUpdate();
+                if(affectedRows == 0) {
+                    log.info("userId " + userId + " not found when deleting");
+                    return false;
+                }
+
+                return true;
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Failed to delete user with userId " + userId, e);
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return false;
+    }
+    public boolean deleteUserCompletely(int userId) {
+        //"Deletes" the row of this specific user? Possible?
+        if (setUp()) {
+            try {
+                prep = getConnection().prepareStatement(sqlDeleteUserCompletely);
                 prep.setInt(1, userId);
 
                 int affectedRows = prep.executeUpdate();
@@ -175,11 +198,8 @@ public class UserDBManager extends DBManager {
         }
         return change;
     }*/
-
-    /**
-     * Returns an array with user objects.
-     * @return User object
-     */
+  /*
+     -- NEVER USED
 
 
     public ArrayList<UserBasic> getUsersBasics(){
@@ -207,7 +227,7 @@ public class UserDBManager extends DBManager {
         }
         return users;
     }
-
+*/
     /* //Deprecated
     public String[][] getTableAllUsers(){
         String[] tupleArray = {"user_id", "first_name", "last_name", "email", "phonenumber"};
@@ -238,6 +258,12 @@ public class UserDBManager extends DBManager {
     }
     */
 
+    /**
+     * Returns arraylist of User objects
+     * @param includeAdmins: False if you want only employees (no admins)
+     *                       True if all users
+     * @return ArrayList<User>
+     */
     public ArrayList<User> getUsers(boolean includeAdmins){
         ArrayList<User> users = new ArrayList<User>();
         if(setUp()){
@@ -267,7 +293,9 @@ public class UserDBManager extends DBManager {
         return users;
     }
 
+
     // Currently not used
+    /*
     public ArrayList<User> getUsersInDepartment(int departmentId, boolean includeAdmins){
         ArrayList<User> users = new ArrayList<User>();
         if(setUp()){
@@ -297,7 +325,13 @@ public class UserDBManager extends DBManager {
         }
         return users;
     }
+*/
 
+    /**
+     * Returns User object by given user ID
+     * @param userId - ID for user
+     * @return User object
+     */
     public User getUserById(int userId) {
         User user = null;
         if(setUp()){
@@ -326,18 +360,36 @@ public class UserDBManager extends DBManager {
                 finallyStatement(res,prep);
             }
         }
+        System.out.println("Users ! " + user);
+
         return user;
     }
-    /**
+    /*
      * Creates a new user in the database
-     * @return An object containing the user's ID (index 0), and the user's password (index 1)
+     * return An object containing the user's ID (index 0), and the user's password (index 1)
+     */
+
+
+    /**
+     * Creates new user in the database
+     * @param firstName - String first name
+     * @param lastName - String last name
+     * @param email - String email
+     * @param phone - String phone number
+     * @param category - UserCategory category
+     *                 Values: 0: Admin, 1: Nurse, 2: Healthworker, 3: Assistant
+     * @param workPercentage - Float: percentage of work (0 to 1)
+     * @param deptId - ID of department
+     * @return Object[] - array with user
      */
     public Object[] createNewUser(String firstName, String lastName, String email, String phone,
                                   User.UserCategory category, float workPercentage, int deptId) {
         Object[] obj = new Object[2];
         obj[0] = -1;
         String randomPass = GeneratePassword.generateRandomPass();
+
         //sendEmailWithGeneratedPass to registered user in this method
+
         String hashedPass[] = en.passEncoding(randomPass);
         String salt = hashedPass[0];
         String hash = hashedPass[1];
@@ -369,8 +421,6 @@ public class UserDBManager extends DBManager {
         return obj;
     }
 
-    private static final String sqlCheckPhoneNumber = "SELECT 1 FROM user WHERE phonenumber = ?";
-
     /**
      * Checks if there is an user with the given phone number
      * @param phoneNumber The phone number to check
@@ -395,11 +445,10 @@ public class UserDBManager extends DBManager {
         return true;
     }
 
-    private static final String sqlCheckEmail = "SELECT 1 FROM user WHERE email = ?";
     /**
      * Checks if there is an user with the given phone number
      * @param email The email to check
-     * @return true if an user exists with this phone number
+     * @return true if an user already exists with this phone number
      */
     public boolean isEmailTaken(String email) {
         if (!setUp()) {
@@ -491,6 +540,13 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
+    /**
+     * Changes user info: Email, phone number
+     * @param email - new email
+     * @param phone - new phone number
+     * @param userId - ID for user you want to change
+     * @return int: > -1 if success, -1 if not success
+     */
     public int changeUserInfoSimple(String email, String phone, int userId) {
         int change = -1;
         if(setUp()) {
@@ -515,6 +571,11 @@ public class UserDBManager extends DBManager {
         return change;
     }
 
+
+    /**
+     * Returns ArrayList with users
+     * @return ArrayList<UserBasicList>
+     */
     public ArrayList<UserBasicList> getUserBasics() {
         ArrayList<UserBasicList> userBasics = new ArrayList<>();
         if (setUp()) {
@@ -551,6 +612,11 @@ public class UserDBManager extends DBManager {
         }
         return userBasics;
     }
+
+    /**
+     * Returns admin ID
+     * @return int: Admin ID
+     */
     public int getAdminId(){
         int out = 0;
         if(setUp()){
@@ -573,6 +639,14 @@ public class UserDBManager extends DBManager {
         }
         return out;
     }
+
+
+    /**
+     * Sets new password for a user
+     * @param userId - ID for user
+     * @param saltHash
+     * @return True if successful
+     */
     public boolean setNewPassword(int userId, String[] saltHash){
         boolean out = false;
 
@@ -594,6 +668,13 @@ public class UserDBManager extends DBManager {
         }
         return out;
     }
+
+
+    /**
+     * Gets userID by mail if a user has forgotten the password an needs a new one
+     * @param email - email address registered on user
+     * @return int: userId on user with corresponding email address
+     */
     public int getUserIdFromMail(String email){
         int out = 0;
         if(setUp()){
@@ -617,12 +698,12 @@ public class UserDBManager extends DBManager {
         return out;
     }
 
-    //If string contains @, it's an email
-   /* if(username.contains("@")) {
-     checkLogin(username, password); //Email
-     } else {
-     checkLogin(username, password); //Phone
-     }*/
+    /**
+     * Returns array with users given category
+     * @param category - UserCategory category
+     *                 Values: 0: Admin, 1: Nurse, 2: Healthworker, 3: Assistant
+     * @return ArrayList<UserBasics>
+     */
     public ArrayList<UserBasic> getUserBasicsWithCategory(User.UserCategory category){
         ArrayList<UserBasic> out = new ArrayList<>();
         if(setUp()){
@@ -650,6 +731,4 @@ public class UserDBManager extends DBManager {
         }
         return out;
     }
-
-
 }
