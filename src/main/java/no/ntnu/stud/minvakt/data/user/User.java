@@ -32,15 +32,15 @@ public class User {
             return null;
         }
 
-        @SuppressWarnings("unused")
-        public static UserCategory fromString(String shiftTypeNr) {
-            try {
-                int val = Integer.parseInt(shiftTypeNr);
-                return valueOf(val);
-            } catch (NumberFormatException e) {
-                log.log(Level.WARNING, "Invalid UserCategory " + shiftTypeNr, e);
-                return UserCategory.HEALTH_WORKER;
+
+        public static UserCategory convert(String str) {
+            for (UserCategory demoType : UserCategory.values()) {
+                if (demoType.toString().equals(str)) {
+                    return demoType;
+                }
             }
+            return null;
+
         }
 
         @Override

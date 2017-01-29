@@ -39,8 +39,8 @@ public class ShiftChangeUtilTest{
         NewsFeedItem notification = new NewsFeedItem(-1, date,
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, false));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true,true));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, false,true));
         newsFeedDB.deleteNotification(feedId);
     }
     @Test
@@ -49,7 +49,7 @@ public class ShiftChangeUtilTest{
         NewsFeedItem notification = new NewsFeedItem(-1, date,
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_ADMIN);
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true,true));
         newsFeedDB.deleteNotification(feedId);
     }
     @Test
@@ -59,7 +59,7 @@ public class ShiftChangeUtilTest{
         NewsFeedItem notification = new NewsFeedItem(-1, date,
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true,true));
         newsFeedDB.deleteNotification(feedId);
     }
 
@@ -70,7 +70,7 @@ public class ShiftChangeUtilTest{
         NewsFeedItem notification = new NewsFeedItem(-1, date,"Test", 4,8,7, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE);
 
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, false));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, false,true));
         newsFeedDB.deleteNotification(feedId);
     }
 
@@ -82,7 +82,7 @@ public class ShiftChangeUtilTest{
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.TIMEBANK);
         overtimeDB.setOvertime(1,4,0,60);
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true,true));
         overtimeDB.deleteOvertime(1,4,0);
         newsFeedDB.deleteNotification(feedId);
     }
@@ -93,7 +93,7 @@ public class ShiftChangeUtilTest{
         NewsFeedItem notification = new NewsFeedItem(-1, date,
                 "Test valid absence", 26,1,4, NewsFeedItem.NewsFeedCategory.VALID_ABSENCE);
         int feedId = newsFeedDB.createNotification(notification);
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
+        assertTrue(ShiftChangeUtil.updateNotification(feedId, true,true));
     }
 
     @Test

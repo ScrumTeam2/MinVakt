@@ -660,6 +660,7 @@ public class ShiftDBManager extends DBManager {
                 prep = conn.prepareStatement(sqlGetUserFromShift);
                 prep.setInt(2,userId);
                 prep.setInt(1,shiftId);
+                System.out.println(sqlGetUserFromShift);
                 res = prep.executeQuery();
                 if(res.next()){
                     UserDBManager userDb = new UserDBManager();
@@ -676,6 +677,7 @@ public class ShiftDBManager extends DBManager {
                 finallyStatement(res, prep);
             }
         }
+        System.out.println("Shiftuser = "+shiftUser);
         return shiftUser;
     }
 

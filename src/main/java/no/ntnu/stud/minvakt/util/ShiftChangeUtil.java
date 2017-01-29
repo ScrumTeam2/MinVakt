@@ -37,11 +37,11 @@ public class ShiftChangeUtil {
         return newsDB.createNotification(newsFeedItem) != 0;
     }
 
-    public static boolean updateNotification(int feedId, boolean shiftAccepted){
+    public static boolean updateNotification(int feedId, boolean shiftAccepted, boolean alreadyEdited){
         NewsFeedItem newsFeedItem = newsDB.getNewsFeedItem(feedId);
         switch (newsFeedItem.getCategory()) {
             case SHIFT_CHANGE_ADMIN:
-                return approveShiftChangeAdmin(newsFeedItem, shiftAccepted);
+                return approveShiftChangeAdmin(newsFeedItem, shiftAccepted, alreadyEdited);
             case SHIFT_CHANGE_EMPLOYEE:
                 return approveShiftChangeEmployee(newsFeedItem, shiftAccepted);
             case VALID_ABSENCE:
@@ -127,7 +127,7 @@ public class ShiftChangeUtil {
             if(status == 0) return false;
             statusNewsfeed = newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
             if(userAccepted.getCategory() == userInvolving.getCategory()){
-                updateNotification(status,true);
+                updateNotification(status,true, false);
             }
         }
         //If the employee do not want the shift, check if there are any other users pending confirmation
@@ -152,33 +152,48 @@ public class ShiftChangeUtil {
         //Remove current newsFeedItem
         return statusNewsfeed;
     }
-    private static boolean approveShiftChangeAdmin(NewsFeedItem newsFeedItem, boolean shiftAccepted){
+    private static boolean approveShiftChangeAdmin(NewsFeedItem newsFeedItem, boolean shiftAccepted, boolean alreadyEdited){
+        boolean status = true;
         if(shiftAccepted) {
+            System.out.println("Accepted");
             User userFrom = userDB.getUserById(newsFeedItem.getUserIdTo());
+            System.out.println(userFrom);
+
             User userTo = userDB.getUserById(newsFeedItem.getUserIdTo());
-            ShiftUser shiftUser = shiftDB.getUserFromShift(userTo.getId(), newsFeedItem.getShiftId());
+            System.out.println(userTo);
 
-            //Removes old user and adds new user to shift, if something goes wrong, returns false.
-            if (!shiftDB.deleteEmployeeFromShift(userFrom.getId(), newsFeedItem.getShiftId())||
-                    !shiftDB.addEmployeeToShift(shiftUser, newsFeedItem.getShiftId())) return false;
+            if(!alreadyEdited) {
 
+                if (userFrom == null || userTo == null) return false;
+                //ShiftUser shiftUser = shiftDB.getUserFromShift(userTo.getId(), newsFeedItem.getShiftId());
+                //(int userId, String userName, User.UserCategory userCategory, boolean responsibility, int valid_absence, int departmentId)
+                String userName = userTo.getFirstName() + " " + userTo.getLastName();
+                ShiftUser shiftUser = new ShiftUser(userTo.getId(), userName, userTo.getCategory(),
+                        false, 0, userTo.getDeptId());
+                System.out.println(shiftUser);
+
+                //Removes old user and adds new user to shift, if something goes wrong, returns false.
+                if (!shiftDB.deleteEmployeeFromShift(userFrom.getId(), newsFeedItem.getShiftId()) ||
+                        !shiftDB.addEmployeeToShift(shiftUser, newsFeedItem.getShiftId())) return false;
+
+            }
             //Sets news feed items resolved
-            newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true);
+            if(!newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), true)) return false;
 
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
-
+            if(shift == null) return false;
             //Creates new update notification to the user who wants to change shift.
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
                     contentUtil.shiftChangeUserFrom(), userTo.getId(), userFrom.getId(), shift.getId(), NOTIFICATION);
-            newsDB.createNotification(notification);
+            if(newsDB.createNotification(notification) == 0) return false;
 
             //Creates update notification for user who accepted the shift change
             NewsFeedItem notification2 = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
                     contentUtil.shiftChangeUserTo(),  userFrom.getId(), userTo.getId(), shift.getId(), NOTIFICATION);
-            newsDB.createNotification(notification);
-            newsDB.createNotification(notification2);
+            if(newsDB.createNotification(notification) == 0) status = false;
+            if(newsDB.createNotification(notification2) == 0) status = false;
 
-            return true;
+            return status;
         }
         else {
             //Removes admin notification if not accepted

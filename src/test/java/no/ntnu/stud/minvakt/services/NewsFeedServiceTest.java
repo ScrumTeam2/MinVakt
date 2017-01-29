@@ -48,7 +48,7 @@ public class NewsFeedServiceTest extends ServiceTest{
                 NewsFeedItem.NewsFeedCategory.NOTIFICATION);
         NewsFeedDBManager newsFeedDBM = new NewsFeedDBManager();
         int feedId = newsFeedDBM.createNotification(notification);
-        Response response = newsFS.setResolved(feedId, true);
+        Response response = newsFS.setResolved(feedId, true, true);
         Assert.assertEquals(200, response.getStatus());
         newsFeedDBM.deleteNotification(feedId);
     }

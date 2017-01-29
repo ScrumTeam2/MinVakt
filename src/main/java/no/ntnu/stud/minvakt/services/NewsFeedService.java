@@ -35,12 +35,13 @@ public class NewsFeedService extends SecureService{
     @POST
     @Path("/{feedId}")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true") @FormParam("accepted") boolean accepted){
+    public Response setResolved(@PathParam("feedId") int feedId, @DefaultValue("true") @FormParam("accepted") boolean accepted,
+                                @DefaultValue("true")@FormParam("alreadyEdited") boolean alreadyEdited){
         if(!getSession().isAdmin() && !newsDB.userHasFeed(getSession().getUser().getId(), feedId)) {
             throw new BadRequestException("Invalid feed ID");
         }
 
-        boolean isUpdated = ShiftChangeUtil.updateNotification(feedId, accepted);
+        boolean isUpdated = ShiftChangeUtil.updateNotification(feedId, accepted, alreadyEdited);
         if(isUpdated){
             return Response.status(Response.Status.OK).build();
         }
