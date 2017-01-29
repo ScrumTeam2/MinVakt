@@ -139,22 +139,24 @@ function addShiftInfoHtml (element, shiftId, data) {
     }
 
     // Add shift change button + illness button
+    var now = new Date();
+    var dataDate = new Date(data.date);
     if (iAmOnShift) {
         if (absence > 0) {
             html += '<div class="button-group"><button class="btn-secondary" disabled>Du har registrert sykdom</button></div>';
         } else if (shiftChange) {
             html += '<div class="button-group"><button class="btn-secondary" disabled>Du har registrert vaktbytte</button></div>';
         } else {
-            if (data.date < Date.now()) {
+            if (dataDate < now) {
                 html +=
-                    '<div class="button-group"><button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="reqChangeShift(this);" id="regByttVakt" disabled>Bytt vakt</button>' +
-                    '<button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="registerIllness(this);" id="regSykdom" disabled>Registrer sykdom</button>' +
+                    '<div class="button-group"><button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="reqChangeShift(this);" id="regByttVakt" class="btn-secondary" disabled>Bytt vakt</button>' +
+                    '<button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="registerIllness(this);" id="regSykdom" class="btn-secondary" disabled>Registrer sykdom</button>' +
                     '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
             } else {
                 html +=
                     '<div class="button-group"><button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
                     '<button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
-                    '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime" disabled>Registrer overtid</button></div>';
+                    '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime" class="btn-secondary" disabled>Registrer overtid</button></div>';
             }
 
         }
