@@ -35,9 +35,8 @@ public class AvailableUsersUtilTest {
     public void sortAvailableEmployeesWithCategory() throws Exception {
         LocalDate localDate = LocalDate.parse("2017-02-06", formatter);
         ArrayList<UserBasicWorkHours> sortedUsers = aUU.sortAvailableEmployeesWithCategory(43, localDate, User.UserCategory.ASSISTANT, true);
-        ArrayList<UserBasicWorkHours> sortedUsers2 = aUU.sortAvailableEmployeesWithCategory(43, localDate, User.UserCategory.HEALTH_WORKER, true);
-
-        int expResFirst = 4;
+        
+        int expResFirst = 3;
         Assert.assertEquals(expResFirst, sortedUsers.get(0).getId());
     }
 
