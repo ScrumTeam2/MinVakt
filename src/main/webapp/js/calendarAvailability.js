@@ -1,9 +1,31 @@
+var dateParam = getUrlParameter("date");
+
 $(document).ready(function() {
     loadCalendar();
     loadAvailableShiftsChosen();
+    loadCorrectFirstDate()
 });
 var shiftsChosen = [];
 
+
+function loadCorrectFirstDate() {
+    dateParam = dateParam ? new Date(dateParam) : new Date();
+    dateString = dateParam.getFullYear()+'-'+(dateParam.getMonth()+1)+'-'+dateParam.getDate();
+    $.ajax({
+        url: "/rest/availability/date?date="+dateString,
+        type: 'GET',
+        //datatype: 'json',
+        /* data: {
+                dateSelection: dateString
+                },*/
+        success: success,
+        error: invalid
+    });
+    $(".calendar-clicked").removeClass("calendar-clicked");
+    $(this).addClass("calendar-clicked");
+    dateClicked = dateParam;
+
+}
 function loadCalendar() {
     //Hente dato trykket på
     var tableId = $('#calendar-availability tr');
@@ -281,12 +303,18 @@ function displayAvailabilityHtml(data) {
                   "<div class='watch-info'>" +
                       "<p class='lead'>"+shiftTypes[element.shiftType]+"</p>" +
                       "<p class='sub'>"+shiftTimes[element.shiftType]+"<br></p>" +
-                      "<p class='sub'>"+element.deptName+"</p>" +
                   "</div>";
                   if(element.hasUser) {
-                    html+="<div class='watch-info'>" +
-                "<p class='sub'><span class='circle blue'></span>Din vakt</p>" +
-                  "</div>";
+                      html += "<div class='watch-info'>" +
+                          "<p class='sub'><span class='circle blue'></span>Din vakt</p>" +
+                          "</div>";
+                  }
+                    else if(element.available){
+                          html+="<div class='watch-info'>" +
+                              "<p class='sub'><span class='circle green'></span>Ledig vakt</p>" +
+                              "</div><input type='checkbox' class='checkBox' name='check' id='"+element.shiftId+"' value='employee'>"+
+                              "<label for='"+element.shiftId+"'>Ledig</label>";
+
                   } else {
                     html+="<input type='checkbox' class='checkBox' name='check' id='"+element.shiftId+"' value='employee'>"+
                     "<label for='"+element.shiftId+"'>Ledig</label>";
@@ -313,15 +341,6 @@ function displayAvailabilityHtml(data) {
       });
 }
 
-/*
-var values = (function() {
-                var a = [];
-                $(".checkboxes:checked").each(function() {
-                    a.push(this.value);
-                });
-                return a;
-            })()
-*/
 var tempSelection = [];
 var tempUnSelection = [];
 $('#submitAvailability').click(function() {

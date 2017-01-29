@@ -99,8 +99,8 @@ function addShiftInfoHtml (element, shiftId, data) {
         var hasPerson = false;
         //console.log(categoriesForLoop[i]);
         //console.log(html);
-        var absence = 0;
-        var shiftChange = false;
+        absence = 0;
+        shiftChange = false;
         $.each(shiftUsers, function (index, user) {
             if (user.userCategory == categoriesForLoop[i]) {
                 if (!hasPerson) {
@@ -141,12 +141,14 @@ function addShiftInfoHtml (element, shiftId, data) {
             }
         });
     }
+    console.log(data.date);
+
     //console.log(html);
 
     // Add shift change button + illness button
     if(iAmOnShift) {
         if(absence == 1 || absenceIds.indexOf(shiftId)>-1) {
-            if(shiftChange == true) {            
+            if(shiftChange == true) {
                 html+='<div class="button-group"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></div>';
 
             } else {
@@ -154,13 +156,13 @@ function addShiftInfoHtml (element, shiftId, data) {
 
             }
         } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
-            if(shiftChange == true) {  
+            if(shiftChange == true) {
                 html+='<div class="button-group"><div class="dialogboks" id="absence-sick"><h3>Du har registrert sykdom</h3></div></div>';
             } else {
                 html+='<div class="dialogboks" id="absence"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
             }
         }else {
-            if(shiftChange == true) {  
+            if(shiftChange == true) {
                 html+='<div class="button-group"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></div>';
           } else {
                 html +=
@@ -169,6 +171,9 @@ function addShiftInfoHtml (element, shiftId, data) {
                     '<button type="submit" data-time="'+data.type+'" data-date="'+data.date+'" data-staff="'+data.staffNumb+'" data-id="'+shiftId+'" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
             }
         }
+    }
+    else if(data.shiftUsers.length < data.staffNumb){
+        html+='<a href="availability.html?date='+data.date+'" ><button id="absence">Meld deg tilgjengelig</button></a>';
     }
 
     element.append(html);
