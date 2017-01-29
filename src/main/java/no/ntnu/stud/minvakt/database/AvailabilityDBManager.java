@@ -32,68 +32,10 @@ public class AvailabilityDBManager extends DBManager{
         super();
     }
 
-
-    /*TODO delete if not used
-    // Find available staff for a given shift, returns arraylist with userIDs
-    public ArrayList<Integer> getAvailability(int shiftID){
-        ArrayList<Integer> userList = new ArrayList<>();
-
-        ResultSet res = null;
-
-        if(setUp()){
-            try{
-                startTransaction();
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlGetAvailability);
-
-                prep.setInt(1, shiftID);
-                res = prep.executeQuery();
-
-                while(res.next()){
-                    userList.add(res.getInt("user_id"));
-                }
-
-            } catch (SQLException sqlE) {
-                log.log(Level.WARNING, "Error finding available staff for shift with ID = " + shiftID, sqlE);
-            } finally {
-                endTransaction();
-                finallyStatement(res, prep);
-            }
-        }
-        return userList;
-    }
-    */
-
-    /* TODO: delete if not used
-    // Find available staff for a given shift, returns arraylist with userIDs
-    public ArrayList<Integer> getAvailabilityForUser2(int userId){
-        ArrayList<Integer> userList = new ArrayList<>();
-        ResultSet res = null;
-
-        if(setUp()){
-            try{
-                startTransaction();
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlGetAvailability);
-
-                prep.setInt(1, userId);
-                res = prep.executeQuery();
-
-                while(res.next()){
-                    userList.add(res.getInt("user_id"));
-                }
-
-            } catch (SQLException sqlE) {
-                log.log(Level.WARNING, "Error finding available staff for shift with ID = " + userId, sqlE);
-            } finally {
-                endTransaction();
-                finallyStatement(res, prep);
-            }
-        }
-        return userList;
-    }
-    */
-
+    /**
+     * @param userId
+     * @return ArrayList<Integer>
+     */
     public UserAvailableShifts getAvailabilityForUser(int userId){
         ArrayList<Integer> shiftList = new ArrayList<>();
         UserAvailableShifts u = null;
@@ -121,8 +63,14 @@ public class AvailabilityDBManager extends DBManager{
         }
         return u;
     }
-    // Sets staff member available for given shift, returns true or false
-    public boolean setAvailability(int userID, int shiftID){
+
+    /**
+     * Sets employee available for a given shift
+     * @param userID - ID for user
+     * @param shiftID - ID for shift
+     * @return True: If success
+     */
+     public boolean setAvailability(int userID, int shiftID){
         int out = 0;
 
         if(setUp()){
@@ -144,7 +92,12 @@ public class AvailabilityDBManager extends DBManager{
         return out != 0;
     }
 
-    // Disables the availability on given user for given shift
+    /**
+     * Disables availability for given shift
+     * @param userID - ID for user
+     * @param shiftID - ID for shift
+     * @return True: If success
+     */
     public boolean deleteAvailability(int userID, int shiftID){
         int out = 0;
 
@@ -168,7 +121,11 @@ public class AvailabilityDBManager extends DBManager{
         return out != 0;
     }
 
-    // Find available staff for a given shift, returns arraylist with UserbasicWorkHours objects
+    /**
+     * Returns list with available staff for a given shift
+     * @param shiftID - ID for shift
+     * @return ArrayList<UserBasicWorkHours>
+     */
     public ArrayList<UserBasicWorkHours> getAvailabilityUserBasic(int shiftID){
         ArrayList<UserBasicWorkHours> userList = new ArrayList<>();
 
@@ -202,6 +159,13 @@ public class AvailabilityDBManager extends DBManager{
         return userList;
     }
 
+    /**
+     * Gets shift for a given date with available space (not enough staff)
+     * @param daysForward - int: Days forward from given date
+     * @param userId - ID for user
+     * @param date - Date
+     * @return ArrayList<ShiftAvailable>
+     */
     public ArrayList<ShiftAvailable> getShiftsForDate(int daysForward, int userId, Date date){
         ArrayList<ShiftAvailable> out = new ArrayList<>();
         if (setUp()){
@@ -252,41 +216,4 @@ public class AvailabilityDBManager extends DBManager{
         }
         return out;
     }
-
-    /*TODO delete if not used
-    // Find all available shifts for a specific date
-    @Deprecated
-    public ArrayList<ShiftAvailable> getAvailabilityForDate(String day){
-        ArrayList<ShiftAvailable> out = new ArrayList<>();
-        ResultSet res = null;
-
-        if(setUp()){
-            try{
-                startTransaction();
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlGetAvailableShiftsForDate);
-
-                prep.setString(1,day);
-                res = prep.executeQuery();
-                while(res.next()){
-                    out.add(new ShiftAvailable(
-                                res.getInt("shift_id"),
-                                res.getDate("date"),
-                                Shift.ShiftType.valueOf(res.getInt("time")),
-                                res.getString("dept_name"),false,false
-                            )
-                    );
-                }
-
-            } catch (SQLException sqlE) {
-                log.log(Level.WARNING, "Error finding available staff for shift with ID = " + day, sqlE);
-            } finally {
-                endTransaction();
-                finallyStatement(res, prep);
-            }
-        }
-        return out;
-    }
-    */
-
 }
