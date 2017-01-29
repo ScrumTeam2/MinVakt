@@ -50,7 +50,7 @@ public class UserDBManagerTest {
         Assert.assertTrue((int)userInfo[0] > 0);
 
         User user = userDB.getUserById((int)userInfo[0]);
-        Assert.assertTrue(userDB.deleteUser((int)userInfo[0]));
+        Assert.assertTrue(userDB.deleteUserCompletely((int)userInfo[0]));
 
         Assert.assertEquals("testFornavn", user.getFirstName());
         Assert.assertEquals("testEtternavn", user.getLastName());

@@ -35,6 +35,8 @@ public class UserDBManager extends DBManager {
 
     //private final String sqlChangeDep = "UPDATE dept_id FROM user where user_id=?";
     private final String sqlDeleteUser = "UPDATE user SET removed = 1 WHERE user_id = ?";
+    private final String sqlDeleteUserCompletely = "DELETE FROM user WHERE user_id = ?";
+
     private final String sqlGetAdminId = "SELECT user_id FROM user WHERE category = ? AND removed = 0 LIMIT 1;";
     private final String sqlGetUserIdByMail = "SELECT user_id FROM user WHERE email = ? AND removed = 0";
 
@@ -138,6 +140,29 @@ public class UserDBManager extends DBManager {
         if (setUp()) {
             try {
                 prep = getConnection().prepareStatement(sqlDeleteUser);
+                prep.setInt(1, userId);
+
+                int affectedRows = prep.executeUpdate();
+                if(affectedRows == 0) {
+                    log.info("userId " + userId + " not found when deleting");
+                    return false;
+                }
+
+                return true;
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Failed to delete user with userId " + userId, e);
+            }
+            finally {
+                finallyStatement(res, prep);
+            }
+        }
+        return false;
+    }
+    public boolean deleteUserCompletely(int userId) {
+        //"Deletes" the row of this specific user? Possible?
+        if (setUp()) {
+            try {
+                prep = getConnection().prepareStatement(sqlDeleteUserCompletely);
                 prep.setInt(1, userId);
 
                 int affectedRows = prep.executeUpdate();

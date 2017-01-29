@@ -144,14 +144,13 @@ function addShiftInfoHtml (element, shiftId, data) {
         });
     }
     console.log("People "+amountOfPeople+"StaffNumb"+data.staffNumb);
-    console.log("")
 
     //console.log(html);
 
     // Add shift change button + illness button
     if(iAmOnShift) {
         if(absence == 1 || absenceIds.indexOf(shiftId)>-1) {
-            if(shiftChange == true) {            
+            if(shiftChange == true) {
                 html+='<div class="button-group"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></div>';
 
             } else {
@@ -159,13 +158,13 @@ function addShiftInfoHtml (element, shiftId, data) {
 
             }
         } else if(absence==2 || absenceIds.indexOf(shiftId)>-1) {
-            if(shiftChange == true) {  
+            if(shiftChange == true) {
                 html+='<div class="button-group"><div class="dialogboks" id="absence-sick"><h3>Du har registrert sykdom</h3></div></div>';
             } else {
                 html+='<div class="dialogboks" id="absence"><h3>Ditt fravær for sykdom har blitt godkjent av betjening</h3></div></div>';
             }
         }else {
-            if(shiftChange == true) {  
+            if(shiftChange == true) {
                 html+='<div class="button-group"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></div>';
           } else {
                 html +=
