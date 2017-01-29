@@ -78,8 +78,5 @@ public class NewsFeedDBManagerTest {
         Assert.assertTrue(newsFeedDB.userHasFeed(userId, validFeedId));
         Assert.assertFalse(newsFeedDB.userHasFeed(userId, invalidFeedId));
     }
-    @Test
-    public void resolveNotifications(){
-        assertTrue(newsFeedDB.updateResolvedNotifications(2,26, NewsFeedItem.NewsFeedCategory.SHIFT_CHANGE_EMPLOYEE));
-    }
+
 }
