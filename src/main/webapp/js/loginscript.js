@@ -17,7 +17,10 @@ $(document).ready(function(){
             url: "/rest/session/check",
             type: 'GET',
             dataType: 'json',
-            success: login
+            success: login,
+            error: function(e) {
+                //console.error(e);
+            }
         });
     }
 

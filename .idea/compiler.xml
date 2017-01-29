@@ -22,10 +22,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="min-vakt" />
         <module name="MinVakt" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="min-vakt" target="1.8" />
       <module name="MinVakt" target="1.8" />
     </bytecodeTargetLevel>
   </component>

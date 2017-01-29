@@ -4,6 +4,8 @@ import no.ntnu.stud.minvakt.data.shift.Shift;
 import no.ntnu.stud.minvakt.data.shift.ShiftUser;
 import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
+import no.ntnu.stud.minvakt.database.AvailabilityDBManager;
+import no.ntnu.stud.minvakt.database.OvertimeDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -33,9 +35,8 @@ public class AvailableUsersUtilTest {
     public void sortAvailableEmployeesWithCategory() throws Exception {
         LocalDate localDate = LocalDate.parse("2017-02-06", formatter);
         ArrayList<UserBasicWorkHours> sortedUsers = aUU.sortAvailableEmployeesWithCategory(43, localDate, User.UserCategory.ASSISTANT, true);
-        ArrayList<UserBasicWorkHours> sortedUsers2 = aUU.sortAvailableEmployeesWithCategory(43, localDate, User.UserCategory.HEALTH_WORKER, true);
-
-        int expResFirst = 4;
+        
+        int expResFirst = 3;
         Assert.assertEquals(expResFirst, sortedUsers.get(0).getId());
     }
 
@@ -56,13 +57,16 @@ public class AvailableUsersUtilTest {
         int shiftId = 43;
 
         Shift shift =shiftDBM.getShift(shiftId);
-        ShiftUser shiftUser = shift.getShiftUsers().get(0);
+        ShiftUser shiftUser = shift.getShiftUsers().get(2);
+        //userid = 12 gunnar persen HEALTH WORKER
         User user = new User(shiftUser.getUserId(), "Test", "Bruker", "hash", "salt", "email",
-                "12345678", User.UserCategory.ASSISTANT,100,1);
+                "12345678", User.UserCategory.HEALTH_WORKER,100,1);
+
         boolean res = aUU.sendNotificationOfShiftChange(shift, user, timestamp);
         boolean expRes = true;
         Assert.assertEquals(expRes, res);
     }
+
 
     @Test
     public void sendNotificationToAdminNoAvailableUsers() throws Exception{
