@@ -949,6 +949,10 @@ text-align: center;
     transform: translate(-50%, 3px);
 }
 
+.circle-wrap .circle {
+    margin: 0 2px;
+}
+
 .sub .circle {
     margin-right: .375rem;
 }
