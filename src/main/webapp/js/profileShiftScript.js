@@ -141,7 +141,7 @@ function addShiftInfoHtml (element, shiftId, data) {
             }
         });
     }
-    console.log("People "+data.shiftUsers.length+"StaffNumb"+data.staffNumb);
+    console.log(data.date);
 
     //console.log(html);
 
@@ -173,7 +173,7 @@ function addShiftInfoHtml (element, shiftId, data) {
         }
     }
     else if(data.shiftUsers.length < data.staffNumb){
-        html+='<div class="button-group"><a href="availability.html?date="'+data.date+'"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></a></div>';
+        html+='<a href="availability.html?date='+data.date+'" ><button id="absence">Meld deg tilgjengelig</button></a>';
     }
 
     element.append(html);
