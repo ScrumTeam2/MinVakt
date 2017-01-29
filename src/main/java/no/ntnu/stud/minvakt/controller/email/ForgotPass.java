@@ -6,14 +6,14 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.database.UserDBManager;
 
 /**
- * Created by evend on 1/24/2017.
+ * Logic class for handling password reset
  */
 public class ForgotPass {
     private static Encryption enc = new Encryption();
     private static UserDBManager userDB = new UserDBManager();
 
     /**
-     * Sends email with password to user
+     * Generates a password, and sends email with the new password to user
      * @param email email-address
      * @return 1 = Everything succeeded, 0 = mail failed, -1 = nothing succeeded
      */

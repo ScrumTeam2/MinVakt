@@ -12,6 +12,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Controller class for sending commands to an external mail server
+ */
 public class Mail {
     private static final String CHARSET = "ISO-8859-1";
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());

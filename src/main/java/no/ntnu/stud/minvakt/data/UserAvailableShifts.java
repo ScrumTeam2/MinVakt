@@ -3,11 +3,11 @@ package no.ntnu.stud.minvakt.data;
 import java.util.ArrayList;
 
 /**
- * Created by 8460p on 23.01.2017.
+ * Data structure for a list of shift IDs an user has set itself available for
  */
 public class UserAvailableShifts {
     private int userId;
-    private ArrayList<Integer> shifts = new ArrayList<Integer>();
+    private ArrayList<Integer> shifts = new ArrayList<>();
 
     public UserAvailableShifts(){}
 

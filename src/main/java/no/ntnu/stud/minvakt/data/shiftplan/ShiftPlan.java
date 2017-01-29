@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 
 /**
- * Created by Audun on 20.01.2017.
+ * Represents a shift plan, used for shift plan generation
  */
 public class ShiftPlan {
     private LocalDate startDate;

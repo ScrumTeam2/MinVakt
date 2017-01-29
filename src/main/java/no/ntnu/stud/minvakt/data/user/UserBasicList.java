@@ -5,7 +5,7 @@ import no.ntnu.stud.minvakt.data.user.UserBasic;
 import java.util.ArrayList;
 
 /**
- * Created by evend on 1/16/2017.
+ * A wrapper class for a list of UserBasic objects. Used for employee search
  */
 public class UserBasicList {
     private ArrayList<UserBasic> userBasics;

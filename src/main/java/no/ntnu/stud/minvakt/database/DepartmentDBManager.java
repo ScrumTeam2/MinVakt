@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * Created by evend on 1/25/2017.
+ * Database layer class for departments
  */
 public class DepartmentDBManager extends DBManager{
     Connection conn;

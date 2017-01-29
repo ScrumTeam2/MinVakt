@@ -3,10 +3,8 @@ package no.ntnu.stud.minvakt.database;
 import no.ntnu.stud.minvakt.data.NewsFeedItem;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 

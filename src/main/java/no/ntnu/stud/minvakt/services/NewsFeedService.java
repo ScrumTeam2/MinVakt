@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
 /**
- * Created by evend on 1/20/2017.
+ * Contains REST endpoints for both the user and admin news feed
  */
 @Path("/newsfeed")
 public class NewsFeedService extends SecureService{

@@ -6,12 +6,7 @@ import no.ntnu.stud.minvakt.database.UserDBManager;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
-
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**

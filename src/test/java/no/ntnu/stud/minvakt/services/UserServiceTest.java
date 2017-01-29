@@ -1,13 +1,9 @@
 package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.user.User;
-import no.ntnu.stud.minvakt.database.UserDBManager;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
 import static org.junit.Assert.assertFalse;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by evend on 1/25/2017.

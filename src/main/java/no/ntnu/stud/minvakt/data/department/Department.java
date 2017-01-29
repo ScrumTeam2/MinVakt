@@ -4,7 +4,7 @@ import no.ntnu.stud.minvakt.services.SecureService;
 import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
- * Created by evend on 1/10/2017.
+ * Data structure for the department entity
  */
 public class Department {
     private int id;

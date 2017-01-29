@@ -44,16 +44,12 @@ $(document).ready(function() {
 
         var data = $('#shiftForm').serializeArray()
             .reduce(function(a, x) {
-                console.log(x.name + " " + x.value);
                 if(shiftNames.indexOf(x.name) > -1) {
                     shiftsEmployeeCount.push(parseInt(x.value));
                 }
                 a[x.name] = x.value;
                 return a;
             }, {});
-
-        console.log(data);
-        console.log(shiftsEmployeeCount);
 
         var id = -1;
         var date = data.date;
@@ -83,10 +79,6 @@ $(document).ready(function() {
             days.push(day);
         }
 
-        console.log(days);
-        console.log(JSON.stringify(days));
-
-
         var shiftPlan = {
             departmentId: deptId,
             templateWeek: {
@@ -94,22 +86,19 @@ $(document).ready(function() {
             }
         };
 
-        console.log(shiftPlan);
-
         $.ajax({
-                url: "/rest/shiftplan/" + date,
-                type: "POST",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(shiftPlan)
-        })
-        .done(function(data) {
-            console.log( "success", data );
-            localStorage.setItem("TempShiftPlan", JSON.stringify(data));
-            localStorage.setItem("TempShiftCurr", 0);
-            window.location = "add-users-to-shift.html";
-        })
-        .fail(invalidField);
+            url: "/rest/shiftplan/" + date,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(shiftPlan)
+            success: function(data) {
+                localStorage.setItem("TempShiftPlan", JSON.stringify(data));
+                localStorage.setItem("TempShiftCurr", 0);
+                window.location = "add-users-to-shift.html";
+            },
+            error: invalidField
+        });
     });
 
     //close popup when clicking outside of the popup

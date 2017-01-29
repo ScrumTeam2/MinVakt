@@ -5,7 +5,7 @@ import no.ntnu.stud.minvakt.data.shift.Shift;
 import java.sql.Date;
 
 /**
- * Created by evend on 1/17/2017.
+ * Data structure for the many-to-many relationship between shifts and users. Has extra data used for availability
  */
 public class ShiftUserAvailability {
     private int shiftId;
