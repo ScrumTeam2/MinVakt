@@ -4,26 +4,24 @@
 
 $(document).ready(function(){
 
+    //check if it already exists a session frontend and backend
     if(sessionStorage.getItem("SessionId")){
         if(sessionStorage.getItem("SessionIdCat") === 'ADMIN'){
             window.location = "home-a.html";
             console.log("Already logged in as admin");
         } else{
             window.location = "home-e.html";
-            console.log("Already logged in as employee");
         }
     } else{
         $.ajax({
             url: "/rest/session/check",
             type: 'GET',
             dataType: 'json',
-            success: login,
-            error: function(e) {
-                //console.error(e);
-            }
+            success: login
         });
     }
 
+    //login id
     $('#login').click(function(e){
         e.preventDefault();
         var emptyField = true;
