@@ -101,7 +101,7 @@ function addShiftInfoHtml (element, shiftId, data) {
 
         $.each(shiftUsers, function (index, user) {
 
-            console.log("Loop", index, user);
+            //console.log("Loop", index, user);
 
             if (user.userCategory == categoriesForLoop[i]) {
                 if (!hasPerson) {
@@ -145,14 +145,22 @@ function addShiftInfoHtml (element, shiftId, data) {
         } else if (shiftChange) {
             html += '<div class="button-group"><button class="btn-secondary" disabled>Du har registrert vaktbytte</button></div>';
         } else {
-            html +=
-                '<div class="button-group"><button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
-                '<button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
-                '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
+            if (data.date < Date.now()) {
+                html +=
+                    '<div class="button-group"><button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="reqChangeShift(this);" id="regByttVakt" disabled>Bytt vakt</button>' +
+                    '<button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="registerIllness(this);" id="regSykdom" disabled>Registrer sykdom</button>' +
+                    '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime">Registrer overtid</button></div>';
+            } else {
+                html +=
+                    '<div class="button-group"><button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="reqChangeShift(this);" id="regByttVakt">Bytt vakt</button>' +
+                    '<button type="submit" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="registerIllness(this);" id="regSykdom">Registrer sykdom</button>' +
+                    '<button type="submit" data-time="' + data.type + '" data-date="' + data.date + '" data-staff="' + data.staffNumb + '" data-id="' + shiftId + '" onclick="regOvertime(this);" id="regOvertime" disabled>Registrer overtid</button></div>';
+            }
+
         }
 
     }
-    else if(data.shiftUsers.length < data.staffNumb){
+    else {
         html+='<a href="availability.html?date='+data.date+'" ><button id="absence">Meld deg tilgjengelig</button></a>';
     }
 

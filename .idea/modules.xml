@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MinVakt.iml" filepath="$PROJECT_DIR$/MinVakt.iml" />
-      <module fileurl="file://$PROJECT_DIR$/min-vakt.iml" filepath="$PROJECT_DIR$/min-vakt.iml" />
     </modules>
   </component>
 </project>

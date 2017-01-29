@@ -6,7 +6,7 @@ import no.ntnu.stud.minvakt.util.rest.ErrorInfo;
 import javax.ws.rs.core.Response;
 
 /**
- * Created by Audun on 21.01.2017.
+ * Utility class for validating user input
  */
 public class InputUtil {
     private static final int PHONE_NUMBER_LENGTH = 8;
@@ -20,15 +20,25 @@ public class InputUtil {
         return s == null || s.trim().isEmpty();
     }
 
+    /**
+     * Validates an email.
+     * @param email The email to validate
+     * @return True if the email is valid
+     */
     public static boolean validateEmail(String email) {
-        // TODO: Regex check?
+        // TODO: Regex check
         return !isNullOrWhitespace(email);
     }
 
+    /**
+     * Validates a phone number.
+     * @param number The phone number to validate
+     * @return True if the phone number is valid
+     */
     public static boolean validatePhoneNumber(String number) {
         if (isNullOrWhitespace(number)) return false;
 
-        // TODO: Regex check?
+        // TODO: Regex check
         if(number.length() != PHONE_NUMBER_LENGTH) {
             // Invalid length
             return false;
@@ -96,6 +106,11 @@ public class InputUtil {
         return true;
     }
 
+    /**
+     * Gets how many special characters an input string contains
+     * @param string The input string
+     * @return The amount of special characters in the string
+     */
     private static int getSpecialCharacterCount(String string) {
         final String specialChars = "0123456789<>@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
         int count = 0;
