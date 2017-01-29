@@ -39,6 +39,7 @@ public class AvailabilityDBManagerTest {
 
         assertEquals(res, test);
     }
+
     @Test
     public void deleteAvailabilityTest() {
         availabilityDB.setAvailability(2, 22);
@@ -46,5 +47,20 @@ public class AvailabilityDBManagerTest {
         boolean test = true;
 
         assertEquals(res, test);
+    }
+
+    @Ignore
+    public void getAvailabilityForUser() throws Exception {
+
+    }
+
+    @Ignore
+    public void getAvailabilityUserBasic() throws Exception {
+
+    }
+
+    @Ignore
+    public void getShiftsForDate() throws Exception {
+
     }
 }
