@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Audun on 27.01.2017.
+ * The 'main' class of the servlet. Used for configuring properties and listener classes
  */
 public class MinVaktApp extends Application {
     private static final String PROPERTIES_FILE = "/WEB-INF/MinVakt.properties";

@@ -28,6 +28,12 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
+    <listener>
+        <listener-class>
+            no.ntnu.stud.minvakt.controller.salary.SalaryServletContextListener
+        </listener-class>
+    </listener>
+
     <!-- Global HTML security filter (XSS++) -->
     <filter>
         <filter-name>HeaderSecurityFilter</filter-name>

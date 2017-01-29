@@ -10,10 +10,17 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 /**
- * Created by Audun on 20.01.2017.
+ * Represents a shift in a shift plan
  */
 public class ShiftPlanShift {
+    /**
+     * The minimum required percentage of nurses
+     */
     private static final double MIN_NURSE_PERCENTAGE = 0.2;
+
+    /**
+     * The minimum required percentage of health workers
+     */
     private static final double MIN_HEALTH_WORKER_PERCENTAGE = 0.3;
 
     private Shift shift;
@@ -23,17 +30,16 @@ public class ShiftPlanShift {
      */
     private PriorityQueue<ShiftPlanUser> userQueue;
 
-    /**
-     * The comparator for the priorit queue. Needs to have an updated shift at all times.
-     */
-    private ShiftPlanComparator comparator;
-
     // Internal counters
     private int nurseCount;
     private int healthWorkerCount;
 
     private boolean needResponsibilityUser = true;
 
+    /**
+     * Gets the underlying Shift object, which contains more info about the shift
+     * @return A Shift object
+     */
     public Shift getShift() {
         return shift;
     }

@@ -5,7 +5,7 @@ import no.ntnu.stud.minvakt.data.shift.Shift;
 import java.sql.Date;
 
 /**
- * Created by evend on 1/12/2017.
+ * Data structure for one of an user's own shifts
  */
 public class ShiftUserBasic {
     private int shiftId;

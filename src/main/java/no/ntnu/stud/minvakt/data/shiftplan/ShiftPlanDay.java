@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.data.shiftplan;
 import java.time.DayOfWeek;
 
 /**
- * Created by Audun on 20.01.2017.
+ * Represents a day in a shift plan
  */
 public class ShiftPlanDay {
     private DayOfWeek dayOfWeek;
@@ -17,6 +17,9 @@ public class ShiftPlanDay {
         this.dayOfWeek = dayOfWeek;
     }
 
+    /**
+     * The generated shifts on this day. Length of array is always 3
+     */
     public ShiftPlanShift[] getShifts() {
         return shifts;
     }

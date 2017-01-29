@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlType;
 import java.sql.Date;
 
 /**
- * Created by AnitaKristineAune on 13.01.2017.
+ * Represents the overtime entry. Has information about one overtime entry
  */
 @XmlRootElement
 public class Overtime {

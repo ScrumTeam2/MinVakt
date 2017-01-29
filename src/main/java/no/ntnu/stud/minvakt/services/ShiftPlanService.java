@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 /**
- * Created by Audun on 20.01.2017.
- *
- * REST endpoints of shift plan (turnus)
+ * Contains REST endpoints of shift plan (turnus)
  */
 @Path("shiftplan")
 public class ShiftPlanService extends SecureService {
@@ -30,6 +28,12 @@ public class ShiftPlanService extends SecureService {
         super(request);
     }
 
+    /**
+     * Generates a shift plan if the input start date and template week is valid
+     * @param startDate The start date of the shift plan. Has to be a monday
+     * @param plan The ShiftPlan object containing the template week used for generation
+     * @return A JSON array containing the IDs of the generated shifts.
+     */
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{startDate}")
@@ -66,6 +70,11 @@ public class ShiftPlanService extends SecureService {
         return Response.ok(array.toString()).build();
     }
 
+    /**
+     * Marks the given shift IDs as approved
+     * @param container A wrapper containing the int array of shift IDs
+     * @return Status.OK if the shifts were approved, Status.SERVER_ERROR if else
+     */
     @Path("/approve")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

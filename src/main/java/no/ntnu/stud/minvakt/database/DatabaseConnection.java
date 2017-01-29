@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 
 /**
- * Database class for connection between DBManager and mySQL
+ * Database class for connection between DBManager and MySQL
  */
 public class DatabaseConnection {
     private static final Logger log = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());

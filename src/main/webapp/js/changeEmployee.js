@@ -53,7 +53,8 @@ $(document).ready(function() {
             headers = [ "Tilgjengelige " + userTypesPlural[category] + " for dette skiftet",
                         "Tilgjengelige ansatte for dette skiftet",
                         "Søker etter " + userTypesPlural[category] + " med navn ",
-                        "Søker etter ansatte med navn "];
+                        "Søker etter ansatte med navn ", "Viser alle "+userTypesPlural[category],
+                "Viser alle ansatte"];
             loadAll(category);
         },
         error: function(e) {
@@ -93,9 +94,10 @@ function loadAll(catName) {
         success: function(data) {
             //console.log("LOAD SUGGESTED USERS BY CATEGORY", data);
             suggestedCategoryUsers = data;
-
-            if ($sameCategory[0].checked) {
-                showCategory();
+            if(suggestedCategoryUsers > 0){
+                if ($sameCategory[0].checked) {
+                    showCategory();
+                }
             }
         },
         error: function(e) {
@@ -110,9 +112,10 @@ function loadAll(catName) {
         success: function(data) {
             //console.log("LOAD SUGGESTED USERS WITHOUT CATEGORY", data);
             suggestedAllUsers = data;
-
-            if (!$sameCategory[0].checked) {
-                showAll();
+            if(suggestedAllUsers > 0){
+                if (!$sameCategory[0].checked) {
+                    showAll();
+                }
             }
         },
         error: function(e) {
@@ -127,6 +130,9 @@ function loadAll(catName) {
         success: function(data) {
             //console.log("LOAD ALL USERS FROM A CATEGORY", data);
             categoryUsers = data;
+            if(suggestedCategoryUsers <= 0){
+                showCategory()
+            }
         },
         error: function (e) {
             console.error("loadCategory", e);
@@ -144,6 +150,9 @@ function loadAll(catName) {
                 var letterArray = data[i].userBasics;
                 allUsers.push.apply(allUsers, letterArray);
             }
+            if(suggestedAllUsers <= 0){
+                showAll();
+            }
         },
         error: function (e) {
             console.error("loadAll", e);
@@ -153,15 +162,22 @@ function loadAll(catName) {
 
 function showCategory() {
     if (!getUrlParameter("search")) {
-        displayUsers(headers[0], suggestedCategoryUsers);
+        if(suggestedCategoryUsers > 0)displayUsers(headers[0], suggestedCategoryUsers);
+        else {
+            search(headers[4], "");
+        }
     } else {
         search(headers[2], getUrlParameter("search"));
     }
 }
 
 function showAll() {
+
     if (!getUrlParameter("search")) {
-        displayUsers(headers[1], suggestedAllUsers);
+        if(suggestedAllUsers > 0) displayUsers(headers[1], suggestedAllUsers);
+        else {
+            search(headers[5], "");
+        }
     } else {
         search(headers[3], getUrlParameter("search"));
     }
@@ -195,7 +211,6 @@ function displayUsers(header, data) {
 
         userListElement.append(html);
 
-
     }
 
     $(".changeEmployee").click(function(e) {
@@ -206,6 +221,7 @@ function displayUsers(header, data) {
 }
 
 function search(header, searchStr) {
+
     var userListElement = $('.list');
     var output = [];
     var users;
@@ -228,11 +244,20 @@ function search(header, searchStr) {
     }
 
     userListElement.html("");
-    html =`
+    if(searchStr === ""){
+        html =`
+                <div class='container-title'>
+                    <h3>${header}</h3>
+                </div>`;
+    }
+    else{
+        html =`
                 <div class='container-title'>
                     <h3>${header + '"' + searchStr + '"'}</h3>
                 </div>`;
+    }
     userListElement.append(html);
+
 
     for(var i = 0; i < output.length; i++) {
 
