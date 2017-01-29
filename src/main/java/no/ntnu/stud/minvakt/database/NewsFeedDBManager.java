@@ -19,7 +19,7 @@ public class NewsFeedDBManager extends DBManager{
     private final String sqlGetNewsFeedForUser = "SELECT * FROM newsfeed WHERE user_id = ? AND resolved = 0";
     private final String sqlGetNewsFeedForAdmin = "SELECT feed_id, date_time,content,newsfeed.category, start_time, user.user_id, shift_id, shift_user_id " +
             "FROM newsfeed JOIN user ON(user.user_id = newsfeed.user_id) WHERE user.category = ? AND resolved = 0;";
-    private final String sqlGetNewsFeedItem = "SELECT * FROM newsfeed WHERE feed_id = ?;";
+    private final String sqlGetNewsFeedItem = "SELECT * FROM newsfeed WHERE feed_id = ? AND resolved = 0;";
     private final String sqlSetNewsFeedItemResolved = "UPDATE newsfeed SET resolved = ? WHERE feed_id = ?;";
 
     private final String sqlGetNewsFeedIdFromOvertime = "SELECT feed_id FROM overtime JOIN newsfeed ON overtime.shift_id = newsfeed.shift_id AND overtime.user_id = newsfeed.shift_user_id AND overtime.start_time = newsfeed.start_time WHERE overtime.user_id = ? AND overtime.shift_id = ? AND overtime.start_time = ?;";

@@ -527,7 +527,7 @@ public class ShiftDBManager extends DBManager {
                     if(res2.next()){
                         isInShift = true;
                     }
-                    boolean isAvailable = res.getInt("staff_number") != res.getInt("current_staff_numb");
+                    boolean isAvailable = res.getInt("staff_number") > res.getInt("current_staff_numb");
 
                     ShiftUserAvailability obj = new ShiftUserAvailability(
                             shiftId, res.getDate("date"),
