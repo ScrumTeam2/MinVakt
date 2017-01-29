@@ -2,7 +2,6 @@ package no.ntnu.stud.minvakt.database;
 
 import no.ntnu.stud.minvakt.data.UserAvailableShifts;
 import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
-import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import org.junit.*;
 

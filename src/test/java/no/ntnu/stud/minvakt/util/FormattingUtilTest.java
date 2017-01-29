@@ -3,9 +3,6 @@ package no.ntnu.stud.minvakt.util;
 import org.junit.Test;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
