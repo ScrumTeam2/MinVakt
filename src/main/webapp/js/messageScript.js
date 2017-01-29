@@ -33,6 +33,16 @@ function loadShiftInfo(feedData, callback){
     });
 }
 
+function loadDeptInfo(shiftData, deptCallback){
+    $.ajax({
+        url: "/rest/department/" + shiftData.deptId,
+        type: 'GET',
+        success: function(data){
+            deptCallback(data);
+        }
+    });
+}
+
 // Toggle messages
 $('.container-title').click(function() {
     if (!popVisible) {
@@ -82,6 +92,13 @@ function showMessages(data){
         $notifications.html(empty);
     }
 }
+
+//close button
+var $close = $('#closePop');
+$close.on("click", function(e){
+    e.preventDefault();
+    hidePopup(e);
+});
 
 //yes button
 var $accept = $('#acceptBtn');
@@ -187,30 +204,32 @@ function acceptShift(feedData){
     var shiftId = feedData.shiftId;
     var userId = feedData.userIdInvolving;
     loadShiftInfo(feedData, function(shiftData){
-        var shiftType = shiftTypes[shiftData.type];
+        var shiftDpt = shiftData.deptId;
         var shiftDate = convertDate(shiftData.date);
-        var $requests = $('#requests');
-
-        var html=
-            `<a href="#" id="open-popup">
-            <div class="watch" data-feed="${feedId}" data-shift="${shiftId}" data-cat="${category}" data-user="${userId}">
-                <div class="watch-info">
-                    <p class="lead">${content}</p>
-                    <p class="sub">${shiftType}, ${shiftDate}</p>
-                </div>
-                <i class="symbol right-arrow">
-                    <i class="material-icons">chevron_right</i>
-                </i>
-            </div>
-        </a>`;
-        var $html = $(html);
-        $requests.append($html);
-        $html.on("click", function(e){
-            if (!popVisible) {
-                e.preventDefault();
-                openPopup(e);
-                popOpened = false;
-            }
+        loadDeptInfo(shiftData, function(deptData){
+            var shiftDpt = deptData.name;
+            var $requests = $('#requests');
+            var html=
+                `<a href="#" id="open-popup">
+                    <div class="watch" data-feed="${feedId}" data-shift="${shiftId}" data-cat="${category}" data-user="${userId}">
+                        <div class="watch-info">
+                            <p class="lead">${content}</p>
+                            <p class="sub">${shiftDpt}, ${shiftDate}</p>
+                        </div>
+                        <i class="symbol right-arrow">
+                            <i class="material-icons">chevron_right</i>
+                        </i>
+                    </div>
+                </a>`;
+            var $html = $(html);
+            $requests.append($html);
+            $html.on("click", function(e){
+                if (!popVisible) {
+                    e.preventDefault();
+                    openPopup(e);
+                    popOpened = false;
+                }
+            });
         });
     });
 }
