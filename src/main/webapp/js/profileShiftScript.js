@@ -90,7 +90,6 @@ function addShiftInfoHtml (element, shiftId, data) {
     var shiftUsers = data.shiftUsers;
     var html = "";
     var iAmOnShift = false;
-    var amountOfPeople = 0;
     var absence = 0;
     var shiftChange = false;
     var removed = false;
@@ -103,7 +102,6 @@ function addShiftInfoHtml (element, shiftId, data) {
         absence = 0;
         shiftChange = false;
         $.each(shiftUsers, function (index, user) {
-            amountOfPeople++;
             if (user.userCategory == categoriesForLoop[i]) {
                 if (!hasPerson) {
                     html += "<h4>" + employeeCategories[categoriesForLoop[i]] + "</h4>";
@@ -143,7 +141,7 @@ function addShiftInfoHtml (element, shiftId, data) {
             }
         });
     }
-    console.log("People "+amountOfPeople+"StaffNumb"+data.staffNumb);
+    console.log("People "+data.shiftUsers.length+"StaffNumb"+data.staffNumb);
 
     //console.log(html);
 
@@ -174,7 +172,7 @@ function addShiftInfoHtml (element, shiftId, data) {
             }
         }
     }
-    else if(amountOfPeople < data.staffNumb){
+    else if(data.shiftUsers.length < data.staffNumb){
         html+='<div class="button-group"><a href="availability.html?date="'+data.date+'"><div class="dialogboks" id="absence"><h3>Du har registrert vaktbytte</h3></div></a></div>';
     }
 
