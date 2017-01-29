@@ -23,7 +23,7 @@ function createAjaxForUser(userId) {
 }
 function addShiftInfoHtml (element, shiftId, data) {
 
-    employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsemedarbeider', 'NURSE': 'Sykepleier'};
+    employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsefagarbeider', 'NURSE': 'Sykepleier'};
     categoriesForLoop = ['ASSISTANT', 'HEALTH_WORKER', 'NURSE'];
     var shiftUsers = data.shiftUsers;
     var hasPerson = false;

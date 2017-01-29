@@ -8,7 +8,7 @@ var $saveButton;
 var $cancelButton;
 var $popup;
 
-var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
+var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsefagarbeider", "NURSE" : "Sykepleier"};
 var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 
 var $list = $('.list');
