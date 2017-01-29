@@ -19,7 +19,6 @@ public class OvertimeDBManager extends DBManager{
     private final String sqlCountUnapproved = "SELECT COUNT(*) FROM overtime WHERE approved = 0";
 
     private final String getSqlGetOvertimeByUserId = "SELECT overtime.*, shift.date, shift.time FROM overtime NATURAL JOIN employee_shift JOIN shift ON (shift.shift_id = employee_shift.shift_id) WHERE overtime.user_id =?;";
-    private final String sqlCountOvertimeUser = "SELECT COUNT(*) FROM overtime WHERE user_id = ?";
     private final String sqlGetMinutesByDate = "SELECT sum(minutes) AS minute_sum FROM overtime NATURAL JOIN employee_shift JOIN shift ON employee_shift.shift_id = shift.shift_id WHERE overtime.user_id = ? AND date BETWEEN ? AND ? AND shift.approved = TRUE";
     private final String sqlGetMinutes = "SELECT minutes FROM overtime WHERE user_id = ? AND shift_id = ? AND start_time = ?";
     private final String sqlGetOvertimeShift = "SELECT * FROM overtime WHERE user_id = ? AND shift_id = ?";
@@ -171,7 +170,7 @@ public class OvertimeDBManager extends DBManager{
 
     /**
      * Fetched all unapproved overtime registered by employees
-     * @return Overime[] - array of Overtime objects with the overtimes not yet approved by admin
+     * @return Overtime[] - array of Overtime objects with the overtimes not yet approved by admin
      */
     public Overtime[] getUnapprovedOvertime(){
         Overtime overtimeObj;
@@ -323,6 +322,10 @@ public class OvertimeDBManager extends DBManager{
         return minutes;
     }
 
+    /**
+     * Is used as a helping method for getting unapproved overtime by counting rows in the database
+     * @return int - counted rows
+     */
     //helping method
     private int getRowCount() {
         int count = 0;

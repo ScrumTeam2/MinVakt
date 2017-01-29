@@ -268,9 +268,11 @@ public class ShiftDBManager extends DBManager {
         }
         return out;
     }
-    /*
-        Adds new employee to shift. Send a shiftUser object to the correct path
-        (shift you would like to add to)
+
+    /**
+     * @param shiftUser - User to add to shift
+     * @param shiftId - ID of shift to add employee to
+     * @return True if employee is added to shift
      */
     public boolean addEmployeeToShift(ShiftUser shiftUser, int shiftId){
         boolean out = false;
@@ -303,6 +305,12 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
+    /**
+     * Deletes an employee from a shift.
+     * @param userId - ID of user to delete from shift
+     * @param shiftId - ID of shift to delete user from
+     * @return True if employee is deleted
+     */
     public boolean deleteEmployeeFromShift(int userId, int shiftId){
         boolean out = false;
         if(setUp()){
@@ -340,6 +348,12 @@ public class ShiftDBManager extends DBManager {
         return addEmployeeToShift(shiftUser, shiftId) && deleteEmployeeFromShift(oldUserId, shiftId);
     }
 
+    /**
+     * Gives an array with ShiftUserBasic objects: shifts by userId on given date
+     * @param userId - ID of user to get shifts for
+     * @param date - Date for shift
+     * @return ArrayList<ShiftUserBasic>
+     */
     public ArrayList<ShiftUserBasic> getShiftWithUserId(int userId, Date date){
         ArrayList<ShiftUserBasic> out = new ArrayList<>();
         if(setUp()){
@@ -369,11 +383,13 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
-    /*
-     Calculates number of hours an employee has worked from a given start date to an end date.
-     NB overtime hours are calculated in OvertimeDBManager
-      */
-
+    /**
+     * Gets number of shifts given a user from a start date to an end date
+     * @param userId - ID of user for fetched shifts
+     * @param startDate - start date for fetched shifts
+     * @param endDate - end date for fetched shifts
+     * @return int: number of shifts
+     */
     public int getNumberOfShifts(int userId, Date startDate, Date endDate){
         int out = 0;
         ResultSet res = null;
@@ -403,6 +419,12 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
+    /**
+     * Registeres if an employee wishes to change a shift
+     * @param shiftId - ID of shift you want to set shift_change true
+     * @param userId - ID of user
+     * @return True if success
+     */
     // Registers a shift as available for change. Returns true or false
     public boolean setShiftChange(int shiftId, int userId){
         int out = 0;
@@ -472,6 +494,14 @@ public class ShiftDBManager extends DBManager {
     */
 
 
+    /**
+     * Gives an array with shifts for a user from a given date a number of days forward
+     * @param daysForward - int: How many days forward fetched shifts are
+     * @param userId - ID for user
+     * @param date - Start date for shifts fetched
+     * @param deptId - ID for department of the shift
+     * @return ArrayList<ShiftUserAvailability>
+     */
     public ArrayList<ShiftUserAvailability> getShifts(int daysForward, int userId, Date date, int deptId){
         ArrayList<ShiftUserAvailability> out = new ArrayList<>();
         if (setUp()){
@@ -521,6 +551,15 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
+    /**
+     * @param daysForward - int: number of days forward to fetch shift
+     * @param userId - ID for user
+     * @param date - Date
+     * @return ArrayList<ShiftUserAvailability>
+     * TODO:What does this method do? Improve comment and return.
+     */
+
+
     public ArrayList<ShiftUserAvailability> getShiftsNoDept(int daysForward, int userId, Date date){
         ArrayList<ShiftUserAvailability> out = new ArrayList<>();
         if (setUp()){
@@ -569,6 +608,12 @@ public class ShiftDBManager extends DBManager {
         return out;
     }
 
+    /**
+     * Changes staff number on a given shift
+     * @param shiftId - ID for shift you want to change staff number for
+     * @param staffNumber - int: new staff number
+     * @return True if staff number is changed
+     */
     public boolean setStaffNumberOnShift(int shiftId, int staffNumber){
         int status = 0;
         if(setUp()){
@@ -621,7 +666,10 @@ public class ShiftDBManager extends DBManager {
         return true;
     }
 
-    // Returns array with shifts that need more employees (shifts with not enough employees connected)
+    /**
+     * Returns array with ShiftAvailable objects: shifts with not enough employees connected (need more staff)
+     * @return ArrayList<ShiftAvailable>
+     */
     public ArrayList<ShiftAvailable> getAvailableShifts(){
         ArrayList<ShiftAvailable> shiftList = new ArrayList<>();
 
@@ -651,6 +699,12 @@ public class ShiftDBManager extends DBManager {
         return shiftList;
     }
 
+    /**
+     * Returns ShiftUser object for given user ID and shift ID
+     * @param userId - ID of user from fetched shift
+     * @param shiftId - ID of fetched shift
+     * @return ShiftUser
+     */
     public ShiftUser getUserFromShift(int userId, int shiftId){
         ShiftUser shiftUser = null;
         if(setUp()){
@@ -679,13 +733,23 @@ public class ShiftDBManager extends DBManager {
         return shiftUser;
     }
 
-    public boolean setValidAbsenceInt(int userId, int shiftId, int valid_absence){
+    /**
+     * Registers if an employee has been absent from a shift with a valid reason.
+     * @param userId - ID of user to set validAbsence for
+     * @param shiftId - ID of shift to set validAbsence for
+     * @param validAbsence - Can be set to following int:
+     *                      0 - default or not registered,
+     *                      1 - user has registrered,
+     *                      2 - admin has approved the registration
+     * @return True if successful
+     */
+    public boolean setValidAbsence(int userId, int shiftId, int validAbsence){
         int result = 0;
         if(setUp()){
             try {
                 conn = getConnection();
                 prep = conn.prepareStatement(sqlSetValidAbsence);
-                prep.setInt(1,valid_absence);
+                prep.setInt(1,validAbsence);
                 prep.setInt(2,userId);
                 prep.setInt(3,shiftId);
                 result = prep.executeUpdate();
@@ -700,26 +764,12 @@ public class ShiftDBManager extends DBManager {
         return result != 0;
     }
 
-    public boolean setValidAbsence(int userId, int shiftId, boolean valid_absence){
-        int result = 0;
-        if(setUp()){
-            try {
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlSetValidAbsence);
-                prep.setBoolean(1,valid_absence);
-                prep.setInt(2,userId);
-                prep.setInt(3,shiftId);
-                result = prep.executeUpdate();
-            }
-            catch (SQLException sqle){
-                log.log(Level.WARNING, "Issue updating valid absence for user_id = "+userId, sqle);
-            }
-            finally {
-                finallyStatement(prep);
-            }
-        }
-        return result != 0;
-    }
+
+    /**
+     * Returns Array with User objects for given shift ID
+     * @param shiftId - ID for shift to fetch users from
+     * @return ArrayList<User> - Array with User objects
+     */
     public ArrayList<User> getUsersFromShift(int shiftId){
         ArrayList<User> out = new ArrayList<>();
         if(setUp()){
@@ -789,6 +839,12 @@ public class ShiftDBManager extends DBManager {
         return false;
     }
 
+    /**
+     * Checks if a user is responsible for a shift
+     * @param userId - ID of the user
+     * @param shiftId - ID of the shift
+     * @return True if user is responsible
+     */
     private boolean isUserResponsible(int userId, int shiftId){
         boolean isResponsible = false;
         if(setUp()){
@@ -811,6 +867,14 @@ public class ShiftDBManager extends DBManager {
         }
         return isResponsible;
     }
+
+    /**
+     * Registers user as repsonsible for shift
+     * @param shiftId - ID for shift
+     * @param userId - ID for user
+     * @param isResponsible - True if responsible, false if not
+     * @return True: if successfully registered
+     */
     public boolean setResponsibleUser(int shiftId, int userId, boolean isResponsible){
         boolean out = false;
         if(setUp()){
