@@ -27,8 +27,6 @@ function checkInput(){
     $('#timebankBtn').click(function(e){
         e.preventDefault();
 
-        console.log("klikket");
-
         var formError = false;
 
         var $hours = $('#hours');
@@ -49,8 +47,6 @@ function checkInput(){
         var hoursVal = $hours.val();
         var minutesVal = $minutes.val();
 
-        console.log(formError);
-
         if(!formError){
             calcMinutes(hoursVal, minutesVal);
         }
@@ -70,11 +66,10 @@ function sendTimebank(formData){
         contentType: "application/json",
         data: JSON.stringify(formData),
         success: function(){
-            console.log("ok post");
             popupContent();
         },
-        error: function(){
-            console.log("ikke ok post");
+        error: function(e){
+            console.error(e);
         }
     });
 }
@@ -104,7 +99,7 @@ function registerAbsence(minutes){
      startTime = 1380;
      break;
      default:
-     console.log("type not known", type);
+     console.error("Unknown type", type);
      }
     var formData;
     formData = {

@@ -51,12 +51,11 @@ function loadAll() {
         url: "/rest/availability/shift/" + shift + "?category=ASSISTANT&limitByCategory=false",
         type: "GET",
         success: function(data) {
-            //console.log("LOAD SUGGESTED USERS WITHOUT CATEGORY", data);
             suggestedAllUsers = data;
             if(suggestedAllUsers.length > 0) showAll();
         },
         error: function(e) {
-            console.error("Couldn't get data from category " + catName, e);
+            console.error("(58) Could not load users", e);
         }
     });
 
@@ -66,7 +65,6 @@ function loadAll() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            //console.log("LOAD ALL USERS", data);
             for (var i = 0; i < data.length; i++) {
                 var letterArray = data[i].userBasics;
                 allUsers.push.apply(allUsers, letterArray);
@@ -77,7 +75,7 @@ function loadAll() {
             }
         },
         error: function (e) {
-            console.error("loadAll", e);
+            console.error("(74) Could not load users", e);
         }
     });
 }
@@ -162,7 +160,6 @@ function search(header, searchStr) {
     for(var i = 0; i < output.length; i++) {
 
         var user = output[i];
-        //console.log(user);
         var name = user.firstName + " " + user.lastName;
         var html =`
                 <div class='watch' data-id='${user.id}'>
@@ -192,7 +189,7 @@ function addToShift(id) {
             window.location = "edit-shift.html?id=" + shiftId+"&feedId="+feedId+"&userId="+userId;
         },
         error: function (e) {
-            console.log("addToShift", e);
+            console.error(e);
         }
     });
 }
