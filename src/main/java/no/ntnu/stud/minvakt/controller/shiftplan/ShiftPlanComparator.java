@@ -7,7 +7,7 @@ import no.ntnu.stud.minvakt.data.shiftplan.ShiftPlanUser;
 import java.util.Comparator;
 
 /**
- * Created by Audun on 20.01.2017.
+ * A comparator used to sort shift candidates in the best way possible
  */
 public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
     private static final int DEPARTMENT_WEIGHT = 5;
@@ -26,6 +26,7 @@ public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
     public ShiftPlanComparator(ShiftPlanShift shift) {
         this.shift = shift;
     }
+
 
     @Override
     public int compare(ShiftPlanUser user1, ShiftPlanUser user2) {
@@ -57,7 +58,7 @@ public class ShiftPlanComparator implements Comparator<ShiftPlanUser> {
      * Compares two users. Correct department + least shifts + assistants will be prioritized
      * @param user1 The first user
      * @param user2 The second user
-     * @return Negative if the best user is best, 0 if they are equal, positive if the last user is best
+     * @return Negative if the first user is best, 0 if they are equal, positive if the last user is best
      */
     private int compareShiftUsers(ShiftPlanUser user1, ShiftPlanUser user2) {
         int departmentWeight = getDepartmentWeight(user1, user2);

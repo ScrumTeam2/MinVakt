@@ -31,7 +31,7 @@ var userId = getUrlParameter("userId");
 $(document).ready(function() {
 
     headers = [ "Tilgjengelige ansatte for dette skiftet",
-                "Søker etter ansatte med navn "];
+                "Søker etter ansatte med navn ", "Viser alle ansatte"];
     loadAll();
 
     var $search = $('#search');
@@ -51,12 +51,11 @@ function loadAll() {
         url: "/rest/availability/shift/" + shift + "?category=ASSISTANT&limitByCategory=false",
         type: "GET",
         success: function(data) {
-            //console.log("LOAD SUGGESTED USERS WITHOUT CATEGORY", data);
             suggestedAllUsers = data;
-            showAll();
+            if(suggestedAllUsers.length > 0) showAll();
         },
         error: function(e) {
-            console.error("Couldn't get data from category " + catName, e);
+            console.error("(58) Could not load users", e);
         }
     });
 
@@ -66,21 +65,27 @@ function loadAll() {
         type: 'GET',
         dataType: 'json',
         success: function(data) {
-            //console.log("LOAD ALL USERS", data);
             for (var i = 0; i < data.length; i++) {
                 var letterArray = data[i].userBasics;
                 allUsers.push.apply(allUsers, letterArray);
             }
+            //if no users, display all
+            if(suggestedAllUsers.length == 0){
+                search(headers[2], " ");
+            }
         },
         error: function (e) {
-            console.error("loadAll", e);
+            console.error("(74) Could not load users", e);
         }
     });
 }
 
 function showAll() {
     if (!getUrlParameter("search")) {
-        displayUsers(headers[0], suggestedAllUsers);
+        if(suggestedAllUsers > 0) displayUsers(headers[0], suggestedAllUsers);
+        else{
+            search(headers[2], "");
+        }
     } else {
         search(headers[1], getUrlParameter("search"));
     }
@@ -113,11 +118,9 @@ function displayUsers(header, data) {
                     </div>`;
 
         userListElement.append(html);
-
-
     }
 
-    $(".addEmployee").click(function(e) {
+    $(".addEmployee").click(function (e) {
         e.preventDefault();
         var changeId = $(e.currentTarget).parent().data("id");
         addToShift(changeId);
@@ -140,18 +143,23 @@ function search(header, searchStr) {
             output.push(users[i]);
         }
     }
-
     userListElement.html("");
-    html =`
+    if(searchStr === ""){
+        html =`
                 <div class='container-title'>
-                    <h3>${header + '"' + searchStr + '"'}</h3>
+                    <h3>${header}</h3>
                 </div>`;
+    }
+    else {
+        html = `
+                    <div class='container-title'>
+                        <h3>${header + '"' + searchStr + '"'}</h3>
+                    </div>`;
+    }
     userListElement.append(html);
-
     for(var i = 0; i < output.length; i++) {
 
         var user = output[i];
-        //console.log(user);
         var name = user.firstName + " " + user.lastName;
         var html =`
                 <div class='watch' data-id='${user.id}'>
@@ -181,7 +189,7 @@ function addToShift(id) {
             window.location = "edit-shift.html?id=" + shiftId+"&feedId="+feedId+"&userId="+userId;
         },
         error: function (e) {
-            console.log("addToShift", e);
+            console.error(e);
         }
     });
 }

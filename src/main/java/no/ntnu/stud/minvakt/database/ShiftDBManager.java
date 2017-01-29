@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * Created by evend on 1/10/2017.
+ * Database layer class for shifts
  */
-
 public class ShiftDBManager extends DBManager {
     public ShiftDBManager(){
         super();
@@ -35,7 +34,7 @@ public class ShiftDBManager extends DBManager {
 
     private final String addEmployeeToShift = "INSERT INTO employee_shift VALUES(?,?,?,?,?,DEFAULT);";
     private final String deleteEmployeeFromShift = "UPDATE employee_shift SET removed = 1 WHERE shift_id = ? and user_id = ?;";
-    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ? AND removed = 0)" +
+    private final String getShiftWithUserId = "SELECT shift_id, date, time FROM shift WHERE shift_id IN (SELECT shift_id FROM employee_shift WHERE user_id = ? AND removed = 0 AND valid_absence < 2)" +
             " AND date >= ? AND approved = TRUE ORDER BY date ASC, time ASC;";
 
 
@@ -43,21 +42,21 @@ public class ShiftDBManager extends DBManager {
     private final String sqlSetShiftChange = "UPDATE employee_shift SET shift_change=? WHERE shift_id =? AND user_id =?";
     private final String sqlGetShifts = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
-            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 AND dept_id = ? GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
+            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence < 2 AND removed = 0 AND dept_id = ? GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
     private final String sqlGetShiftsNoDept = "SELECT shift.shift_id, date, time, staff_number, COUNT(employee_shift.shift_id) as current_staff_numb " +
             "FROM shift JOIN employee_shift ON(shift.shift_id = employee_shift.shift_id) WHERE date >= ? " +
-            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence = 0 AND removed = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
-    private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ? AND removed = 0";
+            "AND date <= DATE_ADD(?, INTERVAL ? DAY) AND valid_absence < 2 AND removed = 0 GROUP BY shift.shift_id ORDER BY date ASC, time ASC;";
+    private final String sqlGetShiftsIsUser = "SELECT user_id FROM employee_shift WHERE user_id = ? AND shift_id = ? AND removed = 0 AND valid_absence < 2";
     private final String sqlSetStaffNumberOnShift = "UPDATE shift SET staff_number = ? WHERE shift_id = ?";
     private final String sqlGetUserFromShift = "SELECT * FROM employee_shift NATURAL JOIN user WHERE shift_id = ? AND user_id = ?";
 
     private final String sqlSetValidAbsence = "UPDATE employee_shift SET valid_absence = ? WHERE user_id = ? AND shift_id = ?;";
 
     private final String sqlGetAvailableShifts = "SELECT * FROM shift HAVING staff_number > " +
-            "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id)";
+            "(SELECT COUNT(*) user_id FROM employee_shift WHERE employee_shift.shift_id = shift.shift_id AND removed = 0 AND valid_absence < 2)";
     private final String sqlWasEmployeeOnShift = "UPDATE employee_shift SET removed = 0 WHERE user_id = ? AND shift_id = ?;";
     private final String sqlGetUsersFromShift = "SELECT user_id, first_name, last_name, email,phonenumber,category,percentage_work,dept_id" +
-            " FROM user WHERE user_id IN(SELECT user_id FROM employee_shift WHERE shift_id = ?);";
+            " FROM user WHERE user_id IN(SELECT user_id FROM employee_shift WHERE shift_id = ? AND removed = 0 AND valid_absence < 2);";
     private final String sqlIsUserResponsible = "SELECT responsibility FROM employee_shift WHERE user_id = ? AND shift_id = ?;";
     private final String sqlSetUserResponsible = "UPDATE employee_shift SET responsibility = ? WHERE user_id = ? AND shift_id = ?;";
 

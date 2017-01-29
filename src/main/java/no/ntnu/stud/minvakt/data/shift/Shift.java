@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- * Created by evend on 1/10/2017.
+ * Data structure for the shift entity
  */
 public class Shift {
     private int id;

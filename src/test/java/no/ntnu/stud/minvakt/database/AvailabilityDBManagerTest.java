@@ -1,7 +1,11 @@
 package no.ntnu.stud.minvakt.database;
 
+import no.ntnu.stud.minvakt.data.UserAvailableShifts;
+import no.ntnu.stud.minvakt.data.shift.ShiftAvailable;
+import no.ntnu.stud.minvakt.data.user.UserBasicWorkHours;
 import org.junit.*;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
@@ -17,30 +21,6 @@ public class AvailabilityDBManagerTest {
         availabilityDB = new AvailabilityDBManager();
     }
 
-    /*
-    @Test
-    public void getAvailabilityTest() {
-        ArrayList<Integer> userList = new ArrayList<>();
-        ArrayList<Integer> userListTest;
-
-        userList.add(0, 1);
-        userList.add(1, 2);
-
-        int res1 = 0;
-        int res2 = 0;
-
-        userListTest = availabilityDB.getAvailability(41);
-
-        for (int i = 0; i < userList.size(); i++) {
-            res1 += userList.get(i);
-            res2 += userListTest.get(i);
-
-        }
-        assertEquals(res1, res2);
-    }
-    */
-
-
     @Test
     public void setAvailabilityTest() {
         boolean res = availabilityDB.setAvailability(2, 22);
@@ -49,10 +29,8 @@ public class AvailabilityDBManagerTest {
         if(test) {
             availabilityDB.deleteAvailability(2, 22); // Clean up
         }
-
         assertEquals(res, test);
     }
-
 
     @Test
     public void setAvailableFailTest() {
@@ -65,6 +43,7 @@ public class AvailabilityDBManagerTest {
 
         assertEquals(res, test);
     }
+
     @Test
     public void deleteAvailabilityTest() {
         availabilityDB.setAvailability(2, 22);
@@ -72,5 +51,34 @@ public class AvailabilityDBManagerTest {
         boolean test = true;
 
         assertEquals(res, test);
+    }
+
+    @Test
+    public void getAvailabilityForUser() throws Exception {
+        int userId = 1;
+        UserAvailableShifts user = availabilityDB.getAvailabilityForUser(userId);
+        ArrayList<Integer> shifts = user.getShifts();
+        int shiftID = shifts.get(0);
+        Assert.assertEquals(41, shiftID);
+    }
+
+    @Test
+    public void getAvailabilityUserBasic() throws Exception {
+        int shiftId = 41;
+        ArrayList<UserBasicWorkHours> user = availabilityDB.getAvailabilityUserBasic(shiftId);
+        int userId = user.get(0).getId();
+        int expId = 1;
+
+        Assert.assertEquals(expId, userId);
+    }
+
+    @Test
+    public void getShiftsForDate() throws Exception {
+        int userId = 1;
+        int daysForward = 1;
+        String fromDateString = "2017-02-12";
+        Date date = Date.valueOf(fromDateString);
+        ArrayList<ShiftAvailable> shifts = availabilityDB.getShiftsForDate(daysForward, userId, date);
+        Assert.assertEquals(61, shifts.get(0).getShiftId());
     }
 }

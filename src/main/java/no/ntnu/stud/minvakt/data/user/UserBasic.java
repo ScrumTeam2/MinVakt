@@ -4,7 +4,7 @@ import no.ntnu.stud.minvakt.data.user.User;
 import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
- * Created by evend on 1/13/2017.
+ * Represents the user entity. A very basic implementation used when the rest isn't needed
  */
 
 public class UserBasic {

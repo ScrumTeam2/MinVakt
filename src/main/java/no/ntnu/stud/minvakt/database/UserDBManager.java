@@ -15,6 +15,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+/**
+ * Database layer class for users
+ */
 public class UserDBManager extends DBManager {
     public UserDBManager() {
         super();

@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.data;
 import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
- * Created by Audun on 26.01.2017.
+ * Data structure containing work time for a specific user
  */
 public class UserWorkInfo {
     private int userId;

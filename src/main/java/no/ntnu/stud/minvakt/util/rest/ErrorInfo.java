@@ -3,7 +3,7 @@ package no.ntnu.stud.minvakt.util.rest;
 import no.ntnu.stud.minvakt.util.SanitizeUtil;
 
 /**
- * Created by Audun on 11.01.2017.
+ * Plain old Java object used for sending error objects to the client
  */
 public class ErrorInfo {
     private String error;

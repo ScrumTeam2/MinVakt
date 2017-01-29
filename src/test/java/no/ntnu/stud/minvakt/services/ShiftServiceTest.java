@@ -6,7 +6,6 @@ package no.ntnu.stud.minvakt.services;
 
 import no.ntnu.stud.minvakt.data.shift.*;
 import no.ntnu.stud.minvakt.data.user.User;
-import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.database.NewsFeedDBManager;
 import no.ntnu.stud.minvakt.database.ShiftDBManager;
 import org.json.JSONObject;
