@@ -7,7 +7,7 @@ var currentNum = parseInt(localStorage.getItem("TempShiftCurr"));
 console.log("shiftPlan", shiftPlan);
 console.log("currentNum", currentNum);
 
-var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
+var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsefagarbeider", "NURSE" : "Sykepleier"};
 var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 
 var $list = $('.list');

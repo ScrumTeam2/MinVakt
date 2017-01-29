@@ -83,13 +83,13 @@ function createAjaxForAllShifts(deptId) {
 
 function addShiftInfoHtml (element, shiftId, data) {
 
-    employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsemedarbeider', 'NURSE': 'Sykepleier'};
+    employeeCategories = {'ASSISTANT': 'Assistent', 'HEALTH_WORKER': 'Helsefagarbeider', 'NURSE': 'Sykepleier'};
     categoriesForLoop = ['ASSISTANT', 'HEALTH_WORKER', 'NURSE'];
     var shiftUsers = data.shiftUsers;
     var html = "";
 
     //Could be made more efficient
-    var baseUrl = "../html/user-e.html?search=";
+    var baseUrl = "../html/user-a.html?search=";
     for (var i = 0; i < categoriesForLoop.length; i++) {
         var hasPerson = false;
         //console.log(categoriesForLoop[i]);

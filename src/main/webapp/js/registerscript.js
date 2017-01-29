@@ -82,12 +82,8 @@ $(document).ready(function () {
 
         var formData;
 
-        console.log(formError);
-        console.log(userValue);
-
         if (userValue === "admin") {
             if (!formError) {
-                console.log("Submitting admin");
                 formData = {
                     "firstName": $first.val(),
                     "lastName": $last.val(),
@@ -203,10 +199,8 @@ function showEmployeeInput() {
 
 function addUser(data) {
     createSuccess = true;
-    console.log("OK", data);
-    console.log("Adduser");
     $('.title').text("Vellykket!");
-    $('.result').text("Bruker ble laget med passord: " + data.password);
+    $('.result').text("Bruker ble opprettet");
     $('#userViewBtn').attr("href", "user-a.html?search=" + $first.val() + " " + $last.val());
 
     $('.popup').show();
