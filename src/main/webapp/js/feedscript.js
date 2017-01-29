@@ -2,7 +2,7 @@
  * Created by marith 18.01.2017.
  */
 
-var $this, feedId, categoryPop;
+var $this, feedId, categoryPop, shiftId, userId;
 var popVisible = false;
 var popOpened = false;
 
@@ -123,8 +123,7 @@ $accept.on("click", function(e){
 var $edit = $('#editBtn');
 $edit.on("click", function(e){
     e.preventDefault();
-    console.log("edit", feedId);
-    //window.location = "";
+    window.location = "/html/edit-shift.html?id=" + shiftId + "&feedId=" + feedId + "&userId=" + userId;
 });
 
 
@@ -168,9 +167,11 @@ function openPopup(e){
     $this = $(e.currentTarget);
     feedId = $this.children().first().data("feed");
     categoryPop = $this.children().first().data("cat");
+    shiftId = $this.children().first().data("shift");
+    userId = $this.children().first().data("user");
     var content = $this.children().first().children().first().children().first().html();
     var shift = $this.children().first().children().first().children().last().html();
-    var $popup = $('#content');
+    var $popupCont = $('#content');
 
     var $yes = $('#acceptBtn');
     var $edit = $('#editBtn');
@@ -185,7 +186,7 @@ function openPopup(e){
     switch(categoryPop){
         case "SHIFT_CHANGE_ADMIN":
             $yes.addClass("hide");
-            $popup.html(
+            $popupCont.html(
                 `<h3>Godkjenne vaktbytte?</h3>
                 <p>${content}<br>${shift}</p>
                 <p>Det finnes ingen ledige ansatte i samme kategori</p>`
@@ -194,7 +195,7 @@ function openPopup(e){
             break;
         case "TIMEBANK":
             $edit.addClass("hide");
-            $popup.html(
+            $popupCont.html(
                 `<h3>Godkjenne timeavvik?</h3>
                 <p>${content}<br>${shift}</p>`
             );
@@ -202,7 +203,7 @@ function openPopup(e){
             break;
         case "VALID_ABSENCE":
             $yes.addClass("hide");
-            $popup.html(
+            $popupCont.html(
                 `<h3>Godkjenne fravær?</h3>
                 <p>${content}<br>${shift}</p>`
             );
@@ -241,13 +242,14 @@ function acceptChangeover(feedData){
     var category = feedData.category;
     var content = feedData.content;
     var shiftId = feedData.shiftId;
+    var userId = feedData.userIdInvolving;
     loadShiftInfo(feedData, function(shiftData){
         var shiftType = shiftTypes[shiftData.type];
         var shiftDate = convertDate(shiftData.date);
         var $changes = $('#accept_change');
         var html=
             `<a href="#" id="open-popup" class="open-pop">
-            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}">
+            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}" data-user="${userId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                     <p class="sub">${shiftType}, ${shiftDate}</p>
@@ -311,13 +313,15 @@ function acceptAbsence(feedData){
     var category = feedData.category;
     var content = feedData.content;
     var shiftId = feedData.shiftId;
+    var userId = feedData.userIdInvolving;
+
     loadShiftInfo(feedData, function(shiftData){
         var shiftType = shiftTypes[shiftData.type];
         var shiftDate = convertDate(shiftData.date);
         var $absence = $('#accept_absence');
         var html=
             `<a href="#" id="open-popup" class="open-pop">
-            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}">
+            <div class="watch" data-feed="${feedId}" data-cat="${category}" data-shift="${shiftId}" data-user="${userId}">
                 <div class="watch-info">
                     <p class="lead">${content}</p>
                     <p class="sub">${shiftType}, ${shiftDate}</p>
@@ -376,7 +380,6 @@ function adminNotification(feedData){
 //hide popup if click outside
 var $popup = $('.popup');
 $(document).on("click", function (e) {
-    //e.preventDefault();
     if(popOpened){
         if (popVisible) {
             if (!$popup.is(e.currentTarget) && $popup.has(e.target).length === 0) {
