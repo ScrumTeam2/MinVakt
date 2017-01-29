@@ -82,6 +82,7 @@ function checkInput(){
     });
 }
 
+// calculate to minutes
 function calcMinutes(hoursVal, minutesVal){
     var parsedH = parseInt(hoursVal);
     var parsedM = parseInt(minutesVal);
@@ -142,6 +143,7 @@ function registerOvertime(minutes){
     sendTimebank(formData);
 }
 
+// popup content of submitted overtime
 function popupContent(){
     var $popupCont = $('#content');
 

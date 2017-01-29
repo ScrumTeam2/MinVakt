@@ -11,9 +11,9 @@ var shiftTypes = {
 
 var users = [];
 
+// show all users and set url if typed in the searchbar
 $(document).ready(function() {
     $.ajax({
-        //     url: "rest/shift/user/"+userId,
         url: "/rest/user/",
         type: 'GET',
         dataType: 'json',
@@ -34,17 +34,12 @@ $(document).ready(function() {
                 "<div class='container-title'>" +
                     "<h3>" +data[i].orderCharacter+ " </h3>" +
                 "</div>";
-            //console.log(html);
-            //console.log(data[i]);
-            //console.log(data[i].userBasics);
             userListElement.append(html);
-            //console.log("index = "+i);
             var category = sessionStorage.getItem("SessionIdCat");
             for(j = 0; j < data[i].userBasics.length;j++) {
                 data[i].userBasics[j]["orderCharacter"] = data[i].orderCharacter;
                 users.push(data[i].userBasics[j]);
                 user = data[i].userBasics[j];
-                //console.log(user);
                 name = user.firstName + " " + user.lastName;
                 html =
                     "<div class='watch' data-id='" + user.id + "'>" +
@@ -58,11 +53,9 @@ $(document).ready(function() {
                 html += "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";
                 userListElement.append(html);
-                //console.log("index = "+i+" J = "+j+"Userbasics"+data[i].userBasics.length);
-
             }
-
         }
+
         if (getUrlParameter("search")) {
             $search.val(getUrlParameter("search"));
             search(getUrlParameter("search"));
@@ -73,7 +66,6 @@ $(document).ready(function() {
     function dropDownUser(user, element){
         var userDataElement = element.children(".user-data");
         userDataElement.addClass("loaded");
-        //console.log(userDataElement.length);
         if(userDataElement.data("hasInfo") != "1") {
             userDataElement.data("hasInfo", "1");
             html =
@@ -86,14 +78,11 @@ $(document).ready(function() {
                     "<i class='material-icons'>phone</i></i>"
                 + user.phoneNumber + "</p>" +
                 "<p class='more-info__text'>"+(user.workPercentage*100)+"% stilling</p>";
-            //console.log(html);
             userDataElement.append(html);
-            console.log(user.workPercentage*100);
         }
         else {
             userDataElement.slideToggle(200);
         }
-
     }
 
     function setEventListeners(){
@@ -104,7 +93,6 @@ $(document).ready(function() {
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
-                    //console.log(data);
                     dropDownUser(data, watchElement);
                 },
                 error: function (data) {
@@ -136,9 +124,7 @@ $(document).ready(function() {
             str = str.toLowerCase();
             searchStr = searchStr.toLowerCase();
 
-            //console.log(str, searchStr);
             if (str.includes(searchStr)) {
-                //console.log("Match!");
                 if (users[i].orderCharacter !== currentChar) {
                     output.push({
                         char : currentChar,
@@ -167,9 +153,7 @@ $(document).ready(function() {
             userListElement.append(html);
             for (var j = 0; j < output[i].data.length; j++) {
 
-
                 var user = output[i].data[j];
-                //console.log(user);
                 var name = user.firstName + " " + user.lastName;
                 var html =
                     "<div class='watch' data-id='" + user.id + "'>" +
@@ -183,9 +167,7 @@ $(document).ready(function() {
                 html += "<div class='user-data more-info' data-hasInfo='0'></div>" +
                     "</div>";
                 userListElement.append(html);
-
             }
         }
     }
-
 });
