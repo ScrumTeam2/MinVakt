@@ -8,6 +8,7 @@ import no.ntnu.stud.minvakt.data.user.UserBasic;
 import no.ntnu.stud.minvakt.data.user.UserBasicList;
 import no.ntnu.stud.minvakt.util.QueryUtil;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -325,6 +326,7 @@ public class UserDBManager extends DBManager {
 
     public User getUserById(int userId) {
         User user = null;
+        ResultSet res = null;
         if(setUp()){
             try {
                 conn = getConnection();

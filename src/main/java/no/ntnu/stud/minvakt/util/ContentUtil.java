@@ -132,6 +132,10 @@ public class ContentUtil {
         String res = "Ønske om vaktbytte godkjent";
         return res;
     }
+    public String shiftChangeUserFromNotAccepted(){
+        String res = "Ønske om vaktbytte ikke godkjent";
+        return res;
+    }
 
     private String minutesFormat(int minutes){
         String res;
