@@ -85,7 +85,7 @@ public class ShiftChangeUtil {
     private static boolean approveValidAbsence(NewsFeedItem newsFeedItem, boolean shiftAccepted){
         if(shiftAccepted){
             if(!newsDB.setNewsFeedItemResolved(newsFeedItem.getFeedId(), shiftAccepted) ||
-            !shiftDB.setValidAbsence(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), true)) return false;
+            !shiftDB.setValidAbsence(newsFeedItem.getUserIdInvolving(), newsFeedItem.getShiftId(), 2)) return false;
             Shift shift = shiftDB.getShift(newsFeedItem.getShiftId());
             NewsFeedItem notification = new NewsFeedItem(-1, Timestamp.from(Instant.now()),
                     contentUtil.acceptValidAbsence(), newsFeedItem.getUserIdInvolving(),
