@@ -10,7 +10,7 @@ var shiftType;
 
 var users = [];
 
-var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsemedarbeider", "NURSE" : "Sykepleier"};
+var userTypes = {"ADMIN" : "Administrasjon", "ASSISTANT" : "Assistent", "HEALTH_WORKER" : "Helsefagarbeider", "NURSE" : "Sykepleier"};
 var shiftTypes = {"DAY" : "Dagvakt", "EVENING" : "Kveldsvakt", "NIGHT" : "Nattevakt"};
 var startTimes = {"DAY" : 420, "EVENING" : 900, "NIGHT" : 1380};
 

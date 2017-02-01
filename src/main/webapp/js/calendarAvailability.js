@@ -9,8 +9,10 @@ var shiftsChosen = [];
 
 
 function loadCorrectFirstDate() {
+
     dateParam = dateParam ? new Date(dateParam) : new Date();
     dateString = dateParam.getFullYear()+'-'+(dateParam.getMonth()+1)+'-'+dateParam.getDate();
+    createCalendatWithData(dateParam.getMonth()+1, dateParam.getFullYear());
     $.ajax({
         url: "/rest/availability/date?date="+dateString,
         type: 'GET',

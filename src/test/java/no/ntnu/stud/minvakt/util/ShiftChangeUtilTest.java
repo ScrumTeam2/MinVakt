@@ -34,7 +34,6 @@ public class ShiftChangeUtilTest{
                 "Test", 1,1,4, NewsFeedItem.NewsFeedCategory.NOTIFICATION);
         int feedId = newsFeedDB.createNotification(notification);
         assertTrue(ShiftChangeUtil.updateNotification(feedId, true));
-        assertTrue(ShiftChangeUtil.updateNotification(feedId, false));
         newsFeedDB.deleteNotification(feedId);
     }
     @Test

@@ -104,7 +104,6 @@ $close.on("click", function(e){
 var $accept = $('#acceptBtn');
 $accept.on("click", function(e){
     e.preventDefault();
-    console.log("yes", feedId);
     $.ajax({
         url: "/rest/newsfeed/" + feedId,
         type: 'POST',
@@ -119,7 +118,6 @@ $accept.on("click", function(e){
 var $deny = $('#denyBtn');
 $deny.on("click", function(e){
     e.preventDefault();
-    console.log("no", feedId);
     var formData = {"accepted":false};
 
     $.ajax({
@@ -177,7 +175,6 @@ function openPopup(e){
 // remove notification
 function removeMessage(element){
     feedId = element.data("feed");
-    console.log(feedId);
     $.ajax({
         url: "/rest/newsfeed/" + feedId,
         type: 'POST',
@@ -188,12 +185,11 @@ function removeMessage(element){
 }
 
 function postOk(){
-    console.log("ok post", feedId);
     loadMessages();
 }
 
-function postNotOk(){
-    console.log("ikke ok post", feedId);
+function postNotOk(e){
+    console.error(e);
 }
 
 // add request for shift messages

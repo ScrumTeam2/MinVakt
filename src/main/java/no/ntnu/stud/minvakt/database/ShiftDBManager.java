@@ -446,54 +446,6 @@ public class ShiftDBManager extends DBManager {
         return out != 0;
     }
 
-    private final String sqlGetCandidates =
-            "SELECT user.*, COUNT(*) shifts_worked FROM employee_shift " +
-                    "LEFT JOIN shift USING(shift_id) " +
-                    "NATURAL JOIN user " +
-                    "WHERE shift.date IS NULL OR shift.date BETWEEN ? AND ? " +
-                    "AND user.category != 0 " +
-                    "AND shift.approved = TRUE " +
-                    "GROUP BY user_id " +
-                    "UNION " +
-                    "SELECT *, 0 AS shifts_worked FROM user " +
-                    "WHERE category != 0 " +
-                    "AND shift.approved = TRUE " +
-                    "ORDER BY shifts_worked DESC " +
-                    "LIMIT ?";
-
-    /* TODO: delete if not used
-    public ArrayList<UserBasicWorkHours> getOrdinaryWorkHoursForPeriod(Date start, Date end, int limit) {
-        ArrayList<UserBasicWorkHours> users = new ArrayList<>();
-        ResultSet res=null;
-        if(setUp()){
-            try {
-                conn = getConnection();
-                prep = conn.prepareStatement(sqlGetCandidates);
-                prep.setDate(1, start);
-                prep.setDate(2, end);
-                prep.setInt(3, limit);
-                res = prep.executeQuery();
-                while (res.next()){
-                    int userId = res.getInt("user_id");
-                    String firstName =res.getString("first_name");
-                    String lastName = res.getString("last_name");
-                    int category = res.getInt("category");
-                    int normalShifts = res.getInt("shifts_worked");
-                    UserBasicWorkHours user = new UserBasicWorkHours(userId,firstName,lastName, User.UserCategory.valueOf(category), normalShifts, 0);
-                    user.calculateTotalWorkHours();
-                    users.add(user);
-                }
-            } catch (Exception e) {
-                log.log(Level.WARNING, "Could not get work hour list", e);
-            } finally {
-                finallyStatement(res, prep);
-            }
-        }
-        return users;
-    }
-    */
-
-
     /**
      * Gives an array with shifts for a user from a given date a number of days forward
      * @param daysForward - int: How many days forward fetched shifts are
@@ -527,7 +479,7 @@ public class ShiftDBManager extends DBManager {
                     if(res2.next()){
                         isInShift = true;
                     }
-                    boolean isAvailable = res.getInt("staff_number") != res.getInt("current_staff_numb");
+                    boolean isAvailable = res.getInt("staff_number") > res.getInt("current_staff_numb");
 
                     ShiftUserAvailability obj = new ShiftUserAvailability(
                             shiftId, res.getDate("date"),
