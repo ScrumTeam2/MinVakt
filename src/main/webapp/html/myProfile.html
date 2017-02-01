@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MinVakt | Endre passord</title>
+    <title>MinVakt | Min profil</title>
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link rel="stylesheet" href="../css/style.css"/>
     <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 <header>
@@ -24,44 +24,33 @@
     <ul>
         <li><a href="home-e.html">Vaktliste<i class="material-icons">chevron_right</i></a></li>
         <li><a href="messages-e.html">Meldinger<i class="material-icons">chevron_right</i></a></li>
-        <li><a href="user-e.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
         <li><a href="availability.html">Tilgjengelighet<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="user-e.html">Ansatte<i class="material-icons">chevron_right</i></a></li>
+        <li><a href="timebank.html">Timebank<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
 <aside class="popup-more employee hide" id="popup_more">
     <ul>
+        <li><a href="myProfile.html">Min profil<i class="material-icons">chevron_right</i></a></li>
         <li><a href="change-password.html">Endre passord<i class="material-icons">chevron_right</i></a></li>
         <li><a href="#" id="logout">Logg ut<i class="material-icons">chevron_right</i></a></li>
     </ul>
 </aside>
-
 <div class="container">
     <div class="container-header">
-        <h2 class="my-shifts">Endre passord</h2>
-    </div>
-    <form class="register-form">
         <div>
-            <input type="password" id="oldPass" placeholder="Gammelt passord" required/>
-        </div>
-        <div>
-            <input type="password" id="newPass" placeholder="Nytt passord" required/>
-        </div>
-        <div>
-            <input type="password" id="reNewPass" placeholder="Gjenta nytt passord" required/>
-        </div>
-        <button type="submit" id="userBtn">Endre passord</button>
-    </form>
-    <div class="popup" style="display: none">
-        <h3 id="popup-title">Tittel</h3>
-        <p id="popup-message"></p>
-        <div class="links">
-            <a id="popup-btn1" href="#">Ja</a>
-            <a id="popup-btn2" href="#">Nei</a>
+            <!--<i class="material-icons">chevron_left</i>-->
+            <h2>Min profil</h2>
         </div>
     </div>
-    <p class="feedback-login"></p>
+
+    <div class="user_profile">
+        <a id="e" href="#">Rediger</a>
+    </div>
+
 </div>
+
 <script src="../js/checkscript.js"></script>
-<script src="../js/changePassword.js"></script>
+<script src="../js/myProfileScript.js"></script>
 </body>
 </html>
