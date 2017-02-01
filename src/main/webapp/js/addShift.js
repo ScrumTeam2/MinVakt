@@ -91,7 +91,7 @@ $(document).ready(function() {
             type: "POST",
             dataType: "json",
             contentType: "application/json",
-            data: JSON.stringify(shiftPlan)
+            data: JSON.stringify(shiftPlan),
             success: function(data) {
                 localStorage.setItem("TempShiftPlan", JSON.stringify(data));
                 localStorage.setItem("TempShiftCurr", 0);
